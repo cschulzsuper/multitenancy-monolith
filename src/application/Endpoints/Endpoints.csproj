@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Application</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0-rc.2.22476.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
+	</ItemGroup>
+
+</Project>
