@@ -8,9 +8,12 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Weather
     {
         public static IEndpointRouteBuilder MapWeatherForecastEndpoints(this IEndpointRouteBuilder endpoints)
         {
-            var wheatherForecastEndpoints = endpoints.MapGroup("/wheather-forecast");
+            var wheatherForecastEndpoints = endpoints
+                .MapGroup("/wheather-forecast")
+                .RequireAuthorization();
 
-            wheatherForecastEndpoints.MapGet(string.Empty, GetAll);
+            wheatherForecastEndpoints
+                .MapGet(string.Empty, GetAll);
 
             return endpoints;
         }

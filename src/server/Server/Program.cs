@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Weather;
+using ChristianSchulz.MultitenancyMonolith.Server.BadgeIdentity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,17 +12,38 @@ namespace ChristianSchulz.MultitenancyMonolith.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddAuthentication(setup =>
+            {
+                setup.DefaultScheme = "Badge";
+                setup.AddScheme<BadgeAuthenticationHandler>("Badge", "Badge Authentication");
+            });
+
+            builder.Services.AddAuthorization();
+
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new() { Title = "Multitenancy Monolith", Version = "v1" });
+
+                options.ConfigureBadgeAuthentication();
+                options.ConfigureBadgeAuthorization();
+            });
 
             builder.Services.AddWeatherForecastTransport();
 
             var app = builder.Build();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Multitenancy Monolith");
+                });
             }
 
             app.UseHttpsRedirection();
