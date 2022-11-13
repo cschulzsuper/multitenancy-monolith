@@ -1,30 +1,53 @@
-﻿using System;
-using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+using System;
+using System.Linq;
+using System.Text;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
 public class AuthenticationRequestHandler : IAuthenticationRequestHandler
 {
-    private const string _defaultUsername = "admin";
-    private const string _defaultPassword = "default";
+    private readonly IUserManager _userManager;
 
-    private static readonly byte[] _defaultBadgeBytes = Guid
-        .Parse("7c348e46-6706-42f1-8cb7-14092ee319b3")
-        .ToByteArray();
+    private readonly static object _signInLock = new();
+
+    public AuthenticationRequestHandler(
+        IUserManager userManager)
+    {
+        _userManager = userManager;
+    }
 
     public string SignIn(string username, SignInRequest request)
     {
-        var password = request.Password;
-
-        var valid =
-            username == _defaultUsername &&
-            password == _defaultPassword;
-
-        if (!valid)
+        lock (_signInLock)
         {
-            throw new TransportException($"The password does not match.");
-        }
+            var user = _userManager.Get(username);
 
-        return Convert.ToBase64String(_defaultBadgeBytes);
+            var valid = request.Password == user.Password;
+
+            if (!valid)
+            {
+                throw new TransportException($"The password does not match.");
+            }
+
+            user.Verification = Guid
+                .NewGuid()
+                .ToByteArray();
+
+            var badge = CreateBadge(user);
+
+            return badge;
+        }
+    }
+
+    private static string CreateBadge(User user)
+    {
+        var usernameBytes = Encoding.UTF8.GetBytes(user.Username);
+
+        var badgeBytes = Enumerable
+            .Concat(user.Verification, usernameBytes)
+            .ToArray();
+
+        return Convert.ToBase64String(badgeBytes);
     }
 }

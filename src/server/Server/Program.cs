@@ -32,6 +32,7 @@ public class Program
             options.ConfigureAuthorization();
         });
 
+        builder.Services.AddAuthenticationManagement();
         builder.Services.AddAuthenticationTransport();
         builder.Services.AddWeatherForecastTransport();
 

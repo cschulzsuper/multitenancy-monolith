@@ -1,9 +1,14 @@
-﻿using System.Security.Claims;
-using System;
-using System.Threading.Tasks;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.BadgeIdentity;
 
@@ -11,15 +16,15 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
 {
     private AuthenticationScheme? _scheme;
     private HttpContext? _context;
+    private IUserManager? _userManager;
 
-    private static readonly byte[] _validBadgeBytes = Guid
-        .Parse("7c348e46-6706-42f1-8cb7-14092ee319b3")
-        .ToByteArray();
+    private static readonly int SizeOfGuid = Marshal.SizeOf(typeof(Guid));
 
     public Task InitializeAsync(AuthenticationScheme scheme, HttpContext context)
     {
         _scheme = scheme;
         _context = context;
+        _userManager = context.RequestServices.GetRequiredService<IUserManager>();
 
         return Task.CompletedTask;
     }
@@ -36,13 +41,13 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
             return Task.FromResult(AuthenticateResult.Fail("Authentication failed"));
         }
 
-        var claimsPrincipal = Authenticate(contextBadge);
-        if (claimsPrincipal == null)
+        var authenticated = TryAuthenticate(contextBadge, out var claimsPrincipal);
+        if (!authenticated)
         {
             return Task.FromResult(AuthenticateResult.Fail("Authentication failed"));
         }
 
-        var ticket = new AuthenticationTicket(claimsPrincipal, _scheme!.Name);
+        var ticket = new AuthenticationTicket(claimsPrincipal!, _scheme!.Name);
 
         return Task.FromResult(AuthenticateResult.Success(ticket));
     }
@@ -88,25 +93,40 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
         return Task.CompletedTask;
     }
 
-    private ClaimsPrincipal? Authenticate(string badge)
+    private bool TryAuthenticate(string badge, [MaybeNullWhen(false)] out ClaimsPrincipal claimsPrincipal)
     {
+        claimsPrincipal = null;
+
         if (string.IsNullOrWhiteSpace(badge))
         {
-            return null;
+            return false;
         }
 
-        var badgeBytes = Convert.FromBase64String(badge);
-        var badgeValid = badgeBytes.SequenceEqual(_validBadgeBytes);
+        var badgeBytes = Convert
+            .FromBase64String(badge)
+            .AsSpan();
 
+        if (badgeBytes.Length <= SizeOfGuid)
+        {
+            return false;
+        }
+
+        var verfication = badgeBytes.Slice(0, SizeOfGuid);
+        var usernameBytes = badgeBytes.Slice(SizeOfGuid);
+        var username = Encoding.UTF8.GetString(usernameBytes);
+
+        var user = _userManager!.Get(username);
+
+        var badgeValid = verfication.SequenceEqual(user.Verification);
         if (!badgeValid)
         {
-            return null;
+            return false;
         }
 
         var claims = Array.Empty<Claim>();
         var claimsIdentity = new ClaimsIdentity(claims, "badge");
-        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-        return claimsPrincipal;
+        
+        claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+        return true;
     }
 }
