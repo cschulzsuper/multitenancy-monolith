@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.BadgeIdentity;
 
@@ -11,7 +12,9 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
     private AuthenticationScheme? _scheme;
     private HttpContext? _context;
 
-    private readonly string _defaultBadge = "badge";
+    private static readonly byte[] _validBadgeBytes = Guid
+        .Parse("7c348e46-6706-42f1-8cb7-14092ee319b3")
+        .ToByteArray();
 
     public Task InitializeAsync(AuthenticationScheme scheme, HttpContext context)
     {
@@ -33,13 +36,11 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
             return Task.FromResult(AuthenticateResult.Fail("Authentication failed"));
         }
 
-        if (contextBadge != _defaultBadge)
+        var claimsPrincipal = Authenticate(contextBadge);
+        if (claimsPrincipal == null)
         {
             return Task.FromResult(AuthenticateResult.Fail("Authentication failed"));
         }
-
-        var claimsIdentity = new ClaimsIdentity(Enumerable.Empty<Claim>(), "badge");
-        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
         var ticket = new AuthenticationTicket(claimsPrincipal, _scheme!.Name);
 
@@ -85,5 +86,27 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
     {
         _context!.Response.StatusCode = StatusCodes.Status403Forbidden;
         return Task.CompletedTask;
+    }
+
+    private ClaimsPrincipal? Authenticate(string badge)
+    {
+        if (string.IsNullOrWhiteSpace(badge))
+        {
+            return null;
+        }
+
+        var badgeBytes = Convert.FromBase64String(badge);
+        var badgeValid = badgeBytes.SequenceEqual(_validBadgeBytes);
+
+        if (!badgeValid)
+        {
+            return null;
+        }
+
+        var claims = Array.Empty<Claim>();
+        var claimsIdentity = new ClaimsIdentity(claims, "badge");
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+        return claimsPrincipal;
     }
 }

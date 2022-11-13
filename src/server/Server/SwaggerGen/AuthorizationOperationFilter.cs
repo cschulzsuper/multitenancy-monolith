@@ -4,18 +4,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.BadgeIdentity;
+namespace ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
 
-public class SwaggerGenBadgeAuthorizationOperationFilter : IOperationFilter
+public class AuthorizationOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        var authorizeAttribute = (AuthorizeAttribute?)context.ApiDescription
+        var hasAuthorizeAttribute = context.ApiDescription
             .ActionDescriptor
             .EndpointMetadata
-            .SingleOrDefault(x => x is AuthorizeAttribute);
+            .Any(x => x is AuthorizeAttribute);
 
-        if (authorizeAttribute == null)
+        if (!hasAuthorizeAttribute)
         {
             return;
         }
