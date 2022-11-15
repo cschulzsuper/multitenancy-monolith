@@ -7,27 +7,27 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
 public class AuthenticationRequestHandler : IAuthenticationRequestHandler
 {
-    private readonly IUserManager _userManager;
+    private readonly IIdentityManager _identityManager;
 
     private readonly static object _signInLock = new();
 
     public AuthenticationRequestHandler(
-        IUserManager userManager)
+        IIdentityManager identityManager)
     {
-        _userManager = userManager;
+        _identityManager = identityManager;
     }
 
-    public string SignIn(string username, SignInRequest request)
+    public string SignIn(string uniqueName, SignInRequest request)
     {
         lock (_signInLock)
         {
-            var user = _userManager.Get(username);
+            var user = _identityManager.Get(uniqueName);
 
-            var valid = request.Password == user.Password;
+            var valid = request.Secret == user.Secret;
 
             if (!valid)
             {
-                throw new TransportException($"The password does not match.");
+                throw new TransportException($"The secret does not match.");
             }
 
             user.Verification = Guid
@@ -40,12 +40,12 @@ public class AuthenticationRequestHandler : IAuthenticationRequestHandler
         }
     }
 
-    private static string CreateBadge(User user)
+    private static string CreateBadge(Identity identity)
     {
-        var usernameBytes = Encoding.UTF8.GetBytes(user.Username);
+        var uniqueNameBytes = Encoding.UTF8.GetBytes(identity.UniqueName);
 
         var badgeBytes = Enumerable
-            .Concat(user.Verification, usernameBytes)
+            .Concat(identity.Verification, uniqueNameBytes)
             .ToArray();
 
         return Convert.ToBase64String(badgeBytes);

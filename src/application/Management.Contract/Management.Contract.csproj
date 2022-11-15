@@ -8,4 +8,8 @@
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Application</RootNamespace>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\data\Aggregates\Aggregates.csproj" />
+	</ItemGroup>
+
 </Project>

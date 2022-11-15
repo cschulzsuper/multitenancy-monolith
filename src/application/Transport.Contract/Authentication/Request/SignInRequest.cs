@@ -6,5 +6,5 @@ public class SignInRequest
 {
     [Required]
     [StringLength(140)]
-    public required string Password { get; init; }
+    public required string Secret { get; init; }
 }

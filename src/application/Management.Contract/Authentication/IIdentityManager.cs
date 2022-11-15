@@ -1,6 +1,6 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
-public interface IUserManager
+public interface IIdentityManager
 {
-    User Get(string username);
+    Identity Get(string uniqueName);
 }

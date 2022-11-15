@@ -15,8 +15,8 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\application\Endpoints\Endpoints.csproj" />
+	  <ProjectReference Include="..\..\application\Management\Management.csproj" />
 	  <ProjectReference Include="..\..\application\Transport\Transport.csproj" />
-	  <ProjectReference Include="..\..\Management\Management.csproj" />
 	</ItemGroup>
 
 </Project>

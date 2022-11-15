@@ -16,7 +16,7 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
 {
     private AuthenticationScheme? _scheme;
     private HttpContext? _context;
-    private IUserManager? _userManager;
+    private IIdentityManager? _identityManager;
 
     private static readonly int SizeOfGuid = Marshal.SizeOf(typeof(Guid));
 
@@ -24,7 +24,7 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
     {
         _scheme = scheme;
         _context = context;
-        _userManager = context.RequestServices.GetRequiredService<IUserManager>();
+        _identityManager = context.RequestServices.GetRequiredService<IIdentityManager>();
 
         return Task.CompletedTask;
     }
@@ -112,10 +112,10 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
         }
 
         var verfication = badgeBytes.Slice(0, SizeOfGuid);
-        var usernameBytes = badgeBytes.Slice(SizeOfGuid);
-        var username = Encoding.UTF8.GetString(usernameBytes);
+        var identityBytes = badgeBytes.Slice(SizeOfGuid);
+        var identity = Encoding.UTF8.GetString(identityBytes);
 
-        var user = _userManager!.Get(username);
+        var user = _identityManager!.Get(identity);
 
         var badgeValid = verfication.SequenceEqual(user.Verification);
         if (!badgeValid)

@@ -11,16 +11,16 @@ public static class AuthenticationEndpoints
     public static IEndpointRouteBuilder MapAuthenticationEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var authenticationEndpoints = endpoints
-            .MapGroup("/users")
-            .WithTags("User");
+            .MapGroup("/identities")
+            .WithTags("Identities");
 
         authenticationEndpoints
-            .MapPost("/{username}/sign-in", SignIn);
+            .MapPost("/{uniqueName}/sign-in", SignIn);
 
         return endpoints;
     }
 
     private static Delegate SignIn =>
-        (IAuthenticationRequestHandler requestHandler, string username, SignInRequest request)
-            => requestHandler.SignIn(username, request);
+        (IAuthenticationRequestHandler requestHandler, string uniqueName, SignInRequest request)
+            => requestHandler.SignIn(uniqueName, request);
 }
