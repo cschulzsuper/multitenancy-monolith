@@ -53,6 +53,7 @@ public class Program
         app.UseHttpsRedirection();
 
         app.MapAuthenticationEndpoints();
+        app.MapAuthorizationEndpoints();
         app.MapWeatherForecastEndpoints();
 
         app.Run();

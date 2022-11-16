@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -10,17 +11,49 @@ public static class AuthenticationEndpoints
 {
     public static IEndpointRouteBuilder MapAuthenticationEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        var authenticationEndpoints = endpoints
+        var identitiesEndpoints = endpoints
             .MapGroup("/identities")
             .WithTags("Identities");
 
-        authenticationEndpoints
-            .MapPost("/{uniqueName}/sign-in", SignIn);
+        identitiesEndpoints.MapPost("/register", Register);
+
+        var identityEndpoints = identitiesEndpoints
+            .MapGroup("/{identity}");
+
+        identityEndpoints.MapPost("/sign-in", SignIn);
+        identityEndpoints.MapPost("/reset", Reset);
+
+        var meEndpoints = identitiesEndpoints
+            .MapGroup("/me");
+
+        meEndpoints.MapPost("/sign-out", SignOut);
+        meEndpoints.MapPost("/change-secret", ChangeSecret);
+        meEndpoints.MapPost("/verify", Verify);
 
         return endpoints;
     }
 
+    private static Delegate Register =>
+        () => Results.StatusCode(StatusCodes.Status501NotImplemented);
+
     private static Delegate SignIn =>
-        (IAuthenticationRequestHandler requestHandler, string uniqueName, SignInRequest request)
-            => requestHandler.SignIn(uniqueName, request);
+        (IAuthenticationRequestHandler requestHandler, string identity, SignInRequest request)
+            => requestHandler.SignIn(identity, request);
+
+    private static Delegate Reset =>
+        [Authorize]
+        () => Results.StatusCode(StatusCodes.Status501NotImplemented);
+
+    private static Delegate SignOut =>
+        [Authorize]
+        () => Results.StatusCode(StatusCodes.Status501NotImplemented);
+
+    private static Delegate ChangeSecret =>
+        [Authorize]
+        () => Results.StatusCode(StatusCodes.Status501NotImplemented);
+
+    private static Delegate Verify =>
+        [Authorize]
+        () => Results.StatusCode(StatusCodes.Status501NotImplemented);
+
 }
