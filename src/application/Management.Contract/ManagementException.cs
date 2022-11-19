@@ -2,21 +2,22 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Application;
 
-public class TransportException :Exception
+public class ManagementException : Exception
 {
-    public TransportException()
+
+    public ManagementException()
         : base()
     {
 
     }
 
-    public TransportException(string message)
+    public ManagementException(string message)
         : base(message)
     {
 
     }
 
-    public TransportException(string message, Exception innerException)
+    public ManagementException(string message, Exception innerException)
         : base(message, innerException)
     {
 

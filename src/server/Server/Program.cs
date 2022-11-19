@@ -1,4 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration;
+using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Application.Weather;
 using ChristianSchulz.MultitenancyMonolith.Server.BadgeIdentity;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
@@ -32,8 +33,12 @@ public class Program
             options.ConfigureAuthorization();
         });
 
+        builder.Services.AddAdministrationManagement();
+        builder.Services.AddAdministrationTransport();
+
         builder.Services.AddAuthenticationManagement();
         builder.Services.AddAuthenticationTransport();
+
         builder.Services.AddWeatherForecastTransport();
 
         var app = builder.Build();

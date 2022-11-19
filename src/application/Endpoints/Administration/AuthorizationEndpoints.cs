@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
+using System.Security.Claims;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 public static class AuthorizationEndpoints
 {
@@ -31,5 +33,6 @@ public static class AuthorizationEndpoints
 
     private static Delegate TakeUp =>
         [Authorize]
-        () => Results.StatusCode(StatusCodes.Status501NotImplemented);
+        (IAuthorizationRequestHandler requestHandler, ClaimsPrincipal user, string group, string member)
+            => requestHandler.TakeUp(user, group, member);
 }

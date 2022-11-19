@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
@@ -11,8 +12,7 @@ public static class WeatherForecastEndpoints
     {
         var wheatherForecastEndpoints = endpoints
             .MapGroup("/wheather-forecast")
-            .WithTags("Wheather Forecast")
-            .RequireAuthorization();
+            .WithTags("Wheather Forecast");
 
         wheatherForecastEndpoints
             .MapGet(string.Empty, GetAll);
@@ -21,6 +21,7 @@ public static class WeatherForecastEndpoints
     }
 
     private static Delegate GetAll =>
+        [Authorize(Roles = "Member")]
         (IWeatherForecastRequestHandler requestHandler)
             => requestHandler.GetAll();
 }

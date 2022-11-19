@@ -9,9 +9,13 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared;
 public class ClaimsJsonConverter : JsonConverter<Claim[]>
 {
     private static readonly JsonEncodedText Identity = JsonEncodedText.Encode("identity");
+    private static readonly JsonEncodedText Group = JsonEncodedText.Encode("group");
+    private static readonly JsonEncodedText Member = JsonEncodedText.Encode("member");
     private static readonly JsonEncodedText Verification = JsonEncodedText.Encode("verification");
 
-    public override Claim[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+
+    public override Claim[] Read(ref Utf8JsonReader reader, Type typeToConvert, 
+        JsonSerializerOptions options)
     {
         var request = new List<Claim>();
 
@@ -46,11 +50,24 @@ public class ClaimsJsonConverter : JsonConverter<Claim[]>
         return request.ToArray();
     }
 
-    internal static void ReadValue(ref Utf8JsonReader reader, ICollection<Claim> value, JsonSerializerOptions _)
+    internal static void ReadValue(ref Utf8JsonReader reader, ICollection<Claim> value, 
+        JsonSerializerOptions _)
     {
         if (reader.TryReadStringProperty(Identity, out var stringValue))
         {
             value.Add(new Claim(nameof(Identity), stringValue));
+            return;
+        }
+
+        if (reader.TryReadStringProperty(Group, out stringValue))
+        {
+            value.Add(new Claim(nameof(Group), stringValue));
+            return;
+        }
+
+        if (reader.TryReadStringProperty(Member, out stringValue))
+        {
+            value.Add(new Claim(nameof(Member), stringValue));
             return;
         }
 
@@ -61,7 +78,8 @@ public class ClaimsJsonConverter : JsonConverter<Claim[]>
         }
     }
 
-    public override void Write(Utf8JsonWriter writer, Claim[] value, JsonSerializerOptions _)
+    public override void Write(Utf8JsonWriter writer, Claim[] value, 
+        JsonSerializerOptions _)
     {
         writer.WriteStartArray();
 
@@ -85,6 +103,8 @@ public class ClaimsJsonConverter : JsonConverter<Claim[]>
         => claimType switch
         {
             nameof(Identity) => Identity,
+            nameof(Group) => Group,
+            nameof(Member) => Member,
             nameof(Verification) => Verification,
             _ => null
         };
