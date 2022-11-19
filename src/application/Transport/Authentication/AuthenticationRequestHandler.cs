@@ -1,7 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
 using System;
-using System.Linq;
-using System.Text;
+using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
@@ -17,37 +16,34 @@ public class AuthenticationRequestHandler : IAuthenticationRequestHandler
         _identityManager = identityManager;
     }
 
-    public string SignIn(string uniqueName, SignInRequest request)
+    public ClaimsIdentity SignIn(string uniqueName, SignInRequest request)
     {
         lock (_signInLock)
         {
-            var user = _identityManager.Get(uniqueName);
+            var identity = _identityManager.Get(uniqueName);
 
-            var valid = request.Secret == user.Secret;
+            var valid = request.Secret == identity.Secret;
 
             if (!valid)
             {
                 throw new TransportException($"The secret does not match.");
             }
 
-            user.Verification = Guid
+            identity.Verification = Guid
                 .NewGuid()
                 .ToByteArray();
 
-            var badge = CreateBadge(user);
+            var identityVerificationString = Convert.ToBase64String(identity.Verification);
 
-            return badge;
+            var claims = new Claim[]
+            {
+                new Claim("Identity", identity.UniqueName),
+                new Claim("Verification", identityVerificationString, ClaimValueTypes.Base64Binary)
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, "Badge");
+
+            return claimsIdentity;
         }
-    }
-
-    private static string CreateBadge(Identity identity)
-    {
-        var uniqueNameBytes = Encoding.UTF8.GetBytes(identity.UniqueName);
-
-        var badgeBytes = Enumerable
-            .Concat(identity.Verification, uniqueNameBytes)
-            .ToArray();
-
-        return Convert.ToBase64String(badgeBytes);
     }
 }

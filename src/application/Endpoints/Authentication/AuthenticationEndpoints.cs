@@ -20,7 +20,7 @@ public static class AuthenticationEndpoints
         var identityEndpoints = identitiesEndpoints
             .MapGroup("/{identity}");
 
-        identityEndpoints.MapPost("/sign-in", SignIn);
+        identityEndpoints.MapPost("/sign-in", SignIn).AddEndpointFilter<BadgeResultEndpointFilter>();
         identityEndpoints.MapPost("/reset", Reset);
 
         var meEndpoints = identitiesEndpoints

@@ -1,8 +1,9 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
 public interface IAuthenticationRequestHandler
 {
-    string SignIn(string uniqueName, SignInRequest request);
+    ClaimsIdentity SignIn(string uniqueName, SignInRequest request);
 }

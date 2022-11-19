@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -20,7 +19,7 @@ public static class AuthorizationEndpoints
         var memberEndpoints = groupsEndpoints
             .MapGroup("/{group}/members/{member}");
 
-        memberEndpoints.MapPost("/take-up", TakeUp);
+        memberEndpoints.MapPost("/take-up", TakeUp).AddEndpointFilter<BadgeResultEndpointFilter>(); ;
         memberEndpoints.MapPost("/verify", TakeUp);
 
         return endpoints;

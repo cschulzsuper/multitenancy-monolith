@@ -1,13 +1,14 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Shared;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Claims;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.BadgeIdentity;
@@ -17,8 +18,6 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
     private AuthenticationScheme? _scheme;
     private HttpContext? _context;
     private IIdentityManager? _identityManager;
-
-    private static readonly int SizeOfGuid = Marshal.SizeOf(typeof(Guid));
 
     public Task InitializeAsync(AuthenticationScheme scheme, HttpContext context)
     {
@@ -102,29 +101,35 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
             return false;
         }
 
-        var badgeBytes = Convert
-            .FromBase64String(badge)
-            .AsSpan();
+        var badgeBytes = WebEncoders.Base64UrlDecode(badge);
+        var badgeClaims = JsonSerializer.Deserialize<Claim[]>(badgeBytes, ClaimsJsonSerializerOptions.Options)
+             ?? Array.Empty<Claim>();
 
-        if (badgeBytes.Length <= SizeOfGuid)
+        if (!badgeClaims.Any())
         {
             return false;
         }
 
-        var verfication = badgeBytes.Slice(0, SizeOfGuid);
-        var identityBytes = badgeBytes.Slice(SizeOfGuid);
-        var identity = Encoding.UTF8.GetString(identityBytes);
+        var identityUniqueName = badgeClaims.SingleOrDefault(x => x.Type == "Identity")?.Value;        
+        var identityVerificationString = badgeClaims.SingleOrDefault(x => x.Type == "Verification")?.Value;
 
-        var user = _identityManager!.Get(identity);
+        if (identityUniqueName == null || identityVerificationString == null)
+        {
+            return false;
+        }
 
-        var badgeValid = verfication.SequenceEqual(user.Verification);
+        var identityVerification = Convert.FromBase64String(identityVerificationString);
+
+        var identity = _identityManager!.Get(identityUniqueName);
+
+        var badgeValid = identityVerification.SequenceEqual(identity.Verification);
         if (!badgeValid)
         {
             return false;
         }
 
         var claims = Array.Empty<Claim>();
-        var claimsIdentity = new ClaimsIdentity(claims, "badge");
+        var claimsIdentity = new ClaimsIdentity(claims, "Badge");
         
         claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
         return true;
