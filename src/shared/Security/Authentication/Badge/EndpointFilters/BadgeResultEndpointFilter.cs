@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge.EndpointFilters;
 
 public class BadgeResultEndpointFilter : IEndpointFilter
 {
@@ -20,7 +20,7 @@ public class BadgeResultEndpointFilter : IEndpointFilter
         {
             var claims = claimsIdentity.Claims as Claim[] ?? claimsIdentity.Claims.ToArray();
 
-            var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, 
+            var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims,
                 ClaimsJsonSerializerOptions.Options);
 
             result = WebEncoders.Base64UrlEncode(claimsSerialized);

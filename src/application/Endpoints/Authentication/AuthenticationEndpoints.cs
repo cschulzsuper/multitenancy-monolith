@@ -1,4 +1,6 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration;
+using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge.EndpointFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -54,6 +56,8 @@ public static class AuthenticationEndpoints
 
     private static Delegate Verify =>
         [Authorize]
-        () => Results.StatusCode(StatusCodes.Status501NotImplemented);
+        (IAuthenticationRequestHandler requestHandler)
+            => requestHandler.Verify();
+
 
 }

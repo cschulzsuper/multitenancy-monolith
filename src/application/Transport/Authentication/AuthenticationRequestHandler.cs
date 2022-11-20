@@ -46,4 +46,6 @@ public class AuthenticationRequestHandler : IAuthenticationRequestHandler
             return claimsIdentity;
         }
     }
+
+    public void Verify() { }
 }

@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
 
-public static class Utf8JsonReaderExtensions
+internal static class Utf8JsonReaderExtensions
 {
     public static bool TryReadStringProperty(this ref Utf8JsonReader reader, JsonEncodedText propertyName, [NotNullWhen(true)] out string? value)
     {

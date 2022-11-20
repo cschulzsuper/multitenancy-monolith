@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Claims;
 
@@ -47,4 +46,6 @@ public class AuthorizationRequestHandler : IAuthorizationRequestHandler
             return claimsIdentity;
         }
     }
+
+    public void Verify() { }
 }

@@ -1,8 +1,9 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration;
 using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Application.Weather;
-using ChristianSchulz.MultitenancyMonolith.Server.BadgeIdentity;
+using ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
+using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,12 +16,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddAuthentication(setup =>
-        {
-            setup.DefaultScheme = "Badge";
-            setup.AddScheme<BadgeAuthenticationHandler>("Badge", "Badge Authentication");
-        });
-
+        builder.Services.AddAuthentication().AddBadge(options => options.Configure());
         builder.Services.AddAuthorization();
 
         builder.Services.AddEndpointsApiExplorer();

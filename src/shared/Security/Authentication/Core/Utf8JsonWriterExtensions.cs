@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
 
-public static class Utf8JsonWriterExtensions
+internal static class Utf8JsonWriterExtensions
 {
     public static void WriteStringIfNotNull(this Utf8JsonWriter writer, JsonEncodedText propertyName, string? value)
     {

@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge.EndpointFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +22,7 @@ public static class AuthorizationEndpoints
             .MapGroup("/{group}/members/{member}");
 
         memberEndpoints.MapPost("/take-up", TakeUp).AddEndpointFilter<BadgeResultEndpointFilter>(); ;
-        memberEndpoints.MapPost("/verify", TakeUp);
+        memberEndpoints.MapPost("/verify", Verify);
 
         return endpoints;
     }
@@ -35,4 +35,9 @@ public static class AuthorizationEndpoints
         [Authorize]
         (IAuthorizationRequestHandler requestHandler, ClaimsPrincipal user, string group, string member)
             => requestHandler.TakeUp(user, group, member);
+
+    private static Delegate Verify =>
+        [Authorize(Roles = "Memeber")]
+        (IAuthorizationRequestHandler requestHandler)
+            => requestHandler.Verify();
 }

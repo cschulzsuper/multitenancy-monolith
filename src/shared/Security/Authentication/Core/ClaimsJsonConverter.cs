@@ -4,17 +4,16 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
 
-public class ClaimsJsonConverter : JsonConverter<Claim[]>
+internal class ClaimsJsonConverter : JsonConverter<Claim[]>
 {
     private static readonly JsonEncodedText Identity = JsonEncodedText.Encode("identity");
     private static readonly JsonEncodedText Group = JsonEncodedText.Encode("group");
     private static readonly JsonEncodedText Member = JsonEncodedText.Encode("member");
     private static readonly JsonEncodedText Verification = JsonEncodedText.Encode("verification");
 
-
-    public override Claim[] Read(ref Utf8JsonReader reader, Type typeToConvert, 
+    public override Claim[] Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
         var request = new List<Claim>();
@@ -50,7 +49,7 @@ public class ClaimsJsonConverter : JsonConverter<Claim[]>
         return request.ToArray();
     }
 
-    internal static void ReadValue(ref Utf8JsonReader reader, ICollection<Claim> value, 
+    internal static void ReadValue(ref Utf8JsonReader reader, ICollection<Claim> value,
         JsonSerializerOptions _)
     {
         if (reader.TryReadStringProperty(Identity, out var stringValue))
@@ -78,7 +77,7 @@ public class ClaimsJsonConverter : JsonConverter<Claim[]>
         }
     }
 
-    public override void Write(Utf8JsonWriter writer, Claim[] value, 
+    public override void Write(Utf8JsonWriter writer, Claim[] value,
         JsonSerializerOptions _)
     {
         writer.WriteStartArray();
