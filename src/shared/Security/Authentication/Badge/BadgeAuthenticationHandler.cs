@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
 
-public class BadgeAuthenticationHandler : AuthenticationHandler<BadgeAuthenticationOptions>
+public sealed class BadgeAuthenticationHandler : AuthenticationHandler<BadgeAuthenticationOptions>
 {
     public BadgeAuthenticationHandler(IOptionsMonitor<BadgeAuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
         : base(options, logger, encoder, clock)

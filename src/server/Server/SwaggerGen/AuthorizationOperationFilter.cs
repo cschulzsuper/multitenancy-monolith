@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
 
-public class AuthorizationOperationFilter : IOperationFilter
+internal sealed class AuthorizationOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {

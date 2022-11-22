@@ -1,24 +1,50 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
-public class MemberManager : IMemberManager
+internal sealed class MemberManager : IMemberManager
 {
-    public const string DefaultGroup = "default";
+    private static IDictionary<string, Member[]>? _members;
 
-    public static readonly Member[] _members =
+    private const string MemberConfigurationKey = "Template:Administration:Members";
+
+    public MemberManager(IConfiguration configuration)
     {
-        new Member { UniqueName = "default-admin", Identity = "admin" },
-        new Member { UniqueName = "default-guest", Identity = "guest" },
-    };
+        var groupSections = configuration.GetRequiredSection(MemberConfigurationKey).GetChildren();
+
+        _members ??= groupSections
+            .ToDictionary(
+                group => group.Key,
+                group => group.Get<Member[]>() ?? throw new ManagementException($"Could not get `{MemberConfigurationKey}` configuration for group `{group.Key}`"));
+    }
+
+    public Member Get(string group, string uniqueName)
+    {
+        var member = GetAll(group)
+            .SingleOrDefault(x => x.UniqueName == uniqueName);
+
+        if (member == null)
+        {
+            throw new ManagementException($"Memeber `{uniqueName}` does not exist in group `{group}`");
+        }
+
+        return member;
+    }
 
     public IEnumerable<Member> GetAll(string group)
     {
-        if (group != DefaultGroup)
+        var found = _members?.TryGetValue(group, out var members)
+            ?? throw new UnreachableException($"The `{nameof(_members)}` field should never be null");
+
+        if (!found)
         {
-            throw new ManagementException("Group does not exist");
+            throw new ManagementException($"Group `{group}` does not exist");
         }
 
-        return _members.AsReadOnly();
+        return members?.AsReadOnly()
+            ?? throw new UnreachableException($"The local variable `{nameof(members)}` should never be null"); ;
     }
 }

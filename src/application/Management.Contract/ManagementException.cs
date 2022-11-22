@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Application;
 
-public class ManagementException : Exception
+public sealed class ManagementException : Exception
 {
 
     public ManagementException()

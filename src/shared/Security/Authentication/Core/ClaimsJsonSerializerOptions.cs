@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
 
-internal static class ClaimsJsonSerializerOptions
+public static class ClaimsJsonSerializerOptions
 {
     public static readonly JsonSerializerOptions Options;
 

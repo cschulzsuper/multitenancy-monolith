@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Weather;
 
-public class WeatherForecastRequestHandler : IWeatherForecastRequestHandler
+internal sealed class WeatherForecastRequestHandler : IWeatherForecastRequestHandler
 {
     private readonly string[] _availableSummeries = new[]
         { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };

@@ -11,7 +11,7 @@ using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
 
-public static class _Configuration
+internal static class _Configuration
 {
     public static void Configure(this BadgeAuthenticationOptions options)
     {
@@ -19,7 +19,6 @@ public static class _Configuration
 
         options.Events.OnValidatePrincipal = context =>
         {
-
             var valid = Validate(context);
 
             if (!valid)

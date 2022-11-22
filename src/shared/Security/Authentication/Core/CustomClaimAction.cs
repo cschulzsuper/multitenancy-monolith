@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
 
-public class CustomClaimAction : ClaimAction
+internal sealed class CustomClaimAction : ClaimAction
 {
     public CustomClaimAction(string claimType, string valueType, Func<ICollection<Claim>, string?> resolver)
         : base(claimType, valueType)

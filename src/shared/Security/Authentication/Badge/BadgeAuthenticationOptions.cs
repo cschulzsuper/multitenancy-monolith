@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
 
-public class BadgeAuthenticationOptions : AuthenticationSchemeOptions
+public sealed class BadgeAuthenticationOptions : AuthenticationSchemeOptions
 {
 
     public ICollection<ClaimAction> ClaimActions { get; } = new List<ClaimAction>();

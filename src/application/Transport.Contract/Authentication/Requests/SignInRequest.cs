@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication.Requests;
 
 public class SignInRequest
 {

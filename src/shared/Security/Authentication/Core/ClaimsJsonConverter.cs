@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
 
-internal class ClaimsJsonConverter : JsonConverter<Claim[]>
+internal sealed class ClaimsJsonConverter : JsonConverter<Claim[]>
 {
     private static readonly JsonEncodedText Identity = JsonEncodedText.Encode("identity");
     private static readonly JsonEncodedText Group = JsonEncodedText.Encode("group");

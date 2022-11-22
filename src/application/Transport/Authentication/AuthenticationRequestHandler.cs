@@ -1,10 +1,10 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Requests;
 using System;
 using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
-public class AuthenticationRequestHandler : IAuthenticationRequestHandler
+internal sealed class AuthenticationRequestHandler : IAuthenticationRequestHandler
 {
     private readonly IIdentityManager _identityManager;
 

@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
-public class BadgeValidatePrincipalContext : PrincipalContext<BadgeAuthenticationOptions>
+
+public sealed class BadgeValidatePrincipalContext : PrincipalContext<BadgeAuthenticationOptions>
 {
     public BadgeValidatePrincipalContext(HttpContext context, AuthenticationScheme scheme, BadgeAuthenticationOptions options, AuthenticationTicket ticket)
         : base(context, scheme, options, ticket?.Properties)

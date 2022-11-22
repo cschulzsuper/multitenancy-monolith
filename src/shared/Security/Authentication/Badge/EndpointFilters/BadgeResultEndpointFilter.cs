@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge.EndpointFilters;
 
-public class BadgeResultEndpointFilter : IEndpointFilter
+public sealed class BadgeResultEndpointFilter : IEndpointFilter
 {
     public async ValueTask<object?> InvokeAsync(
         EndpointFilterInvocationContext context,

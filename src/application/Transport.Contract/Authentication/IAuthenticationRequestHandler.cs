@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Requests;
 using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;

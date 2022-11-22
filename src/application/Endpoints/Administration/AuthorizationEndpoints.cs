@@ -8,9 +8,9 @@ using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
-public static class AuthorizationEndpoints
+internal static class AuthorizationEndpoints
 {
-    public static IEndpointRouteBuilder MapAuthorizationEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapAdministrationAuthorizationEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var groupsEndpoints = endpoints
             .MapGroup("/groups")
@@ -19,7 +19,7 @@ public static class AuthorizationEndpoints
         groupsEndpoints.MapPost("/register", Register);
 
         var memberEndpoints = groupsEndpoints
-            .MapGroup("/{group}/members/{member}");
+            .MapGroup("/{group}/members/{uniqueName}");
 
         memberEndpoints.MapPost("/take-up", TakeUp).AddEndpointFilter<BadgeResultEndpointFilter>(); ;
         memberEndpoints.MapPost("/verify", Verify);

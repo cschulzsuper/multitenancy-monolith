@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
 

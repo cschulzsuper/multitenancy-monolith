@@ -1,15 +1,27 @@
-﻿using System.Linq;
+﻿using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
-public class IdentityManager : IIdentityManager
+internal sealed class IdentityManager : IIdentityManager
 {
-    public static readonly Identity[] _users =
+    private static Identity[]? _identities;
+
+    private const string IdentitiesConfigurationKey = "Template:Authentication:Identities";
+
+    public IdentityManager(IConfiguration configuration)
     {
-        new Identity { UniqueName = "admin", Secret = "default" },
-        new Identity { UniqueName = "guest", Secret = "default" },
-    };
+        _identities ??= configuration.GetRequiredSection(IdentitiesConfigurationKey).Get<Identity[]>()
+            ?? throw new ManagementException($"Could not get `{IdentitiesConfigurationKey}` configuration");
+    }
 
     public Identity Get(string uniqueName)
-        => _users.Single(x => x.UniqueName == uniqueName);
+        => _identities?.Single(x => x.UniqueName == uniqueName)
+            ?? throw new UnreachableException($"The `{nameof(_identities)}` field should never be null");
+
+    public IEnumerable<Identity> GetAll()
+        => _identities?.AsReadOnly()
+            ?? throw new UnreachableException($"The `{nameof(_identities)}` field should never be null");
 }

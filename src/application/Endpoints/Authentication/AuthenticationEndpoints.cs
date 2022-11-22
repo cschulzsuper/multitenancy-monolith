@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration;
-using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Request;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Requests;
 using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge.EndpointFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -9,9 +8,9 @@ using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
-public static class AuthenticationEndpoints
+internal static class AuthenticationEndpoints
 {
-    public static IEndpointRouteBuilder MapAuthenticationEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapAuthenticationAuthenticationEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var identitiesEndpoints = endpoints
             .MapGroup("/identities")

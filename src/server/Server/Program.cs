@@ -10,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
-public class Program
+public sealed class Program
 {
     public static void Main(string[] args)
     {
@@ -20,6 +20,7 @@ public class Program
         builder.Services.AddAuthorization();
 
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddSwaggerGen(options =>
         {
@@ -53,8 +54,8 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.MapAdministrationEndpoints();
         app.MapAuthenticationEndpoints();
-        app.MapAuthorizationEndpoints();
         app.MapWeatherForecastEndpoints();
 
         app.Run();

@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
-public class AuthorizationRequestHandler : IAuthorizationRequestHandler
+internal sealed class AuthorizationRequestHandler : IAuthorizationRequestHandler
 {
     private readonly IMemberManager _memberManager;
 
