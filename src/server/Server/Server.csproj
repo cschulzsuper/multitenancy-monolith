@@ -17,6 +17,7 @@
 	  <ProjectReference Include="..\..\application\Endpoints\Endpoints.csproj" />
 	  <ProjectReference Include="..\..\application\Management\Management.csproj" />
 	  <ProjectReference Include="..\..\application\Transport\Transport.csproj" />
+	  <ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
 	</ItemGroup>
 
 </Project>

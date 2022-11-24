@@ -6,8 +6,8 @@ using ChristianSchulz.MultitenancyMonolith.Application.Administration;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
-using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Core;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
 

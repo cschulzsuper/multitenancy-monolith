@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Core;
 
 internal sealed class ClaimsJsonConverter : JsonConverter<Claim[]>
 {

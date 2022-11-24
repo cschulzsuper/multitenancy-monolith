@@ -1,5 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration.Responses;
-using Microsoft.AspNetCore.Http;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -10,17 +11,17 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 internal sealed class MemberRequestHandler : IMemberRequestHandler
 {
     private readonly IMemberManager _memberManager;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ClaimsPrincipal _user;
 
     public MemberRequestHandler(
         IMemberManager memberManager,
-        IHttpContextAccessor httpContextAccessor)
+        ClaimsPrincipal user)
     {
         _memberManager = memberManager;
-        _httpContextAccessor = httpContextAccessor;
+        _user = user;
     }
 
-    private string Group => _httpContextAccessor.HttpContext.User.FindFirstValue("Group")
+    private string Group => _user.GetGroupOrDefault()
         ?? throw new TransportException("Could not find 'Group' claim");
 
     public MemberResponse Get(string uniqueName)
@@ -30,7 +31,6 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         var response = new MemberResponse
         {
             UniqueName = member.UniqueName,
-            Group = member.Group,
             Identity = member.Identity
         };
 
@@ -45,7 +45,6 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
             new MemberResponse
             {
                 UniqueName = member.UniqueName,
-                Group = member.Group,
                 Identity = member.Identity
             });
 

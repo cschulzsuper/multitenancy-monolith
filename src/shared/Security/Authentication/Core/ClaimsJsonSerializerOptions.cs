@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Core;
 
 public static class ClaimsJsonSerializerOptions
 {

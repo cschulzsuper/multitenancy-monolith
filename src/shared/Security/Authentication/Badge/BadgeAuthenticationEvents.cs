@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 
 public sealed class BadgeAuthenticationEvents
 {

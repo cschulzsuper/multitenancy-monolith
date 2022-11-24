@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Core;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
@@ -9,7 +9,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 
 public sealed class BadgeAuthenticationHandler : AuthenticationHandler<BadgeAuthenticationOptions>
 {

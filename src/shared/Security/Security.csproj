@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Shared</RootNamespace>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Shared.Security</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

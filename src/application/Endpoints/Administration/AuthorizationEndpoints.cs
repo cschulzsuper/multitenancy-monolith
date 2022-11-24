@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge.EndpointFilters;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.EndpointFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -21,7 +21,7 @@ internal static class AuthorizationEndpoints
         var memberEndpoints = groupsEndpoints
             .MapGroup("/{group}/members/{uniqueName}");
 
-        memberEndpoints.MapPost("/take-up", TakeUp).AddEndpointFilter<BadgeResultEndpointFilter>(); ;
+        memberEndpoints.MapPost("/take-up", TakeUp).AddEndpointFilter<BadgeResultEndpointFilter>();
         memberEndpoints.MapPost("/verify", Verify);
 
         return endpoints;

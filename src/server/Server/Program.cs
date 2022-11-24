@@ -3,7 +3,7 @@ using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Application.Weather;
 using ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
-using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +17,7 @@ public sealed class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddAuthentication().AddBadge(options => options.Configure());
+        builder.Services.AddRequestUser();
         builder.Services.AddAuthorization();
 
         builder.Services.AddEndpointsApiExplorer();
@@ -41,6 +42,7 @@ public sealed class Program
         var app = builder.Build();
 
         app.UseAuthentication();
+        app.UseRequestUser();
         app.UseAuthorization();
 
         if (app.Environment.IsDevelopment())

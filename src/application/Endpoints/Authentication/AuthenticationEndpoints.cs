@@ -1,5 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Requests;
-using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge.EndpointFilters;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.EndpointFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

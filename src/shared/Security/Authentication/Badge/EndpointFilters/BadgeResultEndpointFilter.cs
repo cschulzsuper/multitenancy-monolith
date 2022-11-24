@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge.EndpointFilters;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.EndpointFilters;
 
 public sealed class BadgeResultEndpointFilter : IEndpointFilter
 {

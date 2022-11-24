@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Core;
 
 public abstract class ClaimAction
 {

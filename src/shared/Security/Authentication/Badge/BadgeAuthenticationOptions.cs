@@ -1,8 +1,8 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Core;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Core;
 using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 
 public sealed class BadgeAuthenticationOptions : AuthenticationSchemeOptions
 {

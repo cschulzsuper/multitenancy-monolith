@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using System;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 
 public static class _Authentication
 {

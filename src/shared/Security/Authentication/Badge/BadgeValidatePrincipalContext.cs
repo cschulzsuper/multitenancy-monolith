@@ -3,7 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Authentication.Badge;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 
 public sealed class BadgeValidatePrincipalContext : PrincipalContext<BadgeAuthenticationOptions>
 {
