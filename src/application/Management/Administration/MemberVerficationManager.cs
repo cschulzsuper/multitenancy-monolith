@@ -11,9 +11,9 @@ internal sealed class MemberVerficationManager : IMemberVerficationManager
         _byteCache = byteCacheFactory.Create($"member-verfication");
     }
 
-    public byte[] Get(string member)
-        => _byteCache.Get(member);
+    public bool Has(string group, string member, byte[] verfication)
+        => _byteCache.Has($"{group}.{member}", verfication);
 
-    public void Set(string member, byte[] verfication)
-        => _byteCache.Set(member,verfication);
+    public void Set(string group, string member, byte[] verfication)
+        => _byteCache.Set($"{group}.{member}", verfication);
 }

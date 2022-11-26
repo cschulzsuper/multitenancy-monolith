@@ -4,6 +4,6 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 public interface IMemberSignInRequestHandler
 {
-    ClaimsIdentity SignIn(string group, string uniqueName);
+    ClaimsIdentity SignIn(string group, string member);
     void Verify();
 }

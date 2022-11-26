@@ -47,10 +47,6 @@ public sealed class Program
 
         app.UseHttpsRedirection();
 
-        app.UseAuthentication();
-        app.UseRequestUser();
-        app.UseAuthorization();
-
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

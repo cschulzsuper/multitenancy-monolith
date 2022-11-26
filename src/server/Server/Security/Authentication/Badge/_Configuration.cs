@@ -30,7 +30,7 @@ internal static class _Configuration
         };
     }
 
-    public static bool Validate(BadgeValidatePrincipalContext context)
+    private static bool Validate(BadgeValidatePrincipalContext context)
     {
         var badgeClaims = 
             context.Principal?.Claims as ICollection<Claim> ?? 
@@ -60,9 +60,7 @@ internal static class _Configuration
             return false;
         }
 
-        var identityVerification = identityVerficationManager.Get(badgeIdentity.Value);
-
-        var badgeValid = badgeVerification.SequenceEqual(identityVerification);
+        var badgeValid = identityVerficationManager.Has(badgeIdentity.Value, badgeVerification);
 
         return badgeValid;
     }
@@ -83,9 +81,7 @@ internal static class _Configuration
             return false;
         }
 
-        var memberVerification = memberVerficationManager.Get($"{badgeGroup.Value}.{badgeMember.Value}");
-
-        var badgeValid = badgeVerification.SequenceEqual(memberVerification);
+        var badgeValid = memberVerficationManager.Has(badgeGroup.Value, badgeMember.Value, badgeVerification);
 
         return badgeValid;
     }

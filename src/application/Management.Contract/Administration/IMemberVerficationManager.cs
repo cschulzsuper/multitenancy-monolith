@@ -2,8 +2,7 @@
 
 public interface IMemberVerficationManager
 {
-    void Set(string member, byte[] verfication);
+    bool Has(string group, string member, byte[] verfication);
 
-    byte[] Get(string member);
-
+    void Set(string group, string member, byte[] verfication);
 }

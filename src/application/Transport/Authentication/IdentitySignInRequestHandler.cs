@@ -1,6 +1,8 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Requests;
 using System;
+using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
@@ -19,31 +21,30 @@ internal sealed class IdentitySignInRequestHandler : IIdentitySignInRequestHandl
         _identityVerficationManager = identityVerficationManager;
     }
 
-    public ClaimsIdentity SignIn(string uniqueName, SignInRequest request)
+    public ClaimsIdentity SignIn(string identity, SignInRequest request)
     {
         lock (_signInLock)
         {
-            var identity = _identityManager.Get(uniqueName);
+            var found = _identityManager.GetAll()
+                .Any(x => 
+                    x.UniqueName == identity && 
+                    x.Secret == request.Secret);
 
-            var valid = request.Secret == identity.Secret;
-
-            if (!valid)
+            if (!found)
             {
-                throw new TransportException($"The secret does not match.");
+                throw new TransportException($"Could match identity '{identity}' against secret '{request.Secret}'");
             }
 
-            var identityVerification = Guid
-                .NewGuid()
-                .ToByteArray();
+            var verification = Guid.NewGuid().ToByteArray();
 
-            _identityVerficationManager.Set(identity.UniqueName, identityVerification);
+            _identityVerficationManager.Set(identity, verification);
 
-            var identityVerificationString = Convert.ToBase64String(identityVerification);
+            var verificationValue = Convert.ToBase64String(verification);
 
             var claims = new Claim[]
             {
-                new Claim("Identity", identity.UniqueName),
-                new Claim("Verification", identityVerificationString, ClaimValueTypes.Base64Binary)
+                new Claim("Identity", identity),
+                new Claim("Verification", verificationValue, ClaimValueTypes.Base64Binary)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, "Badge");

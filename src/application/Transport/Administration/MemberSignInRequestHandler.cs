@@ -23,31 +23,35 @@ internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
         _user = user;
     }
 
-    public ClaimsIdentity SignIn(string group, string uniqueName)
+    public ClaimsIdentity SignIn(string group, string member)
     {
         lock (_signInLock)
         {
-            var userIdentity = _user.GetClaim("Identity");
+            var identity = _user.GetClaim("Identity");
 
-            var member = _memberManager.GetAll(group)
-                .Single(x =>
-                    x.UniqueName == uniqueName &&
-                    x.Identity == userIdentity);
+            var found = _memberManager
+                .GetAll(group)
+                .Any(x =>
+                    x.UniqueName == member &&
+                    x.Identity == identity);
 
-            var memberVerfication = Guid
-                .NewGuid()
-                .ToByteArray();
+            if (!found)
+            {
+                throw new TransportException($"Member '{member}' does not exist in group '{group}'");
+            }
 
-            _memberVerficationManager.Set($"{group}.{member.UniqueName}", memberVerfication);
+            var verfication = Guid.NewGuid().ToByteArray();
 
-            var memberVerificationString = Convert.ToBase64String(memberVerfication);
+            _memberVerficationManager.Set(group, member, verfication);
+
+            var verficationnValue = Convert.ToBase64String(verfication);
 
             var claims = new Claim[]
             {
-                new Claim("Identity", userIdentity),
+                new Claim("Identity", identity),
                 new Claim("Group", group),
-                new Claim("Member", uniqueName),
-                new Claim("Verification", memberVerificationString, ClaimValueTypes.Base64Binary)
+                new Claim("Member", member),
+                new Claim("Verification", verficationnValue, ClaimValueTypes.Base64Binary)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, "Badge");

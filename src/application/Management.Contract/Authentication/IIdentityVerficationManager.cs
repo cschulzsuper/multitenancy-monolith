@@ -2,7 +2,7 @@
 
 public interface IIdentityVerficationManager
 {
-    void Set(string identity, byte[] verfication);
+    bool Has(string identity, byte[] verfication);
 
-    byte[] Get(string identity);
+    void Set(string identity, byte[] verfication);
 }

@@ -17,11 +17,16 @@ internal static class MemberSignInEndpoints
 
         groupsEndpoints.MapPost("/register", Register);
 
-        var memberEndpoints = groupsEndpoints
+        var groupMemberEndpoints = groupsEndpoints
             .MapGroup("/{group}/members/{member}");
 
-        memberEndpoints.MapPost("/sign-in", SignIn).AddEndpointFilter<BadgeResultEndpointFilter>();
-        memberEndpoints.MapPost("/verify", Verify);
+        groupMemberEndpoints.MapPost("/sign-in", SignIn).AddEndpointFilter<BadgeResultEndpointFilter>();
+
+        var membersMeEndpoints = endpoints
+            .MapGroup("/members/me")
+            .WithTags("Members");
+
+        membersMeEndpoints.MapPost("/verify", Verify);
 
         return endpoints;
     }
@@ -36,7 +41,7 @@ internal static class MemberSignInEndpoints
             => requestHandler.SignIn(group, member);
 
     private static Delegate Verify =>
-        [Authorize(Roles = "Memeber")]
+        [Authorize(Roles = "Member")]
         (IMemberSignInRequestHandler requestHandler)
             => requestHandler.Verify();
 }

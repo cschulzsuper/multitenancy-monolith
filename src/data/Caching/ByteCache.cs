@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Caching;
 
-public record ByteCache : IByteCache
+internal sealed class ByteCache : IByteCache
 {
     private readonly string _prefix;
     private readonly IDistributedCache _distributedCache;
@@ -19,6 +19,17 @@ public record ByteCache : IByteCache
 
         return _distributedCache.Get(cacheKey)
             ?? throw new CachingException($"Could not find cached entry for key '{cacheKey}'");
+    }
+
+    public bool Has(string key, byte[] value)
+    {
+        var cacheKey = $"{_prefix}.{key}";
+
+        var cacheValue = _distributedCache.Get(cacheKey);
+
+        return
+            cacheValue != null &&
+            cacheValue.SequenceEqual(value);
     }
 
     public void Set(string key, byte[] value)

@@ -3,14 +3,14 @@ using System.Net.Http.Json;
 using System.Net;
 using Xunit;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication;
+namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentitySignInEndpoints;
 
-public class IdentitySignInTests : IClassFixture<WebApplicationFactory<Program>>
+public class SignIn : IClassFixture<WebApplicationFactory<Program>>
 {
 
     private readonly WebApplicationFactory<Program> _factory;
 
-    public IdentitySignInTests(WebApplicationFactory<Program> factory)
+    public SignIn(WebApplicationFactory<Program> factory)
     {
         _factory = factory.WithInMemoryData();
     }
@@ -18,12 +18,12 @@ public class IdentitySignInTests : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.AdminSecret)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.GuestSecret)]
-    public async Task SignIn_ShouldSucceed_WhenCredentialAreValid(string unqiueName, string secret)
+    public async Task SignIn_ShouldSucceed_WhenCredentialAreValid(string identity, string secret)
     {
         // Arrange
         var client = _factory.CreateClient();
 
-        var requestUrl = $"/identities/{unqiueName}/sign-in";
+        var requestUrl = $"/identities/{identity}/sign-in";
         var requestBody = new { Secret = secret };
 
         // Act
@@ -36,12 +36,12 @@ public class IdentitySignInTests : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity, "invalid")]
     [InlineData(TestConfiguration.GuestIdentity, "invalid")]
-    public async Task SignIn_ShouldFail_WhenCredentialAreInvalid(string unqiueName, string secret)
+    public async Task SignIn_ShouldFail_WhenCredentialAreInvalid(string identity, string secret)
     {
         // Arrange
         var client = _factory.CreateClient();
 
-        var requestUrl = $"/identities/{unqiueName}/sign-in";
+        var requestUrl = $"/identities/{identity}/sign-in";
         var requestBody = new { Secret = secret };
 
         // Act
