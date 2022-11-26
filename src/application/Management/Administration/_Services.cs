@@ -7,6 +7,7 @@ public static class _Services
     public static IServiceCollection AddAdministrationManagement(this IServiceCollection services)
     {
         services.AddScoped<IMemberManager, MemberManager>();
+        services.AddScoped<IMemberVerficationManager, MemberVerficationManager>();
 
         return services;
     }

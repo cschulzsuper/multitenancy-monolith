@@ -4,16 +4,19 @@ using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
-internal sealed class AuthenticationRequestHandler : IAuthenticationRequestHandler
+internal sealed class IdentitySignInRequestHandler : IIdentitySignInRequestHandler
 {
     private readonly IIdentityManager _identityManager;
+    private readonly IIdentityVerficationManager _identityVerficationManager;
 
     private readonly static object _signInLock = new();
 
-    public AuthenticationRequestHandler(
-        IIdentityManager identityManager)
+    public IdentitySignInRequestHandler(
+        IIdentityManager identityManager,
+        IIdentityVerficationManager identityVerficationManager)
     {
         _identityManager = identityManager;
+        _identityVerficationManager = identityVerficationManager;
     }
 
     public ClaimsIdentity SignIn(string uniqueName, SignInRequest request)
@@ -29,11 +32,13 @@ internal sealed class AuthenticationRequestHandler : IAuthenticationRequestHandl
                 throw new TransportException($"The secret does not match.");
             }
 
-            identity.Verification = Guid
+            var identityVerification = Guid
                 .NewGuid()
                 .ToByteArray();
 
-            var identityVerificationString = Convert.ToBase64String(identity.Verification);
+            _identityVerficationManager.Set(identity.UniqueName, identityVerification);
+
+            var identityVerificationString = Convert.ToBase64String(identityVerification);
 
             var claims = new Claim[]
             {

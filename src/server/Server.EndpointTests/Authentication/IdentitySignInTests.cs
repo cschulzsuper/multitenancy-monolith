@@ -1,24 +1,23 @@
-using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http.Json;
 using System.Net;
 using Xunit;
 
-namespace Server.EndpointTests.Authentication;
+namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication;
 
-public class AuthenticationTests : IClassFixture<WebApplicationFactory<Program>>
+public class IdentitySignInTests : IClassFixture<WebApplicationFactory<Program>>
 {
 
     private readonly WebApplicationFactory<Program> _factory;
 
-    public AuthenticationTests(WebApplicationFactory<Program> factory)
+    public IdentitySignInTests(WebApplicationFactory<Program> factory)
     {
-        _factory = factory;
+        _factory = factory.WithInMemoryData();
     }
 
     [Theory]
-    [InlineData("admin", "default")]
-    [InlineData("guest", "default")]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.AdminSecret)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.GuestSecret)]
     public async Task SignIn_ShouldSucceed_WhenCredentialAreValid(string unqiueName, string secret)
     {
         // Arrange
@@ -35,8 +34,8 @@ public class AuthenticationTests : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData("admin", "invalid")]
-    [InlineData("guest", "invalid")]
+    [InlineData(TestConfiguration.AdminIdentity, "invalid")]
+    [InlineData(TestConfiguration.GuestIdentity, "invalid")]
     public async Task SignIn_ShouldFail_WhenCredentialAreInvalid(string unqiueName, string secret)
     {
         // Arrange

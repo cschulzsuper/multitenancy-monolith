@@ -9,7 +9,7 @@ internal sealed class MemberManager : IMemberManager
 {
     private static IDictionary<string, Member[]>? _members;
 
-    private const string MemberConfigurationKey = "Template:Administration:Members";
+    private const string MemberConfigurationKey = "SeedData:Administration:Members";
 
     public MemberManager(IConfiguration configuration)
     {

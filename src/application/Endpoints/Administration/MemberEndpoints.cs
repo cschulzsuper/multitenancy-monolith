@@ -8,7 +8,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 internal static class MemberEndpoints
 {
-    public static IEndpointRouteBuilder MapAdministrationMemberEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapMemberEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var membersEndpoints = endpoints
             .MapGroup("/members")

@@ -7,6 +7,7 @@ public static class _Services
     public static IServiceCollection AddAuthenticationManagement(this IServiceCollection services)
     {
         services.AddScoped<IIdentityManager, IdentityManager>();
+        services.AddScoped<IIdentityVerficationManager, IdentityVerficationManager>();
 
         return services;
     }

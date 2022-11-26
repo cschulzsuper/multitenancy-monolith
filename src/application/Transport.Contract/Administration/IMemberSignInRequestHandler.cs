@@ -2,8 +2,8 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
-public interface IAuthorizationRequestHandler
+public interface IMemberSignInRequestHandler
 {
-    ClaimsIdentity TakeUp(ClaimsPrincipal user, string group, string uniqueName);
+    ClaimsIdentity SignIn(string group, string uniqueName);
     void Verify();
 }

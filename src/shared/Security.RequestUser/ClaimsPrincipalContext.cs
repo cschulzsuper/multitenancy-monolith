@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 
 public class ClaimsPrincipalContext
 {

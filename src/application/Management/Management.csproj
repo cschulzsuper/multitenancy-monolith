@@ -15,6 +15,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\data\Caching.Contract\Caching.Contract.csproj" />
+		<ProjectReference Include="..\..\shared\Security.Claims\Security.Claims.csproj" />
 		<ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />
 	</ItemGroup>
 

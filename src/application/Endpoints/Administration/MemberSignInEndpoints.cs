@@ -4,13 +4,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
-using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
-internal static class AuthorizationEndpoints
+internal static class MemberSignInEndpoints
 {
-    public static IEndpointRouteBuilder MapAdministrationAuthorizationEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapMemberSignInEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var groupsEndpoints = endpoints
             .MapGroup("/groups")
@@ -19,9 +18,9 @@ internal static class AuthorizationEndpoints
         groupsEndpoints.MapPost("/register", Register);
 
         var memberEndpoints = groupsEndpoints
-            .MapGroup("/{group}/members/{uniqueName}");
+            .MapGroup("/{group}/members/{member}");
 
-        memberEndpoints.MapPost("/take-up", TakeUp).AddEndpointFilter<BadgeResultEndpointFilter>();
+        memberEndpoints.MapPost("/sign-in", SignIn).AddEndpointFilter<BadgeResultEndpointFilter>();
         memberEndpoints.MapPost("/verify", Verify);
 
         return endpoints;
@@ -31,13 +30,13 @@ internal static class AuthorizationEndpoints
         [Authorize]
         () => Results.StatusCode(StatusCodes.Status501NotImplemented);
 
-    private static Delegate TakeUp =>
+    private static Delegate SignIn =>
         [Authorize]
-        (IAuthorizationRequestHandler requestHandler, ClaimsPrincipal user, string group, string member)
-            => requestHandler.TakeUp(user, group, member);
+        (IMemberSignInRequestHandler requestHandler, string group, string member)
+            => requestHandler.SignIn(group, member);
 
     private static Delegate Verify =>
         [Authorize(Roles = "Memeber")]
-        (IAuthorizationRequestHandler requestHandler)
+        (IMemberSignInRequestHandler requestHandler)
             => requestHandler.Verify();
 }

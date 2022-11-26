@@ -29,11 +29,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{536F15
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security", "src\shared\Security\Security.csproj", "{188F2939-5088-4C97-8397-DF1EB539A018}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "src\data\Data\Data.csproj", "{50EF97DA-CB06-4E4E-B596-C265CD5DBB2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "src\data\Data\Data.csproj", "{50EF97DA-CB06-4E4E-B596-C265CD5DBB2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Claims", "src\shared\Security.Claims\Security.Claims.csproj", "{45718219-01C3-4B23-B0AD-628FF54EDD53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security.Claims", "src\shared\Security.Claims\Security.Claims.csproj", "{45718219-01C3-4B23-B0AD-628FF54EDD53}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security.RequestUser", "src\shared\Security.RequestUser\Security.RequestUser.csproj", "{0C74D3D6-BAAE-4A51-BC12-438EF78D314C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching", "src\data\Caching\Caching.csproj", "{F09036B9-FDC1-4010-BF71-BD10DD57794F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.Contract", "src\data\Caching.Contract\Caching.Contract.csproj", "{8478FB31-10FE-4E28-9B23-6ED51307794D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +93,14 @@ Global
 		{0C74D3D6-BAAE-4A51-BC12-438EF78D314C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C74D3D6-BAAE-4A51-BC12-438EF78D314C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C74D3D6-BAAE-4A51-BC12-438EF78D314C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F09036B9-FDC1-4010-BF71-BD10DD57794F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F09036B9-FDC1-4010-BF71-BD10DD57794F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F09036B9-FDC1-4010-BF71-BD10DD57794F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F09036B9-FDC1-4010-BF71-BD10DD57794F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8478FB31-10FE-4E28-9B23-6ED51307794D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8478FB31-10FE-4E28-9B23-6ED51307794D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8478FB31-10FE-4E28-9B23-6ED51307794D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8478FB31-10FE-4E28-9B23-6ED51307794D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +118,8 @@ Global
 		{50EF97DA-CB06-4E4E-B596-C265CD5DBB2F} = {E9436848-A5FC-41BE-B345-609E35C38C00}
 		{45718219-01C3-4B23-B0AD-628FF54EDD53} = {536F15A9-214D-459F-8EC4-8950C78E1BD0}
 		{0C74D3D6-BAAE-4A51-BC12-438EF78D314C} = {536F15A9-214D-459F-8EC4-8950C78E1BD0}
+		{F09036B9-FDC1-4010-BF71-BD10DD57794F} = {E9436848-A5FC-41BE-B345-609E35C38C00}
+		{8478FB31-10FE-4E28-9B23-6ED51307794D} = {E9436848-A5FC-41BE-B345-609E35C38C00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}

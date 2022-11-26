@@ -1,37 +1,46 @@
-﻿using System;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+using System;
 using System.Linq;
 using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
-internal sealed class AuthorizationRequestHandler : IAuthorizationRequestHandler
+internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
 {
     private readonly IMemberManager _memberManager;
+    private readonly IMemberVerficationManager _memberVerficationManager;
+    private readonly ClaimsPrincipal _user;
 
     private readonly static object _signInLock = new();
 
-    public AuthorizationRequestHandler(
-        IMemberManager memberManager)
+    public MemberSignInRequestHandler(
+        IMemberManager memberManager,
+        IMemberVerficationManager memberVerficationManager,
+        ClaimsPrincipal user)
     {
         _memberManager = memberManager;
+        _memberVerficationManager = memberVerficationManager;
+        _user = user;
     }
 
-    public ClaimsIdentity TakeUp(ClaimsPrincipal user, string group, string uniqueName)
+    public ClaimsIdentity SignIn(string group, string uniqueName)
     {
         lock (_signInLock)
         {
-            var userIdentity = user.Claims.Single(x => x.Type == "Identity").Value;
+            var userIdentity = _user.GetClaim("Identity");
 
             var member = _memberManager.GetAll(group)
-                .Single(x => 
+                .Single(x =>
                     x.UniqueName == uniqueName &&
                     x.Identity == userIdentity);
 
-            member.Verification = Guid
+            var memberVerfication = Guid
                 .NewGuid()
                 .ToByteArray();
 
-            var memberVerificationString = Convert.ToBase64String(member.Verification);
+            _memberVerficationManager.Set($"{group}.{member.UniqueName}", memberVerfication);
+
+            var memberVerificationString = Convert.ToBase64String(memberVerfication);
 
             var claims = new Claim[]
             {

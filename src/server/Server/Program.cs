@@ -1,9 +1,11 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration;
 using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Application.Weather;
+using ChristianSchulz.MultitenancyMonolith.Caching;
 using ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,6 +33,8 @@ public sealed class Program
             options.ConfigureAuthorization();
         });
 
+        builder.Services.AddCaching();
+
         builder.Services.AddAdministrationManagement();
         builder.Services.AddAdministrationTransport();
 
@@ -40,6 +44,8 @@ public sealed class Program
         builder.Services.AddWeatherForecastTransport();
 
         var app = builder.Build();
+
+        app.UseHttpsRedirection();
 
         app.UseAuthentication();
         app.UseRequestUser();
@@ -53,8 +59,6 @@ public sealed class Program
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Multitenancy Monolith");
             });
         }
-
-        app.UseHttpsRedirection();
 
         app.MapAdministrationEndpoints();
         app.MapAuthenticationEndpoints();

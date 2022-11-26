@@ -8,9 +8,9 @@ using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
-internal static class AuthenticationEndpoints
+internal static class IdentitySignInEndpoints
 {
-    public static IEndpointRouteBuilder MapAuthenticationAuthenticationEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapIdentitySignInEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var identitiesEndpoints = endpoints
             .MapGroup("/identities")
@@ -38,7 +38,7 @@ internal static class AuthenticationEndpoints
         () => Results.StatusCode(StatusCodes.Status501NotImplemented);
 
     private static Delegate SignIn =>
-        (IAuthenticationRequestHandler requestHandler, string identity, SignInRequest request)
+        (IIdentitySignInRequestHandler requestHandler, string identity, SignInRequest request)
             => requestHandler.SignIn(identity, request);
 
     private static Delegate Reset =>
@@ -55,7 +55,7 @@ internal static class AuthenticationEndpoints
 
     private static Delegate Verify =>
         [Authorize]
-        (IAuthenticationRequestHandler requestHandler)
+        (IIdentitySignInRequestHandler requestHandler)
             => requestHandler.Verify();
 
 

@@ -6,8 +6,8 @@ public static class _Endpoints
 {
     public static IEndpointRouteBuilder MapAdministrationEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapAdministrationAuthorizationEndpoints();
-        endpoints.MapAdministrationMemberEndpoints();
+        endpoints.MapMemberEndpoints();
+        endpoints.MapMemberSignInEndpoints();
 
         return endpoints;
     }

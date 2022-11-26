@@ -8,7 +8,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
 internal static class IdentityEndpoints
 {
-    public static IEndpointRouteBuilder MapAuthenticationIdentityEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapIdentityEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var identitiesEndpoints = endpoints
             .MapGroup("/identities")
@@ -16,7 +16,6 @@ internal static class IdentityEndpoints
 
         identitiesEndpoints.MapGet(string.Empty, GetAll);
         identitiesEndpoints.MapGet("{identity}", Get);
-
 
         return endpoints;
     }

@@ -1,5 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration.Responses;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using System.Collections.Generic;
 using System.Data;
@@ -21,12 +20,13 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         _user = user;
     }
 
-    private string Group => _user.GetGroupOrDefault()
-        ?? throw new TransportException("Could not find 'Group' claim");
+
 
     public MemberResponse Get(string uniqueName)
     {
-        var member = _memberManager.Get(Group, uniqueName);
+        var group = _user.GetClaim("Group");
+
+        var member = _memberManager.Get(group, uniqueName);
 
         var response = new MemberResponse
         {
@@ -39,7 +39,9 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
 
     public IEnumerable<MemberResponse> GetAll()
     {
-        var members = _memberManager.GetAll(Group);
+        var group = _user.GetClaim("Group");
+
+        var members = _memberManager.GetAll(group);
 
         var response = members.Select(member =>
             new MemberResponse

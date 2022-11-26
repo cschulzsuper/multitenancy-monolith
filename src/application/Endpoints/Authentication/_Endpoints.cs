@@ -6,8 +6,8 @@ public static class _Endpoints
 {
     public static IEndpointRouteBuilder MapAuthenticationEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapAuthenticationAuthenticationEndpoints();
-        endpoints.MapAuthenticationIdentityEndpoints();
+        endpoints.MapIdentityEndpoints();
+        endpoints.MapIdentitySignInEndpoints();
 
         return endpoints;
     }

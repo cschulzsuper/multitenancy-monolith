@@ -52,7 +52,7 @@ internal static class _Configuration
 
     private static bool ValidateIdentity(BadgeValidatePrincipalContext context, ICollection<Claim> badgeClaims, byte[] badgeVerification)
     {
-        var identityManager = context.HttpContext.RequestServices.GetRequiredService<IIdentityManager>();
+        var identityVerficationManager = context.HttpContext.RequestServices.GetRequiredService<IIdentityVerficationManager>();
 
         var badgeIdentity = badgeClaims.SingleOrDefault(x => x.Type == "Identity");
         if (badgeIdentity == null)
@@ -60,16 +60,16 @@ internal static class _Configuration
             return false;
         }
 
-        var identity = identityManager.Get(badgeIdentity.Value);
+        var identityVerification = identityVerficationManager.Get(badgeIdentity.Value);
 
-        var badgeValid = badgeVerification.SequenceEqual(identity.Verification);
+        var badgeValid = badgeVerification.SequenceEqual(identityVerification);
 
         return badgeValid;
     }
 
     private static bool ValidateMember(BadgeValidatePrincipalContext context, ICollection<Claim> badgeClaims, byte[] badgeVerification)
     {
-        var memberManager = context.HttpContext.RequestServices.GetRequiredService<IMemberManager>();
+        var memberVerficationManager = context.HttpContext.RequestServices.GetRequiredService<IMemberVerficationManager>();
 
         var badgeGroup = badgeClaims.SingleOrDefault(x => x.Type == "Group");
         if (badgeGroup == null)
@@ -83,16 +83,9 @@ internal static class _Configuration
             return false;
         }
 
-        var member = memberManager
-            .GetAll(badgeGroup.Value)
-            .SingleOrDefault(x => x.UniqueName == badgeMember.Value);
+        var memberVerification = memberVerficationManager.Get($"{badgeGroup.Value}.{badgeMember.Value}");
 
-        if (member == null)
-        {
-            return false;
-        }
-
-        var badgeValid = badgeVerification.SequenceEqual(member.Verification);
+        var badgeValid = badgeVerification.SequenceEqual(memberVerification);
 
         return badgeValid;
     }

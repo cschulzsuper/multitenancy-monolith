@@ -9,7 +9,7 @@ internal sealed class IdentityManager : IIdentityManager
 {
     private static Identity[]? _identities;
 
-    private const string IdentitiesConfigurationKey = "Template:Authentication:Identities";
+    private const string IdentitiesConfigurationKey = "SeedData:Authentication:Identities";
 
     public IdentityManager(IConfiguration configuration)
     {
