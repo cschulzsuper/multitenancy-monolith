@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 

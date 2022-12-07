@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net.Http.Json;
 using System.Net;
 using Xunit;
-using System.Net.Http.Headers;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentitySignInEndpoints;
 

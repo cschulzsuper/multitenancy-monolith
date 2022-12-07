@@ -19,7 +19,8 @@ internal sealed class IdentityRequestHandler : IIdentityRequestHandler
 
         var response = new IdentityResponse
         {
-            UniqueName = member.UniqueName
+            UniqueName = member.UniqueName,
+            MailAddress = member.MailAddress
         };
 
         return response;
@@ -32,7 +33,8 @@ internal sealed class IdentityRequestHandler : IIdentityRequestHandler
         var response = identities.Select(member =>
             new IdentityResponse
             {
-                UniqueName = member.UniqueName
+                UniqueName = member.UniqueName,
+                MailAddress = member.MailAddress
             });
 
         return response;

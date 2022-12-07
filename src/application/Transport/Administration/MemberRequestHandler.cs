@@ -1,5 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration.Responses;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -10,28 +9,20 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 internal sealed class MemberRequestHandler : IMemberRequestHandler
 {
     private readonly IMemberManager _memberManager;
-    private readonly ClaimsPrincipal _user;
 
-    public MemberRequestHandler(
-        IMemberManager memberManager,
-        ClaimsPrincipal user)
+    public MemberRequestHandler(IMemberManager memberManager)
     {
         _memberManager = memberManager;
-        _user = user;
     }
-
-
 
     public MemberResponse Get(string uniqueName)
     {
-        var group = _user.GetClaim("Group");
 
-        var member = _memberManager.Get(group, uniqueName);
+        var member = _memberManager.Get(uniqueName);
 
         var response = new MemberResponse
         {
             UniqueName = member.UniqueName,
-            Identity = member.Identity
         };
 
         return response;
@@ -39,15 +30,12 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
 
     public IEnumerable<MemberResponse> GetAll()
     {
-        var group = _user.GetClaim("Group");
-
-        var members = _memberManager.GetAll(group);
+        var members = _memberManager.GetAll();
 
         var response = members.Select(member =>
             new MemberResponse
             {
                 UniqueName = member.UniqueName,
-                Identity = member.Identity
             });
 
         return response;

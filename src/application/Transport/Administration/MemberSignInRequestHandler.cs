@@ -7,19 +7,19 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
 {
-    private readonly IMemberManager _memberManager;
-    private readonly IMemberVerficationManager _memberVerficationManager;
+    private readonly IMembershipManager _membershipManager;
+    private readonly IMembershipVerficationManager _membershipVerficationManager;
     private readonly ClaimsPrincipal _user;
 
     private readonly static object _signInLock = new();
 
     public MemberSignInRequestHandler(
-        IMemberManager memberManager,
-        IMemberVerficationManager memberVerficationManager,
+        IMembershipManager membershipManager,
+        IMembershipVerficationManager membershipVerficationManager,
         ClaimsPrincipal user)
     {
-        _memberManager = memberManager;
-        _memberVerficationManager = memberVerficationManager;
+        _membershipManager = membershipManager;
+        _membershipVerficationManager = membershipVerficationManager;
         _user = user;
     }
 
@@ -29,10 +29,10 @@ internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
         {
             var identity = _user.GetClaim("Identity");
 
-            var found = _memberManager
+            var found = _membershipManager
                 .GetAll(group)
                 .Any(x =>
-                    x.UniqueName == member &&
+                    x.Member == member &&
                     x.Identity == identity);
 
             if (!found)
@@ -42,7 +42,7 @@ internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
 
             var verfication = Guid.NewGuid().ToByteArray();
 
-            _memberVerficationManager.Set(group, member, verfication);
+            _membershipVerficationManager.Set(group, member, verfication);
 
             var verficationnValue = Convert.ToBase64String(verfication);
 

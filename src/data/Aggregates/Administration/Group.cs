@@ -1,6 +1,6 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
-public class Member
+public class Group
 {
     public required string UniqueName { get; set; }
 }

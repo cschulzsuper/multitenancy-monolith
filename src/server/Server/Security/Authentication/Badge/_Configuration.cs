@@ -67,7 +67,7 @@ internal static class _Configuration
 
     private static bool ValidateMember(BadgeValidatePrincipalContext context, ICollection<Claim> badgeClaims, byte[] badgeVerification)
     {
-        var memberVerficationManager = context.HttpContext.RequestServices.GetRequiredService<IMemberVerficationManager>();
+        var membershipVerficationManager = context.HttpContext.RequestServices.GetRequiredService<IMembershipVerficationManager>();
 
         var badgeGroup = badgeClaims.SingleOrDefault(x => x.Type == "Group");
         if (badgeGroup == null)
@@ -81,7 +81,7 @@ internal static class _Configuration
             return false;
         }
 
-        var badgeValid = memberVerficationManager.Has(badgeGroup.Value, badgeMember.Value, badgeVerification);
+        var badgeValid = membershipVerficationManager.Has(badgeGroup.Value, badgeMember.Value, badgeVerification);
 
         return badgeValid;
     }

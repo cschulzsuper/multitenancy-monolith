@@ -2,13 +2,13 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
-internal sealed class MemberVerficationManager : IMemberVerficationManager
+internal sealed class MembershipVerficationManager : IMembershipVerficationManager
 {
     private readonly IByteCache _byteCache;
 
-    public MemberVerficationManager(IByteCacheFactory byteCacheFactory) 
+    public MembershipVerficationManager(IByteCacheFactory byteCacheFactory) 
     {
-        _byteCache = byteCacheFactory.Create($"member-verfication");
+        _byteCache = byteCacheFactory.Create($"membership-verfication");
     }
 
     public bool Has(string group, string member, byte[] verfication)

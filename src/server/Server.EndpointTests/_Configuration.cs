@@ -14,8 +14,10 @@ namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests;
 internal static class TestConfiguration
 {
     public const string AdminIdentity = "admin";
+    public const string AdminMailAddress = "default@localhost";
     public const string AdminSecret = "default";
     public const string GuestIdentity = "guest";
+    public const string GuestMailAddress = "default@localhost";
     public const string GuestSecret = "default";
 
     public const string DefaultGroup = "default";
@@ -27,13 +29,19 @@ internal static class TestConfiguration
     private static readonly IDictionary<string,string> _configuration = new Dictionary<string, string>()
     {
         { "SeedData:Authentication:Identities:0:UniqueName", AdminIdentity },
+        { "SeedData:Authentication:Identities:0:MailAddress", AdminIdentity },
         { "SeedData:Authentication:Identities:0:Secret", AdminSecret },
         { "SeedData:Authentication:Identities:1:UniqueName", GuestIdentity },
+        { "SeedData:Authentication:Identities:1:MailAddress", GuestIdentity },
         { "SeedData:Authentication:Identities:1:Secret", GuestSecret },
+        { $"SeedData:Administration:Memberships:0:Group", DefaultGroup },
+        { $"SeedData:Administration:Memberships:0:Member", DefaultGroupAdmin },
+        { $"SeedData:Administration:Memberships:0:Identity", DefaultGroupAdminIdentity },
+        { $"SeedData:Administration:Memberships:1:Group", DefaultGroup },
+        { $"SeedData:Administration:Memberships:1:Member", DefaultGroupGuest },
+        { $"SeedData:Administration:Memberships:1:Identity", DefaultGroupGuestIdentity },
         { $"SeedData:Administration:Members:{DefaultGroup}:0:UniqueName", DefaultGroupAdmin },
-        { $"SeedData:Administration:Members:{DefaultGroup}:0:Identity", DefaultGroupAdminIdentity },
         { $"SeedData:Administration:Members:{DefaultGroup}:1:UniqueName", DefaultGroupGuest },
-        { $"SeedData:Administration:Members:{DefaultGroup}:1:Identity", DefaultGroupGuestIdentity }
     };
 
     public static WebApplicationFactory<Program> WithInMemoryData(this WebApplicationFactory<Program> factory)
@@ -103,7 +111,7 @@ internal static class TestConfiguration
         using var scope = factory.Services.CreateScope();
 
         scope.ServiceProvider
-            .GetRequiredService<IMemberVerficationManager>()
+            .GetRequiredService<IMembershipVerficationManager>()
             .Set(group, member, verfication);
 
         return Convert.ToBase64String(verfication);

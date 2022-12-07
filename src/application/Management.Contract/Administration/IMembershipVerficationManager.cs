@@ -1,6 +1,6 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
-public interface IMemberVerficationManager
+public interface IMembershipVerficationManager
 {
     bool Has(string group, string member, byte[] verfication);
 

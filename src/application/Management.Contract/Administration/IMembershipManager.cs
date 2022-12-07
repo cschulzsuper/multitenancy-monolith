@@ -2,9 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
-public interface IMemberManager
+public interface IMembershipManager
 {
-    Member Get(string uniqueName);
-
-    IEnumerable<Member> GetAll();
+    IEnumerable<Membership> GetAll(string group);
 }
