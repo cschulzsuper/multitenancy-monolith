@@ -1,27 +1,20 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using ChristianSchulz.MultitenancyMonolith.Data;
 using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
 internal sealed class IdentityManager : IIdentityManager
 {
-    private static Identity[]? _identities;
+    private readonly IRepository<Identity> _repository;
 
-    private const string IdentitiesConfigurationKey = "SeedData:Authentication:Identities";
-
-    public IdentityManager(IConfiguration configuration)
+    public IdentityManager(IRepository<Identity> repository)
     {
-        _identities ??= configuration.GetRequiredSection(IdentitiesConfigurationKey).Get<Identity[]>()
-            ?? throw new ManagementException($"Could not get `{IdentitiesConfigurationKey}` configuration");
+        _repository = repository;
     }
 
     public Identity Get(string uniqueName)
-        => _identities?.Single(x => x.UniqueName == uniqueName)
-            ?? throw new UnreachableException($"The `{nameof(_identities)}` field should never be null");
+        => _repository.Get(uniqueName);
 
-    public IEnumerable<Identity> GetAll()
-        => _identities?.AsReadOnly()
-            ?? throw new UnreachableException($"The `{nameof(_identities)}` field should never be null");
+    public IQueryable<Identity> GetAll()
+        => _repository.GetQueryable();
 }

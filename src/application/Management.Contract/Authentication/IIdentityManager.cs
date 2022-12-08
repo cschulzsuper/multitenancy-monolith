@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
@@ -6,5 +6,5 @@ public interface IIdentityManager
 {
     Identity Get(string uniqueName);
 
-    IEnumerable<Identity> GetAll();
+    IQueryable<Identity> GetAll();
 }

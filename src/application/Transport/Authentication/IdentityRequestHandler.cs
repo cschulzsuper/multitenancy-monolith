@@ -1,5 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Responses;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
@@ -26,7 +25,7 @@ internal sealed class IdentityRequestHandler : IIdentityRequestHandler
         return response;
     }
 
-    public IEnumerable<IdentityResponse> GetAll()
+    public IQueryable<IdentityResponse> GetAll()
     {
         var identities = _identityManager.GetAll();
 

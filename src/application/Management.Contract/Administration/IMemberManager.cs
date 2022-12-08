@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
@@ -6,5 +6,5 @@ public interface IMemberManager
 {
     Member Get(string uniqueName);
 
-    IEnumerable<Member> GetAll();
+    IQueryable<Member> GetAll();
 }

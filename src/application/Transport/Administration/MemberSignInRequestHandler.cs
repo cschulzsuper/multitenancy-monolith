@@ -30,8 +30,9 @@ internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
             var identity = _user.GetClaim("Identity");
 
             var found = _membershipManager
-                .GetAll(group)
+                .GetAll()
                 .Any(x =>
+                    x.Group == group &&
                     x.Member == member &&
                     x.Identity == identity);
 

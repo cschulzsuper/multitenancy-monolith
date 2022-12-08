@@ -2,6 +2,7 @@
 using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Application.Weather;
 using ChristianSchulz.MultitenancyMonolith.Caching;
+using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
@@ -34,6 +35,7 @@ public sealed class Program
         });
 
         builder.Services.AddCaching();
+        builder.Services.AddData();
 
         builder.Services.AddAdministrationManagement();
         builder.Services.AddAdministrationTransport();

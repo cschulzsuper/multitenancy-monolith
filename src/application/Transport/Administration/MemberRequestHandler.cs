@@ -1,8 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration.Responses;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
@@ -28,7 +26,7 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         return response;
     }
 
-    public IEnumerable<MemberResponse> GetAll()
+    public IQueryable<MemberResponse> GetAll()
     {
         var members = _memberManager.GetAll();
 

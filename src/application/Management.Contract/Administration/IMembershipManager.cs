@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 public interface IMembershipManager
 {
-    IEnumerable<Membership> GetAll(string group);
+    IQueryable<Membership> GetAll();
 }
