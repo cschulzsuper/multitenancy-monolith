@@ -2,9 +2,11 @@
 
 public interface IRepository<TEntity>
 {
-    TEntity Get(object id);
+    TEntity Get(object snowflake);
 
-    TEntity? GetOrDefault(object id);
+    TEntity? GetOrDefault(object snowflake);
 
     IQueryable<TEntity> GetQueryable();
+
+    void InsertMany(ICollection<TEntity> entities);
 }

@@ -47,6 +47,8 @@ public sealed class Program
 
         var app = builder.Build();
 
+        app.Services.ConfigureData();
+
         app.UseHttpsRedirection();
 
         if (app.Environment.IsDevelopment())
