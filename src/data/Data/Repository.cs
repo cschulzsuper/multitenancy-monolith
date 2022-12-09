@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace ChristianSchulz.MultitenancyMonolith.Data;
+﻿namespace ChristianSchulz.MultitenancyMonolith.Data;
 
 internal sealed class Repository<TEntity> : IRepository<TEntity>
 {

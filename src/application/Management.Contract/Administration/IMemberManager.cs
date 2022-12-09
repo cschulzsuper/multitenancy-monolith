@@ -4,6 +4,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 public interface IMemberManager
 {
+    Member Get(long snowflake);
+
     Member Get(string uniqueName);
 
     IQueryable<Member> GetAll();

@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.MemberSignIn;
 
-public class SignIn : IClassFixture<WebApplicationFactory<Program>>
+public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
 {
 
     private readonly WebApplicationFactory<Program> _factory;
@@ -15,8 +15,10 @@ public class SignIn : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.DefaultGroupAdminIdentity, TestConfiguration.DefaultGroup, TestConfiguration.DefaultGroupAdmin)]
-    [InlineData(TestConfiguration.DefaultGroupGuestIdentity, TestConfiguration.DefaultGroup, TestConfiguration.DefaultGroupGuest)]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
     public async Task SignIn_ShouldSucceed_WhenMemberIsValid(string identity, string group, string member)
     {
         // Arrange
@@ -33,8 +35,10 @@ public class SignIn : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.DefaultGroupAdminIdentity, TestConfiguration.DefaultGroup, "invalid")]
-    [InlineData(TestConfiguration.DefaultGroupGuestIdentity, TestConfiguration.DefaultGroup, "invalid")]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, "invalid")]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, "invalid")]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, "invalid")]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, "invalid")]
     public async Task SignIn_ShouldFail_WhenMemberDoesNotExist(string identity, string group, string member)
     {
         // Arrange
@@ -51,8 +55,10 @@ public class SignIn : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.DefaultGroupAdminIdentity, TestConfiguration.DefaultGroup, TestConfiguration.DefaultGroupGuest)]
-    [InlineData(TestConfiguration.DefaultGroupGuestIdentity, TestConfiguration.DefaultGroup, TestConfiguration.DefaultGroupAdmin)]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
     public async Task SignIn_ShouldFail_WhenIdentityIsNotAssignedToMember(string identity, string group, string member)
     {
         // Arrange
@@ -69,8 +75,10 @@ public class SignIn : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.DefaultGroupAdminIdentity, "invalid", TestConfiguration.DefaultGroupGuest)]
-    [InlineData(TestConfiguration.DefaultGroupGuestIdentity, "invalid", TestConfiguration.DefaultGroupAdmin)]
+    [InlineData(TestConfiguration.AdminIdentity, "invalid", TestConfiguration.DefaultGroup1Guest)]
+    [InlineData(TestConfiguration.GuestIdentity, "invalid", TestConfiguration.DefaultGroup1Admin)]
+    [InlineData(TestConfiguration.AdminIdentity, "invalid", TestConfiguration.DefaultGroup2Guest)]
+    [InlineData(TestConfiguration.GuestIdentity, "invalid", TestConfiguration.DefaultGroup2Admin)]
     public async Task SignIn_ShouldFail_WhenGroupDoesNotExist(string identity, string group, string member)
     {
         // Arrange

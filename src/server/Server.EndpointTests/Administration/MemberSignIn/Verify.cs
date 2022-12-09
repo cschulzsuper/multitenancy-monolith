@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.MemberSignIn;
 
-public class IdentitySignInTests : IClassFixture<WebApplicationFactory<Program>>
+public sealed class IdentitySignInTests : IClassFixture<WebApplicationFactory<Program>>
 {
 
     private readonly WebApplicationFactory<Program> _factory;
@@ -15,8 +15,10 @@ public class IdentitySignInTests : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.DefaultGroupAdminIdentity, TestConfiguration.DefaultGroup, TestConfiguration.DefaultGroupAdmin)]
-    [InlineData(TestConfiguration.DefaultGroupGuestIdentity, TestConfiguration.DefaultGroup, TestConfiguration.DefaultGroupGuest)]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
     public async Task Verfiy_ShouldSucceed_WhenAuthorizationIsValid(string identity, string group, string member)
     {
         // Arrange
@@ -33,8 +35,10 @@ public class IdentitySignInTests : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.DefaultGroupAdminIdentity, TestConfiguration.DefaultGroup, TestConfiguration.DefaultGroupAdmin)]
-    [InlineData(TestConfiguration.DefaultGroupGuestIdentity, TestConfiguration.DefaultGroup, TestConfiguration.DefaultGroupGuest)]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
     public async Task Verfiy_ShouldFail_WhenAuthorizationIsInvalid(string identity, string group, string member)
     {
         // Arrange

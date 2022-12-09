@@ -20,11 +20,13 @@ internal static class TestConfiguration
     public const string GuestMailAddress = "default@localhost";
     public const string GuestSecret = "default";
 
-    public const string DefaultGroup = "default";
-    public const string DefaultGroupAdmin = "default-admin";
-    public const string DefaultGroupAdminIdentity = AdminIdentity;
-    public const string DefaultGroupGuest = "default-guest";
-    public const string DefaultGroupGuestIdentity = GuestIdentity;
+    public const string DefaultGroup1 = "default-1";
+    public const string DefaultGroup1Admin = "default-1-admin";
+    public const string DefaultGroup1Guest = "default-1-guest";
+
+    public const string DefaultGroup2 = "default-2";
+    public const string DefaultGroup2Admin = "default-2-admin";
+    public const string DefaultGroup2Guest = "default-2-guest";
 
     private static readonly IDictionary<string,string> _configuration = new Dictionary<string, string>()
     {
@@ -34,14 +36,22 @@ internal static class TestConfiguration
         { "SeedData:Authentication:Identities:1:UniqueName", GuestIdentity },
         { "SeedData:Authentication:Identities:1:MailAddress", GuestIdentity },
         { "SeedData:Authentication:Identities:1:Secret", GuestSecret },
-        { $"SeedData:Administration:Memberships:0:Group", DefaultGroup },
-        { $"SeedData:Administration:Memberships:0:Member", DefaultGroupAdmin },
-        { $"SeedData:Administration:Memberships:0:Identity", DefaultGroupAdminIdentity },
-        { $"SeedData:Administration:Memberships:1:Group", DefaultGroup },
-        { $"SeedData:Administration:Memberships:1:Member", DefaultGroupGuest },
-        { $"SeedData:Administration:Memberships:1:Identity", DefaultGroupGuestIdentity },
-        { $"SeedData:Administration:Members:{DefaultGroup}:0:UniqueName", DefaultGroupAdmin },
-        { $"SeedData:Administration:Members:{DefaultGroup}:1:UniqueName", DefaultGroupGuest },
+        { $"SeedData:Administration:Memberships:0:Group", DefaultGroup1 },
+        { $"SeedData:Administration:Memberships:0:Member", DefaultGroup1Admin },
+        { $"SeedData:Administration:Memberships:0:Identity", AdminIdentity },
+        { $"SeedData:Administration:Memberships:1:Group", DefaultGroup1 },
+        { $"SeedData:Administration:Memberships:1:Member", DefaultGroup1Guest },
+        { $"SeedData:Administration:Memberships:1:Identity", GuestIdentity },
+        { $"SeedData:Administration:Memberships:2:Group", DefaultGroup2 },
+        { $"SeedData:Administration:Memberships:2:Member", DefaultGroup2Admin },
+        { $"SeedData:Administration:Memberships:2:Identity", AdminIdentity },
+        { $"SeedData:Administration:Memberships:3:Group", DefaultGroup2 },
+        { $"SeedData:Administration:Memberships:3:Member", DefaultGroup2Guest },
+        { $"SeedData:Administration:Memberships:3:Identity", GuestIdentity },
+        { $"SeedData:Administration:Members:{DefaultGroup1}:0:UniqueName", DefaultGroup1Admin },
+        { $"SeedData:Administration:Members:{DefaultGroup1}:1:UniqueName", DefaultGroup1Guest },
+        { $"SeedData:Administration:Members:{DefaultGroup2}:0:UniqueName", DefaultGroup2Admin },
+        { $"SeedData:Administration:Members:{DefaultGroup2}:1:UniqueName", DefaultGroup2Guest },
     };
 
     public static WebApplicationFactory<Program> WithInMemoryData(this WebApplicationFactory<Program> factory)

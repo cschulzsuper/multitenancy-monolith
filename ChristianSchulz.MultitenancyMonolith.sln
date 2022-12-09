@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching", "src\data\Caching
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.Contract", "src\data\Caching.Contract\Caching.Contract.csproj", "{8478FB31-10FE-4E28-9B23-6ED51307794D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Contract", "src\data\Data.Contract\Data.Contract.csproj", "{EADC41AC-9854-4EC6-B6AD-F7E8B22F087B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Contract", "src\data\Data.Contract\Data.Contract.csproj", "{EADC41AC-9854-4EC6-B6AD-F7E8B22F087B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

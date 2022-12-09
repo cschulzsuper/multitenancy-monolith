@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentitySignIn;
 
-public class SignIn : IClassFixture<WebApplicationFactory<Program>>
+public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
 {
 
     private readonly WebApplicationFactory<Program> _factory;

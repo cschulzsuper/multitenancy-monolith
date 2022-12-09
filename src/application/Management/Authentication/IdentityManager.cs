@@ -12,8 +12,11 @@ internal sealed class IdentityManager : IIdentityManager
         _repository = repository;
     }
 
+    public Identity Get(long snowflake)
+        => _repository.Get(snowflake);
+
     public Identity Get(string uniqueName)
-        => _repository.Get(uniqueName);
+        => _repository.GetQueryable().Single(x => x.UniqueName == uniqueName);
 
     public IQueryable<Identity> GetAll()
         => _repository.GetQueryable();

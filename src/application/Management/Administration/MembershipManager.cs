@@ -12,6 +12,9 @@ internal sealed class MembershipManager : IMembershipManager
         _repository = repository;
     }
 
+    public Membership Get(long snowflake)
+        => _repository.Get(snowflake);
+
     public IQueryable<Membership> GetAll()
         => _repository.GetQueryable();
 }

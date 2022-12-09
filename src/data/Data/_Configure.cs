@@ -13,14 +13,15 @@ public static class _Configure
     private const string MembershipsConfigurationKey
         = "SeedData:Administration:Memberships";
 
-    private const string MembersConfigurationKey 
+    private const string MembersConfigurationKey
         = "SeedData:Administration:Members";
 
     public static IServiceProvider ConfigureData(this IServiceProvider services)
     {
         services.ConfigureIdentities();
-        services.ConfigureMemberships();
+        services.ConfigureGroups();
         services.ConfigureMembers();
+        services.ConfigureMemberships();
 
         return services;
     }
@@ -43,20 +44,21 @@ public static class _Configure
         return services;
     }
 
-    public static IServiceProvider ConfigureMemberships(this IServiceProvider services)
+    public static IServiceProvider ConfigureGroups(this IServiceProvider services)
     {
-        var memberships = services
-            .GetRequiredService<IConfiguration>()
-            .GetRequiredSection(MembershipsConfigurationKey)
-            .Get<Membership[]>()
+        var configuration = services.GetRequiredService<IConfiguration>();
 
-            ?? throw new RepositoryException($"Could not get `{MembershipsConfigurationKey}` configuration");
+        var groupSections = configuration.GetRequiredSection(MembersConfigurationKey).GetChildren();
+
+        var groups = groupSections
+            .Select(group => new Group { UniqueName = group.Key })
+            .ToArray();
 
         using var scope = services.CreateScope();
 
         scope.ServiceProvider
-            .GetRequiredService<IRepository<Membership>>()
-            .InsertMany(memberships);
+            .GetRequiredService<IRepository<Group>>()
+            .InsertMany(groups);
 
         return services;
     }
@@ -85,6 +87,71 @@ public static class _Configure
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
                 .InsertMany(members);
+        }
+
+        return services;
+    }
+
+    public static IServiceProvider ConfigureMemberships(this IServiceProvider services)
+    {
+        var memberships = services
+            .GetRequiredService<IConfiguration>()
+            .GetRequiredSection(MembershipsConfigurationKey)
+            .Get<Membership[]>()
+
+            ?? throw new RepositoryException($"Could not get `{MembershipsConfigurationKey}` configuration");
+
+        Group[] groups;
+        Identity[] identities;
+
+        using (var scope = services.CreateScope())
+        {
+            groups = scope.ServiceProvider
+                .GetRequiredService<IRepository<Group>>()
+                .GetQueryable()
+                .ToArray();
+
+            identities = scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .GetQueryable()
+                .ToArray();
+        }
+
+        foreach (var group in groups)
+        {
+            using var scope = services.CreateScope();
+
+            scope.ServiceProvider
+                .GetRequiredService<MultitenancyContext>()
+                .MultitenancyDiscriminator = group.UniqueName;
+
+            var members = scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .GetQueryable()
+                .ToArray();
+
+            var membershipsForGroup = memberships
+                .Where(membership => membership.Group == group.UniqueName)
+                .ToArray();
+
+            foreach (var membership in membershipsForGroup)
+            {
+                membership.IdentitySnowflake = identities
+                    .Single(identity => identity.UniqueName == membership.Identity)
+                    .Snowflake;
+
+                membership.GroupSnowflake = groups
+                    .Single(group => group.UniqueName == membership.Group)
+                    .Snowflake;
+
+                membership.MemberSnowflake = members
+                    .Single(member => member.UniqueName == membership.Member)
+                    .Snowflake;
+            }
+
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Membership>>()
+                .InsertMany(membershipsForGroup);
         }
 
         return services;
