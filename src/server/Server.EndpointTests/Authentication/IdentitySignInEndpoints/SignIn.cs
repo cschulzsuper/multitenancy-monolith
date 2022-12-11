@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using System.Net;
 using Xunit;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentitySignIn;
+namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentitySignInEndpoints;
 
 public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
 {

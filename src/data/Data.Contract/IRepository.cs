@@ -7,6 +7,8 @@ public interface IRepository<TEntity>
     TEntity? GetOrDefault(object snowflake);
 
     IQueryable<TEntity> GetQueryable();
-
+    
+    void Insert(TEntity entity);
+    
     void InsertMany(ICollection<TEntity> entities);
 }

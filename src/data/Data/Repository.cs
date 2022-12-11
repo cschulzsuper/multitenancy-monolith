@@ -30,13 +30,17 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
     public IQueryable<TEntity> GetQueryable()
         => _context.Data.Values.AsQueryable();
 
+    public void Insert(TEntity entity)
+    {
+        var snowflake = _context.SnowflakeFactory(entity);
+        _context.Data.Add(snowflake, entity);
+    }
+
     public void InsertMany(ICollection<TEntity> entities)
     {
         foreach(var entity in entities)
         {
-            var snowflake = _context.SnowflakeFactory(entity);
-
-            _context.Data.Add(snowflake, entity);
+            Insert(entity);
         }
     }
 }

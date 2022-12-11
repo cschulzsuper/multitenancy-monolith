@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration;
-using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
+using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,7 +26,7 @@ public static class _Configure
         return services;
     }
 
-    public static IServiceProvider ConfigureIdentities(this IServiceProvider services) 
+    public static IServiceProvider ConfigureIdentities(this IServiceProvider services)
     {
         var identities = services
             .GetRequiredService<IConfiguration>()
@@ -74,15 +74,11 @@ public static class _Configure
                 group => group.Key,
                 group => group.Get<Member[]>() ?? throw new RepositoryException($"Could not get `{MembersConfigurationKey}` configuration for group `{group.Key}`"));
 
-        foreach(var group in groupedMembers.Keys)
+        foreach (var group in groupedMembers.Keys)
         {
             var members = groupedMembers[group];
 
-            using var scope = services.CreateScope();
-
-            scope.ServiceProvider
-                .GetRequiredService<MultitenancyContext>()
-                .MultitenancyDiscriminator = group;
+            using var scope = services.CreateMultitenancyScope(group);
 
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -119,11 +115,7 @@ public static class _Configure
 
         foreach (var group in groups)
         {
-            using var scope = services.CreateScope();
-
-            scope.ServiceProvider
-                .GetRequiredService<MultitenancyContext>()
-                .MultitenancyDiscriminator = group.UniqueName;
+            using var scope = services.CreateMultitenancyScope(group.UniqueName);
 
             var members = scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -156,4 +148,5 @@ public static class _Configure
 
         return services;
     }
+
 }

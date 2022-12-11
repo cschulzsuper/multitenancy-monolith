@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using Xunit;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentitySignIn;
+namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentitySignInEndpoints;
 
 public sealed class IdentitySignInTests : IClassFixture<WebApplicationFactory<Program>>
 {

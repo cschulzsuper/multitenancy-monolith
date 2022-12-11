@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration;
-using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
+using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data;

@@ -1,4 +1,6 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration.Responses;
+﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
+using ChristianSchulz.MultitenancyMonolith.Application.Administration.Requests;
+using ChristianSchulz.MultitenancyMonolith.Application.Administration.Responses;
 using System.Data;
 using System.Linq;
 
@@ -15,7 +17,6 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
 
     public MemberResponse Get(string uniqueName)
     {
-
         var member = _memberManager.Get(uniqueName);
 
         var response = new MemberResponse
@@ -35,6 +36,23 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
             {
                 UniqueName = member.UniqueName,
             });
+
+        return response;
+    }
+
+    public MemberResponse Insert(MemberRequest request)
+    {
+        var member = new Member
+        {
+            UniqueName = request.UniqueName
+        };
+
+        _memberManager.Insert(member);
+
+        var response = new MemberResponse
+        {
+            UniqueName = member.UniqueName,
+        };
 
         return response;
     }

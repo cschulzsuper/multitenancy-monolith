@@ -1,4 +1,4 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+﻿namespace ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
 
 public class Identity
 {

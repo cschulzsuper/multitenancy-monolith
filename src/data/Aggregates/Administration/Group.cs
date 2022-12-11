@@ -1,4 +1,4 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
+﻿namespace ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
 
 public class Group
 {

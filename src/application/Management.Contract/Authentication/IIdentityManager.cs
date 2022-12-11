@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
+using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 

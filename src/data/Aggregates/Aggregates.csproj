@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Application</RootNamespace>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Aggregates</RootNamespace>
 	</PropertyGroup>
 
 </Project>

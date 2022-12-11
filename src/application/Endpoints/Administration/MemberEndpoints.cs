@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -16,6 +17,7 @@ internal static class MemberEndpoints
 
         membersEndpoints.MapGet(string.Empty, GetAll);
         membersEndpoints.MapGet("{member}", Get);
+        membersEndpoints.MapPost(string.Empty, Post);
 
         return endpoints;
     }
@@ -29,4 +31,9 @@ internal static class MemberEndpoints
         [Authorize(Roles = "Member")]
         (IMemberRequestHandler requestHandler, string member)
             => requestHandler.Get(member);
+
+    private static Delegate Post =>
+        [Authorize(Roles = "Member")]
+        (IMemberRequestHandler requestHandler, MemberRequest request)
+            => requestHandler.Insert(request);
 }
