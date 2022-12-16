@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.Contract", "src\dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Contract", "src\data\Data.Contract\Data.Contract.csproj", "{EADC41AC-9854-4EC6-B6AD-F7E8B22F087B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Validation", "src\shared\Validation\Validation.csproj", "{AFD148A8-8894-4B0F-987B-21ABB51D7D5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,10 @@ Global
 		{EADC41AC-9854-4EC6-B6AD-F7E8B22F087B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EADC41AC-9854-4EC6-B6AD-F7E8B22F087B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EADC41AC-9854-4EC6-B6AD-F7E8B22F087B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFD148A8-8894-4B0F-987B-21ABB51D7D5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFD148A8-8894-4B0F-987B-21ABB51D7D5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFD148A8-8894-4B0F-987B-21ABB51D7D5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFD148A8-8894-4B0F-987B-21ABB51D7D5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +133,7 @@ Global
 		{F09036B9-FDC1-4010-BF71-BD10DD57794F} = {E9436848-A5FC-41BE-B345-609E35C38C00}
 		{8478FB31-10FE-4E28-9B23-6ED51307794D} = {E9436848-A5FC-41BE-B345-609E35C38C00}
 		{EADC41AC-9854-4EC6-B6AD-F7E8B22F087B} = {E9436848-A5FC-41BE-B345-609E35C38C00}
+		{AFD148A8-8894-4B0F-987B-21ABB51D7D5F} = {536F15A9-214D-459F-8EC4-8950C78E1BD0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}

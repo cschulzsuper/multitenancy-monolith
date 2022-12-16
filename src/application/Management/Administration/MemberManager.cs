@@ -14,10 +14,24 @@ internal sealed class MemberManager : IMemberManager
     }
 
     public Member Get(long snowflake)
-        => _repository.Get(snowflake);
+    {
+        MemberValidator.EnsureSnowflake(snowflake);
+
+        var member = _repository.Get(snowflake);
+
+        return member;
+    }
 
     public Member Get(string uniqueName)
-        => _repository.GetQueryable().Single(x => x.UniqueName == uniqueName);
+    {
+        MemberValidator.EnsureUniqueName(uniqueName);
+
+        var memeber = _repository
+            .GetQueryable()
+            .Single(x => x.UniqueName == uniqueName);
+
+        return memeber;
+    }
 
     public IQueryable<Member> GetAll()
         => _repository.GetQueryable();
