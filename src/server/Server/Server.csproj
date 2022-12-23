@@ -18,7 +18,7 @@
 	  <ProjectReference Include="..\..\application\Management\Management.csproj" />
 	  <ProjectReference Include="..\..\application\Transport\Transport.csproj" />
 	  <ProjectReference Include="..\..\data\Caching\Caching.csproj" />
-	  <ProjectReference Include="..\..\data\Data\Data.csproj" />
+	  <ProjectReference Include="..\..\data\Data.StaticDictionary\Data.StaticDictionary.csproj" />
 	  <ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
 	</ItemGroup>
 

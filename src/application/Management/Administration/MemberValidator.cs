@@ -6,22 +6,22 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 internal static class MemberValidator
 {
-    private readonly static Validator<Member> _validator;
+    private readonly static Validator<Member> _insertValidator;
 
     static MemberValidator()
     {
-        _validator = new Validator<Member>();
-        _validator.AddRules(x => x.Snowflake, ZeroValueValidator<long>.CreateRules("snowflake"));
-        _validator.AddRules(x => x.UniqueName, UniqueNameValidator.CreateRules());
+        _insertValidator = new Validator<Member>();
+        _insertValidator.AddRules(x => x.Snowflake, ZeroValueValidator<long>.CreateRules("snowflake"));
+        _insertValidator.AddRules(x => x.UniqueName, UniqueNameValidator.CreateRules());
     }
 
-    internal static void Ensure(Member member)
-        => _validator.Ensure(member);
+    public static void EnsureInsertable(Member member)
+        => _insertValidator.Ensure(member);
 
-    internal static void EnsureSnowflake(long snowflake)
+    public static void EnsureSnowflake(long snowflake)
         => SnowflakeValidator.Ensure(snowflake);
 
-    internal static void EnsureUniqueName(string uniqueName)
+    public static void EnsureUniqueName(string uniqueName)
         => UniqueNameValidator.Ensure(uniqueName);
 
 }

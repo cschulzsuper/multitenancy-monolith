@@ -1,6 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
-using System.Numerics;
-using System.Runtime.InteropServices;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
 

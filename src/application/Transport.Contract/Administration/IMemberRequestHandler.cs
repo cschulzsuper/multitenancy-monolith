@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Application.Administration.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Administration.Responses;
 
@@ -6,9 +7,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 public interface IMemberRequestHandler
 {
-    MemberResponse Get(string uniqueName);
+    ValueTask<MemberResponse> GetAsync(string uniqueName);
 
     IQueryable<MemberResponse> GetAll();
 
-    MemberResponse Insert(MemberRequest request);
+    ValueTask<MemberResponse> InsertAsync(MemberRequest request);
+    
+    ValueTask DeleteAsync(string uniqueName);
 }

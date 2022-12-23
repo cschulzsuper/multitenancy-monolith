@@ -15,7 +15,9 @@ public static partial class _Services
             var snowflakeGenerator = services.GetRequiredService<SnowflakeGenerator>();
 
             var repositoryContextFactory = services.GetRequiredService<RepositoryContextFactory<Member>>();
-            var repositoryContext = repositoryContextFactory.Create(multitenancyDiscriminator, member => member.Snowflake = snowflakeGenerator.Next());
+            var repositoryContext = repositoryContextFactory.Create(multitenancyDiscriminator,
+                member => member.Snowflake = snowflakeGenerator.Next(),
+                member => member.Snowflake);
 
             return new Repository<Member>(repositoryContext);
         };
@@ -26,7 +28,9 @@ public static partial class _Services
             var snowflakeGenerator = services.GetRequiredService<SnowflakeGenerator>();
 
             var repositoryContextFactory = services.GetRequiredService<RepositoryContextFactory<Membership>>();
-            var repositoryContext = repositoryContextFactory.Create(membership => membership.Snowflake = snowflakeGenerator.Next());
+            var repositoryContext = repositoryContextFactory.Create(
+                membership => membership.Snowflake = snowflakeGenerator.Next(),
+                membership => membership.Snowflake);
 
             return new Repository<Membership>(repositoryContext);
         };
@@ -37,7 +41,9 @@ public static partial class _Services
             var snowflakeGenerator = services.GetRequiredService<SnowflakeGenerator>();
 
             var repositoryContextFactory = services.GetRequiredService<RepositoryContextFactory<Group>>();
-            var repositoryContext = repositoryContextFactory.Create(group => group.Snowflake = snowflakeGenerator.Next());
+            var repositoryContext = repositoryContextFactory.Create(
+                group => group.Snowflake = snowflakeGenerator.Next(),
+                group => group.Snowflake);
 
             return new Repository<Group>(repositoryContext);
         };
@@ -48,7 +54,9 @@ public static partial class _Services
             var snowflakeGenerator = services.GetRequiredService<SnowflakeGenerator>();
 
             var repositoryContextFactory = services.GetRequiredService<RepositoryContextFactory<Identity>>();
-            var repositoryContext = repositoryContextFactory.Create(identity => identity.Snowflake = snowflakeGenerator.Next());
+            var repositoryContext = repositoryContextFactory.Create(
+                identity => identity.Snowflake = snowflakeGenerator.Next(),
+                identity => identity.Snowflake);
 
             return new Repository<Identity>(repositoryContext);
         };

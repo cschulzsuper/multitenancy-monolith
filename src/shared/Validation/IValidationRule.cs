@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation;
+﻿namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation;
 
 public interface IValidationRule<T>
 {

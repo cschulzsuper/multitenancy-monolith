@@ -1,15 +1,20 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 public interface IMemberManager
 {
-    Member Get(long snowflake);
+    ValueTask<Member> GetAsync(long snowflake);
 
-    Member Get(string uniqueName);
+    ValueTask<Member> GetAsync(string uniqueName);
 
-    IQueryable<Member> GetAll();
+    IQueryable<Member> GetQueryable();
 
-    void Insert(Member member);
+    ValueTask InsertAsync(Member member);
+
+    ValueTask DeleteAsync(long snowflake);
+
+    ValueTask DeleteAsync(string uniqueName);
 }

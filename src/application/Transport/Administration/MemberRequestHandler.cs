@@ -3,6 +3,7 @@ using ChristianSchulz.MultitenancyMonolith.Application.Administration.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Administration.Responses;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
@@ -15,9 +16,9 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         _memberManager = memberManager;
     }
 
-    public MemberResponse Get(string uniqueName)
+    public async ValueTask<MemberResponse> GetAsync(string uniqueName)
     {
-        var member = _memberManager.Get(uniqueName);
+        var member = await _memberManager.GetAsync(uniqueName);
 
         var response = new MemberResponse
         {
@@ -29,7 +30,7 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
 
     public IQueryable<MemberResponse> GetAll()
     {
-        var members = _memberManager.GetAll();
+        var members = _memberManager.GetQueryable();
 
         var response = members.Select(member =>
             new MemberResponse
@@ -40,14 +41,14 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         return response;
     }
 
-    public MemberResponse Insert(MemberRequest request)
+    public async ValueTask<MemberResponse> InsertAsync(MemberRequest request)
     {
         var member = new Member
         {
             UniqueName = request.UniqueName
         };
 
-        _memberManager.Insert(member);
+        await _memberManager.InsertAsync(member);
 
         var response = new MemberResponse
         {
@@ -56,4 +57,7 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
 
         return response;
     }
+
+    public async ValueTask DeleteAsync(string uniqueName)
+        => await _memberManager.DeleteAsync(uniqueName);
 }

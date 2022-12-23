@@ -39,7 +39,7 @@ public static class _Configure
 
         scope.ServiceProvider
             .GetRequiredService<IRepository<Identity>>()
-            .InsertMany(identities);
+            .Insert(identities);
 
         return services;
     }
@@ -58,7 +58,7 @@ public static class _Configure
 
         scope.ServiceProvider
             .GetRequiredService<IRepository<Group>>()
-            .InsertMany(groups);
+            .Insert(groups);
 
         return services;
     }
@@ -82,7 +82,7 @@ public static class _Configure
 
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
-                .InsertMany(members);
+                .Insert(members);
         }
 
         return services;
@@ -143,7 +143,7 @@ public static class _Configure
 
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Membership>>()
-                .InsertMany(membershipsForGroup);
+                .Insert(membershipsForGroup);
         }
 
         return services;

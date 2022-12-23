@@ -1,6 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
@@ -13,9 +14,29 @@ internal sealed class MembershipManager : IMembershipManager
         _repository = repository;
     }
 
-    public Membership Get(long snowflake)
-        => _repository.Get(snowflake);
+    public async ValueTask<Membership> GetAsync(long snowflake)
+    {
+        MembershipValidator.EnsureSnowflake(snowflake);
 
-    public IQueryable<Membership> GetAll()
+        var membership = await _repository.GetAsync(snowflake);
+
+        return membership;
+    }
+
+    public IQueryable<Membership> GetQueryable()
         => _repository.GetQueryable();
+
+    public async ValueTask InsertAsync(Membership membership)
+    {
+        MembershipValidator.EnsureInsertable(membership);
+
+        await _repository.InsertAsync(membership);
+    }
+
+    public async ValueTask DeleteAsync(long snowflake)
+    {
+        MembershipValidator.EnsureSnowflake(snowflake);
+
+        await _repository.DeleteAsync(snowflake);
+    }
 }

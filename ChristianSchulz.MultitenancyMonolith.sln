@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{536F15
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security", "src\shared\Security\Security.csproj", "{188F2939-5088-4C97-8397-DF1EB539A018}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "src\data\Data\Data.csproj", "{50EF97DA-CB06-4E4E-B596-C265CD5DBB2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.StaticDictionary", "src\data\Data.StaticDictionary\Data.StaticDictionary.csproj", "{50EF97DA-CB06-4E4E-B596-C265CD5DBB2F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security.Claims", "src\shared\Security.Claims\Security.Claims.csproj", "{45718219-01C3-4B23-B0AD-628FF54EDD53}"
 EndProject
