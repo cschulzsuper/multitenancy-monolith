@@ -36,7 +36,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Collection(content.RootElement.EnumerateArray(),
+        Assert.Collection(content.RootElement.EnumerateArray().OrderBy(x => x.GetString("uniqueName")),
             x => Assert.Equal(TestConfiguration.DefaultGroup1Admin, x.GetString("uniqueName")),
             x => Assert.Equal(TestConfiguration.DefaultGroup1Guest, x.GetString("uniqueName")));
     }
@@ -60,7 +60,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Collection(content.RootElement.EnumerateArray(),
+        Assert.Collection(content.RootElement.EnumerateArray().OrderBy(x => x.GetString("uniqueName")),
             x => Assert.Equal(TestConfiguration.DefaultGroup2Admin, x.GetString("uniqueName")),
             x => Assert.Equal(TestConfiguration.DefaultGroup2Guest, x.GetString("uniqueName")));
     }

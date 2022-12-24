@@ -1,3 +1,4 @@
+
 # Multitenancy Monolith
 
 This repository contains everything related to the development of my multitenancy monolith based on ASP.NET Core.
@@ -48,4 +49,6 @@ If you are developing an ASP.NET Core application yourself and are looking for a
 
 /20 Validation is such an essential element that it makes sense to think about it a bit more. I implemented a shared validation component that does not depend on an external library. I want full control over the validation. https://github.com/cschulzsuper/multitenancy-monolith/commit/b9febca05bbbe399e0203809a9a90d3abc9b04d6
 
-/21 Slowly extending the repository. Asynchronicity is key when talk to a database. With the static dictionary currently used this may not be exactly true, but it will become important once I switch to an ORM.
+/21 Slowly extending the repository. Asynchronicity is key when talk to a database. With the static dictionary currently used this may not be exactly true, but it will become important once I switch to an ORM. https://github.com/cschulzsuper/multitenancy-monolith/commit/75fa043dbccc3bde11ac7271db026ca3b2d318e4
+
+/22 Bulk deletions in the repository can be tricky, when the operation needs to be atomic. In the current static dictionary implementation I solve this requirement by using [SemaphoreSlim](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Threading/SemaphoreSlim.cs).

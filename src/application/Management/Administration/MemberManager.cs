@@ -46,13 +46,13 @@ internal sealed class MemberManager : IMemberManager
     {
         MemberValidator.EnsureSnowflake(snowflake);
 
-        await _repository.DeleteAsync(snowflake);
+        await _repository.DeleteOrThrowAsync(snowflake);
     }
 
     public async ValueTask DeleteAsync(string uniqueName)
     {
         MemberValidator.EnsureUniqueName(uniqueName);
 
-        await _repository.DeleteAsync(x => x.UniqueName == uniqueName);
+        await _repository.DeleteOrThrowAsync(x => x.UniqueName == uniqueName);
     }
 }

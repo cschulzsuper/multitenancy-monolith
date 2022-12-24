@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
+using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
@@ -11,6 +13,54 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
     public Repository(RepositoryContext<TEntity> context)
     {
         _context = context;
+    }
+
+    public void Execute(Action<IRepository<TEntity>> action)
+    {
+        using var _ = _context.AquireLock();
+
+        var backup = _context.Data.ToDictionary(
+            x => x.Key,
+            x => x.Value);
+
+        try
+        {
+            action.Invoke(this);
+        }
+        catch
+        {
+            _context.Data.Clear();
+            foreach(var entry in backup)
+            {
+                _context.Data.TryAdd(entry.Key, entry.Value);
+            }
+
+            throw;
+        }
+    }
+
+    public async ValueTask ExecuteAsync(Func<IRepository<TEntity>, ValueTask> func)
+    {
+        using var _ = _context.AquireLock();
+
+        var backup = _context.Data.ToDictionary(
+            x => x.Key,
+            x => x.Value);
+
+        try
+        {
+            await func.Invoke(this);
+        }
+        catch
+        {
+            _context.Data.Clear();
+            foreach (var entry in backup)
+            {
+                _context.Data.TryAdd(entry.Key, entry.Value);
+            }
+
+            throw;
+        }
     }
 
     public TEntity Get(object snowflake)

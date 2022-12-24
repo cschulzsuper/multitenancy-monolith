@@ -3,6 +3,10 @@ using System.Net.Http.Json;
 using System.Net;
 using Xunit;
 using System.Text.Json.Nodes;
+using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Data;
+using Microsoft.Extensions.DependencyInjection;
+using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.MemberEndpoints;
 
@@ -16,15 +20,28 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin, TestConfiguration.DefaultGroup1Guest)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest, TestConfiguration.DefaultGroup1Admin)]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin, TestConfiguration.DefaultGroup2Guest)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest, TestConfiguration.DefaultGroup2Admin)]
-    public async Task Get_ShouldReturnMember_WhenMemberExists(string authIdentity, string authGroup, string authMember, string member)
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
+    public async Task Get_ShouldReturnMember_WhenMemberExists(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/members/{member}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(authIdentity, authGroup, authMember);
+        var existingMember = new Member
+        {
+            Snowflake = 1,
+            UniqueName =  $"existing-identity-{Guid.NewGuid()}"
+        };
+
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .Insert(existingMember);
+        }         
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/members/{existingMember.UniqueName}");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
 
@@ -37,6 +54,6 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
         Assert.Collection(content,
-            x => Assert.Equal((x.Key, (string?)x.Value), ("uniqueName", member)));
+            x => Assert.Equal((x.Key, (string?)x.Value), ("uniqueName", existingMember.UniqueName)));
     }
 }

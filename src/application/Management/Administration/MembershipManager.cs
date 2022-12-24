@@ -37,6 +37,6 @@ internal sealed class MembershipManager : IMembershipManager
     {
         MembershipValidator.EnsureSnowflake(snowflake);
 
-        await _repository.DeleteAsync(snowflake);
+        await _repository.DeleteOrThrowAsync(snowflake);
     }
 }
