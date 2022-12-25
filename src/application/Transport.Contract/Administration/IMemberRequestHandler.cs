@@ -12,6 +12,8 @@ public interface IMemberRequestHandler
     IQueryable<MemberResponse> GetAll();
 
     ValueTask<MemberResponse> InsertAsync(MemberRequest request);
-    
+
+    ValueTask UpdateAsync(string uniqueName, MemberRequest request);
+
     ValueTask DeleteAsync(string uniqueName);
 }

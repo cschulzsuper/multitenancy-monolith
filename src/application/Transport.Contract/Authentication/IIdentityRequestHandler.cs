@@ -13,5 +13,7 @@ public interface IIdentityRequestHandler
 
     ValueTask<IdentityResponse> InsertAsync(IdentityRequest request);
 
+    ValueTask UpdateAsync(string uniqueName, IdentityRequest request);
+
     ValueTask DeleteAsync(string uniqueName);
 }

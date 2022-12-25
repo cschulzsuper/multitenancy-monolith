@@ -18,6 +18,7 @@ internal static class MemberEndpoints
         membersEndpoints.MapGet(string.Empty, GetAll);
         membersEndpoints.MapGet("{member}", Get);
         membersEndpoints.MapPost(string.Empty, Post);
+        membersEndpoints.MapPut("{member}", Put);
         membersEndpoints.MapDelete("{member}", Delete);
 
         return endpoints;
@@ -37,6 +38,11 @@ internal static class MemberEndpoints
         [Authorize(Roles = "Member")]
         (IMemberRequestHandler requestHandler, MemberRequest request)
             => requestHandler.InsertAsync(request);
+
+    private static Delegate Put =>
+        [Authorize(Roles = "Member")]
+        (IMemberRequestHandler requestHandler, string member, MemberRequest request)
+            => requestHandler.UpdateAsync(member, request);
 
     private static Delegate Delete =>
         [Authorize(Roles = "Member")]

@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
+﻿namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 
 public sealed partial class MailAddress : IValidationRule<string>
 {

@@ -62,6 +62,15 @@ internal sealed class IdentityRequestHandler : IIdentityRequestHandler
         return response;
     }
 
+    public async ValueTask UpdateAsync(string uniqueName, IdentityRequest request)
+    => await _identityManager.UpdateAsync(uniqueName, 
+        member => 
+        {
+            member.UniqueName = request.UniqueName;
+            member.Secret = request.Secret;
+            member.MailAddress = request.MailAddress;
+        });
+
     public async ValueTask DeleteAsync(string uniqueName)
         => await _identityManager.DeleteAsync(uniqueName);
 }

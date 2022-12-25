@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using System.Net;
 using Xunit;
 using System.Text.Json.Nodes;
-using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using Microsoft.Extensions.DependencyInjection;
 using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;

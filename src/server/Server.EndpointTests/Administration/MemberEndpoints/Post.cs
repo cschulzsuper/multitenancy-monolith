@@ -71,7 +71,6 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Act
         var response = await client.SendAsync(request);
-        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
 
         // Assert
         using var scope = _factory.Services.CreateMultitenancyScope(group);

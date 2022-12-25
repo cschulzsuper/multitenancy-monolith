@@ -38,23 +38,19 @@ public interface IRepository<TEntity>
 
     ValueTask InsertAsync(ICollection<TEntity> entities);
 
+    int Update(object snowflake, Action<TEntity> action);
+
+    int Update(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action);
+
+    ValueTask<int> UpdateAsync(object snowflake, Action<TEntity> action);
+
+    ValueTask<int> UpdateAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action);
+
     int Delete(object snowflake);
 
-    int Delete(TEntity entity);
-
-    int Delete(params TEntity[] entities);
-
-    int Delete(ICollection<TEntity> entities);
-
-    int Delete(Expression<Func<TEntity, bool>> query);
+    int Delete(Expression<Func<TEntity, bool>> predicate);
 
     ValueTask<int> DeleteAsync(object snowflake);
 
-    ValueTask<int> DeleteAsync(TEntity entity);
-
-    ValueTask<int> DeleteAsync(params TEntity[] entities);
-
-    ValueTask<int> DeleteAsync(ICollection<TEntity> entities);
-
-    ValueTask<int> DeleteAsync(Expression<Func<TEntity, bool>> query);
+    ValueTask<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
 }

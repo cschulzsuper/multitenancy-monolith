@@ -58,6 +58,13 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         return response;
     }
 
+    public async ValueTask UpdateAsync(string uniqueName, MemberRequest request)
+        => await _memberManager.UpdateAsync(uniqueName,
+            member =>
+            {
+                member.UniqueName = request.UniqueName;
+            });
+
     public async ValueTask DeleteAsync(string uniqueName)
         => await _memberManager.DeleteAsync(uniqueName);
 }

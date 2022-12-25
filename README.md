@@ -35,7 +35,7 @@ If you are developing an ASP.NET Core application yourself and are looking for a
 
 /13 A simple byte cache in the data layer is used to store an authentication verification value. During authentication this value is validated against the value in the token. Additionally, some renaming was necessary. https://github.com/cschulzsuper/multitenancy-monolith/commit/25a49abad32edbf7d989edb8884e4243e79a3013
 
-/14 More authentication endpoint tests. In this example I want to write them from the beginning. We all know that it will pay off. Additional, I moved to IClaimsTransformation after meeting it on David Fowler's timeline.😱 https://github.com/cschulzsuper/multitenancy-monolith/commit/324c0d2e1b5200b245e5059359f841e1e2918be7
+/14 More authentication endpoint tests. In this example I want to write them from the beginning. We all know that it will pay off. Additional, I moved to `IClaimsTransformation` after meeting it on David Fowler's timeline.😱 https://github.com/cschulzsuper/multitenancy-monolith/commit/324c0d2e1b5200b245e5059359f841e1e2918be7
 
 /15 Paving the way to a real data layer. But first I needed to modify the relationship between groups, members and identities. A membership allows for an identity to be bound to multiple members of different groups. One authentication, multiple accounts. https://github.com/cschulzsuper/multitenancy-monolith/commit/5571bb6a567f8475c83cac151c433f98dbe1a964
 
@@ -51,4 +51,6 @@ If you are developing an ASP.NET Core application yourself and are looking for a
 
 /21 Slowly extending the repository. Asynchronicity is key when talk to a database. With the static dictionary currently used this may not be exactly true, but it will become important once I switch to an ORM. https://github.com/cschulzsuper/multitenancy-monolith/commit/75fa043dbccc3bde11ac7271db026ca3b2d318e4
 
-/22 Bulk deletions in the repository can be tricky, when the operation needs to be atomic. In the current static dictionary implementation I solve this requirement by using [SemaphoreSlim](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Threading/SemaphoreSlim.cs).
+/22 Bulk deletions in the repository can be tricky, when the operation needs to be atomic. In the current static dictionary implementation I solve this requirement by using [SemaphoreSlim](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Threading/SemaphoreSlim.cs). https://github.com/cschulzsuper/multitenancy-monolith/commit/e6dcdbbbb0be44f4d647250f1e206c71ce7d4a77
+
+/23 For the update method in the repository, I use an `Action` which will modify the entity. I will not support real bulk updates yet. After [#29654](https://github.com/dotnet/efcore/issues/29654) is implemented, I will have another look for an additional update method. 

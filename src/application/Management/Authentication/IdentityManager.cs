@@ -1,5 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Data;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -40,6 +41,30 @@ internal sealed class IdentityManager : IIdentityManager
         IdentityValidator.EnsureInsertable(identity);
 
         await _repository.InsertAsync(identity);
+    }
+
+    public async ValueTask UpdateAsync(long snowflake, Action<Identity> action)
+    {
+        var validatedAction = (Identity identity) =>
+        {
+            action.Invoke(identity);
+
+            IdentityValidator.EnsureUpdatable(identity);
+        };
+
+        await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
+    }
+
+    public async ValueTask UpdateAsync(string uniqueName, Action<Identity> action)
+    {
+        var validatedAction = (Identity identity) =>
+        {
+            action.Invoke(identity);
+
+            IdentityValidator.EnsureUpdatable(identity);
+        };
+
+        await _repository.UpdateOrThrowAsync(x => x.UniqueName == uniqueName, validatedAction);
     }
 
     public async ValueTask DeleteAsync(long snowflake)

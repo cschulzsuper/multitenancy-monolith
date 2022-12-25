@@ -1,5 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
 using ChristianSchulz.MultitenancyMonolith.Data;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -40,6 +41,30 @@ internal sealed class MemberManager : IMemberManager
         MemberValidator.EnsureInsertable(member);
 
         await _repository.InsertAsync(member);
+    }
+
+    public async ValueTask UpdateAsync(long snowflake, Action<Member> action)
+    {
+        var validatedAction = (Member member) =>
+        {
+            action.Invoke(member);
+
+            MemberValidator.EnsureUpdatable(member);
+        };
+        
+        await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
+    }
+
+    public async ValueTask UpdateAsync(string uniqueName, Action<Member> action)
+    {
+        var validatedAction = (Member member) =>
+        {
+            action.Invoke(member);
+
+            MemberValidator.EnsureUpdatable(member);
+        };
+
+        await _repository.UpdateOrThrowAsync(x => x.UniqueName == uniqueName, validatedAction);
     }
 
     public async ValueTask DeleteAsync(long snowflake)

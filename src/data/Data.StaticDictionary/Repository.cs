@@ -1,7 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
-using System;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data;
@@ -187,36 +184,67 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         return ValueTask.CompletedTask;
     }
 
+    public int Update(object snowflake, Action<TEntity> action)
+    {
+        var found = _context.Data.TryGetValue(snowflake, out var value);
+        
+        if(found)
+        {
+            action(value!);
+
+            return 1;
+        }
+
+        return 0;
+    }
+
+    public int Update(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action)
+    {
+        var entities = GetQueryable()
+            .Where(predicate)
+            .ToArray();
+
+        var rowsAffected = entities
+            .Sum(entity =>
+            {
+                var snowflake = _context.SnowflakeProvider(entity);
+                return Update(snowflake, action);
+            });
+
+        return rowsAffected;
+    }
+
+    public ValueTask<int> UpdateAsync(object snowflake, Action<TEntity> action)
+    {
+        var rowsAffected = Update(snowflake, action);
+        return ValueTask.FromResult(rowsAffected);
+    }
+
+    public ValueTask<int> UpdateAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action)
+    {
+        var rowsAffected = Update(predicate, action);
+        return ValueTask.FromResult(rowsAffected);
+    }
+
     public int Delete(object snowflake)
     {
         var removed = _context.Data.TryRemove(snowflake, out _);
         return removed ? 1 : 0;
     }
 
-    public int Delete(TEntity entity)
-    {
-        var snowflake = _context.SnowflakeProvider(entity);
-
-        var rowsAffected = Delete(snowflake);
-        return rowsAffected;
-    }
-
-    public int Delete(params TEntity[] entities)
-        => Delete(entities as ICollection<TEntity>);
-
-    public int Delete(ICollection<TEntity> entities)
-    {
-        var rowsAffected = entities.Sum(Delete);
-        return rowsAffected;
-    }
-
-    public int Delete(Expression<Func<TEntity, bool>> query)
+    public int Delete(Expression<Func<TEntity, bool>> predicate)
     {
         var entities = GetQueryable()
-            .Where(query)
+            .Where(predicate)
             .ToArray();
 
-        var rowsAffected = Delete(entities);
+        var rowsAffected = entities
+            .Sum(entity => 
+            {
+                var snowflake = _context.SnowflakeProvider(entity);
+                return Delete(snowflake);
+            });
+
         return rowsAffected;
     }
 
@@ -226,27 +254,9 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         return ValueTask.FromResult(rowsAffected);
     }
 
-    public ValueTask<int> DeleteAsync(TEntity entity)
+    public ValueTask<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
     {
-        var rowsAffected = Delete(entity);
-        return ValueTask.FromResult(rowsAffected);
-    }
-
-    public ValueTask<int> DeleteAsync(params TEntity[] entities)
-    {
-        var rowsAffected = Delete(entities);
-        return ValueTask.FromResult(rowsAffected);
-    }
-
-    public ValueTask<int> DeleteAsync(ICollection<TEntity> entities)
-    {
-        var rowsAffected = Delete(entities);
-        return ValueTask.FromResult(rowsAffected);
-    }
-
-    public ValueTask<int> DeleteAsync(Expression<Func<TEntity, bool>> query)
-    {
-        var rowsAffected = Delete(query);
+        var rowsAffected = Delete(predicate);
         return ValueTask.FromResult(rowsAffected);
     }
 }

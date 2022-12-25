@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +14,10 @@ public interface IIdentityManager
     IQueryable<Identity> GetAll();
 
     ValueTask InsertAsync(Identity identity);
+
+    ValueTask UpdateAsync(long snowflake, Action<Identity> action);
+
+    ValueTask UpdateAsync(string uniqueName, Action<Identity> action);
 
     ValueTask DeleteAsync(long snowflake);
 
