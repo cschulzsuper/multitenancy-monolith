@@ -98,7 +98,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldNotDeleteMember_WhenMemberDoesNotExist(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/members/foo-bar");
+        var absentIdentity = $"absent-identity-{Guid.NewGuid()}";
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/members/{absentIdentity}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -107,7 +109,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.NotEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Theory]
@@ -118,7 +120,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldNotDeleteMember_WhenMemberUniqueNameIsInvalid(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/members/FOOBAR");
+        var invalidIdentity = $"INVALID_IDENTITY_{Guid.NewGuid()}";
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/members/{invalidIdentity}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -127,6 +131,6 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.NotEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }

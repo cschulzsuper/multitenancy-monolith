@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.IdentityEndpoints;
+namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentityEndpoints;
 
 public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -79,7 +79,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<Identity>>()
             .GetQueryable()
-            .SingleOrDefault(x => 
+            .SingleOrDefault(x =>
                 x.UniqueName == newIdentity.UniqueName &&
                 x.MailAddress == newIdentity.MailAddress &&
                 x.Secret == newIdentity.Secret);
@@ -111,7 +111,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.NotEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Theory]
@@ -138,7 +138,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.NotEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Theory]
@@ -165,7 +165,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.NotEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Theory]
@@ -192,7 +192,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.NotEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Theory]
@@ -219,7 +219,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.NotEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Theory]
@@ -246,7 +246,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.NotEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Theory]
@@ -273,6 +273,6 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.NotEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }

@@ -7,7 +7,7 @@ using ChristianSchulz.MultitenancyMonolith.Data;
 using Microsoft.Extensions.DependencyInjection;
 using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.IdentityEndpoints;
+namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentityEndpoints;
 
 public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 {

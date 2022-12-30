@@ -21,6 +21,7 @@ internal static class SwaggerGenOptionsExtensions
 
     public static SwaggerGenOptions ConfigureAuthorization(this SwaggerGenOptions options)
     {
+        options.OperationFilter<StatusCodeOperationFilter>();
         options.OperationFilter<AuthorizationOperationFilter>();
 
         return options;
