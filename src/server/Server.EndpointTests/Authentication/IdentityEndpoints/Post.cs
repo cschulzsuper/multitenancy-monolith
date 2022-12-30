@@ -6,6 +6,7 @@ using System.Text.Json.Nodes;
 using Microsoft.Extensions.DependencyInjection;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentityEndpoints;
 
@@ -21,7 +22,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Post_ShouldReturnCreatedIdentity_WhenValidIdentityIsGiven(string identity)
+    public async Task Post_ShouldSucceed_WhenValidIdentityIsGiven(string identity)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
@@ -48,49 +49,25 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Collection(content.OrderBy(x => x.Key),
             x => Assert.Equal((x.Key, (string?)x.Value), ("mailAddress", newIdentity.MailAddress)),
             x => Assert.Equal((x.Key, (string?)x.Value), ("uniqueName", newIdentity.UniqueName)));
-    }
 
-    [Theory]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Post_ShouldCreateIdentityInRepository_WhenValidIdentityIsGiven(string identity)
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var newIdentity = new
+        using (var scope = _factory.Services.CreateScope())
         {
-            UniqueName = $"new-identity-{Guid.NewGuid()}",
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
-        };
+            var createdMember = scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .GetQueryable()
+                .SingleOrDefault(x =>
+                    x.UniqueName == newIdentity.UniqueName &&
+                    x.MailAddress == newIdentity.MailAddress &&
+                    x.Secret == newIdentity.Secret);
 
-        request.Content = JsonContent.Create(newIdentity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        using var scope = _factory.Services.CreateScope();
-
-        var createdMember = scope.ServiceProvider
-            .GetRequiredService<IRepository<Identity>>()
-            .GetQueryable()
-            .SingleOrDefault(x =>
-                x.UniqueName == newIdentity.UniqueName &&
-                x.MailAddress == newIdentity.MailAddress &&
-                x.Secret == newIdentity.Secret);
-
-        Assert.NotNull(createdMember);
+            Assert.NotNull(createdMember);
+        }
     }
 
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Post_ShouldNotCreateIdentity_WhenIdentityUniqueNameIsEmpty(string identity)
+    public async Task Post_ShouldFail_WhenIdentityUniqueNameIsEmpty(string identity)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
@@ -112,12 +89,21 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using var scope = _factory.Services.CreateScope();
+
+        var createdIdentity = scope.ServiceProvider
+            .GetRequiredService<IRepository<Member>>()
+            .GetQueryable()
+            .SingleOrDefault(x => x.UniqueName == newIdentity.UniqueName);
+
+        Assert.Null(createdIdentity);
     }
 
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Post_ShouldNotCreateIdentity_WhenIdentityUniqueNameIsNull(string identity)
+    public async Task Post_ShouldFail_WhenIdentityUniqueNameIsNull(string identity)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
@@ -139,12 +125,21 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using var scope = _factory.Services.CreateScope();
+
+        var createdIdentity = scope.ServiceProvider
+            .GetRequiredService<IRepository<Member>>()
+            .GetQueryable()
+            .SingleOrDefault(x => x.UniqueName == newIdentity.UniqueName);
+
+        Assert.Null(createdIdentity);
     }
 
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Post_ShouldNotCreateIdentity_WhenIdentitySecretIsEmpty(string identity)
+    public async Task Post_ShouldFail_WhenIdentitySecretIsEmpty(string identity)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
@@ -166,12 +161,21 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using var scope = _factory.Services.CreateScope();
+
+        var createdIdentity = scope.ServiceProvider
+            .GetRequiredService<IRepository<Member>>()
+            .GetQueryable()
+            .SingleOrDefault(x => x.UniqueName == newIdentity.UniqueName);
+
+        Assert.Null(createdIdentity);
     }
 
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Post_ShouldNotCreateIdentity_WhenIdentitySecretIsNull(string identity)
+    public async Task Post_ShouldFail_WhenIdentitySecretIsNull(string identity)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
@@ -193,12 +197,21 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using var scope = _factory.Services.CreateScope();
+
+        var createdIdentity = scope.ServiceProvider
+            .GetRequiredService<IRepository<Member>>()
+            .GetQueryable()
+            .SingleOrDefault(x => x.UniqueName == newIdentity.UniqueName);
+
+        Assert.Null(createdIdentity);
     }
 
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Post_ShouldNotCreateIdentity_WhenIdentityMailAddressIsEmpty(string identity)
+    public async Task Post_ShouldFail_WhenIdentityMailAddressIsEmpty(string identity)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
@@ -220,12 +233,21 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using var scope = _factory.Services.CreateScope();
+
+        var createdIdentity = scope.ServiceProvider
+            .GetRequiredService<IRepository<Member>>()
+            .GetQueryable()
+            .SingleOrDefault(x => x.UniqueName == newIdentity.UniqueName);
+
+        Assert.Null(createdIdentity);
     }
 
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Post_ShouldNotCreateIdentity_WhenIdentityMailAddressIsNull(string identity)
+    public async Task Post_ShouldFail_WhenIdentityMailAddressIsNull(string identity)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
@@ -247,12 +269,21 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using var scope = _factory.Services.CreateScope();
+
+        var createdIdentity = scope.ServiceProvider
+            .GetRequiredService<IRepository<Member>>()
+            .GetQueryable()
+            .SingleOrDefault(x => x.UniqueName == newIdentity.UniqueName);
+
+        Assert.Null(createdIdentity);
     }
 
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Post_ShouldNotCreatIdentity_WhenIdentityMailAddressIsNotMailAddress(string identity)
+    public async Task Post_ShouldFail_WhenIdentityMailAddressIsNotMailAddress(string identity)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
@@ -274,5 +305,14 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using var scope = _factory.Services.CreateScope();
+
+        var createdIdentity = scope.ServiceProvider
+            .GetRequiredService<IRepository<Member>>()
+            .GetQueryable()
+            .SingleOrDefault(x => x.UniqueName == newIdentity.UniqueName);
+
+        Assert.Null(createdIdentity);
     }
 }

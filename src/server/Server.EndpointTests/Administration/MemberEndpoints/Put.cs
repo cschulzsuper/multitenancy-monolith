@@ -5,6 +5,7 @@ using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
+using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.MemberEndpoints;
 
@@ -55,6 +56,18 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            var createdMember = scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .GetQueryable()
+                .SingleOrDefault(x =>
+                    x.Snowflake == existingMember.Snowflake &&
+                    x.UniqueName == putMember.UniqueName);
+
+            Assert.NotNull(createdMember);
+        }
     }
 
     [Theory]
@@ -91,7 +104,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
     [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
-    public async Task Put_ShouldUpdateMemberInRepository_WhenValidExistingMemberIsGiven(string identity, string group, string member)
+    public async Task Put_ShouldFail_WhenMemberUniqueNameIsEmpty(string identity, string group, string member)
     {
         // Arrange
         var existingMember = new Member
@@ -110,60 +123,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var request = new HttpRequestMessage(HttpMethod.Put, $"/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
-        var newMember = new
-        {
-            UniqueName = $"put-member-{Guid.NewGuid()}"
-        };
-
-        request.Content = JsonContent.Create(newMember);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
-        {
-            var createdMember = scope.ServiceProvider
-                .GetRequiredService<IRepository<Member>>()
-                .GetQueryable()
-                .SingleOrDefault(x => x.UniqueName == newMember.UniqueName);
-
-            Assert.NotNull(createdMember);
-        }
-    }
-
-    [Theory]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
-    public async Task Put_ShouldNotUpdateMember_WhenMemberUniqueNameIsEmpty(string identity, string group, string member)
-    {
-        // Arrange
-        var existingMember = new Member
-        {
-            Snowflake = 1,
-            UniqueName =  $"existing-member-{Guid.NewGuid()}"
-        };
-
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
-        {
-            scope.ServiceProvider
-                .GetRequiredService<IRepository<Member>>()
-                .Insert(existingMember);
-        }
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/members/{existingMember.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
-
-        var newMember = new
+        var putMember = new
         {
             UniqueName = string.Empty
         };
 
-        request.Content = JsonContent.Create(newMember);
+        request.Content = JsonContent.Create(putMember);
 
         var client = _factory.CreateClient();
 
@@ -172,6 +137,18 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            var createdIdentity = scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .GetQueryable()
+                .SingleOrDefault(x => 
+                    x.Snowflake == existingMember.Snowflake &&
+                    x.UniqueName == putMember.UniqueName);
+
+            Assert.Null(createdIdentity);
+        }
     }
 
     [Theory]
@@ -179,7 +156,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
     [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
-    public async Task Put_ShouldNotUpdateMember_WhenMemberUniqueNameIsNull(string identity, string group, string member)
+    public async Task Put_ShouldFail_WhenMemberUniqueNameIsNull(string identity, string group, string member)
     {
         // Arrange
         var existingMember = new Member
@@ -198,12 +175,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var request = new HttpRequestMessage(HttpMethod.Put, $"/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
-        var newMember = new
+        var putMember = new
         {
             UniqueName = (string?)null
         };
 
-        request.Content = JsonContent.Create(newMember);
+        request.Content = JsonContent.Create(putMember);
 
         var client = _factory.CreateClient();
 
@@ -212,5 +189,17 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            var createdIdentity = scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .GetQueryable()
+                .SingleOrDefault(x =>
+                    x.Snowflake == existingMember.Snowflake &&
+                    x.UniqueName == putMember.UniqueName);
+
+            Assert.Null(createdIdentity);
+        }
     }
 }

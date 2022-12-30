@@ -1,5 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Requests;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -9,44 +8,59 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
 internal static class IdentityEndpoints
 {
+    private const string CouldNotQueryIdentities = "Could not query identities";
+    private const string CouldNotQueryIdentity = "Could not query identity";
+    private const string CouldNotCreateIdentity = "Could not create identity";
+    private const string CouldNotUpdateIdentity = "Could not update identity";
+    private const string CouldNotDeleteIdentity = "Could not delete identity";
+
     public static IEndpointRouteBuilder MapIdentityEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var identitiesEndpoints = endpoints
             .MapGroup("/identities")
+            .RequireAuthorization()
             .WithTags("Identities");
 
-        identitiesEndpoints.MapGet(string.Empty, GetAll);
-        identitiesEndpoints.MapGet("{identity}", Get);
-        identitiesEndpoints.MapPost(string.Empty, Post);
-        identitiesEndpoints.MapPut("{identity}", Put);
-        identitiesEndpoints.MapDelete("{identity}", Delete);
+        identitiesEndpoints
+            .MapGet(string.Empty, GetAll)
+            .WithErrorMessage(CouldNotQueryIdentities);
+
+        identitiesEndpoints
+            .MapGet("{identity}", Get)
+            .WithErrorMessage(CouldNotQueryIdentity);
+
+        identitiesEndpoints
+            .MapPost(string.Empty, Post)
+            .WithErrorMessage(CouldNotCreateIdentity);
+
+        identitiesEndpoints
+            .MapPut("{identity}", Put)
+            .WithErrorMessage(CouldNotUpdateIdentity);
+
+        identitiesEndpoints
+            .MapDelete("{identity}", Delete)
+            .WithErrorMessage(CouldNotDeleteIdentity);
 
         return endpoints;
     }
 
     private static Delegate GetAll =>
-        [Authorize]
         (IIdentityRequestHandler requestHandler) 
             => requestHandler.GetAll();
 
     private static Delegate Get =>
-        [Authorize]
         (IIdentityRequestHandler requestHandler, string identity)
             => requestHandler.GetAsync(identity);
 
     private static Delegate Post =>
-        [Authorize]
         (IIdentityRequestHandler requestHandler, IdentityRequest request)
             => requestHandler.InsertAsync(request);
 
     private static Delegate Put =>
-        [Authorize]
-        (IIdentityRequestHandler requestHandler, string member, IdentityRequest request)
-            => requestHandler.UpdateAsync(member, request);
-
+        (IIdentityRequestHandler requestHandler, string identity, IdentityRequest request)
+            => requestHandler.UpdateAsync(identity, request);
 
     private static Delegate Delete =>
-        [Authorize]
         (IIdentityRequestHandler requestHandler, string identity)
             => requestHandler.DeleteAsync(identity);
 }

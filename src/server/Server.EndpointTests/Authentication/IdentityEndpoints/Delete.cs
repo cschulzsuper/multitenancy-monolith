@@ -3,7 +3,6 @@ using System.Net;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using ChristianSchulz.MultitenancyMonolith.Data;
-using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
 using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.IdentityEndpoints;
@@ -20,7 +19,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Delete_ShouldDeleteIdentity_WhenExistingIdentityIsGiven(string identity)
+    public async Task Delete_ShouldSucceed_WhenExistingIdentityIsGiven(string identity)
     {
         // Arrange
         var existingIdentity = $"existing-identity-{Guid.NewGuid()}";
@@ -48,38 +47,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    }
 
-    [Theory]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Delete_ShouldDeleteIdentityInRepository_WhenExistingIdentityIsGiven(string identity)
-    {
-        // Arrange
-        var existingIdentity = $"existing-identity-{Guid.NewGuid()}";
-
-        using (var scope = _factory.Services.CreateScope())
-        {
-            scope.ServiceProvider
-                .GetRequiredService<IRepository<Identity>>()
-                .Insert(new Identity
-                {
-                    Snowflake = 1,
-                    UniqueName = existingIdentity,
-                    MailAddress = "info@localhost",
-                    Secret = "foo-bar"
-                });
-        }
-
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/identities/{existingIdentity}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
         using (var scope = _factory.Services.CreateScope())
         {
             var deletedIdentity = scope.ServiceProvider
@@ -94,7 +62,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Delete_ShouldNotDeleteIdentity_WhenIdentityDoesNotExist(string identity)
+    public async Task Delete_ShouldFail_WhenIdentityDoesNotExist(string identity)
     {
         // Arrange
         var absentIdentity = $"absent-identity-{Guid.NewGuid()}";
@@ -114,7 +82,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Delete_ShouldNotDeleteIdentity_WhenIdentityUniqueNameIsInvalid(string identity)
+    public async Task Delete_ShouldFail_WhenIdentityUniqueNameIsInvalid(string identity)
     {
         // Arrange
         var invalidIdentity = $"INVALID_IDENTITY_{Guid.NewGuid()}";

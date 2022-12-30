@@ -23,7 +23,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
     [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
-    public async Task Post_ShouldReturnCreatedMember_WhenValidMemberIsGiven(string identity, string group, string member)
+    public async Task Post_ShouldSucceed_WhenValidMemberIsGiven(string identity, string group, string member)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/members");
@@ -47,40 +47,16 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.NotNull(content);
         Assert.Collection(content,
             x => Assert.Equal((x.Key, (string?)x.Value), ("uniqueName", newMember.UniqueName)));
-    }
 
-    [Theory]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
-    public async Task Post_ShouldCreateMemberInRepository_WhenValidMemberIsGiven(string identity, string group, string member)
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
-
-        var newMember = new
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
-            UniqueName = $"new-member-{Guid.NewGuid()}"
-        };
+            var createdMember = scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .GetQueryable()
+                .SingleOrDefault(x => x.UniqueName == newMember.UniqueName);
 
-        request.Content = JsonContent.Create(newMember);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        using var scope = _factory.Services.CreateMultitenancyScope(group);
-
-        var createdMember = scope.ServiceProvider
-            .GetRequiredService<IRepository<Member>>()
-            .GetQueryable()
-            .SingleOrDefault(x => x.UniqueName == newMember.UniqueName);
-
-        Assert.NotNull(createdMember);
+            Assert.NotNull(createdMember);
+        }
     }
 
     [Theory]
@@ -88,7 +64,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
     [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
-    public async Task Post_ShouldNotCreateMember_WhenMemberUniqueNameIsEmpty(string identity, string group, string member)
+    public async Task Post_ShouldFail_WhenMemberUniqueNameIsEmpty(string identity, string group, string member)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/members");
@@ -108,6 +84,15 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using var scope = _factory.Services.CreateMultitenancyScope(group);
+
+        var createdMember = scope.ServiceProvider
+            .GetRequiredService<IRepository<Member>>()
+            .GetQueryable()
+            .SingleOrDefault(x => x.UniqueName == newMember.UniqueName);
+
+        Assert.Null(createdMember);
     }
 
     [Theory]
@@ -115,7 +100,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
     [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
-    public async Task Post_ShouldNotCreateMember_WhenMemberUniqueNameIsNull(string identity, string group, string member)
+    public async Task Post_ShouldFail_WhenMemberUniqueNameIsNull(string identity, string group, string member)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/members");
@@ -135,5 +120,14 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using var scope = _factory.Services.CreateMultitenancyScope(group);
+
+        var createdMember = scope.ServiceProvider
+            .GetRequiredService<IRepository<Member>>()
+            .GetQueryable()
+            .SingleOrDefault(x => x.UniqueName == newMember.UniqueName);
+
+        Assert.Null(createdMember);
     }
 }

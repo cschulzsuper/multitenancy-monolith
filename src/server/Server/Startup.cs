@@ -1,15 +1,10 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Application.Administration;
@@ -21,6 +16,7 @@ using ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
+using ChristianSchulz.MultitenancyMonolith.Application;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
@@ -130,17 +126,17 @@ public class Startup
                 _ => throw exception
             };
 
+            var errorMessageAttribute = context.GetEndpoint()?.Metadata
+                .GetMetadata<ErrorMessageAttribute>();
+
             context.Response.StatusCode = statusCode;
 
             problem = new ProblemDetails
             {
-                Title = exception.Message,
-                Status = statusCode,
                 Instance = context.Request.Path,
-
-                Detail = _environment.IsDevelopment()
-                    ? exception.StackTrace ?? null
-                    : null
+                Title = errorMessageAttribute?.ErrorMessage ?? "Could not process request",
+                Status = statusCode,
+                Detail = exception.Message
             };
         }
 

@@ -9,24 +9,37 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 internal static class MemberSignInEndpoints
 {
+    private const string CouldNotRegisterMember = "Could not register member";
+    private const string CouldNotSignInMember = "Could not sign in member";
+    private const string CouldNotVerifyMember = "Could not verify member";
+
     public static IEndpointRouteBuilder MapMemberSignInEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var groupsEndpoints = endpoints
             .MapGroup("/groups")
+            .RequireAuthorization()
             .WithTags("Groups");
 
-        groupsEndpoints.MapPost("/register", Register);
+        groupsEndpoints
+            .MapPost("/register", Register)
+            .WithErrorMessage(CouldNotRegisterMember);
 
         var groupMemberEndpoints = groupsEndpoints
             .MapGroup("/{group}/members/{member}");
 
-        groupMemberEndpoints.MapPost("/sign-in", SignIn).AddEndpointFilter<BadgeResultEndpointFilter>();
+        groupMemberEndpoints
+            .MapPost("/sign-in", SignIn)
+            .AddEndpointFilter<BadgeResultEndpointFilter>()
+            .WithErrorMessage(CouldNotSignInMember);
 
         var membersMeEndpoints = endpoints
             .MapGroup("/members/me")
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Member"))
             .WithTags("Members");
 
-        membersMeEndpoints.MapPost("/verify", Verify);
+        membersMeEndpoints
+            .MapPost("/verify", Verify)
+            .WithErrorMessage(CouldNotVerifyMember);
 
         return endpoints;
     }

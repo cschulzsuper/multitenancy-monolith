@@ -15,20 +15,20 @@ internal sealed class IdentityManager : IIdentityManager
         _repository = repository;
     }
 
-    public ValueTask<Identity> GetAsync(long snowflake)
+    public async ValueTask<Identity> GetAsync(long snowflake)
     {
         IdentityValidator.EnsureSnowflake(snowflake);
 
-        var identity = _repository.GetAsync(snowflake);
+        var identity = await _repository.GetAsync(snowflake);
 
         return identity;
     }
 
-    public ValueTask<Identity> GetAsync(string uniqueName)
+    public async ValueTask<Identity> GetAsync(string uniqueName)
     {
         IdentityValidator.EnsureUniqueName(uniqueName);
 
-        var identity = _repository.GetAsync(x => x.UniqueName == uniqueName);
+        var identity = await _repository.GetAsync(x => x.UniqueName == uniqueName);
 
         return identity;
     }

@@ -1,6 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Requests;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.EndpointFilters;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -10,26 +9,51 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
 internal static class IdentitySignInEndpoints
 {
+    private const string CouldNotRegisterIdentity = "Could not register identity";
+    private const string CouldNotSignInIdentity = "Could not sign in identity";
+    private const string CouldNotResetIdentity = "Could not reset identity";
+    private const string CouldNotSignOutIdentity = "Could not sign out identity";
+    private const string CouldNotChangeIdentitySecret = "Could not change identity secret";
+    private const string CouldNotVerifyIdentity = "Could not verify identity";
+
     public static IEndpointRouteBuilder MapIdentitySignInEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var identitiesEndpoints = endpoints
             .MapGroup("/identities")
             .WithTags("Identities");
 
-        identitiesEndpoints.MapPost("/register", Register);
+        identitiesEndpoints
+            .MapPost("/register", Register)
+            .WithErrorMessage(CouldNotRegisterIdentity);
 
         var identityEndpoints = identitiesEndpoints
             .MapGroup("/{identity}");
 
-        identityEndpoints.MapPost("/sign-in", SignIn).AddEndpointFilter<BadgeResultEndpointFilter>();
-        identityEndpoints.MapPost("/reset", Reset);
+        identityEndpoints
+            .MapPost("/sign-in", SignIn)
+            .AddEndpointFilter<BadgeResultEndpointFilter>()
+            .WithErrorMessage(CouldNotSignInIdentity);
+
+        identityEndpoints
+            .MapPost("/reset", Reset)
+            .RequireAuthorization()
+            .WithErrorMessage(CouldNotResetIdentity);
 
         var meEndpoints = identitiesEndpoints
-            .MapGroup("/me");
+            .MapGroup("/me")
+            .RequireAuthorization();
 
-        meEndpoints.MapPost("/sign-out", SignOut);
-        meEndpoints.MapPost("/change-secret", ChangeSecret);
-        meEndpoints.MapPost("/verify", Verify);
+        meEndpoints
+            .MapPost("/sign-out", SignOut)
+            .WithErrorMessage(CouldNotSignOutIdentity);
+
+        meEndpoints
+            .MapPost("/change-secret", ChangeSecret)
+            .WithErrorMessage(CouldNotChangeIdentitySecret);
+
+        meEndpoints
+            .MapPost("/verify", Verify)
+            .WithErrorMessage(CouldNotVerifyIdentity);
 
         return endpoints;
     }
@@ -42,19 +66,15 @@ internal static class IdentitySignInEndpoints
             => requestHandler.SignIn(identity, request);
 
     private static Delegate Reset =>
-        [Authorize]
         () => Results.StatusCode(StatusCodes.Status501NotImplemented);
 
     private static Delegate SignOut =>
-        [Authorize]
         () => Results.StatusCode(StatusCodes.Status501NotImplemented);
 
     private static Delegate ChangeSecret =>
-        [Authorize]
         () => Results.StatusCode(StatusCodes.Status501NotImplemented);
 
     private static Delegate Verify =>
-        [Authorize]
         (IIdentitySignInRequestHandler requestHandler)
             => requestHandler.Verify();
 

@@ -56,4 +56,44 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
             x => Assert.Equal((x.Key, (string?)x.Value), ("mailAddress", existingIdentity.MailAddress)),
             x => Assert.Equal((x.Key, (string?)x.Value), ("uniqueName", existingIdentity.UniqueName)));
     }
+
+    [Theory]
+    [InlineData(TestConfiguration.AdminIdentity)]
+    [InlineData(TestConfiguration.GuestIdentity)]
+    public async Task Get_ShouldFail_WhenIdentityDoesNotExists(string identity)
+    {
+        // Arrange
+        var absentIdentity = $"absent-identity-{Guid.NewGuid()}";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/identities/{absentIdentity}");
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData(TestConfiguration.AdminIdentity)]
+    [InlineData(TestConfiguration.GuestIdentity)]
+    public async Task Get_ShouldFail_WhenIdentityUniqueNameIsInvalid(string identity)
+    {
+        // Arrange
+        var invalidIdentity = $"INVALID_IDENTITY_{Guid.NewGuid()}";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/identities/{invalidIdentity}");
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
 }

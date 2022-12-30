@@ -186,11 +186,20 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
 
     public int Update(object snowflake, Action<TEntity> action)
     {
-        var found = _context.Data.TryGetValue(snowflake, out var value);
+        var found = _context.Data.TryGetValue(snowflake, out var entity);
         
         if(found)
         {
-            action(value!);
+            if (entity is ICloneable cloneable)
+            {
+                var updated = (TEntity)cloneable.Clone();
+                action(updated);
+                _context.Data.TryUpdate(snowflake, updated, entity);
+            }
+            else
+            {
+                action(entity!);
+            }
 
             return 1;
         }

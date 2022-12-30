@@ -55,4 +55,26 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         Assert.Collection(content,
             x => Assert.Equal((x.Key, (string?)x.Value), ("uniqueName", existingMember.UniqueName)));
     }
+
+    [Theory]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
+    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
+    public async Task Get_ShouldFail_WhenMemberDoesNotExist(string identity, string group, string member)
+    {
+        // Arrange
+        var absentMember = $"absent-member-{Guid.NewGuid()}";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/members/{absentMember}");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
 }

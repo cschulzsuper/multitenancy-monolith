@@ -1,7 +1,12 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
+﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
 
-public class Membership
+namespace ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
+
+public class Membership : ICloneable
 {
+    public object Clone()
+        => MemberwiseClone();
+
     public long Snowflake { get; set; }
 
     public required string Identity { get; set; }
