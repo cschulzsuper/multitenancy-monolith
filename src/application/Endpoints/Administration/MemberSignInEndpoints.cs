@@ -22,6 +22,7 @@ internal static class MemberSignInEndpoints
 
         groupsEndpoints
             .MapPost("/register", Register)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
             .WithErrorMessage(CouldNotRegisterMember);
 
         var groupMemberEndpoints = groupsEndpoints
@@ -29,16 +30,17 @@ internal static class MemberSignInEndpoints
 
         groupMemberEndpoints
             .MapPost("/sign-in", SignIn)
-            .AddEndpointFilter<BadgeResultEndpointFilter>()
-            .WithErrorMessage(CouldNotSignInMember);
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Default"))
+            .WithErrorMessage(CouldNotSignInMember)
+            .AddEndpointFilter<BadgeResultEndpointFilter>();
 
         var membersMeEndpoints = endpoints
             .MapGroup("/members/me")
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Member"))
             .WithTags("Members");
 
         membersMeEndpoints
             .MapPost("/verify", Verify)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Member", "Observer"))
             .WithErrorMessage(CouldNotVerifyMember);
 
         return endpoints;

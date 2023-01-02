@@ -19,10 +19,38 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
+    [Trait("Category", "Security")]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
+    public async Task Post_ShouldBeForbidden_WhenMemberIsNotChief(string identity, string group, string member)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/members");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+
+        var newMember = new
+        {
+            UniqueName = $"new-member-{Guid.NewGuid()}"
+        };
+
+        request.Content = JsonContent.Create(newMember);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
     public async Task Post_ShouldSucceed_WhenValidMemberIsGiven(string identity, string group, string member)
     {
         // Arrange
@@ -40,9 +68,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Act
         var response = await client.SendAsync(request);
-        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
 
         // Assert
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
+
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
         Assert.Collection(content,
@@ -60,10 +89,9 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
     public async Task Post_ShouldFail_WhenMemberUniqueNameIsEmpty(string identity, string group, string member)
     {
         // Arrange
@@ -84,6 +112,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using var scope = _factory.Services.CreateMultitenancyScope(group);
 
@@ -96,10 +125,9 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
     public async Task Post_ShouldFail_WhenMemberUniqueNameIsNull(string identity, string group, string member)
     {
         // Arrange
@@ -120,6 +148,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using var scope = _factory.Services.CreateMultitenancyScope(group);
 

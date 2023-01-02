@@ -14,7 +14,6 @@ internal sealed class CustomClaimAction : ClaimAction
 
     public Func<ICollection<Claim>, string?> Resolver { get; }
 
-    /// <inheritdoc />
     public override void Run(ICollection<Claim> claims, ClaimsIdentity identity, string issuer)
     {
         var value = Resolver(claims);

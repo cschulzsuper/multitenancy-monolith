@@ -31,28 +31,30 @@ internal static class IdentitySignInEndpoints
 
         identityEndpoints
             .MapPost("/sign-in", SignIn)
-            .AddEndpointFilter<BadgeResultEndpointFilter>()
-            .WithErrorMessage(CouldNotSignInIdentity);
+            .WithErrorMessage(CouldNotSignInIdentity)
+            .AddEndpointFilter<BadgeResultEndpointFilter>();
 
         identityEndpoints
             .MapPost("/reset", Reset)
-            .RequireAuthorization()
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
             .WithErrorMessage(CouldNotResetIdentity);
 
         var meEndpoints = identitiesEndpoints
-            .MapGroup("/me")
-            .RequireAuthorization();
+            .MapGroup("/me");
 
         meEndpoints
             .MapPost("/sign-out", SignOut)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Default"))
             .WithErrorMessage(CouldNotSignOutIdentity);
 
         meEndpoints
             .MapPost("/change-secret", ChangeSecret)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Secure"))
             .WithErrorMessage(CouldNotChangeIdentitySecret);
 
         meEndpoints
             .MapPost("/verify", Verify)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Default"))
             .WithErrorMessage(CouldNotVerifyIdentity);
 
         return endpoints;

@@ -1,6 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
-
-namespace ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
+﻿namespace ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
 
 public class Membership : ICloneable
 {

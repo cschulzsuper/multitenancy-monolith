@@ -1,10 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
-using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using System;
 using System.Linq;
-using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;

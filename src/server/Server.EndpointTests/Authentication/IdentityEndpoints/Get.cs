@@ -19,9 +19,45 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.AdminIdentity)]
+    [Trait("Category", "Security")]
+    [InlineData(TestConfiguration.ChiefIdentity)]
+    [InlineData(TestConfiguration.DefaultIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Get_ShouldReturnIdentity_WhenIdentityExists(string identity)
+    public async Task Get_ShouldBeForbidden_WhenIdentityIsNotAdmin(string identity)
+    {
+        // Arrange
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName =  $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "info@localhost",
+            Secret = "foo-bar"
+        };
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/identities/{existingIdentity.UniqueName}");
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.AdminIdentity)]
+    public async Task Get_ShouldSucceed_WhenIdentityExists(string identity)
     {
         // Arrange
         var existingIdentity = new Identity
@@ -58,8 +94,8 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Get_ShouldFail_WhenIdentityDoesNotExists(string identity)
     {
         // Arrange
@@ -75,11 +111,12 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Get_ShouldFail_WhenIdentityUniqueNameIsInvalid(string identity)
     {
         // Arrange
@@ -95,5 +132,6 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 }

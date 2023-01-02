@@ -18,27 +18,31 @@ internal static class IdentityEndpoints
     {
         var identitiesEndpoints = endpoints
             .MapGroup("/identities")
-            .RequireAuthorization()
             .WithTags("Identities");
 
         identitiesEndpoints
             .MapGet(string.Empty, GetAll)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
             .WithErrorMessage(CouldNotQueryIdentities);
 
         identitiesEndpoints
             .MapGet("{identity}", Get)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
             .WithErrorMessage(CouldNotQueryIdentity);
 
         identitiesEndpoints
             .MapPost(string.Empty, Post)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
             .WithErrorMessage(CouldNotCreateIdentity);
 
         identitiesEndpoints
             .MapPut("{identity}", Put)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
             .WithErrorMessage(CouldNotUpdateIdentity);
 
         identitiesEndpoints
             .MapDelete("{identity}", Delete)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
             .WithErrorMessage(CouldNotDeleteIdentity);
 
         return endpoints;

@@ -15,6 +15,7 @@ public sealed class IdentitySignInTests : IClassFixture<WebApplicationFactory<Pr
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Verfiy_ShouldSucceed_WhenAuthorizationIsValid(string identity)
@@ -33,9 +34,10 @@ public sealed class IdentitySignInTests : IClassFixture<WebApplicationFactory<Pr
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Verfiy_ShouldFail_WhenAuthorizationIsInvalid(string identity)
+    public async Task Verfiy_ShouldBeUnauthorized_WhenAuthorizationIsInvalid(string identity)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/identities/me/verify");

@@ -16,6 +16,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.AdminSecret)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.GuestSecret)]
     public async Task SignIn_ShouldSucceed_WhenCredentialAreValid(string identity, string secret)
@@ -34,6 +35,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity, "invalid")]
     [InlineData(TestConfiguration.GuestIdentity, "invalid")]
     public async Task SignIn_ShouldFail_WhenCredentialAreInvalid(string identity, string secret)
@@ -49,5 +51,6 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 }

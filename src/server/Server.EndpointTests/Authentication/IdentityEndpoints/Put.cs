@@ -18,8 +18,53 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.AdminIdentity)]
+    [Trait("Category", "Security")]
+    [InlineData(TestConfiguration.ChiefIdentity)]
+    [InlineData(TestConfiguration.DefaultIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
+    public async Task Delete_ShouldBeForbidden_WhenIdentityIsNotAdmin(string identity)
+    {
+        // Arrange
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName =  $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost",
+            Secret = "existing-foo-bar"
+        };
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/identities/{existingIdentity.UniqueName}");
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+
+        var putIdentity = new
+        {
+            UniqueName = $"put-identity-{Guid.NewGuid()}",
+            MailAddress = "put-info@localhost",
+            Secret = "put-foo-bar"
+        };
+
+        request.Content = JsonContent.Create(putIdentity);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.AdminIdentity)]
     public async Task Put_ShouldSucceed_WhenValidExistingIdentityIsGiven(string identity)
     {
         // Arrange
@@ -74,8 +119,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Put_ShouldFail_WhenNotExistingIdentityIsGiven(string identity)
     {
         // Arrange
@@ -100,11 +145,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Put_ShouldFail_WhenIdentityUniqueNameIsNull(string identity)
     {
         // Arrange
@@ -142,6 +188,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using (var scope = _factory.Services.CreateScope())
         {
@@ -159,8 +206,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Put_ShouldFail_WhenIdentityUniqueNameIsEmpty(string identity)
     {
         // Arrange
@@ -198,6 +245,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using (var scope = _factory.Services.CreateScope())
         {
@@ -215,8 +263,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Put_ShouldFail_WhenIdentitySecretIsNull(string identity)
     {
         // Arrange
@@ -254,6 +302,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using (var scope = _factory.Services.CreateScope())
         {
@@ -271,8 +320,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Put_ShouldFail_WhenIdentitySecretIsEmpty(string identity)
     {
         // Arrange
@@ -310,6 +359,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using (var scope = _factory.Services.CreateScope())
         {
@@ -327,8 +377,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Put_ShouldFail_WhenIdentityMailAddressIsEmpty(string identity)
     {
         // Arrange
@@ -366,6 +416,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using (var scope = _factory.Services.CreateScope())
         {
@@ -383,8 +434,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Put_ShouldFail_WhenIdentityMailAddressIsNull(string identity)
     {
         // Arrange
@@ -422,6 +473,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using (var scope = _factory.Services.CreateScope())
         {
@@ -439,8 +491,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Put_ShouldFail_WhenIdentityMailAddressIsNotMailAddress(string identity)
     {
         // Arrange
@@ -478,6 +530,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using (var scope = _factory.Services.CreateScope())
         {

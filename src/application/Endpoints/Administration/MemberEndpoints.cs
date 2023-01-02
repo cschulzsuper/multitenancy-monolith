@@ -18,27 +18,31 @@ internal static class MemberEndpoints
     {
         var membersEndpoints = endpoints
             .MapGroup("/members")
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Member"))
             .WithTags("Members");
 
         membersEndpoints
             .MapGet(string.Empty, GetAll)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Chief", "Observer"))
             .WithErrorMessage(CouldNotQueryMembers);
 
         membersEndpoints
             .MapGet("{member}", Get)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Chief", "Observer"))
             .WithErrorMessage(CouldNotQueryMember);
 
         membersEndpoints
             .MapPost(string.Empty, Post)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Chief"))
             .WithErrorMessage(CouldNotCreateMember);
 
         membersEndpoints
             .MapPut("{member}", Put)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Chief"))
             .WithErrorMessage(CouldNotUpdateMember);
 
         membersEndpoints
             .MapDelete("{member}", Delete)
+            .RequireAuthorization(ploicy => ploicy.RequireRole("Chief"))
             .WithErrorMessage(CouldNotDeleteMember);
 
         return endpoints;

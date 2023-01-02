@@ -15,10 +15,13 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     public async Task SignIn_ShouldSucceed_WhenMemberIsValid(string identity, string group, string member)
     {
         // Arrange
@@ -35,10 +38,13 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, "invalid")]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, "invalid")]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, "invalid")]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, "invalid")]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, "invalid")]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, "invalid")]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, "invalid")]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, "invalid")]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, "invalid")]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, "invalid")]
     public async Task SignIn_ShouldFail_WhenMemberDoesNotExist(string identity, string group, string member)
     {
         // Arrange
@@ -52,13 +58,17 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
     [Theory]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Guest)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup1, TestConfiguration.DefaultGroup1Admin)]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Guest)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.DefaultGroup2, TestConfiguration.DefaultGroup2Admin)]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
     public async Task SignIn_ShouldFail_WhenIdentityIsNotAssignedToMember(string identity, string group, string member)
     {
         // Arrange
@@ -72,13 +82,17 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
     [Theory]
-    [InlineData(TestConfiguration.AdminIdentity, "invalid", TestConfiguration.DefaultGroup1Guest)]
-    [InlineData(TestConfiguration.GuestIdentity, "invalid", TestConfiguration.DefaultGroup1Admin)]
-    [InlineData(TestConfiguration.AdminIdentity, "invalid", TestConfiguration.DefaultGroup2Guest)]
-    [InlineData(TestConfiguration.GuestIdentity, "invalid", TestConfiguration.DefaultGroup2Admin)]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.ChiefIdentity, "invalid", TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, "invalid", TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.DefaultIdentity, "invalid", TestConfiguration.Group1Member)]
+    [InlineData(TestConfiguration.DefaultIdentity, "invalid", TestConfiguration.Group2Member)]
+    [InlineData(TestConfiguration.GuestIdentity, "invalid", TestConfiguration.Group1Member)]
+    [InlineData(TestConfiguration.GuestIdentity, "invalid", TestConfiguration.Group2Member)]
     public async Task SignIn_ShouldFail_WhenGroupDoesNotExist(string identity, string group, string member)
     {
         // Arrange
@@ -92,5 +106,6 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 }

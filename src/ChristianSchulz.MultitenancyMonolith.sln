@@ -7,41 +7,41 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "application", "application"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{2600463A-238C-4171-8AA8-6BCD909ADDC7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "src\server\Server\Server.csproj", "{905B074E-406D-4D4B-ACF7-22B488EE4D2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "server\Server\Server.csproj", "{905B074E-406D-4D4B-ACF7-22B488EE4D2E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Endpoints", "src\application\Endpoints\Endpoints.csproj", "{CA33AB9C-5D7A-4FBC-9127-B5C33CF970BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Endpoints", "application\Endpoints\Endpoints.csproj", "{CA33AB9C-5D7A-4FBC-9127-B5C33CF970BF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Transport", "src\application\Transport\Transport.csproj", "{36D70E09-29AE-4746-98DA-F6B4F67D5BDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Transport", "application\Transport\Transport.csproj", "{36D70E09-29AE-4746-98DA-F6B4F67D5BDB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Transport.Contract", "src\application\Transport.Contract\Transport.Contract.csproj", "{EA6E8F89-C6DE-45F5-B5A9-386F0C3F85A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Transport.Contract", "application\Transport.Contract\Transport.Contract.csproj", "{EA6E8F89-C6DE-45F5-B5A9-386F0C3F85A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Management.Contract", "src\application\Management.Contract\Management.Contract.csproj", "{5B5FF0D8-2551-4AD8-975C-DEC7E7C1354E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Management.Contract", "application\Management.Contract\Management.Contract.csproj", "{5B5FF0D8-2551-4AD8-975C-DEC7E7C1354E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{E9436848-A5FC-41BE-B345-609E35C38C00}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aggregates", "src\data\Aggregates\Aggregates.csproj", "{DE6FD4F4-4847-4048-8D15-C3151E7CD5CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aggregates", "data\Aggregates\Aggregates.csproj", "{DE6FD4F4-4847-4048-8D15-C3151E7CD5CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Management", "src\application\Management\Management.csproj", "{476D9F6B-61B7-4FC2-824F-2CB9A0EA18E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Management", "application\Management\Management.csproj", "{476D9F6B-61B7-4FC2-824F-2CB9A0EA18E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.EndpointTests", "src\server\Server.EndpointTests\Server.EndpointTests.csproj", "{F3F9A996-DCDF-40E8-824F-5A7911AAB899}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.EndpointTests", "server\Server.EndpointTests\Server.EndpointTests.csproj", "{F3F9A996-DCDF-40E8-824F-5A7911AAB899}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{536F15A9-214D-459F-8EC4-8950C78E1BD0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security", "src\shared\Security\Security.csproj", "{188F2939-5088-4C97-8397-DF1EB539A018}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security", "shared\Security\Security.csproj", "{188F2939-5088-4C97-8397-DF1EB539A018}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.StaticDictionary", "src\data\Data.StaticDictionary\Data.StaticDictionary.csproj", "{50EF97DA-CB06-4E4E-B596-C265CD5DBB2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.StaticDictionary", "data\Data.StaticDictionary\Data.StaticDictionary.csproj", "{50EF97DA-CB06-4E4E-B596-C265CD5DBB2F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security.Claims", "src\shared\Security.Claims\Security.Claims.csproj", "{45718219-01C3-4B23-B0AD-628FF54EDD53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security.Claims", "shared\Security.Claims\Security.Claims.csproj", "{45718219-01C3-4B23-B0AD-628FF54EDD53}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security.RequestUser", "src\shared\Security.RequestUser\Security.RequestUser.csproj", "{0C74D3D6-BAAE-4A51-BC12-438EF78D314C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security.RequestUser", "shared\Security.RequestUser\Security.RequestUser.csproj", "{0C74D3D6-BAAE-4A51-BC12-438EF78D314C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching", "src\data\Caching\Caching.csproj", "{F09036B9-FDC1-4010-BF71-BD10DD57794F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching", "data\Caching\Caching.csproj", "{F09036B9-FDC1-4010-BF71-BD10DD57794F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.Contract", "src\data\Caching.Contract\Caching.Contract.csproj", "{8478FB31-10FE-4E28-9B23-6ED51307794D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.Contract", "data\Caching.Contract\Caching.Contract.csproj", "{8478FB31-10FE-4E28-9B23-6ED51307794D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Contract", "src\data\Data.Contract\Data.Contract.csproj", "{EADC41AC-9854-4EC6-B6AD-F7E8B22F087B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Contract", "data\Data.Contract\Data.Contract.csproj", "{EADC41AC-9854-4EC6-B6AD-F7E8B22F087B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Validation", "src\shared\Validation\Validation.csproj", "{AFD148A8-8894-4B0F-987B-21ABB51D7D5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Validation", "shared\Validation\Validation.csproj", "{AFD148A8-8894-4B0F-987B-21ABB51D7D5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

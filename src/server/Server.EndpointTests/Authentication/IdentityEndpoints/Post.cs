@@ -20,8 +20,38 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(TestConfiguration.AdminIdentity)]
+    [Trait("Category", "Security")]
+    [InlineData(TestConfiguration.ChiefIdentity)]
+    [InlineData(TestConfiguration.DefaultIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
+    public async Task Delete_ShouldBeForbidden_WhenIdentityIsNotAdmin(string identity)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+
+        var newIdentity = new
+        {
+            UniqueName = $"new-identity-{Guid.NewGuid()}",
+            MailAddress = "info@localhost",
+            Secret = "foo-bar"
+        };
+
+        request.Content = JsonContent.Create(newIdentity);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.AdminIdentity)]
     public async Task Post_ShouldSucceed_WhenValidIdentityIsGiven(string identity)
     {
         // Arrange
@@ -41,9 +71,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Act
         var response = await client.SendAsync(request);
-        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
 
         // Assert
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
+
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
@@ -65,8 +96,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Post_ShouldFail_WhenIdentityUniqueNameIsEmpty(string identity)
     {
         // Arrange
@@ -89,6 +120,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using var scope = _factory.Services.CreateScope();
 
@@ -101,8 +133,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Post_ShouldFail_WhenIdentityUniqueNameIsNull(string identity)
     {
         // Arrange
@@ -125,6 +157,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using var scope = _factory.Services.CreateScope();
 
@@ -137,8 +170,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Post_ShouldFail_WhenIdentitySecretIsEmpty(string identity)
     {
         // Arrange
@@ -161,6 +194,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using var scope = _factory.Services.CreateScope();
 
@@ -173,8 +207,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Post_ShouldFail_WhenIdentitySecretIsNull(string identity)
     {
         // Arrange
@@ -197,6 +231,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using var scope = _factory.Services.CreateScope();
 
@@ -209,8 +244,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Post_ShouldFail_WhenIdentityMailAddressIsEmpty(string identity)
     {
         // Arrange
@@ -233,6 +268,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using var scope = _factory.Services.CreateScope();
 
@@ -245,8 +281,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Post_ShouldFail_WhenIdentityMailAddressIsNull(string identity)
     {
         // Arrange
@@ -269,6 +305,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using var scope = _factory.Services.CreateScope();
 
@@ -281,8 +318,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
     public async Task Post_ShouldFail_WhenIdentityMailAddressIsNotMailAddress(string identity)
     {
         // Arrange
@@ -305,6 +342,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using var scope = _factory.Services.CreateScope();
 

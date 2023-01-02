@@ -15,7 +15,30 @@ internal static class _Configuration
 {
     public static void Configure(this BadgeAuthenticationOptions options)
     {
-        options.ClaimActions.MapCustomClaim(ClaimTypes.Role, claims => claims.Any(x => x.Type == "Member") ? "Member" : null);
+        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
+            claims => claims.Any(x => 
+                x.Type == "Identity" && x.Value == "admin") ? "Admin" : null);
+
+        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
+            claims => claims.Any(x =>
+                x.Type == "Identity" && !string.IsNullOrWhiteSpace(x.Value)) ? "Default" : null);
+
+        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
+            claims => claims.Any(x =>
+                x.Type == "Identity" && x.Value != "demo") ? "Secure" : null);
+
+        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
+            claims => claims.Any(x =>
+                x.Type == "Member" && x.Value.StartsWith("chief-")) ? "Chief" : null);
+
+        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
+            claims => claims.Any(x => 
+                x.Type == "Member" && !string.IsNullOrWhiteSpace(x.Value)) ? "Member" : null);
+
+        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
+            claims =>
+                claims.Any(x => x.Type == "Identity" && x.Value == "demo") &&
+                claims.Any(x => x.Type == "Member" && !string.IsNullOrWhiteSpace(x.Value)) ? "Observer" : null);
 
         options.Events.OnValidatePrincipal = context =>
         {
