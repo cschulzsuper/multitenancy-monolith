@@ -1,4 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.EndpointFilters;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration.Requests;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.EndpointFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -52,8 +53,8 @@ internal static class MemberSignInEndpoints
 
     private static Delegate SignIn =>
         [Authorize]
-        (IMemberSignInRequestHandler requestHandler, string group, string member)
-            => requestHandler.SignIn(group, member);
+        (IMemberSignInRequestHandler requestHandler, string group, string member, MemberSignInRequest request)
+            => requestHandler.SignIn(group, member, request);
 
     private static Delegate Verify =>
         [Authorize(Roles = "Member")]

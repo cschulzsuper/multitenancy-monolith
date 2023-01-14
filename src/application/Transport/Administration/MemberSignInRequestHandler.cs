@@ -1,4 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration.Requests;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -10,6 +11,8 @@ internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
     private readonly IMembershipManager _membershipManager;
     private readonly IMembershipVerficationManager _membershipVerficationManager;
     private readonly ClaimsPrincipal _user;
+
+    private readonly string[] _allowedClients = { "swagger", "endpoint-tests" };
 
     private readonly static object _signInLock = new();
 
@@ -23,8 +26,16 @@ internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
         _user = user;
     }
 
-    public ClaimsIdentity SignIn(string group, string member)
+    public ClaimsIdentity SignIn(string group, string member, MemberSignInRequest request)
     {
+        var client = request.Client;
+
+        if (!_allowedClients.Contains(request.Client))
+        {
+            throw new TransportException($"Client '{client}' is not allowed to sign in");
+        }
+
+
         lock (_signInLock)
         {
             var identity = _user.GetClaim("Identity");
@@ -43,12 +54,20 @@ internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
 
             var verfication = Guid.NewGuid().ToByteArray();
 
-            _membershipVerficationManager.Set(group, member, verfication);
+            var verfifytionKey = new MembershipVerficationKey
+            {
+                Client = client,
+                Group = group,
+                Member = member
+            };
+
+            _membershipVerficationManager.Set(verfifytionKey, verfication);
 
             var verficationnValue = Convert.ToBase64String(verfication);
 
             var claims = new Claim[]
             {
+                new Claim("Client", client),
                 new Claim("Identity", identity),
                 new Claim("Group", group),
                 new Claim("Member", member),

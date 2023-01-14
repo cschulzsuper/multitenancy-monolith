@@ -7,7 +7,7 @@ The application focuses on the REST API, authentication and the database access 
 
 If you are developing an ASP.NET Core application yourself and are looking for a different approach, you've come to the right place.
 
-# Progress
+# History
 
 * /1 In the initial commit I only created a single Visual Studio project from the built-in template and the GitHub repository. https://github.com/cschulzsuper/multitenancy-monolith/commit/0a18987ba7518789da227fce88915b55f3635d78
 * /2 I took the application logic from the template and moved it into an application layer. This layer is split into endpoints and transport. Endpoints only maps routes, while transport contains the logic to handle requests. https://github.com/cschulzsuper/multitenancy-monolith/commit/91a308bdb5b3593ac53061d309caf45837e36c45
@@ -34,11 +34,15 @@ If you are developing an ASP.NET Core application yourself and are looking for a
 * /23 For the update method in the repository, I use an `Action` which will modify the entity. I will not support real bulk updates yet. After [#29654](https://github.com/dotnet/efcore/issues/29654) is implemented, I will have another look for an additional update method. https://github.com/cschulzsuper/multitenancy-monolith/commit/6e4bae6652d618885efa30f4b91a27928a9d6a52
 * /24 Simple adjustments add some generic error handling. It uses [problem details](https://www.rfc-editor.org/rfc/rfc7807) and supports swagger. Standardized support for error messages allows clients to use a generic error handling as well. https://github.com/cschulzsuper/multitenancy-monolith/commit/3b3dbb323d5be9b0ba19ee88a853dddbf46bc3fa
 * /25 Endpoint error messages help to increase the usefulness of the problem details. Additionally, it turned out that I forgot that the temporary static dictionary data provider does not cope well with update actions. I needed to make all entities `ICloneable`. https://github.com/cschulzsuper/multitenancy-monolith/commit/ac414583372631693cf59c33b839f79a8e94cf2d
-* /26 (Role requirements)[./docs/ROLES.md] restrict endpoint access for authenticated identities and members. Security tests as part of endpoint tests ensure this permanently. 
+* /26 [Role requirements](./docs/ROLES.md) restrict endpoint access for authenticated identities and members. Security tests as part of endpoint tests ensure this permanently. https://github.com/cschulzsuper/multitenancy-monolith/commit/6a9c4801f9bf2ada9aae78be7143c2af5c5ecd53 
+* /27 [Client requirement](./docs/CLIENTS.md) in authentication and authorization request will later allow a restricted usage of badges. https://github.com/cschulzsuper/multitenancy-monolith/commit/6a9c4801f9bf2ada9aae78be7143c2af5c5ecd53 
 
-# Planned
+# Current
 
-* Swagger: Role specific swagger.json
+* Swagger: Authorization specific `swagger.json`
+
+# Backlog
+
 * ORM: Entity Framework In-Memroy provider
 * ORM: Entity Framework SQL Server provider 
 * Business: Example endpoint

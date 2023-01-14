@@ -8,6 +8,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Co
 
 internal sealed class ClaimsJsonConverter : JsonConverter<Claim[]>
 {
+    private static readonly JsonEncodedText Client = JsonEncodedText.Encode("client");
     private static readonly JsonEncodedText Identity = JsonEncodedText.Encode("identity");
     private static readonly JsonEncodedText Group = JsonEncodedText.Encode("group");
     private static readonly JsonEncodedText Member = JsonEncodedText.Encode("member");
@@ -52,7 +53,13 @@ internal sealed class ClaimsJsonConverter : JsonConverter<Claim[]>
     internal static void ReadValue(ref Utf8JsonReader reader, ICollection<Claim> value,
         JsonSerializerOptions _)
     {
-        if (reader.TryReadStringProperty(Identity, out var stringValue))
+        if (reader.TryReadStringProperty(Client, out var stringValue))
+        {
+            value.Add(new Claim(nameof(Client), stringValue));
+            return;
+        }
+
+        if (reader.TryReadStringProperty(Identity, out stringValue))
         {
             value.Add(new Claim(nameof(Identity), stringValue));
             return;
@@ -101,6 +108,7 @@ internal sealed class ClaimsJsonConverter : JsonConverter<Claim[]>
     private static JsonEncodedText? GetPropertyNameOrDefault(string claimType)
         => claimType switch
         {
+            nameof(Client) => Client,
             nameof(Identity) => Identity,
             nameof(Group) => Group,
             nameof(Member) => Member,

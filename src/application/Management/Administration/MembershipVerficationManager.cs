@@ -11,9 +11,9 @@ internal sealed class MembershipVerficationManager : IMembershipVerficationManag
         _byteCache = byteCacheFactory.Create($"membership-verfication");
     }
 
-    public bool Has(string group, string member, byte[] verfication)
-        => _byteCache.Has($"{group}.{member}", verfication);
+    public bool Has(MembershipVerficationKey verficationKey, byte[] verfication)
+        => _byteCache.Has($"{verficationKey.Group}:{verficationKey.Member}:{verficationKey.Client}", verfication);
 
-    public void Set(string group, string member, byte[] verfication)
-        => _byteCache.Set($"{group}.{member}", verfication);
+    public void Set(MembershipVerficationKey verficationKey, byte[] verfication)
+        => _byteCache.Set($"{verficationKey.Group}:{verficationKey.Member}:{verficationKey.Client}", verfication);
 }

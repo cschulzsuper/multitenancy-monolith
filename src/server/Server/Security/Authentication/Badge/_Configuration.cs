@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Security.Claims;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration;
 using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Application.Administration;
-using System.Collections.Generic;
-using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Core;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
 
@@ -77,13 +77,25 @@ internal static class _Configuration
     {
         var identityVerficationManager = context.HttpContext.RequestServices.GetRequiredService<IIdentityVerficationManager>();
 
+        var badgeClient = badgeClaims.SingleOrDefault(x => x.Type == "Client");
+        if (badgeClient == null)
+        {
+            return false;
+        }
+
         var badgeIdentity = badgeClaims.SingleOrDefault(x => x.Type == "Identity");
         if (badgeIdentity == null)
         {
             return false;
         }
 
-        var badgeValid = identityVerficationManager.Has(badgeIdentity.Value, badgeVerification);
+        var verficationKey = new IdentityVerficationKey
+        {
+            Client = badgeClient.Value,
+            Identity = badgeIdentity.Value,
+        };
+
+        var badgeValid = identityVerficationManager.Has(verficationKey, badgeVerification);
 
         return badgeValid;
     }
@@ -91,6 +103,12 @@ internal static class _Configuration
     private static bool ValidateMember(BadgeValidatePrincipalContext context, ICollection<Claim> badgeClaims, byte[] badgeVerification)
     {
         var membershipVerficationManager = context.HttpContext.RequestServices.GetRequiredService<IMembershipVerficationManager>();
+
+        var badgeClient = badgeClaims.SingleOrDefault(x => x.Type == "Client");
+        if (badgeClient == null)
+        {
+            return false;
+        }
 
         var badgeGroup = badgeClaims.SingleOrDefault(x => x.Type == "Group");
         if (badgeGroup == null)
@@ -104,7 +122,14 @@ internal static class _Configuration
             return false;
         }
 
-        var badgeValid = membershipVerficationManager.Has(badgeGroup.Value, badgeMember.Value, badgeVerification);
+        var verficationKey = new MembershipVerficationKey
+        {
+            Client = badgeClient.Value,
+            Group = badgeGroup.Value,
+            Member = badgeMember.Value,
+        };
+
+        var badgeValid = membershipVerficationManager.Has(verficationKey, badgeVerification);
 
         return badgeValid;
     }

@@ -1,4 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration;
+﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Application.Administration;
 using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Core;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -13,6 +14,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests;
 
 internal static class TestConfiguration
 {
+    public const string ClientName = "endpoint-tests";
+
     public const string AdminIdentity = "admin";
     public const string AdminMailAddress = "admin@localhost";
     public const string AdminSecret = "secret";
@@ -126,11 +129,17 @@ internal static class TestConfiguration
     {
         var verfication = Guid.NewGuid().ToByteArray();
 
+        var verficationKey = new IdentityVerficationKey
+        {
+            Client = ClientName,
+            Identity= identity,
+        };
+
         using var scope = factory.Services.CreateScope();
 
         scope.ServiceProvider
             .GetRequiredService<IIdentityVerficationManager>()
-            .Set(identity, verfication);
+            .Set(verficationKey, verfication);
 
         return Convert.ToBase64String(verfication);
     }
@@ -139,11 +148,18 @@ internal static class TestConfiguration
     {
         var verfication = Guid.NewGuid().ToByteArray();
 
+        var verficationKey = new MembershipVerficationKey
+        {
+            Client = ClientName,
+            Group = group,
+            Member = member
+        };
+
         using var scope = factory.Services.CreateScope();
 
         scope.ServiceProvider
             .GetRequiredService<IMembershipVerficationManager>()
-            .Set(group, member, verfication);
+            .Set(verficationKey, verfication);
 
         return Convert.ToBase64String(verfication);
     }
@@ -152,6 +168,7 @@ internal static class TestConfiguration
     {
         var claims = new Claim[]
         {
+            new Claim("Client", ClientName),
             new Claim("Identity", identity),
             new Claim("Verification", verification, ClaimValueTypes.Base64Binary)
         };
@@ -165,6 +182,7 @@ internal static class TestConfiguration
     {
         var claims = new Claim[]
         {
+            new Claim("Client", ClientName),
             new Claim("Identity", identity),
             new Claim("Group", group),
             new Claim("Member", member),

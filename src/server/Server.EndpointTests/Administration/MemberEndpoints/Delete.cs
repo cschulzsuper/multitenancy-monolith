@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
+using ChristianSchulz.MultitenancyMonolith.Data;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using Xunit;
-using Microsoft.Extensions.DependencyInjection;
-using ChristianSchulz.MultitenancyMonolith.Data;
-using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.MemberEndpoints;
 

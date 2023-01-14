@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Application.Administration.Requests;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Administration.Responses;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 

@@ -64,7 +64,7 @@ internal static class IdentitySignInEndpoints
         () => Results.StatusCode(StatusCodes.Status501NotImplemented);
 
     private static Delegate SignIn =>
-        (IIdentitySignInRequestHandler requestHandler, string identity, SignInRequest request)
+        (IIdentitySignInRequestHandler requestHandler, string identity, IdentitySignInRequest request)
             => requestHandler.SignIn(identity, request);
 
     private static Delegate Reset =>

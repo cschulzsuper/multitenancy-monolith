@@ -11,9 +11,9 @@ internal sealed class IdentityVerficationManager : IIdentityVerficationManager
         _byteCache = byteCacheFactory.Create("identity-verfication");
     }
 
-    public bool Has(string identity, byte[] verfication)
-        => _byteCache.Has(identity, verfication);
+    public bool Has(IdentityVerficationKey verficationKey, byte[] verfication)
+        => _byteCache.Has($"{verficationKey.Identity}:{verficationKey.Client}", verfication);
 
-    public void Set(string identity, byte[] verfication)
-        => _byteCache.Set(identity, verfication);
+    public void Set(IdentityVerficationKey verficationKey, byte[] verfication)
+        => _byteCache.Set($"{verficationKey.Identity}:{verficationKey.Client}", verfication);
 }

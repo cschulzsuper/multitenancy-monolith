@@ -1,8 +1,8 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Responses;
+﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Requests;
+using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Responses;
 using System.Linq;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Requests;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 

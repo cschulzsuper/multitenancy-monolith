@@ -5,6 +5,6 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
 public interface IIdentitySignInRequestHandler
 {
-    ClaimsIdentity SignIn(string identity, SignInRequest request);
+    ClaimsIdentity SignIn(string identity, IdentitySignInRequest request);
     void Verify();
 }

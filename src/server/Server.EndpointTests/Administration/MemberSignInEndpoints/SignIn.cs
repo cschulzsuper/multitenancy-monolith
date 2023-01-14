@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
+using System.Net.Http.Json;
 using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.MemberSignInEndpoints;
@@ -27,6 +28,13 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/groups/{group}/members/{member}/sign-in");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        
+        var signInRequest = new
+        {
+            Client = TestConfiguration.ClientName
+        };
+
+        request.Content = JsonContent.Create(signInRequest);
 
         var client = _factory.CreateClient();
 
@@ -51,6 +59,13 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
         var request = new HttpRequestMessage(HttpMethod.Post, $"/groups/{group}/members/{member}/sign-in");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
+        var signInRequest = new
+        {
+            Client = TestConfiguration.ClientName
+        };
+
+        request.Content = JsonContent.Create(signInRequest);
+
         var client = _factory.CreateClient();
 
         // Act
@@ -74,6 +89,13 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/groups/{group}/members/{member}/sign-in");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+
+        var signInRequest = new
+        {
+            Client = TestConfiguration.ClientName
+        };
+
+        request.Content = JsonContent.Create(signInRequest);
 
         var client = _factory.CreateClient();
 
@@ -100,6 +122,44 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
+
+        var signInRequest = new
+        {
+            Client = TestConfiguration.ClientName
+        };
+
+        request.Content = JsonContent.Create(signInRequest);
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Theory]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
+    public async Task SignIn_ShouldFail_WhenClientIsInvalid(string identity, string group, string member)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/groups/{group}/members/{member}/sign-in");
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+
+        var client = _factory.CreateClient();
+
+        var signInRequest = new
+        {
+            Client = "invalid"
+        };
+
+        request.Content = JsonContent.Create(signInRequest);
 
         // Act
         var response = await client.SendAsync(request);

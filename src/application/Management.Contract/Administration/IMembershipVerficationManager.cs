@@ -2,7 +2,7 @@
 
 public interface IMembershipVerficationManager
 {
-    bool Has(string group, string member, byte[] verfication);
+    bool Has(MembershipVerficationKey verficationKey, byte[] verfication);
 
-    void Set(string group, string member, byte[] verfication);
+    void Set(MembershipVerficationKey verficationKey, byte[] verfication);
 }

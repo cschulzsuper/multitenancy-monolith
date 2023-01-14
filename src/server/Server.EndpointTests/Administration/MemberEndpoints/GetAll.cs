@@ -1,6 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
-using ChristianSchulz.MultitenancyMonolith.Data;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Net.Http.Json;

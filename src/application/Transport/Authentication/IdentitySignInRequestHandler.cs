@@ -10,6 +10,8 @@ internal sealed class IdentitySignInRequestHandler : IIdentitySignInRequestHandl
     private readonly IIdentityManager _identityManager;
     private readonly IIdentityVerficationManager _identityVerficationManager;
 
+    private readonly string[] _allowedClients = { "swagger", "endpoint-tests" };
+
     private readonly static object _signInLock = new();
 
     public IdentitySignInRequestHandler(
@@ -20,8 +22,15 @@ internal sealed class IdentitySignInRequestHandler : IIdentitySignInRequestHandl
         _identityVerficationManager = identityVerficationManager;
     }
 
-    public ClaimsIdentity SignIn(string identity, SignInRequest request)
+    public ClaimsIdentity SignIn(string identity, IdentitySignInRequest request)
     {
+        var client = request.Client;
+
+        if (!_allowedClients.Contains(request.Client))
+        {
+            throw new TransportException($"Client '{client}' is not allowed to sign in");
+        }
+
         lock (_signInLock)
         {
             var found = _identityManager.GetAll()
@@ -36,12 +45,19 @@ internal sealed class IdentitySignInRequestHandler : IIdentitySignInRequestHandl
 
             var verification = Guid.NewGuid().ToByteArray();
 
-            _identityVerficationManager.Set(identity, verification);
+            var verfifytionKey = new IdentityVerficationKey
+            {
+                Client = client,
+                Identity = identity
+            };
+
+            _identityVerficationManager.Set(verfifytionKey, verification);
 
             var verificationValue = Convert.ToBase64String(verification);
 
             var claims = new Claim[]
             {
+                new Claim("Client", client),
                 new Claim("Identity", identity),
                 new Claim("Verification", verificationValue, ClaimValueTypes.Base64Binary)
             };
