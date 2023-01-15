@@ -35,7 +35,9 @@ If you are developing an ASP.NET Core application yourself and are looking for a
 * /24 Simple adjustments add some generic error handling. It uses [problem details](https://www.rfc-editor.org/rfc/rfc7807) and supports swagger. Standardized support for error messages allows clients to use a generic error handling as well. https://github.com/cschulzsuper/multitenancy-monolith/commit/3b3dbb323d5be9b0ba19ee88a853dddbf46bc3fa
 * /25 Endpoint error messages help to increase the usefulness of the problem details. Additionally, it turned out that I forgot that the temporary static dictionary data provider does not cope well with update actions. I needed to make all entities `ICloneable`. https://github.com/cschulzsuper/multitenancy-monolith/commit/ac414583372631693cf59c33b839f79a8e94cf2d
 * /26 [Role requirements](./docs/ROLES.md) restrict endpoint access for authenticated identities and members. Security tests as part of endpoint tests ensure this permanently. https://github.com/cschulzsuper/multitenancy-monolith/commit/6a9c4801f9bf2ada9aae78be7143c2af5c5ecd53 
-* /27 [Client requirement](./docs/CLIENTS.md) in authentication and authorization request will later allow a restricted usage of badges. https://github.com/cschulzsuper/multitenancy-monolith/commit/6a9c4801f9bf2ada9aae78be7143c2af5c5ecd53 
+* /27 [Client requirement](./docs/CLIENTS.md) in authentication and authorization request will later allow a restricted usage of badges. https://github.com/cschulzsuper/multitenancy-monolith/commit/03edcb32647649ea23f4beca53e4adb73924808a
+
+* /28 Only clients that authenticate as `swagger` client can access the `swagger.json` in production. In development this restriction is not applied. A security tests verifies the behavior. 
 
 # Current
 

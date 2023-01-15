@@ -17,8 +17,8 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
@@ -80,10 +80,10 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     public async Task SignIn_ShouldFail_WhenIdentityIsNotAssignedToMember(string identity, string group, string member)
     {
         // Arrange
@@ -109,8 +109,8 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, "invalid", TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, "invalid", TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, "invalid", TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, "invalid", TestConfiguration.Group2chief)]
     [InlineData(TestConfiguration.DefaultIdentity, "invalid", TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.DefaultIdentity, "invalid", TestConfiguration.Group2Member)]
     [InlineData(TestConfiguration.GuestIdentity, "invalid", TestConfiguration.Group1Member)]
@@ -140,8 +140,8 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]

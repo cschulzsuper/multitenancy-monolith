@@ -13,8 +13,10 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -24,7 +26,7 @@ public class Startup
 {
     private readonly IWebHostEnvironment _environment;
 
-    public Startup(IWebHostEnvironment environment)
+    public Startup(IWebHostEnvironment environment, IConfiguration configuration)
     {
         _environment = environment;
     }
@@ -40,7 +42,7 @@ public class Startup
 
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new() { Title = "Multitenancy Monolith", Version = "v1" });
+            options.SwaggerDoc("v1", new() { Title = "Multitenancy Monolith", Version = "v1" });           
 
             options.ConfigureAuthentication();
             options.ConfigureAuthorization();
@@ -69,13 +71,10 @@ public class Startup
 
         app.UseHttpsRedirection();
 
-        if (_environment.IsDevelopment())
+        app.UseSwaggerUI(options =>
         {
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Multitenancy Monolith");
-            });
-        }
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Multitenancy Monolith");
+        });
 
         app.UseRouting();
 
@@ -87,6 +86,12 @@ public class Startup
             if (_environment.IsDevelopment())
             {
                 endpoints.MapSwagger();
+            } 
+            else
+            {
+                endpoints.MapSwagger()
+                    .RequireAuthorization(ploicy => ploicy
+                    .RequireClaim("scope", "swagger-json"));
             }
 
             endpoints.MapAdministrationEndpoints();

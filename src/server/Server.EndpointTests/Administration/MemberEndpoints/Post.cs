@@ -19,12 +19,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [Trait("Category", "Security")]
+    [Trait("Category", "Endpoint.Security")]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Post_ShouldBeForbidden_WhenMemberIsNotChief(string identity, string group, string member)
+    public async Task Post_ShouldBeForbidden_WhenMemberIsNotchief(string identity, string group, string member)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/members");
@@ -49,8 +49,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     public async Task Post_ShouldSucceed_WhenValidMemberIsGiven(string identity, string group, string member)
     {
         // Arrange
@@ -90,8 +90,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     public async Task Post_ShouldFail_WhenMemberUniqueNameIsEmpty(string identity, string group, string member)
     {
         // Arrange
@@ -126,8 +126,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     public async Task Post_ShouldFail_WhenMemberUniqueNameIsNull(string identity, string group, string member)
     {
         // Arrange

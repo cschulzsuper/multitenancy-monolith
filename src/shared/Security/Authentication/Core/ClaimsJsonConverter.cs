@@ -55,31 +55,31 @@ internal sealed class ClaimsJsonConverter : JsonConverter<Claim[]>
     {
         if (reader.TryReadStringProperty(Client, out var stringValue))
         {
-            value.Add(new Claim(nameof(Client), stringValue));
+            value.Add(new Claim("client", stringValue));
             return;
         }
 
         if (reader.TryReadStringProperty(Identity, out stringValue))
         {
-            value.Add(new Claim(nameof(Identity), stringValue));
+            value.Add(new Claim("identity", stringValue));
             return;
         }
 
         if (reader.TryReadStringProperty(Group, out stringValue))
         {
-            value.Add(new Claim(nameof(Group), stringValue));
+            value.Add(new Claim("group", stringValue));
             return;
         }
 
         if (reader.TryReadStringProperty(Member, out stringValue))
         {
-            value.Add(new Claim(nameof(Member), stringValue));
+            value.Add(new Claim("member", stringValue));
             return;
         }
 
         if (reader.TryReadStringProperty(Verification, out stringValue))
         {
-            value.Add(new Claim(nameof(Verification), stringValue, ClaimValueTypes.Base64Binary));
+            value.Add(new Claim("verification", stringValue, ClaimValueTypes.Base64Binary));
             return;
         }
     }
@@ -108,11 +108,11 @@ internal sealed class ClaimsJsonConverter : JsonConverter<Claim[]>
     private static JsonEncodedText? GetPropertyNameOrDefault(string claimType)
         => claimType switch
         {
-            nameof(Client) => Client,
-            nameof(Identity) => Identity,
-            nameof(Group) => Group,
-            nameof(Member) => Member,
-            nameof(Verification) => Verification,
+            "client" => Client,
+            "identity" => Identity,
+            "group" => Group,
+            "member" => Member,
+            "verification" => Verification,
             _ => null
         };
 }

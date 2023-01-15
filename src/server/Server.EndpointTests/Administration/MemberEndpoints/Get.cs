@@ -19,7 +19,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [Trait("Category", "Security")]
+    [Trait("Category", "Endpoint.Security")]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     public async Task Get_ShouldBeForbidden_WhenMemberIsOnlyMember(string identity, string group, string member)
@@ -53,8 +53,8 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     public async Task Get_ShouldSucceed_WhenMemberExists(string identity, string group, string member)
@@ -92,8 +92,8 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     public async Task Get_ShouldFail_WhenMemberDoesNotExist(string identity, string group, string member)
@@ -116,8 +116,8 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     public async Task Get_ShouldFail_WhenMemberUniqueNameIsInvalid(string identity, string group, string member)

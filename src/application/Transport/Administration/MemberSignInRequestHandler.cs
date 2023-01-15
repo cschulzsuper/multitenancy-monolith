@@ -38,7 +38,7 @@ internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
 
         lock (_signInLock)
         {
-            var identity = _user.GetClaim("Identity");
+            var identity = _user.GetClaim("identity");
 
             var found = _membershipManager
                 .GetQueryable()
@@ -67,11 +67,11 @@ internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
 
             var claims = new Claim[]
             {
-                new Claim("Client", client),
-                new Claim("Identity", identity),
-                new Claim("Group", group),
-                new Claim("Member", member),
-                new Claim("Verification", verficationnValue, ClaimValueTypes.Base64Binary)
+                new Claim("client", client),
+                new Claim("identity", identity),
+                new Claim("group", group),
+                new Claim("member", member),
+                new Claim("verification", verficationnValue, ClaimValueTypes.Base64Binary)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, "Badge");

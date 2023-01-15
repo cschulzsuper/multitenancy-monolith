@@ -18,7 +18,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [Trait("Category", "Security")]
+    [Trait("Category", "Endpoint.Security")]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     public async Task Get_ShouldBeForbidden_WhenMemberIsOnlyMember(string identity, string group, string member)
@@ -39,7 +39,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1chief)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1Member)]
     public async Task GetAll_ShouldReturnDefaultGroup1Members(string identity, string member)
     {
@@ -58,13 +58,13 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
         Assert.Collection(content.RootElement.EnumerateArray().OrderBy(x => x.GetString("uniqueName")),
-            x => Assert.Equal(TestConfiguration.Group1Chief, x.GetString("uniqueName")),
+            x => Assert.Equal(TestConfiguration.Group1chief, x.GetString("uniqueName")),
             x => Assert.Equal(TestConfiguration.Group1Member, x.GetString("uniqueName")));
     }
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2chief)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2Member)]
     public async Task GetAll_ShouldReturnDefaultGroup2Members(string identity, string member)
     {
@@ -83,7 +83,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
         Assert.Collection(content.RootElement.EnumerateArray().OrderBy(x => x.GetString("uniqueName")),
-            x => Assert.Equal(TestConfiguration.Group2Chief, x.GetString("uniqueName")),
+            x => Assert.Equal(TestConfiguration.Group2chief, x.GetString("uniqueName")),
             x => Assert.Equal(TestConfiguration.Group2Member, x.GetString("uniqueName")));
     }
 }

@@ -57,9 +57,9 @@ internal sealed class IdentitySignInRequestHandler : IIdentitySignInRequestHandl
 
             var claims = new Claim[]
             {
-                new Claim("Client", client),
-                new Claim("Identity", identity),
-                new Claim("Verification", verificationValue, ClaimValueTypes.Base64Binary)
+                new Claim("client", client),
+                new Claim("identity", identity),
+                new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, "Badge");

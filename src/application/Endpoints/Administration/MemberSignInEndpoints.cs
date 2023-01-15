@@ -18,12 +18,13 @@ internal static class MemberSignInEndpoints
     {
         var groupsEndpoints = endpoints
             .MapGroup("/groups")
-            .RequireAuthorization()
             .WithTags("Groups");
 
         groupsEndpoints
             .MapPost("/register", Register)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("admin")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotRegisterMember);
 
         var groupMemberEndpoints = groupsEndpoints
@@ -31,7 +32,9 @@ internal static class MemberSignInEndpoints
 
         groupMemberEndpoints
             .MapPost("/sign-in", SignIn)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Default"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("default")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotSignInMember)
             .AddEndpointFilter<BadgeResultEndpointFilter>();
 
@@ -41,23 +44,22 @@ internal static class MemberSignInEndpoints
 
         membersMeEndpoints
             .MapPost("/verify", Verify)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Member", "Observer"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("member", "observer")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotVerifyMember);
 
         return endpoints;
     }
 
     private static Delegate Register =>
-        [Authorize]
         () => Results.StatusCode(StatusCodes.Status501NotImplemented);
 
     private static Delegate SignIn =>
-        [Authorize]
         (IMemberSignInRequestHandler requestHandler, string group, string member, MemberSignInRequest request)
             => requestHandler.SignIn(group, member, request);
 
     private static Delegate Verify =>
-        [Authorize(Roles = "Member")]
         (IMemberSignInRequestHandler requestHandler)
             => requestHandler.Verify();
 }

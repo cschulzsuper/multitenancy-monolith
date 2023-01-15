@@ -36,7 +36,9 @@ internal static class IdentitySignInEndpoints
 
         identityEndpoints
             .MapPost("/reset", Reset)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("admin")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotResetIdentity);
 
         var meEndpoints = identitiesEndpoints
@@ -44,17 +46,23 @@ internal static class IdentitySignInEndpoints
 
         meEndpoints
             .MapPost("/sign-out", SignOut)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Default"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("default")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotSignOutIdentity);
 
         meEndpoints
             .MapPost("/change-secret", ChangeSecret)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Secure"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("secure")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotChangeIdentitySecret);
 
         meEndpoints
             .MapPost("/verify", Verify)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Default"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("default")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotVerifyIdentity);
 
         return endpoints;

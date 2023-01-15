@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
+using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
@@ -22,27 +23,37 @@ internal static class MemberEndpoints
 
         membersEndpoints
             .MapGet(string.Empty, GetAll)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Chief", "Observer"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("chief", "observer")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotQueryMembers);
 
         membersEndpoints
             .MapGet("{member}", Get)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Chief", "Observer"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("chief", "observer")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotQueryMember);
 
         membersEndpoints
             .MapPost(string.Empty, Post)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Chief"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("chief")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotCreateMember);
 
         membersEndpoints
             .MapPut("{member}", Put)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Chief"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("chief")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotUpdateMember);
 
         membersEndpoints
             .MapDelete("{member}", Delete)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Chief"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("chief")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotDeleteMember);
 
         return endpoints;

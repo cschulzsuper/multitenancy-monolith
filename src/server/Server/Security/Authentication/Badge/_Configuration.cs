@@ -15,30 +15,16 @@ internal static class _Configuration
 {
     public static void Configure(this BadgeAuthenticationOptions options)
     {
-        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
-            claims => claims.Any(x => 
-                x.Type == "Identity" && x.Value == "admin") ? "Admin" : null);
+        options.ClaimActions.MapRoleClaimForAdmin();
+        options.ClaimActions.MapRoleClaimForDefault();
+        options.ClaimActions.MapRoleClaimForSecure();
 
-        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
-            claims => claims.Any(x =>
-                x.Type == "Identity" && !string.IsNullOrWhiteSpace(x.Value)) ? "Default" : null);
+        options.ClaimActions.MapRoleClaimForChief();
+        options.ClaimActions.MapRoleClaimForMember();
+        options.ClaimActions.MapRoleClaimForObserver();
 
-        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
-            claims => claims.Any(x =>
-                x.Type == "Identity" && x.Value != "demo") ? "Secure" : null);
-
-        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
-            claims => claims.Any(x =>
-                x.Type == "Member" && x.Value.StartsWith("chief-")) ? "Chief" : null);
-
-        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
-            claims => claims.Any(x => 
-                x.Type == "Member" && !string.IsNullOrWhiteSpace(x.Value)) ? "Member" : null);
-
-        options.ClaimActions.MapCustomClaim(ClaimTypes.Role,
-            claims =>
-                claims.Any(x => x.Type == "Identity" && x.Value == "demo") &&
-                claims.Any(x => x.Type == "Member" && !string.IsNullOrWhiteSpace(x.Value)) ? "Observer" : null);
+        options.ClaimActions.MapScopeClaimForEndpoints();
+        options.ClaimActions.MapScopeClaimForSwaggerJson();
 
         options.Events.OnValidatePrincipal = context =>
         {
@@ -53,6 +39,73 @@ internal static class _Configuration
         };
     }
 
+    private static void MapRoleClaimForAdmin(this ICollection<ClaimAction> claimActions)
+        => claimActions.MapCustomClaim(ClaimTypes.Role,
+            claims => claims.Any(x =>
+                x.Type == "identity" && x.Value == "admin")
+            
+            ? "admin" : null);
+
+    private static void MapRoleClaimForDefault(this ICollection<ClaimAction> claimActions)
+        => claimActions.MapCustomClaim(ClaimTypes.Role,
+            claims => claims.Any(x =>
+                x.Type == "identity" &&
+                !string.IsNullOrWhiteSpace(x.Value))
+            
+            ? "default" : null);
+
+    private static void MapRoleClaimForSecure(this ICollection<ClaimAction> claimActions)
+        => claimActions.MapCustomClaim(ClaimTypes.Role,
+            claims => claims.Any(x =>
+                x.Type == "identity" && 
+                x.Value != "demo")
+            
+            ? "secure" : null);
+
+    private static void MapRoleClaimForChief(this ICollection<ClaimAction> claimActions)
+        => claimActions.MapCustomClaim(ClaimTypes.Role,
+            claims => claims.Any(x =>
+                x.Type == "member" &&
+                x.Value.StartsWith("chief-")) 
+            
+            ? "chief" : null);
+
+    private static void MapRoleClaimForMember(this ICollection<ClaimAction> claimActions)
+        => claimActions.MapCustomClaim(ClaimTypes.Role,
+            claims => claims.Any(x =>
+                x.Type == "member" && 
+                !string.IsNullOrWhiteSpace(x.Value)) 
+            
+            ? "member" : null);
+
+    private static void MapRoleClaimForObserver(this ICollection<ClaimAction> claimActions)
+        => claimActions.MapCustomClaim(ClaimTypes.Role,
+            claims =>
+                claims.Any(x => 
+                    x.Type == "identity" && 
+                    x.Value == "demo") &&
+                claims.Any(x => 
+                    x.Type == "member" && 
+                    !string.IsNullOrWhiteSpace(x.Value)) 
+            
+            ? "observer" : null);
+
+    private static void MapScopeClaimForEndpoints(this ICollection<ClaimAction> claimActions)
+        => claimActions.MapCustomClaim("scope",
+            claims => claims.Any(x =>
+                x.Type == "client" &&
+                (x.Value == "endpoint-tests" || x.Value == "swagger")) 
+            
+            ? "endpoints" : null);
+
+    private static void MapScopeClaimForSwaggerJson(this ICollection<ClaimAction> claimActions)
+        => claimActions.MapCustomClaim("scope",
+            claims => claims.Any(x =>
+                x.Type == "client" && 
+                x.Value == "swagger") 
+            
+            ? "swagger-json" : null);
+
     private static bool Validate(BadgeValidatePrincipalContext context)
     {
         var badgeClaims = 
@@ -60,7 +113,7 @@ internal static class _Configuration
             context.Principal?.Claims.ToArray() ??
             Array.Empty<Claim>();
 
-        var badgeVerificationString = badgeClaims.SingleOrDefault(x => x.Type == "Verification");
+        var badgeVerificationString = badgeClaims.SingleOrDefault(x => x.Type == "verification");
         if (badgeVerificationString == null)
         {
             return false;
@@ -77,13 +130,13 @@ internal static class _Configuration
     {
         var identityVerficationManager = context.HttpContext.RequestServices.GetRequiredService<IIdentityVerficationManager>();
 
-        var badgeClient = badgeClaims.SingleOrDefault(x => x.Type == "Client");
+        var badgeClient = badgeClaims.SingleOrDefault(x => x.Type == "client");
         if (badgeClient == null)
         {
             return false;
         }
 
-        var badgeIdentity = badgeClaims.SingleOrDefault(x => x.Type == "Identity");
+        var badgeIdentity = badgeClaims.SingleOrDefault(x => x.Type == "identity");
         if (badgeIdentity == null)
         {
             return false;
@@ -104,19 +157,19 @@ internal static class _Configuration
     {
         var membershipVerficationManager = context.HttpContext.RequestServices.GetRequiredService<IMembershipVerficationManager>();
 
-        var badgeClient = badgeClaims.SingleOrDefault(x => x.Type == "Client");
+        var badgeClient = badgeClaims.SingleOrDefault(x => x.Type == "client");
         if (badgeClient == null)
         {
             return false;
         }
 
-        var badgeGroup = badgeClaims.SingleOrDefault(x => x.Type == "Group");
+        var badgeGroup = badgeClaims.SingleOrDefault(x => x.Type == "group");
         if (badgeGroup == null)
         {
             return false;
         }
 
-        var badgeMember = badgeClaims.SingleOrDefault(x => x.Type == "Member");
+        var badgeMember = badgeClaims.SingleOrDefault(x => x.Type == "member");
         if (badgeMember == null)
         {
             return false;

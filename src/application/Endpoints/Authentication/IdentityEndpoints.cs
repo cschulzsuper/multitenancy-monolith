@@ -22,27 +22,37 @@ internal static class IdentityEndpoints
 
         identitiesEndpoints
             .MapGet(string.Empty, GetAll)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("admin")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotQueryIdentities);
 
         identitiesEndpoints
             .MapGet("{identity}", Get)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("admin")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotQueryIdentity);
 
         identitiesEndpoints
             .MapPost(string.Empty, Post)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("admin")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotCreateIdentity);
 
         identitiesEndpoints
             .MapPut("{identity}", Put)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("admin")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotUpdateIdentity);
 
         identitiesEndpoints
             .MapDelete("{identity}", Delete)
-            .RequireAuthorization(ploicy => ploicy.RequireRole("Admin"))
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("admin")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotDeleteIdentity);
 
         return endpoints;

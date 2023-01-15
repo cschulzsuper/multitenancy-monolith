@@ -17,12 +17,12 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [Trait("Category", "Security")]
+    [Trait("Category", "Endpoint.Security")]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Delete_ShouldBeForbidden_WhenMemberIsNotChief(string identity, string group, string member)
+    public async Task Delete_ShouldBeForbidden_WhenMemberIsNotchief(string identity, string group, string member)
     {
         // Arrange
         var existingMember = $"existing-member-{Guid.NewGuid()}";
@@ -53,8 +53,8 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     public async Task Delete_ShouldSucceed_WhenExistingMemberIsGiven(string identity, string group, string member)
     {
         // Arrange
@@ -95,8 +95,8 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     public async Task Delete_ShouldFail_WhenMemberDoesNotExist(string identity, string group, string member)
     {
         // Arrange
@@ -117,8 +117,8 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2chief)]
     public async Task Delete_ShouldFail_WhenMemberUniqueNameIsInvalid(string identity, string group, string member)
     {
         // Arrange

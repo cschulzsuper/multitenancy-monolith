@@ -18,7 +18,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [Trait("Category", "Security")]
+    [Trait("Category", "Endpoint.Security")]
     [InlineData(TestConfiguration.ChiefIdentity)]
     [InlineData(TestConfiguration.DefaultIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
