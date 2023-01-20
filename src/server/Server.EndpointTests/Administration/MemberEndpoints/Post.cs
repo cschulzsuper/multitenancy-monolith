@@ -70,9 +70,9 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
-
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content,
             x => Assert.Equal((x.Key, (string?)x.Value), ("uniqueName", newMember.UniqueName)));

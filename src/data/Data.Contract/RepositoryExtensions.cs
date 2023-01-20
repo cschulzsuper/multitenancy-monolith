@@ -51,7 +51,7 @@ public static class RepositoryExtensions
 
     public static void DeleteOrThrow<TEntity>(this IRepository<TEntity> repository, object snowflake)
     {
-        repository.Execute(repository => 
+        repository.Execute(repository =>
         {
             var rowsAffected = repository.Delete(snowflake);
             EnsureSingleAffectedRow<TEntity>(rowsAffected, snowflake);

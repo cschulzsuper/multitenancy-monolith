@@ -5,7 +5,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Data;
 public interface IRepository<TEntity>
 {
     void Execute(Action<IRepository<TEntity>> action);
-    
+
     ValueTask ExecuteAsync(Func<IRepository<TEntity>, ValueTask> func);
 
     TEntity Get(object snowflake);

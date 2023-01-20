@@ -6,6 +6,7 @@ using ChristianSchulz.MultitenancyMonolith.Caching;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
+using ChristianSchulz.MultitenancyMonolith.Server.SwaggerUI;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 using Microsoft.AspNetCore.Builder;
@@ -13,10 +14,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -26,7 +25,7 @@ public class Startup
 {
     private readonly IWebHostEnvironment _environment;
 
-    public Startup(IWebHostEnvironment environment, IConfiguration configuration)
+    public Startup(IWebHostEnvironment environment)
     {
         _environment = environment;
     }
@@ -42,7 +41,7 @@ public class Startup
 
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new() { Title = "Multitenancy Monolith", Version = "v1" });           
+            options.SwaggerDoc("v1", new() { Title = "Multitenancy Monolith", Version = "v1" });
 
             options.ConfigureAuthentication();
             options.ConfigureAuthorization();
@@ -62,7 +61,7 @@ public class Startup
 
     public void Configure(IApplicationBuilder app)
     {
-        if (_environment.IsDevelopment())
+        if (!_environment.IsProduction())
         {
             app.ApplicationServices.ConfigureData();
         }
@@ -71,10 +70,14 @@ public class Startup
 
         app.UseHttpsRedirection();
 
-        app.UseSwaggerUI(options =>
+        if (!_environment.IsProduction())
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Multitenancy Monolith");
-        });
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Multitenancy Monolith");
+                options.UseAccessTokenRequestInterceptor();
+            });
+        }
 
         app.UseRouting();
 
@@ -86,7 +89,7 @@ public class Startup
             if (_environment.IsDevelopment())
             {
                 endpoints.MapSwagger();
-            } 
+            }
             else
             {
                 endpoints.MapSwagger()
@@ -114,7 +117,7 @@ public class Startup
                 Status = StatusCodes.Status500InternalServerError,
                 Instance = context.Request.Path
             };
-        } 
+        }
         else
         {
             var exception = exceptionHandlerPathFeature.Error;

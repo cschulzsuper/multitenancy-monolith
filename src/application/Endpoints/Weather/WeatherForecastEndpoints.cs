@@ -22,6 +22,6 @@ public static class WeatherForecastEndpoints
 
     private static Delegate GetAll =>
         [Authorize(Roles = "Member")]
-        (IWeatherForecastRequestHandler requestHandler)
+    (IWeatherForecastRequestHandler requestHandler)
             => requestHandler.GetAll();
 }

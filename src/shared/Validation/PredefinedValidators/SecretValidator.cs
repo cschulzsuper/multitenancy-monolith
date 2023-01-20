@@ -16,8 +16,8 @@ public sealed class SecretValidator
     {
         var rules = new IValidationRule<string>[]
         {
-            new NotNull(field),
-            new NotEmpty(field),
+        new NotNull(field),
+        new NotEmpty(field),
         };
 
         return rules;

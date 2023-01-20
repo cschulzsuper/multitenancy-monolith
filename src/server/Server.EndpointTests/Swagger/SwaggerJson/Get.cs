@@ -1,8 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Data;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
@@ -17,8 +14,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
     public Get(WebApplicationFactory<Program> factory)
     {
-        _factory = factory.WithWebHostBuilder(app => app
-            .UseEnvironment("Production"));
+        _factory = factory;
     }
 
     [Theory]
@@ -30,10 +26,13 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldBeForbidden_WhenClientIsEndpointTests(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/swagger/v1/swagger.json");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        var productionFactory = _factory.WithWebHostBuilder(app => app
+            .UseEnvironment("Production"));
 
-        var client = _factory.CreateClient();
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/swagger/v1/swagger.json");
+        request.Headers.Authorization = productionFactory.MockValidIdentityAuthorizationHeader(identity);
+
+        var client = productionFactory.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -44,7 +43,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [Trait("Category", "Swagger.Security")]
+    [Trait("Category", "Swagger")]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.ChiefIdentity)]
     [InlineData(TestConfiguration.DefaultIdentity)]
@@ -52,8 +51,11 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldSucceed_WhenClientIsSwagger(string identity)
     {
         // Arrange
+        var productionFactory = _factory.WithWebHostBuilder(app => app
+            .UseEnvironment("Production"));
+
         var request = new HttpRequestMessage(HttpMethod.Get, $"/swagger/v1/swagger.json");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(
+        request.Headers.Authorization = productionFactory.MockValidIdentityAuthorizationHeader(
             claimName => claimName switch
             {
                 "identity" => identity,
@@ -61,15 +63,47 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 _ => throw new UnreachableException("Claim `{claimName}` is not supported.")
             });
 
-        var client = _factory.CreateClient();
+        var client = productionFactory.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
 
         // Assert
-        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
-
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
+        Assert.NotNull(content);
+    }
+
+    [Theory]
+    [Trait("Category", "Swagger")]
+    [InlineData(TestConfiguration.AdminIdentity)]
+    [InlineData(TestConfiguration.ChiefIdentity)]
+    [InlineData(TestConfiguration.DefaultIdentity)]
+    [InlineData(TestConfiguration.GuestIdentity)]
+    public async Task Get_ShouldSucceed_WhenEnvironmentIsDevelopment(string identity)
+    {
+        // Arrange
+        var developmentFactory = _factory.WithInMemoryData();
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/swagger/v1/swagger.json");
+        request.Headers.Authorization = developmentFactory.MockValidIdentityAuthorizationHeader(
+            claimName => claimName switch
+            {
+                "identity" => identity,
+                "client" => "swagger",
+                _ => throw new UnreachableException("Claim `{claimName}` is not supported.")
+            });
+
+        var client = developmentFactory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
     }
 }

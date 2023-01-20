@@ -17,7 +17,7 @@ public sealed class Validator<T>
 
     public void AddRules<TProperty>(Func<T, TProperty> property, params IValidationRule<TProperty>[] rules)
     {
-        foreach(var rule in rules)
+        foreach (var rule in rules)
         {
             AddRule(property, rule);
         }
@@ -42,7 +42,7 @@ public sealed class Validator<T>
             if (validationResult != null &&
                 validationResult != ValidationResult.Success)
             {
-                throw new ValidationException(validationResult.ErrorMessage 
+                throw new ValidationException(validationResult.ErrorMessage
                     ?? $"The '{typeof(T).Name}' value is not valid.");
             }
         }

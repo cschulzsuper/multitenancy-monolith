@@ -51,7 +51,7 @@ internal sealed class MemberManager : IMemberManager
 
             MemberValidator.EnsureUpdatable(member);
         };
-        
+
         await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
     }
 

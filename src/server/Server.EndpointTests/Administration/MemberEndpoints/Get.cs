@@ -71,7 +71,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
                 .Insert(existingMember);
-        }         
+        }
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
@@ -82,9 +82,9 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
-
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content,
             x => Assert.Equal((x.Key, (string?)x.Value), ("uniqueName", existingMember.UniqueName)));

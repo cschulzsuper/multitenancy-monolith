@@ -4,7 +4,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Data;
 
 internal sealed class RepositoryContextFactory<TEntity>
 {
-    private readonly ConcurrentDictionary<string,RepositoryContext<TEntity>> _contexts = new();
+    private readonly ConcurrentDictionary<string, RepositoryContext<TEntity>> _contexts = new();
 
     public RepositoryContext<TEntity> Create()
         => Create(string.Empty);

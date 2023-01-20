@@ -6,7 +6,7 @@ public class SnowflakeGenerator
 {
     private readonly IdGenerator _idGenerator;
 
-    public SnowflakeGenerator() 
+    public SnowflakeGenerator()
     {
         _idGenerator= new IdGenerator(0);
     }

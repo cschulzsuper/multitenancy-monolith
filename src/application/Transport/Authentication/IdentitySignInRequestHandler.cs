@@ -34,13 +34,13 @@ internal sealed class IdentitySignInRequestHandler : IIdentitySignInRequestHandl
         lock (_signInLock)
         {
             var found = _identityManager.GetAll()
-                .Any(x => 
-                    x.UniqueName == identity && 
+                .Any(x =>
+                    x.UniqueName == identity &&
                     x.Secret == request.Secret);
 
             if (!found)
             {
-                throw new TransportException($"Could match identity '{identity}' against secret '{request.Secret}'");
+                throw new TransportException($"Could not match identity '{identity}' against secret");
             }
 
             var verification = Guid.NewGuid().ToByteArray();
@@ -57,9 +57,9 @@ internal sealed class IdentitySignInRequestHandler : IIdentitySignInRequestHandl
 
             var claims = new Claim[]
             {
-                new Claim("client", client),
-                new Claim("identity", identity),
-                new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
+            new Claim("client", client),
+            new Claim("identity", identity),
+            new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, "Badge");

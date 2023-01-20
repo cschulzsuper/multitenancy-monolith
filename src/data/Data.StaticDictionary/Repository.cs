@@ -27,7 +27,7 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         catch
         {
             _context.Data.Clear();
-            foreach(var entry in backup)
+            foreach (var entry in backup)
             {
                 _context.Data.TryAdd(entry.Key, entry.Value);
             }
@@ -187,8 +187,8 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
     public int Update(object snowflake, Action<TEntity> action)
     {
         var found = _context.Data.TryGetValue(snowflake, out var entity);
-        
-        if(found)
+
+        if (found)
         {
             if (entity is ICloneable cloneable)
             {
@@ -248,7 +248,7 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
             .ToArray();
 
         var rowsAffected = entities
-            .Sum(entity => 
+            .Sum(entity =>
             {
                 var snowflake = _context.SnowflakeProvider(entity);
                 return Delete(snowflake);

@@ -63,8 +63,8 @@ internal sealed class IdentityRequestHandler : IIdentityRequestHandler
     }
 
     public async ValueTask UpdateAsync(string uniqueName, IdentityRequest request)
-    => await _identityManager.UpdateAsync(uniqueName, 
-        member => 
+    => await _identityManager.UpdateAsync(uniqueName,
+        member =>
         {
             member.UniqueName = request.UniqueName;
             member.Secret = request.Secret;

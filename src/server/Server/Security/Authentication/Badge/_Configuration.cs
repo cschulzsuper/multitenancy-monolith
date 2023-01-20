@@ -43,7 +43,7 @@ internal static class _Configuration
         => claimActions.MapCustomClaim(ClaimTypes.Role,
             claims => claims.Any(x =>
                 x.Type == "identity" && x.Value == "admin")
-            
+
             ? "admin" : null);
 
     private static void MapRoleClaimForDefault(this ICollection<ClaimAction> claimActions)
@@ -51,65 +51,65 @@ internal static class _Configuration
             claims => claims.Any(x =>
                 x.Type == "identity" &&
                 !string.IsNullOrWhiteSpace(x.Value))
-            
+
             ? "default" : null);
 
     private static void MapRoleClaimForSecure(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim(ClaimTypes.Role,
             claims => claims.Any(x =>
-                x.Type == "identity" && 
+                x.Type == "identity" &&
                 x.Value != "demo")
-            
+
             ? "secure" : null);
 
     private static void MapRoleClaimForChief(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim(ClaimTypes.Role,
             claims => claims.Any(x =>
                 x.Type == "member" &&
-                x.Value.StartsWith("chief-")) 
-            
+                x.Value.StartsWith("chief-"))
+
             ? "chief" : null);
 
     private static void MapRoleClaimForMember(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim(ClaimTypes.Role,
             claims => claims.Any(x =>
-                x.Type == "member" && 
-                !string.IsNullOrWhiteSpace(x.Value)) 
-            
+                x.Type == "member" &&
+                !string.IsNullOrWhiteSpace(x.Value))
+
             ? "member" : null);
 
     private static void MapRoleClaimForObserver(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim(ClaimTypes.Role,
             claims =>
-                claims.Any(x => 
-                    x.Type == "identity" && 
+                claims.Any(x =>
+                    x.Type == "identity" &&
                     x.Value == "demo") &&
-                claims.Any(x => 
-                    x.Type == "member" && 
-                    !string.IsNullOrWhiteSpace(x.Value)) 
-            
+                claims.Any(x =>
+                    x.Type == "member" &&
+                    !string.IsNullOrWhiteSpace(x.Value))
+
             ? "observer" : null);
 
     private static void MapScopeClaimForEndpoints(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim("scope",
             claims => claims.Any(x =>
                 x.Type == "client" &&
-                (x.Value == "endpoint-tests" || x.Value == "swagger")) 
-            
+                (x.Value == "endpoint-tests"))
+
             ? "endpoints" : null);
 
     private static void MapScopeClaimForSwaggerJson(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim("scope",
             claims => claims.Any(x =>
-                x.Type == "client" && 
-                x.Value == "swagger") 
-            
+                x.Type == "client" &&
+                x.Value == "swagger")
+
             ? "swagger-json" : null);
 
     private static bool Validate(BadgeValidatePrincipalContext context)
     {
-        var badgeClaims = 
-            context.Principal?.Claims as ICollection<Claim> ?? 
+        var badgeClaims =
+            context.Principal?.Claims as ICollection<Claim> ??
             context.Principal?.Claims.ToArray() ??
             Array.Empty<Claim>();
 

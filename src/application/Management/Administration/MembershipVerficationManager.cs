@@ -6,7 +6,7 @@ internal sealed class MembershipVerficationManager : IMembershipVerficationManag
 {
     private readonly IByteCache _byteCache;
 
-    public MembershipVerficationManager(IByteCacheFactory byteCacheFactory) 
+    public MembershipVerficationManager(IByteCacheFactory byteCacheFactory)
     {
         _byteCache = byteCacheFactory.Create($"membership-verfication");
     }

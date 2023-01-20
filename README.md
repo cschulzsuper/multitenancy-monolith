@@ -36,8 +36,8 @@ If you are developing an ASP.NET Core application yourself and are looking for a
 * /25 Endpoint error messages help to increase the usefulness of the problem details. Additionally, it turned out that I forgot that the temporary static dictionary data provider does not cope well with update actions. I needed to make all entities `ICloneable`. https://github.com/cschulzsuper/multitenancy-monolith/commit/ac414583372631693cf59c33b839f79a8e94cf2d
 * /26 [Role requirements](./docs/ROLES.md) restrict endpoint access for authenticated identities and members. Security tests as part of endpoint tests ensure this permanently. https://github.com/cschulzsuper/multitenancy-monolith/commit/6a9c4801f9bf2ada9aae78be7143c2af5c5ecd53 
 * /27 [Client requirement](./docs/CLIENTS.md) in authentication and authorization request will later allow a restricted usage of badges. https://github.com/cschulzsuper/multitenancy-monolith/commit/03edcb32647649ea23f4beca53e4adb73924808a
-
-* /28 Only clients that authenticate as `swagger` client can access the `swagger.json` in production. In development this restriction is not applied. A security tests verifies the behavior. 
+* /28 Only clients that authenticate as `swagger` client can access the `swagger.json` in production. In development this restriction is not applied. A security tests verifies the behavior. https://github.com/cschulzsuper/multitenancy-monolith/commit/a5e53c0c9fa505d76a551a5466e79e9040f645e0
+* /29 A nice gem is to make the swagger ui available in staging environments with the necessity of providing an access token for it.
 
 # Current
 

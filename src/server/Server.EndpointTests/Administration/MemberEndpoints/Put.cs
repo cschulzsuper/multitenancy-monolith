@@ -184,7 +184,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             var createdIdentity = scope.ServiceProvider
                 .GetRequiredService<IRepository<Identity>>()
                 .GetQueryable()
-                .SingleOrDefault(x => 
+                .SingleOrDefault(x =>
                     x.Snowflake == existingMember.Snowflake &&
                     x.UniqueName == putMember.UniqueName);
 

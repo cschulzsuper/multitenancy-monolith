@@ -53,9 +53,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        var content = await response.Content.ReadFromJsonAsync<JsonDocument>();
-
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var content = await response.Content.ReadFromJsonAsync<JsonDocument>();
         Assert.NotNull(content);
         Assert.Collection(content.RootElement.EnumerateArray().OrderBy(x => x.GetString("uniqueName")),
             x => Assert.Equal(TestConfiguration.AdminIdentity, x.GetString("uniqueName")),

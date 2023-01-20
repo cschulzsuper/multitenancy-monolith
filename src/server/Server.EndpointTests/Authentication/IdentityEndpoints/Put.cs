@@ -309,8 +309,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             var createdIdentity = scope.ServiceProvider
                 .GetRequiredService<IRepository<Identity>>()
                 .GetQueryable()
-                .SingleOrDefault(x => 
-                    x.Snowflake == existingIdentity.Snowflake && 
+                .SingleOrDefault(x =>
+                    x.Snowflake == existingIdentity.Snowflake &&
                     (x.UniqueName == putIdentity.UniqueName ||
                      x.MailAddress == putIdentity.MailAddress ||
                      x.Secret == putIdentity.Secret));

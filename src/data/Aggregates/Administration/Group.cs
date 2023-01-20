@@ -6,6 +6,6 @@ public class Group : ICloneable
         => MemberwiseClone();
 
     public long Snowflake { get; set; }
-    
+
     public required string UniqueName { get; set; }
 }

@@ -59,7 +59,7 @@ internal static class IdentityEndpoints
     }
 
     private static Delegate GetAll =>
-        (IIdentityRequestHandler requestHandler) 
+        (IIdentityRequestHandler requestHandler)
             => requestHandler.GetAll();
 
     private static Delegate Get =>

@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Application;
 
-public sealed class TransportException :Exception
+public sealed class TransportException : Exception
 {
     public TransportException()
         : base()

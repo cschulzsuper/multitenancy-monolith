@@ -14,9 +14,9 @@ internal sealed class StatusCodeOperationFilter : IOperationFilter
     {
         var errorStatusCodeContent = new Dictionary<string, OpenApiMediaType>
         {
-            ["application/problem+json"] = new OpenApiMediaType 
+            ["application/problem+json"] = new OpenApiMediaType
             {
-                Schema = context.SchemaGenerator.GenerateSchema(typeof(ProblemDetails), context.SchemaRepository) 
+                Schema = context.SchemaGenerator.GenerateSchema(typeof(ProblemDetails), context.SchemaRepository)
             }
         };
 

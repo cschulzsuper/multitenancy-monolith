@@ -16,9 +16,9 @@ public sealed class UniqueNameValidator
     {
         var rules = new IValidationRule<string>[]
         {
-            new NotNull(field),
-            new NotEmpty(field),
-            new KebabCase(field),
+        new NotNull(field),
+        new NotEmpty(field),
+        new KebabCase(field),
         };
 
         return rules;

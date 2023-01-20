@@ -28,7 +28,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/groups/{group}/members/{member}/sign-in");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-        
+
         var signInRequest = new
         {
             Client = TestConfiguration.ClientName

@@ -67,11 +67,11 @@ internal sealed class MemberSignInRequestHandler : IMemberSignInRequestHandler
 
             var claims = new Claim[]
             {
-                new Claim("client", client),
-                new Claim("identity", identity),
-                new Claim("group", group),
-                new Claim("member", member),
-                new Claim("verification", verficationnValue, ClaimValueTypes.Base64Binary)
+            new Claim("client", client),
+            new Claim("identity", identity),
+            new Claim("group", group),
+            new Claim("member", member),
+            new Claim("verification", verficationnValue, ClaimValueTypes.Base64Binary)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, "Badge");

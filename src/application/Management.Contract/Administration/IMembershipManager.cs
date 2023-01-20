@@ -7,7 +7,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 public interface IMembershipManager
 {
     ValueTask<Membership> GetAsync(long snowflake);
-    
+
     IQueryable<Membership> GetQueryable();
 
     ValueTask InsertAsync(Membership membership);
