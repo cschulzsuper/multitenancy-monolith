@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
@@ -6,9 +7,13 @@ public static class _Endpoints
 {
     public static IEndpointRouteBuilder MapAuthenticationEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapIdentityEndpoints();
-        endpoints.MapIdentitySignInEndpoints();
+        var authenticationEndpoints = endpoints
+            .MapGroup("authentication")
+            .WithGroupName("authentication");
 
-        return endpoints;
+        authenticationEndpoints.MapIdentityEndpoints();
+        authenticationEndpoints.MapIdentitySignInEndpoints();
+
+        return authenticationEndpoints;
     }
 }

@@ -38,7 +38,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/members/{existingMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/administration/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -73,7 +73,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/members/{existingMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/administration/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -101,7 +101,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentMember = $"absent-member-{Guid.NewGuid()}";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/members/{absentMember}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/administration/members/{absentMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -125,7 +125,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentMember = $"INVALID-MEMBER-{Guid.NewGuid()}";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/members/{absentMember}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/administration/members/{absentMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();

@@ -38,7 +38,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
                 });
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/members/{existingMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/administration/members/{existingMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -71,7 +71,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
                 });
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/members/{existingMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/administration/members/{existingMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -102,7 +102,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentMember = $"absent-member-{Guid.NewGuid()}";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/members/{absentMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/administration/members/{absentMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -124,7 +124,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidMember = $"INVALID_MEMBER_{Guid.NewGuid()}";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/members/{invalidMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/administration/members/{invalidMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();

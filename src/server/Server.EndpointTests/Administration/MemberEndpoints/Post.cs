@@ -27,7 +27,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldBeForbidden_WhenMemberIsNotchief(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/members");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var newMember = new
@@ -54,7 +54,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenValidMemberIsGiven(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/members");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var newMember = new
@@ -95,7 +95,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMemberUniqueNameIsEmpty(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/members");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var newMember = new
@@ -131,7 +131,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMemberUniqueNameIsNull(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/members");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var newMember = new

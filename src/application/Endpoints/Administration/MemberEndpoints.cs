@@ -18,7 +18,7 @@ internal static class MemberEndpoints
     {
         var membersEndpoints = endpoints
             .MapGroup("/members")
-            .WithTags("Members");
+            .WithTags("Member API");
 
         membersEndpoints
             .MapGet(string.Empty, GetAll)

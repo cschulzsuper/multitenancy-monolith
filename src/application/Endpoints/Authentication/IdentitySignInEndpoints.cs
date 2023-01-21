@@ -20,7 +20,7 @@ internal static class IdentitySignInEndpoints
     {
         var identitiesEndpoints = endpoints
             .MapGroup("/identities")
-            .WithTags("Identities");
+            .WithTags("Identity Commands");
 
         identitiesEndpoints
             .MapPost("/register", Register)

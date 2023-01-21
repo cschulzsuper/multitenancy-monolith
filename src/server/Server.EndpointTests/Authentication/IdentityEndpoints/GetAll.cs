@@ -25,7 +25,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldBeForbidden_WhenIdentityIsNotAdmin(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/identities");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -44,7 +44,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldSucceed(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/identities");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();

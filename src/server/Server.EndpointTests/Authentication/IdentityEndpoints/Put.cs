@@ -40,7 +40,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -83,7 +83,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -126,7 +126,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var notExistingIdentityUniqueName = $"not-existing-identity-{Guid.NewGuid()}";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/identities/{notExistingIdentityUniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{notExistingIdentityUniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -169,7 +169,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -226,7 +226,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -283,7 +283,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -340,7 +340,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -397,7 +397,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -454,7 +454,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -511,7 +511,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new

@@ -24,7 +24,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldBeForbidden_WhenMemberIsOnlyMember(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/members");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/administration/members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -44,7 +44,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldReturnDefaultGroup1Members(string identity, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/members");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/administration/members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, TestConfiguration.Group1, member);
 
         var client = _factory.CreateClient();
@@ -69,7 +69,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldReturnDefaultGroup2Members(string identity, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/members");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/administration/members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, TestConfiguration.Group2, member);
 
         var client = _factory.CreateClient();

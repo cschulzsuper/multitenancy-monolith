@@ -1,9 +1,9 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Weather.Responses;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Business.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application.Weather;
+namespace ChristianSchulz.MultitenancyMonolith.Application.Business;
 
 internal sealed class WeatherForecastRequestHandler : IWeatherForecastRequestHandler
 {

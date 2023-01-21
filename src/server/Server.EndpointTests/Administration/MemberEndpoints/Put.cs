@@ -40,7 +40,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/members/{existingMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putMember = new
@@ -80,7 +80,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/members/{existingMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putMember = new
@@ -120,7 +120,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var notExistingMemberUniqueName = $"not-existing-member-{Guid.NewGuid()}";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/members/{notExistingMemberUniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/members/{notExistingMemberUniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putMember = new
@@ -160,7 +160,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/members/{existingMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putMember = new
@@ -212,7 +212,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/members/{existingMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putMember = new

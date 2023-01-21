@@ -26,7 +26,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     public async Task SignIn_ShouldSucceed_WhenMemberIsValid(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/groups/{group}/members/{member}/sign-in");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/groups/{group}/members/{member}/sign-in");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var signInRequest = new
@@ -56,7 +56,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     public async Task SignIn_ShouldFail_WhenMemberDoesNotExist(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/groups/{group}/members/{member}/sign-in");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/groups/{group}/members/{member}/sign-in");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var signInRequest = new
@@ -87,7 +87,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     public async Task SignIn_ShouldFail_WhenIdentityIsNotAssignedToMember(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/groups/{group}/members/{member}/sign-in");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/groups/{group}/members/{member}/sign-in");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var signInRequest = new
@@ -118,7 +118,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     public async Task SignIn_ShouldFail_WhenGroupDoesNotExist(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/groups/{group}/members/{member}/sign-in");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/groups/{group}/members/{member}/sign-in");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -149,7 +149,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     public async Task SignIn_ShouldFail_WhenClientIsInvalid(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/groups/{group}/members/{member}/sign-in");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/groups/{group}/members/{member}/sign-in");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();

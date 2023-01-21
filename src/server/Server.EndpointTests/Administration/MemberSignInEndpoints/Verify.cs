@@ -25,7 +25,7 @@ public sealed class IdentitySignInTests : IClassFixture<WebApplicationFactory<Pr
     public async Task Verfiy_ShouldSucceed_WhenAuthorizationIsValid(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/members/me/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/members/me/verify");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -48,7 +48,7 @@ public sealed class IdentitySignInTests : IClassFixture<WebApplicationFactory<Pr
     public async Task Verfiy_ShouldBeUnauthorized_WhenAuthorizationIsInvalid(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/members/me/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/members/me/verify");
         request.Headers.Authorization = _factory.MockInvalidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();

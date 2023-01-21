@@ -1,7 +1,8 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Application.Administration;
 using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Application.Weather;
+using ChristianSchulz.MultitenancyMonolith.Application.Business;
+using ChristianSchulz.MultitenancyMonolith.Application.Foundation;
 using ChristianSchulz.MultitenancyMonolith.Caching;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
@@ -41,8 +42,7 @@ public class Startup
 
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new() { Title = "Multitenancy Monolith", Version = "v1" });
-
+            options.ConfigureSwaggerDocs();
             options.ConfigureAuthentication();
             options.ConfigureAuthorization();
         });
@@ -74,7 +74,7 @@ public class Startup
         {
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Multitenancy Monolith");
+                options.ConfigureSwaggerEndpoints();
                 options.UseAccessTokenRequestInterceptor();
             });
         }
@@ -97,9 +97,12 @@ public class Startup
                     .RequireClaim("scope", "swagger-json"));
             }
 
-            endpoints.MapAdministrationEndpoints();
-            endpoints.MapAuthenticationEndpoints();
-            endpoints.MapWeatherForecastEndpoints();
+            var apiEndpoints = endpoints.MapGroup("api");
+
+            apiEndpoints.MapAdministrationEndpoints();
+            apiEndpoints.MapAuthenticationEndpoints();
+            apiEndpoints.MapBusinessEndpoints();
+            apiEndpoints.MapFoundationEndpoints();
         });
     }
 

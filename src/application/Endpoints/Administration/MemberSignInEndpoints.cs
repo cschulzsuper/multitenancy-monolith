@@ -17,7 +17,7 @@ internal static class MemberSignInEndpoints
     {
         var groupsEndpoints = endpoints
             .MapGroup("/groups")
-            .WithTags("Groups");
+            .WithTags("Group Commands");
 
         groupsEndpoints
             .MapPost("/register", Register)
@@ -39,7 +39,7 @@ internal static class MemberSignInEndpoints
 
         var membersMeEndpoints = endpoints
             .MapGroup("/members/me")
-            .WithTags("Members");
+            .WithTags("Member Commands");
 
         membersMeEndpoints
             .MapPost("/verify", Verify)

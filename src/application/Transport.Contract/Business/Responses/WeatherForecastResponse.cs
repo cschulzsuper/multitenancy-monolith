@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application.Weather.Responses;
+namespace ChristianSchulz.MultitenancyMonolith.Application.Business.Responses;
 
 public class WeatherForecastResponse
 {

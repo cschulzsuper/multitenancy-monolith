@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application.Weather;
+namespace ChristianSchulz.MultitenancyMonolith.Application.Business;
 
 public static class WeatherForecastEndpoints
 {
@@ -12,7 +12,7 @@ public static class WeatherForecastEndpoints
     {
         var wheatherForecastEndpoints = endpoints
             .MapGroup("/wheather-forecast")
-            .WithTags("Wheather Forecast");
+            .WithTags("Wheather Forecast API");
 
         wheatherForecastEndpoints
             .MapGet(string.Empty, GetAll);
@@ -22,6 +22,6 @@ public static class WeatherForecastEndpoints
 
     private static Delegate GetAll =>
         [Authorize(Roles = "Member")]
-    (IWeatherForecastRequestHandler requestHandler)
+        (IWeatherForecastRequestHandler requestHandler)
             => requestHandler.GetAll();
 }

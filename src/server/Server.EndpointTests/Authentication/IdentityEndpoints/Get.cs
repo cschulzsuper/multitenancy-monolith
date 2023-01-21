@@ -41,7 +41,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -75,7 +75,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -101,7 +101,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentIdentity = $"absent-identity-{Guid.NewGuid()}";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/identities/{absentIdentity}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities/{absentIdentity}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -122,7 +122,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidIdentity = $"INVALID_IDENTITY_{Guid.NewGuid()}";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/identities/{invalidIdentity}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities/{invalidIdentity}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();

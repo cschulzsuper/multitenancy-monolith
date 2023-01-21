@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application.Weather;
+namespace ChristianSchulz.MultitenancyMonolith.Application.Business;
 
 public static class _Services
 {

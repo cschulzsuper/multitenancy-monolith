@@ -18,7 +18,7 @@ internal static class IdentityEndpoints
     {
         var identitiesEndpoints = endpoints
             .MapGroup("/identities")
-            .WithTags("Identities");
+            .WithTags("Identity API");
 
         identitiesEndpoints
             .MapGet(string.Empty, GetAll)

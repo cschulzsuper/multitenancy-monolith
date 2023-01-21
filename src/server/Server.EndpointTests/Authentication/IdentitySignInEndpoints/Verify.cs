@@ -21,7 +21,7 @@ public sealed class IdentitySignInTests : IClassFixture<WebApplicationFactory<Pr
     public async Task Verfiy_ShouldSucceed_WhenAuthorizationIsValid(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities/me/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities/me/verify");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -40,7 +40,7 @@ public sealed class IdentitySignInTests : IClassFixture<WebApplicationFactory<Pr
     public async Task Verfiy_ShouldBeUnauthorized_WhenAuthorizationIsInvalid(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities/me/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities/me/verify");
         request.Headers.Authorization = _factory.MockInvalidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();

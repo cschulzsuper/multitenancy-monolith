@@ -27,7 +27,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldBeForbidden_WhenIdentityIsNotAdmin(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var newIdentity = new
@@ -55,7 +55,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenValidIdentityIsGiven(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var newIdentity = new
@@ -101,7 +101,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenIdentityUniqueNameIsEmpty(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var newIdentity = new
@@ -138,7 +138,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenIdentityUniqueNameIsNull(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var newIdentity = new
@@ -175,7 +175,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenIdentitySecretIsEmpty(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var newIdentity = new
@@ -212,7 +212,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenIdentitySecretIsNull(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var newIdentity = new
@@ -249,7 +249,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenIdentityMailAddressIsEmpty(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var newIdentity = new
@@ -286,7 +286,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenIdentityMailAddressIsNull(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var newIdentity = new
@@ -323,7 +323,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenIdentityMailAddressIsNotMailAddress(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var newIdentity = new

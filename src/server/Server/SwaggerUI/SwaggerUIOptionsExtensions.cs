@@ -37,4 +37,24 @@ public static class SwaggerUIOptionsExtensions
 
         return options;
     }
+
+    public static SwaggerUIOptions ConfigureSwaggerEndpoints(this SwaggerUIOptions options)
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json",
+            "Multitenancy Monolith V1 (api)");
+
+        options.SwaggerEndpoint("/swagger/v1-administration/swagger.json",
+            "Multitenancy Monolith V1 (api/administration)");
+
+        options.SwaggerEndpoint("/swagger/v1-authentication/swagger.json",
+            "Multitenancy Monolith V1 (api/authentication)");
+
+        options.SwaggerEndpoint("/swagger/v1-business/swagger.json",
+            "Multitenancy Monolith V1 (api/business)");
+
+        options.SwaggerEndpoint("/swagger/v1-foundation/swagger.json",
+            "Multitenancy Monolith V1 (api/foundation)");
+
+        return options;
+    }
 }

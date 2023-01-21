@@ -24,7 +24,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var client = _factory.CreateClient();
 
-        var requestUrl = $"/identities/{identity}/sign-in";
+        var requestUrl = $"/api/authentication/identities/{identity}/sign-in";
         var requestBody = new { Secret = secret, Client = TestConfiguration.ClientName };
 
         // Act
@@ -43,7 +43,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var client = _factory.CreateClient();
 
-        var requestUrl = $"/identities/{identity}/sign-in";
+        var requestUrl = $"/api/authentication/identities/{identity}/sign-in";
         var requestBody = new { Secret = secret, Client = TestConfiguration.ClientName };
 
         // Act
@@ -63,7 +63,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var client = _factory.CreateClient();
 
-        var requestUrl = $"/identities/{identity}/sign-in";
+        var requestUrl = $"/api/authentication/identities/{identity}/sign-in";
         var requestBody = new { Secret = secret, Client = "invalid" };
 
         // Act

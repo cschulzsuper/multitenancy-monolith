@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
@@ -6,9 +8,13 @@ public static class _Endpoints
 {
     public static IEndpointRouteBuilder MapAdministrationEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapMemberEndpoints();
-        endpoints.MapMemberSignInEndpoints();
+        var administrationEndpoints = endpoints
+            .MapGroup("administration")
+            .WithGroupName("administration");
 
-        return endpoints;
+        administrationEndpoints.MapMemberEndpoints();
+        administrationEndpoints.MapMemberSignInEndpoints();
+
+        return administrationEndpoints;
     }
 }
