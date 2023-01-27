@@ -6,7 +6,7 @@ public static class _Services
 {
     public static IServiceCollection AddAuthenticationTransport(this IServiceCollection services)
     {
-        services.AddScoped<IIdentitySignInRequestHandler, IdentitySignInRequestHandler>();
+        services.AddScoped<IIdentityCommandHandler, IdentityCommandHandler>();
         services.AddScoped<IIdentityRequestHandler, IdentityRequestHandler>();
 
         return services;

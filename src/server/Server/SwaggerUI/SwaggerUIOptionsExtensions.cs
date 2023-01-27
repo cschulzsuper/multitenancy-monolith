@@ -49,11 +49,11 @@ public static class SwaggerUIOptionsExtensions
         options.SwaggerEndpoint("/swagger/v1-authentication/swagger.json",
             "Multitenancy Monolith V1 (api/authentication)");
 
+        options.SwaggerEndpoint("/swagger/v1-authorization/swagger.json",
+            "Multitenancy Monolith V1 (api/authorization)");
+
         options.SwaggerEndpoint("/swagger/v1-business/swagger.json",
             "Multitenancy Monolith V1 (api/business)");
-
-        options.SwaggerEndpoint("/swagger/v1-foundation/swagger.json",
-            "Multitenancy Monolith V1 (api/foundation)");
 
         return options;
     }

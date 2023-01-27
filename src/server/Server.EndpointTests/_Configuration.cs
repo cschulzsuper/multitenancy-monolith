@@ -1,5 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration;
 using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Core;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.WebUtilities;
@@ -33,11 +34,11 @@ internal static class TestConfiguration
     public const string GuestSecret = "secret";
 
     public const string Group1 = "group-1";
-    public const string Group1chief = "chief-group-1";
+    public const string Group1Chief = "chief-group-1";
     public const string Group1Member = "member-group-1";
 
     public const string Group2 = "group-2";
-    public const string Group2chief = "chief-group-2";
+    public const string Group2Chief = "chief-group-2";
     public const string Group2Member = "member-group-2";
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
@@ -55,7 +56,7 @@ internal static class TestConfiguration
     { "SeedData:Authentication:Identities:3:MailAddress", GuestMailAddress },
     { "SeedData:Authentication:Identities:3:Secret", GuestSecret },
     { $"SeedData:Administration:Memberships:0:Group", Group1 },
-    { $"SeedData:Administration:Memberships:0:Member", Group1chief },
+    { $"SeedData:Administration:Memberships:0:Member", Group1Chief },
     { $"SeedData:Administration:Memberships:0:Identity", ChiefIdentity },
     { $"SeedData:Administration:Memberships:1:Group", Group1 },
     { $"SeedData:Administration:Memberships:1:Member", Group1Member },
@@ -64,7 +65,7 @@ internal static class TestConfiguration
     { $"SeedData:Administration:Memberships:2:Member", Group1Member },
     { $"SeedData:Administration:Memberships:2:Identity", GuestIdentity },
     { $"SeedData:Administration:Memberships:3:Group", Group2 },
-    { $"SeedData:Administration:Memberships:3:Member", Group2chief },
+    { $"SeedData:Administration:Memberships:3:Member", Group2Chief },
     { $"SeedData:Administration:Memberships:3:Identity", ChiefIdentity },
     { $"SeedData:Administration:Memberships:4:Group", Group2 },
     { $"SeedData:Administration:Memberships:4:Member", Group2Member },
@@ -72,9 +73,9 @@ internal static class TestConfiguration
     { $"SeedData:Administration:Memberships:5:Group", Group2 },
     { $"SeedData:Administration:Memberships:5:Member", Group2Member },
     { $"SeedData:Administration:Memberships:5:Identity", GuestIdentity },
-    { $"SeedData:Administration:Members:{Group1}:0:UniqueName", Group1chief },
+    { $"SeedData:Administration:Members:{Group1}:0:UniqueName", Group1Chief },
     { $"SeedData:Administration:Members:{Group1}:1:UniqueName", Group1Member },
-    { $"SeedData:Administration:Members:{Group2}:0:UniqueName", Group2chief },
+    { $"SeedData:Administration:Members:{Group2}:0:UniqueName", Group2Chief },
     { $"SeedData:Administration:Members:{Group2}:1:UniqueName", Group2Member }
 };
 

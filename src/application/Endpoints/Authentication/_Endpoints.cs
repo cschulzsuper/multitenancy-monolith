@@ -7,13 +7,13 @@ public static class _Endpoints
 {
     public static IEndpointRouteBuilder MapAuthenticationEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        var authenticationEndpoints = endpoints
+        var authentication = endpoints
             .MapGroup("authentication")
             .WithGroupName("authentication");
 
-        authenticationEndpoints.MapIdentityEndpoints();
-        authenticationEndpoints.MapIdentitySignInEndpoints();
+        authentication.MapIdentityResource();
+        authentication.MapIdentityCommands();
 
-        return authenticationEndpoints;
+        return endpoints;
     }
 }

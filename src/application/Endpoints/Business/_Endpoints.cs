@@ -7,12 +7,12 @@ public static class _Endpoints
 {
     public static IEndpointRouteBuilder MapBusinessEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        var businessEndpoints = endpoints
+        var business = endpoints
             .MapGroup("business")
             .WithGroupName("business");
 
-        businessEndpoints.MapWeatherForecastEndpoints();
+        business.MapBusinessObjectResource();
 
-        return businessEndpoints;
+        return endpoints;
     }
 }

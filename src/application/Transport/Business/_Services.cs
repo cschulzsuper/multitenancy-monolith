@@ -4,9 +4,9 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Business;
 
 public static class _Services
 {
-    public static IServiceCollection AddWeatherForecastTransport(this IServiceCollection services)
+    public static IServiceCollection AddBusinessTransport(this IServiceCollection services)
     {
-        services.AddScoped<IWeatherForecastRequestHandler, WeatherForecastRequestHandler>();
+        services.AddScoped<IBusinessObjectRequestHandler, BusinessObjectRequestHandler>();
 
         return services;
     }

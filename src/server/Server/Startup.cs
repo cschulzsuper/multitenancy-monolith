@@ -1,8 +1,8 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Application.Administration;
 using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 using ChristianSchulz.MultitenancyMonolith.Application.Business;
-using ChristianSchulz.MultitenancyMonolith.Application.Foundation;
 using ChristianSchulz.MultitenancyMonolith.Caching;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -50,13 +51,15 @@ public class Startup
         services.AddCaching();
         services.AddData();
 
-        services.AddAdministrationManagement();
         services.AddAdministrationTransport();
 
         services.AddAuthenticationManagement();
         services.AddAuthenticationTransport();
 
-        services.AddWeatherForecastTransport();
+        services.AddAuthorizationManagement();
+        services.AddAuthorizationTransport();
+
+        services.AddBusinessTransport();
     }
 
     public void Configure(IApplicationBuilder app)
@@ -100,9 +103,9 @@ public class Startup
             var apiEndpoints = endpoints.MapGroup("api");
 
             apiEndpoints.MapAdministrationEndpoints();
+            apiEndpoints.MapAuthorizationEndpoints();
             apiEndpoints.MapAuthenticationEndpoints();
             apiEndpoints.MapBusinessEndpoints();
-            apiEndpoints.MapFoundationEndpoints();
         });
     }
 
@@ -124,17 +127,20 @@ public class Startup
         else
         {
             var exception = exceptionHandlerPathFeature.Error;
-
             var httpMethod = context.Request.Method;
-            var statusCode = httpMethod switch
+
+            var statusCode = (exception, httpMethod) switch
             {
+                _ when exception is NotImplementedException => StatusCodes.Status501NotImplemented,
+
                 _ when HttpMethods.IsGet(httpMethod) => StatusCodes.Status404NotFound,
                 _ when HttpMethods.IsHead(httpMethod) => StatusCodes.Status404NotFound,
                 _ when HttpMethods.IsPost(httpMethod) => StatusCodes.Status400BadRequest,
                 _ when HttpMethods.IsPut(httpMethod) => StatusCodes.Status400BadRequest,
                 _ when HttpMethods.IsPatch(httpMethod) => StatusCodes.Status400BadRequest,
                 _ when HttpMethods.IsDelete(httpMethod) => StatusCodes.Status400BadRequest,
-                _ => throw exception
+
+                _ => StatusCodes.Status500InternalServerError
             };
 
             var errorMessageAttribute = context.GetEndpoint()?.Metadata

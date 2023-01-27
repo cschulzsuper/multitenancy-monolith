@@ -47,16 +47,16 @@ internal static class SwaggerGenOptionsExtensions
             Version = "v1-authentication"
         });
 
+        options.SwaggerDoc("v1-authorization", new()
+        {
+            Title = "Multitenancy Monolith V1 (api/authorization)",
+            Version = "v1-authorization"
+        });
+
         options.SwaggerDoc("v1-business", new()
         {
             Title = "Multitenancy Monolith V1 (api/business)",
             Version = "v1-business"
-        });
-
-        options.SwaggerDoc("v1-foundation", new()
-        {
-            Title = "Multitenancy Monolith V1 (api/foundation)",
-            Version = "v1-foundation"
         });
 
         options.DocInclusionPredicate((docName, apiDesc) =>

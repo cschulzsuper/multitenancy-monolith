@@ -63,7 +63,10 @@ If you are developing an ASP.NET Core application yourself and are looking for a
   * /29 A nice gem is to make the swagger ui available in staging environments with the necessity of providing an access token for it. https://github.com/cschulzsuper/multitenancy-monolith/commit/c262d72a03ed0a7cb784a390acb3ba5501e352a9
 
 * Domain specific swagger files
-  * /30 Maybe it is nice for clients to have separated swagger files. I grouped endpoints by domains (`authentication`, `administration`, `business`, `foundation`) and provide a swagger file for each of them. 
+  * /30 Maybe it is nice for clients to have separated swagger files. I grouped endpoints by domains (`authentication`, `administration`, `business`, `foundation`) and provide a swagger file for each of them. e6356978f1e1f9865900870d7053bd4935bac251
+
+* Custom properties
+  * /31 How about the ability to add custom properties to REST resources. I have defined management API for this feature, and regrouped the endpoints once again. 
 
 # Next
 
