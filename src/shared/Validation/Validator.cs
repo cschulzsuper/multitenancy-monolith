@@ -23,6 +23,36 @@ public sealed class Validator<T>
         }
     }
 
+    public void AddRules<TProperty>(Func<T, IEnumerable<TProperty>> property, Action<Validator<TProperty>> setup)
+    {
+        var validator = new Validator<TProperty>();
+
+        setup.Invoke(validator);
+
+        var validation = CreateValidation(property, validator);
+
+        _validations.Add(validation);
+    }
+
+    public Func<T, ValidationResult?> CreateValidation<TProperty>(Func<T, IEnumerable<TProperty>> property, Validator<TProperty> validator)
+        => (@object) =>
+        {
+            var enumeration = property.Invoke(@object);
+
+            foreach (var value in enumeration)
+            {
+                var validationResult = validator.Validate(value);
+
+                if (validationResult != null &&
+                    validationResult != ValidationResult.Success)
+                {
+                    return validationResult;
+                }
+            }
+
+            return ValidationResult.Success;
+        };
+
     public Func<T, ValidationResult?> CreateValidation<TProperty>(Func<T, TProperty> property, IValidationRule<TProperty> rule)
         => (value) =>
         {
@@ -35,6 +65,18 @@ public sealed class Validator<T>
 
     public void Ensure(T value)
     {
+        var validationResult = Validate(value);
+
+        if (validationResult != null &&
+            validationResult != ValidationResult.Success)
+        {
+            throw new ValidationException(validationResult.ErrorMessage
+                                          ?? $"The '{typeof(T).Name}' value is not valid.");
+        }
+    }
+
+    public ValidationResult? Validate(T value)
+    {
         foreach (var validation in _validations)
         {
             var validationResult = validation.Invoke(value);
@@ -42,9 +84,10 @@ public sealed class Validator<T>
             if (validationResult != null &&
                 validationResult != ValidationResult.Success)
             {
-                throw new ValidationException(validationResult.ErrorMessage
-                    ?? $"The '{typeof(T).Name}' value is not valid.");
+                return validationResult;
             }
         }
+
+        return ValidationResult.Success;
     }
 }

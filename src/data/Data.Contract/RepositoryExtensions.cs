@@ -6,6 +6,54 @@ namespace ChristianSchulz.MultitenancyMonolith.Data;
 
 public static class RepositoryExtensions
 {
+    public static TEntity Get<TEntity>(this IRepository<TEntity> repository, object snowflake)
+    {
+        var entity = repository.GetOrDefault(snowflake);
+
+        if (entity == null)
+        {
+            throw new RepositoryException($"{typeof(TEntity).Name} `{snowflake}` does not exist");
+        }
+
+        return entity;
+    }
+
+    public static TEntity Get<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate)
+    {
+        var entity = repository.GetOrDefault(predicate);
+
+        if (entity == null)
+        {
+            throw new RepositoryException($"Single entity of type '{typeof(TEntity).Name}' does not exist");
+        }
+
+        return entity;
+    }
+
+    public static async ValueTask<TEntity> GetAsync<TEntity>(this IRepository<TEntity> repository, object snowflake)
+    {
+        var entity = await repository.GetOrDefaultAsync(snowflake);
+
+        if (entity == null)
+        {
+            throw new RepositoryException($"{typeof(TEntity).Name} `{snowflake}` does not exist");
+        }
+
+        return entity;
+    }
+
+    public static async ValueTask<TEntity> GetAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate)
+    {
+        var entity = await repository.GetOrDefaultAsync(predicate);
+
+        if (entity == null)
+        {
+            throw new RepositoryException($"Single entity of type '{typeof(TEntity).Name}' does not exist");
+        }
+
+        return entity;
+    }
+
     public static void UpdateOrThrow<TEntity>(this IRepository<TEntity> repository, object snowflake, Action<TEntity> action)
     {
         repository.Execute(repository =>

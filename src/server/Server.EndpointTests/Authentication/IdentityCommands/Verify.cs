@@ -6,7 +6,6 @@ namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authenticati
 
 public sealed class IdentitySignInTests : IClassFixture<WebApplicationFactory<Program>>
 {
-
     private readonly WebApplicationFactory<Program> _factory;
 
     public IdentitySignInTests(WebApplicationFactory<Program> factory)
@@ -14,14 +13,31 @@ public sealed class IdentitySignInTests : IClassFixture<WebApplicationFactory<Pr
         _factory = factory.WithInMemoryData();
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Verfiy_ShouldSucceed_WhenAuthorizationIsValid(string identity)
+    [Fact]
+    [Trait("Category", "Endpoint.Security")]
+    public async Task Verfiy_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities/me/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities/me/verify");
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [Trait("Category", "Endpoint.Security")]
+    [InlineData(TestConfiguration.AdminIdentity)]
+    [InlineData(TestConfiguration.GuestIdentity)]
+    public async Task Verfiy_ShouldSucceed_WhenValid(string identity)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities/me/verify");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -34,13 +50,13 @@ public sealed class IdentitySignInTests : IClassFixture<WebApplicationFactory<Pr
     }
 
     [Theory]
-    [Trait("Category", "Endpoint")]
+    [Trait("Category", "Endpoint.Security")]
     [InlineData(TestConfiguration.AdminIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Verfiy_ShouldBeUnauthorized_WhenAuthorizationIsInvalid(string identity)
+    public async Task Verfiy_ShouldBeUnauthorized_WhenInvalid(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authentication/identities/me/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities/me/verify");
         request.Headers.Authorization = _factory.MockInvalidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();

@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\data\Aggregates\Aggregates.csproj" />
+		<ProjectReference Include="..\..\data\Objects\Objects.csproj" />
 		<ProjectReference Include="..\Server\Server.csproj" />
 	</ItemGroup>
 

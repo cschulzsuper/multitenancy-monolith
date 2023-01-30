@@ -9,8 +9,11 @@ internal sealed class RepositoryContextFactory<TEntity>
     public RepositoryContext<TEntity> Create()
         => Create(string.Empty);
 
-    public RepositoryContext<TEntity> Create(Func<TEntity, object> snowflakeFactory, Func<TEntity, object> snowflakeProvider)
-        => Create(string.Empty, snowflakeFactory, snowflakeProvider);
+    public RepositoryContext<TEntity> Create(
+        Func<TEntity, object> snowflakeFactory, 
+        Func<TEntity, object> snowflakeProvider,
+        params Func<IEnumerable<TEntity>, TEntity, bool>[] constrains)
+        => Create(string.Empty, snowflakeFactory, snowflakeProvider, constrains);
 
     public RepositoryContext<TEntity> Create(string multitenancyDiscirmantor)
     {
@@ -19,12 +22,16 @@ internal sealed class RepositoryContextFactory<TEntity>
         return repositoryContext;
     }
 
-    public RepositoryContext<TEntity> Create(string multitenancyDiscirmantor, Func<TEntity, object> snowflakeFactory, Func<TEntity, object> snowflakeProvider)
+    public RepositoryContext<TEntity> Create(string multitenancyDiscirmantor, 
+        Func<TEntity, object> snowflakeFactory, 
+        Func<TEntity, object> snowflakeProvider,
+        params Func<IEnumerable<TEntity>, TEntity, bool>[] constrains)
     {
         var repositoryContext = Create(multitenancyDiscirmantor);
 
         repositoryContext.SnowflakeFactory = snowflakeFactory;
         repositoryContext.SnowflakeProvider = snowflakeProvider;
+        repositoryContext.Constrains = constrains;
 
         return repositoryContext;
     }

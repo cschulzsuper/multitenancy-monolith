@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 using Xunit;
 
@@ -17,14 +16,52 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         _factory = factory.WithInMemoryData();
     }
 
+    [Fact]
+    [Trait("Category", "Endpoint.Security")]
+    public async Task GetAll_ShouldBeUnauthorized_WhenNotAuthenticated()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/authorization/members");
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [Trait("Category", "Endpoint.Security")]
+    [InlineData(TestConfiguration.AdminIdentity)]
+    [InlineData(TestConfiguration.DefaultIdentity)]
+    [InlineData(TestConfiguration.GuestIdentity)]
+    public async Task GetAll_ShouldBeForbidden_WhenNotAuthorized(string identity)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/authorization/members");
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
     [Theory]
     [Trait("Category", "Endpoint.Security")]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Get_ShouldBeForbidden_WhenMemberIsOnlyMember(string identity, string group, string member)
+    public async Task GetAll_ShouldBeForbidden_WhenNotChief(string identity, string group, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authorization/members");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/authorization/members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -41,10 +78,10 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1Chief)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1Member)]
-    public async Task GetAll_ShouldReturnDefaultGroup1Members(string identity, string member)
+    public async Task GetAll_ShouldSucceed_ForGroup1(string identity, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authorization/members");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/authorization/members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, TestConfiguration.Group1, member);
 
         var client = _factory.CreateClient();
@@ -66,10 +103,10 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2Chief)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2Member)]
-    public async Task GetAll_ShouldReturnDefaultGroup2Members(string identity, string member)
+    public async Task GetAll_ShouldSucceed_ForGroup2(string identity, string member)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authorization/members");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/authorization/members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, TestConfiguration.Group2, member);
 
         var client = _factory.CreateClient();

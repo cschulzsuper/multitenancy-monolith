@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
-using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
+﻿using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -125,21 +125,6 @@ public static class _Configure
             var membershipsForGroup = memberships
                 .Where(membership => membership.Group == group.UniqueName)
                 .ToArray();
-
-            foreach (var membership in membershipsForGroup)
-            {
-                membership.IdentitySnowflake = identities
-                    .Single(identity => identity.UniqueName == membership.Identity)
-                    .Snowflake;
-
-                membership.GroupSnowflake = groups
-                    .Single(group => group.UniqueName == membership.Group)
-                    .Snowflake;
-
-                membership.MemberSnowflake = members
-                    .Single(member => member.UniqueName == membership.Member)
-                    .Snowflake;
-            }
 
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Membership>>()

@@ -1,6 +1,6 @@
 # Roles
 
-# Identity Roles
+## Identity Roles
 
 * `admin`
 
@@ -20,7 +20,7 @@
 
   Condition: `Identity != "demo"`
 
-# Member Roles
+## Member Roles
 
 * `chief`
 

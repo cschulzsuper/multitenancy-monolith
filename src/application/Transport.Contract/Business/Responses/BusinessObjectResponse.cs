@@ -2,5 +2,5 @@
 
 public class BusinessObjectResponse
 {
-
+    public required string UniqueName { get; init; }
 }

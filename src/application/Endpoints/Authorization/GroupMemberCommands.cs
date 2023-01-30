@@ -20,8 +20,7 @@ internal static class GroupMemberCommands
         commands
             .MapPost("/{member}/sign-in", SignIn)
             .RequireAuthorization(ploicy => ploicy
-                .RequireRole("default")
-                .RequireClaim("scope", "endpoints"))
+                .RequireRole("default"))
             .WithErrorMessage(CouldNotSignInGroupMember)
             .AddEndpointFilter<BadgeResultEndpointFilter>();
 
@@ -29,6 +28,6 @@ internal static class GroupMemberCommands
     }
 
     private static Delegate SignIn =>
-        (IMemberCommandHandler commandHandler, string group, string member, MemberCommand command)
+        (IMemberCommandHandler commandHandler, string group, string member, MemberSignInCommand command)
             => commandHandler.SignIn(group, member, command);
 }

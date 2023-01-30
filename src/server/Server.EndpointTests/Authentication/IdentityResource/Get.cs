@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Data;
+﻿using ChristianSchulz.MultitenancyMonolith.Data;
+using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
@@ -18,30 +18,36 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         _factory = factory.WithInMemoryData();
     }
 
+    [Fact]
+    [Trait("Category", "Endpoint.Security")]
+    public async Task Get_ShouldBeUnauthorized_WhenNotAuthenticated()
+    {
+        // Arrange
+        var validIdentity = "valid-identity";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities/{validIdentity}");
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
     [Theory]
     [Trait("Category", "Endpoint.Security")]
     [InlineData(TestConfiguration.ChiefIdentity)]
     [InlineData(TestConfiguration.DefaultIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Get_ShouldBeForbidden_WhenIdentityIsNotAdmin(string identity)
+    public async Task Get_ShouldBeForbidden_WhenNotAdmin(string identity)
     {
         // Arrange
-        var existingIdentity = new Identity
-        {
-            Snowflake = 1,
-            UniqueName =  $"existing-identity-{Guid.NewGuid()}",
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
-        };
+        var validIdentity = "valid-identity";
 
-        using (var scope = _factory.Services.CreateScope())
-        {
-            scope.ServiceProvider
-                .GetRequiredService<IRepository<Identity>>()
-                .Insert(existingIdentity);
-        }
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities/{existingIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities/{validIdentity}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -57,13 +63,13 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Get_ShouldSucceed_WhenIdentityExists(string identity)
+    public async Task Get_ShouldSucceed_WhenExists(string identity)
     {
         // Arrange
         var existingIdentity = new Identity
         {
             Snowflake = 1,
-            UniqueName =  $"existing-identity-{Guid.NewGuid()}",
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "info@localhost",
             Secret = "foo-bar"
         };
@@ -89,17 +95,17 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
-            x => Assert.Equal((x.Key, (string?)x.Value), ("mailAddress", existingIdentity.MailAddress)),
-            x => Assert.Equal((x.Key, (string?)x.Value), ("uniqueName", existingIdentity.UniqueName)));
+            x => Assert.Equal((x.Key, (string?) x.Value), ("mailAddress", existingIdentity.MailAddress)),
+            x => Assert.Equal((x.Key, (string?) x.Value), ("uniqueName", existingIdentity.UniqueName)));
     }
 
     [Theory]
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Get_ShouldFail_WhenIdentityDoesNotExists(string identity)
+    public async Task Get_ShouldFail_WhenAbsent(string identity)
     {
         // Arrange
-        var absentIdentity = $"absent-identity-{Guid.NewGuid()}";
+        var absentIdentity = "absent-identity";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities/{absentIdentity}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
@@ -117,10 +123,10 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Get_ShouldFail_WhenIdentityIsInvalid(string identity)
+    public async Task Get_ShouldFail_WhenInvalid(string identity)
     {
         // Arrange
-        var invalidIdentity = $"INVALID_IDENTITY_{Guid.NewGuid()}";
+        var invalidIdentity = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities/{invalidIdentity}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);

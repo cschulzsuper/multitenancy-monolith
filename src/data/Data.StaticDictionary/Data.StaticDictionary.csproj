@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Data</RootNamespace>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -17,7 +17,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\shared\Security.Claims\Security.Claims.csproj" />
-		<ProjectReference Include="..\Aggregates\Aggregates.csproj" />
+		<ProjectReference Include="..\Objects\Objects.csproj" />
 		<ProjectReference Include="..\Data.Contract\Data.Contract.csproj" />
 	</ItemGroup>
 

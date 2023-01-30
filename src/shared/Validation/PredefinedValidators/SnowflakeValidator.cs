@@ -16,8 +16,8 @@ public sealed class SnowflakeValidator
     {
         var rules = new IValidationRule<long>[]
         {
-        new NotZero<long>(field),
-        new NotNegative<long>(field)
+            new NotZero<long>(field),
+            new NotNegative<long>(field)
         };
 
         return rules;

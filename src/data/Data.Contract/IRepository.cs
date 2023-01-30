@@ -8,13 +8,21 @@ public interface IRepository<TEntity>
 
     ValueTask ExecuteAsync(Func<IRepository<TEntity>, ValueTask> func);
 
-    TEntity Get(object snowflake);
+    bool Exists(object snowflake);
 
-    TEntity Get(Expression<Func<TEntity, bool>> predicate);
+    bool Exists(Expression<Func<TEntity, bool>> predicate);
 
-    ValueTask<TEntity> GetAsync(object snowflake);
+    ValueTask<bool> ExistsAsync(object snowflake);
 
-    ValueTask<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
+    ValueTask<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate);
+
+    TEntity? GetOrDefault(object snowflake);
+
+    TEntity? GetOrDefault(Expression<Func<TEntity, bool>> predicate);
+
+    ValueTask<TEntity?> GetOrDefaultAsync(object snowflake);
+
+    ValueTask<TEntity?> GetOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
     IQueryable<TEntity> GetQueryable();
 

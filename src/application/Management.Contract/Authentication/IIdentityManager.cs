@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
+﻿using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

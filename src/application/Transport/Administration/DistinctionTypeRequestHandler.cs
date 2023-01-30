@@ -1,6 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Administration.Responses;
-using System;
+using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,28 +8,77 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 internal sealed class DistinctionTypeRequestHandler : IDistinctionTypeRequestHandler
 {
-    public ValueTask<DistinctionTypeResponse> GetAsync(string uniqueName)
+    
+    private readonly IDistinctionTypeManager _distinctionTypeManager;
+
+    public DistinctionTypeRequestHandler(IDistinctionTypeManager distinctionTypeManager)
     {
-        throw new NotImplementedException();
+        _distinctionTypeManager = distinctionTypeManager;
     }
 
-    public IAsyncEnumerable<DistinctionTypeResponse> GetAll()
+    public async ValueTask<DistinctionTypeResponse> GetAsync(string uniqueName)
     {
-        throw new NotImplementedException();
+        var distinctionType = await _distinctionTypeManager.GetAsync(uniqueName);
+
+        var response = new DistinctionTypeResponse
+        {
+            UniqueName = distinctionType.UniqueName,
+            DisplayName = distinctionType.DisplayName,
+            ObjectType = distinctionType.ObjectType
+        };
+
+        return response;
     }
 
-    public ValueTask<DistinctionTypeResponse> InsertAsync(DistinctionTypeRequest request)
+    public async IAsyncEnumerable<DistinctionTypeResponse> GetAll()
     {
-        throw new NotImplementedException();
+        var distinctionTypes = _distinctionTypeManager.GetAsyncEnumerable();
+
+        await foreach (var distinctionType in distinctionTypes)
+        {
+            var response = new DistinctionTypeResponse
+            {
+                UniqueName = distinctionType.UniqueName,
+                DisplayName = distinctionType.DisplayName,
+                ObjectType = distinctionType.ObjectType
+            };
+
+            yield return response;
+        }
     }
 
-    public ValueTask UpdateAsync(string uniqueName, DistinctionTypeRequest request)
+    public async ValueTask<DistinctionTypeResponse> InsertAsync(DistinctionTypeRequest request)
     {
-        throw new NotImplementedException();
+        var distinctionType = new DistinctionType
+        {
+            UniqueName = request.UniqueName,
+            DisplayName = request.DisplayName,
+            ObjectType = request.ObjectType
+        };
+
+        await _distinctionTypeManager.InsertAsync(distinctionType);
+
+        var response = new DistinctionTypeResponse
+        {
+            UniqueName = distinctionType.UniqueName,
+            DisplayName = distinctionType.DisplayName,
+            ObjectType = distinctionType.ObjectType
+        };
+
+        return response;
     }
 
-    public ValueTask DeleteAsync(string uniqueName)
+    public async ValueTask UpdateAsync(string uniqueName, DistinctionTypeRequest request)
     {
-        throw new NotImplementedException();
+        await _distinctionTypeManager.UpdateAsync(uniqueName,
+            distinctionType =>
+            {
+                distinctionType.UniqueName = request.UniqueName;
+                distinctionType.DisplayName = request.DisplayName;
+                distinctionType.ObjectType = request.ObjectType;
+            });
     }
+
+    public async ValueTask DeleteAsync(string uniqueName)
+        => await _distinctionTypeManager.DeleteAsync(uniqueName);
 }

@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Data;
+﻿using ChristianSchulz.MultitenancyMonolith.Data;
+using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
@@ -16,30 +16,36 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         _factory = factory.WithInMemoryData();
     }
 
+    [Fact]
+    [Trait("Category", "Endpoint.Security")]
+    public async Task Delete_ShouldBeUnauthorized_WhenNotAuthenticated()
+    {
+        // Arrange
+        var validIdentity = "valid-identity";
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{validIdentity}");
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
     [Theory]
     [Trait("Category", "Endpoint.Security")]
     [InlineData(TestConfiguration.ChiefIdentity)]
     [InlineData(TestConfiguration.DefaultIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Delete_ShouldBeForbidden_WhenIdentityIsNotAdmin(string identity)
+    public async Task Delete_ShouldBeForbidden_WhenNotAdmin(string identity)
     {
         // Arrange
-        var existingIdentity = $"existing-identity-{Guid.NewGuid()}";
+        var validIdentity = "valid-identity";
 
-        using (var scope = _factory.Services.CreateScope())
-        {
-            scope.ServiceProvider
-                .GetRequiredService<IRepository<Identity>>()
-                .Insert(new Identity
-                {
-                    Snowflake = 1,
-                    UniqueName = existingIdentity,
-                    MailAddress = "info@localhost",
-                    Secret = "foo-bar"
-                });
-        }
-
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{existingIdentity}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{validIdentity}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -55,25 +61,25 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Delete_ShouldSucceed_WhenExistingIdentityIsGiven(string identity)
+    public async Task Delete_ShouldSucceed_WhenExists(string identity)
     {
         // Arrange
-        var existingIdentity = $"existing-identity-{Guid.NewGuid()}";
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "info@localhost",
+            Secret = "foo-bar"
+        };
 
         using (var scope = _factory.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Identity>>()
-                .Insert(new Identity
-                {
-                    Snowflake = 1,
-                    UniqueName = existingIdentity,
-                    MailAddress = "info@localhost",
-                    Secret = "foo-bar"
-                });
+                .Insert(existingIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{existingIdentity}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -89,7 +95,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
             var deletedIdentity = scope.ServiceProvider
                 .GetRequiredService<IRepository<Identity>>()
                 .GetQueryable()
-                .SingleOrDefault(x => x.UniqueName == existingIdentity);
+                .SingleOrDefault(x => x.UniqueName == existingIdentity.UniqueName);
 
             Assert.Null(deletedIdentity);
         }
@@ -98,10 +104,10 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Delete_ShouldFail_WhenIdentityDoesNotExist(string identity)
+    public async Task Delete_ShouldFail_WhenAbsent(string identity)
     {
         // Arrange
-        var absentIdentity = $"absent-identity-{Guid.NewGuid()}";
+        var absentIdentity = "absent-identity";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{absentIdentity}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
@@ -119,10 +125,10 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Delete_ShouldFail_WhenIdentityUniqueNameIsInvalid(string identity)
+    public async Task Delete_ShouldFail_WhenInvalid(string identity)
     {
         // Arrange
-        var invalidIdentity = $"INVALID_IDENTITY_{Guid.NewGuid()}";
+        var invalidIdentity = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{invalidIdentity}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);

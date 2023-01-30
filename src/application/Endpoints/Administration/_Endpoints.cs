@@ -11,8 +11,8 @@ public static class _Endpoints
             .MapGroup("administration")
             .WithGroupName("administration");
 
-        administration.MapAggregateTypeResource();
-        administration.MapAggregateTypeCustomPropertyResource();
+        administration.MapObjectTypeResource();
+        administration.MapObjectTypeCustomPropertyResource();
 
         administration.MapDistinctionTypeResource();
         administration.MapDistinctionTypeCustomPropertyResource();

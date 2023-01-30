@@ -16,6 +16,27 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [Trait("Category", "Endpoint.Security")]
+    [InlineData(TestConfiguration.Group1, TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    [InlineData(TestConfiguration.Group1, TestConfiguration.Group1Member)]
+    [InlineData(TestConfiguration.Group2, TestConfiguration.Group2Member)]
+    public async Task SignIn_ShouldBeUnauthorized_WhenNotAuthenticated(string group, string member)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authorization/groups/{group}/members/{member}/sign-in");
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
@@ -23,7 +44,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task SignIn_ShouldSucceed_WhenMemberIsValid(string identity, string group, string member)
+    public async Task SignIn_ShouldSucceed_WhenValid(string identity, string group, string member)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authorization/groups/{group}/members/{member}/sign-in");
@@ -53,7 +74,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, "invalid")]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, "invalid")]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, "invalid")]
-    public async Task SignIn_ShouldFail_WhenMemberDoesNotExist(string identity, string group, string member)
+    public async Task SignIn_ShouldFail_WhenMemberAbsent(string identity, string group, string member)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authorization/groups/{group}/members/{member}/sign-in");
@@ -84,7 +105,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task SignIn_ShouldFail_WhenIdentityIsNotAssignedToMember(string identity, string group, string member)
+    public async Task SignIn_ShouldFail_WhenIdentityUnassigned(string identity, string group, string member)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authorization/groups/{group}/members/{member}/sign-in");
@@ -115,7 +136,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.DefaultIdentity, "invalid", TestConfiguration.Group2Member)]
     [InlineData(TestConfiguration.GuestIdentity, "invalid", TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.GuestIdentity, "invalid", TestConfiguration.Group2Member)]
-    public async Task SignIn_ShouldFail_WhenGroupDoesNotExist(string identity, string group, string member)
+    public async Task SignIn_ShouldFail_WhenGroupAbsent(string identity, string group, string member)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authorization/groups/{group}/members/{member}/sign-in");
@@ -146,7 +167,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task SignIn_ShouldFail_WhenClientIsInvalid(string identity, string group, string member)
+    public async Task SignIn_ShouldFail_WhenClientInvalid(string identity, string group, string member)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authorization/groups/{group}/members/{member}/sign-in");

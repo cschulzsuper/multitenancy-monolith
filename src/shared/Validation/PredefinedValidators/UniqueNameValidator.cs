@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
+using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
 
@@ -16,9 +17,10 @@ public sealed class UniqueNameValidator
     {
         var rules = new IValidationRule<string>[]
         {
-        new NotNull(field),
-        new NotEmpty(field),
-        new KebabCase(field),
+            new NotNull(field),
+            new NotEmpty(field),
+            new KebabCase(field),
+            new StringLength(field, 140),
         };
 
         return rules;
@@ -26,4 +28,7 @@ public sealed class UniqueNameValidator
 
     public static void Ensure(string uniqueName)
         => _validator.Ensure(uniqueName);
+
+    public static ValidationResult? Validate(string uniqueName)
+        => _validator.Validate(uniqueName);
 }

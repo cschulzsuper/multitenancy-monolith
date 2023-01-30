@@ -26,13 +26,18 @@ internal sealed class MemberCommandHandler : IMemberCommandHandler
         _user = user;
     }
 
-    public ClaimsIdentity SignIn(string group, string member, MemberCommand command)
+    public ClaimsIdentity SignIn(string group, string member, MemberSignInCommand command)
     {
         var client = command.Client;
 
         if (!_allowedClients.Contains(command.Client))
         {
             throw new TransportException($"Client '{client}' is not allowed to sign in");
+        }
+
+        if (command.Client != _user.GetClaimOrDefault("client"))
+        {
+            throw new TransportException($"Not allowed to switch to client '{client}'");
         }
 
 

@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
-
-		<Nullable>enable</Nullable>		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Shared.Validation</RootNamespace>
 	</PropertyGroup>

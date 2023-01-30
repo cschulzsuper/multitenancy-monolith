@@ -1,8 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
-using ChristianSchulz.MultitenancyMonolith.Data;
+﻿using ChristianSchulz.MultitenancyMonolith.Data;
+using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authorization;
@@ -18,7 +17,7 @@ internal sealed class MemberManager : IMemberManager
 
     public async ValueTask<Member> GetAsync(long snowflake)
     {
-        MemberValidator.EnsureSnowflake(snowflake);
+        MemberValidation.EnsureSnowflake(snowflake);
 
         var member = await _repository.GetAsync(snowflake);
 
@@ -27,7 +26,7 @@ internal sealed class MemberManager : IMemberManager
 
     public async ValueTask<Member> GetAsync(string uniqueName)
     {
-        MemberValidator.EnsureUniqueName(uniqueName);
+        MemberValidation.EnsureUniqueName(uniqueName);
 
         var member = await _repository.GetAsync(x => x.UniqueName == uniqueName);
 
@@ -39,7 +38,7 @@ internal sealed class MemberManager : IMemberManager
 
     public async ValueTask InsertAsync(Member member)
     {
-        MemberValidator.EnsureInsertable(member);
+        MemberValidation.EnsureInsertable(member);
 
         await _repository.InsertAsync(member);
     }
@@ -50,7 +49,7 @@ internal sealed class MemberManager : IMemberManager
         {
             action.Invoke(member);
 
-            MemberValidator.EnsureUpdatable(member);
+            MemberValidation.EnsureUpdatable(member);
         };
 
         await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
@@ -62,7 +61,7 @@ internal sealed class MemberManager : IMemberManager
         {
             action.Invoke(member);
 
-            MemberValidator.EnsureUpdatable(member);
+            MemberValidation.EnsureUpdatable(member);
         };
 
         await _repository.UpdateOrThrowAsync(x => x.UniqueName == uniqueName, validatedAction);
@@ -70,14 +69,14 @@ internal sealed class MemberManager : IMemberManager
 
     public async ValueTask DeleteAsync(long snowflake)
     {
-        MemberValidator.EnsureSnowflake(snowflake);
+        MemberValidation.EnsureSnowflake(snowflake);
 
         await _repository.DeleteOrThrowAsync(snowflake);
     }
 
     public async ValueTask DeleteAsync(string uniqueName)
     {
-        MemberValidator.EnsureUniqueName(uniqueName);
+        MemberValidation.EnsureUniqueName(uniqueName);
 
         await _repository.DeleteOrThrowAsync(x => x.UniqueName == uniqueName);
     }

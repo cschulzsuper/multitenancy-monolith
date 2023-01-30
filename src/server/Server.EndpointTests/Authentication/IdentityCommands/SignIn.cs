@@ -19,7 +19,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.AdminSecret)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.GuestSecret)]
-    public async Task SignIn_ShouldSucceed_WhenCredentialAreValid(string identity, string secret)
+    public async Task SignIn_ShouldSucceed_WhenValid(string identity, string secret)
     {
         // Arrange
         var client = _factory.CreateClient();
@@ -38,7 +38,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity, "invalid")]
     [InlineData(TestConfiguration.GuestIdentity, "invalid")]
-    public async Task SignIn_ShouldFail_WhenCredentialAreInvalid(string identity, string secret)
+    public async Task SignIn_ShouldFail_WhenSecretInvalid(string identity, string secret)
     {
         // Arrange
         var client = _factory.CreateClient();
@@ -58,7 +58,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.AdminSecret)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.GuestSecret)]
-    public async Task SignIn_ShouldFail_WhenClientIsInvalid(string identity, string secret)
+    public async Task SignIn_ShouldFail_WhenClientInvalid(string identity, string secret)
     {
         // Arrange
         var client = _factory.CreateClient();

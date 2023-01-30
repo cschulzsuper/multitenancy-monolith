@@ -23,13 +23,13 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.ChiefIdentity)]
     [InlineData(TestConfiguration.DefaultIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Get_ShouldBeForbidden_WhenClientIsEndpointTests(string identity)
+    public async Task Get_ShouldBeForbidden_WhenClientEndpointTests(string identity)
     {
         // Arrange
         var productionFactory = _factory.WithWebHostBuilder(app => app
             .UseEnvironment("Production"));
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/swagger/v1/swagger.json");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/swagger/v1/swagger.json");
         request.Headers.Authorization = productionFactory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = productionFactory.CreateClient();
@@ -48,13 +48,13 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.ChiefIdentity)]
     [InlineData(TestConfiguration.DefaultIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Get_ShouldSucceed_WhenClientIsSwagger(string identity)
+    public async Task Get_ShouldSucceed_WhenClientSwagger(string identity)
     {
         // Arrange
         var productionFactory = _factory.WithWebHostBuilder(app => app
             .UseEnvironment("Production"));
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/swagger/v1/swagger.json");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/swagger/v1/swagger.json");
         request.Headers.Authorization = productionFactory.MockValidIdentityAuthorizationHeader(
             claimName => claimName switch
             {
@@ -81,12 +81,12 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(TestConfiguration.ChiefIdentity)]
     [InlineData(TestConfiguration.DefaultIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Get_ShouldSucceed_WhenEnvironmentIsDevelopment(string identity)
+    public async Task Get_ShouldSucceed_WhenEnvironmentDevelopment(string identity)
     {
         // Arrange
         var developmentFactory = _factory.WithInMemoryData();
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/swagger/v1/swagger.json");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/swagger/v1/swagger.json");
         request.Headers.Authorization = developmentFactory.MockValidIdentityAuthorizationHeader(
             claimName => claimName switch
             {

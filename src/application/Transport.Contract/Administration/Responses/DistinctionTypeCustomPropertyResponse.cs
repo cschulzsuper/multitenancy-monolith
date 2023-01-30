@@ -2,4 +2,6 @@
 
 public class DistinctionTypeCustomPropertyResponse
 {
+    public required string UniqueName { get; init; }
+    public required string DistinctionType { get; init; }
 }

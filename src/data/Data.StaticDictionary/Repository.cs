@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 namespace ChristianSchulz.MultitenancyMonolith.Data;
 
 internal sealed class Repository<TEntity> : IRepository<TEntity>
+    where TEntity : class, ICloneable
 {
     private readonly RepositoryContext<TEntity> _context;
 
@@ -14,7 +15,7 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
 
     public void Execute(Action<IRepository<TEntity>> action)
     {
-        using var _ = _context.AquireLock();
+        using var _ = _context.AcquireLock();
 
         var backup = _context.Data.ToDictionary(
             x => x.Key,
@@ -38,7 +39,7 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask ExecuteAsync(Func<IRepository<TEntity>, ValueTask> func)
     {
-        using var _ = _context.AquireLock();
+        using var _ = await _context.AcquireLockAsync();
 
         var backup = _context.Data.ToDictionary(
             x => x.Key,
@@ -60,40 +61,57 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         }
     }
 
-    public TEntity Get(object snowflake)
+    public bool Exists(object snowflake)
     {
-        var found = _context.Data.TryGetValue(snowflake, out var entity);
+        var found = _context.Data.ContainsKey(snowflake);
 
-        if (!found)
-        {
-            throw new RepositoryException($"{typeof(TEntity).Name} `{snowflake}` does not exist");
-        }
-
-        return entity!;
+        return found;
     }
 
-    public TEntity Get(Expression<Func<TEntity, bool>> predicate)
+    public bool Exists(Expression<Func<TEntity, bool>> predicate)
     {
         var entity = _context.Data.Values
             .SingleOrDefault(entity => predicate.Compile().Invoke(entity));
 
-        if (entity == null)
-        {
-            throw new RepositoryException($"Single entity of type '{typeof(TEntity).Name}' does not exist");
-        }
-
-        return entity!;
+        return entity != null;
     }
 
-    public ValueTask<TEntity> GetAsync(object snowflake)
+    public ValueTask<bool> ExistsAsync(object snowflake)
     {
-        var entity = Get(snowflake);
+        var entity = Exists(snowflake);
         return ValueTask.FromResult(entity);
     }
 
-    public ValueTask<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
+    public ValueTask<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
     {
-        var entity = Get(predicate);
+        var entity = Exists(predicate);
+        return ValueTask.FromResult(entity);
+    }
+
+    public TEntity? GetOrDefault(object snowflake)
+    {
+        _ = _context.Data.TryGetValue(snowflake, out var entity);
+
+        return entity;
+    }
+
+    public TEntity? GetOrDefault(Expression<Func<TEntity, bool>> predicate)
+    {
+        var entity = _context.Data.Values
+            .SingleOrDefault(entity => predicate.Compile().Invoke(entity));
+
+        return entity;
+    }
+
+    public ValueTask<TEntity?> GetOrDefaultAsync(object snowflake)
+    {
+        var entity = GetOrDefault(snowflake);
+        return ValueTask.FromResult(entity);
+    }
+
+    public ValueTask<TEntity?> GetOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        var entity = GetOrDefault(predicate);
         return ValueTask.FromResult(entity);
     }
 
@@ -148,11 +166,50 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         }
     }
 
+    private void EnsureInsertable(TEntity entity)
+    {
+        foreach (var constrain in _context.Constrains)
+        {
+            var values = _context.Data.Values;
+
+            var valid = constrain.Invoke(values, entity);
+
+            if (!valid)
+            {
+                throw new RepositoryException($"Entity {typeof(TEntity).Name} violates constrain");
+            }
+        }
+    }
+
+    private void EnsureUpdatable(object snowflake, TEntity entity)
+    {
+        foreach (var constrain in _context.Constrains)
+        {
+            var values = _context.Data
+                .Where(x => !x.Key.Equals(snowflake))
+                .Select(x => x.Value);
+
+            var valid = constrain.Invoke(values, entity);
+
+            if (!valid)
+            {
+                throw new RepositoryException($"Entity {typeof(TEntity).Name} violates constrain");
+            }
+        }
+    }
+
+
     public void Insert(TEntity entity)
     {
         var snowflake = _context.SnowflakeFactory(entity);
 
-        _context.Data.TryAdd(snowflake, entity);
+        _context.Data.AddOrUpdate(snowflake,
+            _ =>
+            {
+                EnsureInsertable(entity);
+                return entity;
+            },
+            (_, _) => throw new RepositoryException($"Entity {typeof(TEntity).Name} with snowflake {snowflake} already existst"));
     }
 
     public void Insert(params TEntity[] entities)
@@ -190,15 +247,22 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
 
         if (found)
         {
-            if (entity is ICloneable cloneable)
+            try
             {
-                var updated = (TEntity)cloneable.Clone();
-                action(updated);
-                _context.Data.TryUpdate(snowflake, updated, entity);
+                _context.Data.AddOrUpdate(snowflake,
+                    _ => throw new Exception(),
+                    (_, _) =>
+                    {
+                        var updated = (TEntity) entity!.Clone();
+                        action(updated);
+                        EnsureUpdatable(snowflake, updated);
+
+                        return updated;
+                    });
             }
-            else
+            catch
             {
-                action(entity!);
+                return 0;
             }
 
             return 1;

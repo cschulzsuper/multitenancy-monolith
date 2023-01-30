@@ -12,5 +12,29 @@ public sealed partial class MailAddress : IValidationRule<string>
     public string ValidationMessage => _validationMessage;
 
     public bool Check(string value)
-        => System.Net.Mail.MailAddress.TryCreate(value, out _);
+    {
+        var valid = System.Net.Mail.MailAddress.TryCreate(value, out _);
+        if (!valid) 
+        {
+            return false;
+        }
+
+        if (value.Length > 254)
+        {
+            return false;
+        }
+
+        var valueParts = value.Split('@');
+        if (valueParts.Length != 2)
+        {
+            return false;
+        }
+
+        if (valueParts[0].Length > 64)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }

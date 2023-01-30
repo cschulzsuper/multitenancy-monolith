@@ -17,7 +17,7 @@ internal static class DistinctionTypeCustomPropertyResource
     public static IEndpointRouteBuilder MapDistinctionTypeCustomPropertyResource(this IEndpointRouteBuilder endpoints)
     {
         var resource = endpoints
-            .MapGroup("/distinction-type/{distictionType}/custom-property")
+            .MapGroup("/distinction-types/{distinctionType}/custom-properties")
             .WithTags("Distinction Type Custom Property API");
 
         resource

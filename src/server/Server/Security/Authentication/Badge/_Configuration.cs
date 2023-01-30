@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Administration;
-using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Core;

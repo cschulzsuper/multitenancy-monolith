@@ -11,12 +11,17 @@ public static partial class _Services
         services.AddSingleton(typeof(RepositoryContextFactory<>));
         services.AddScoped<MultitenancyContext>();
 
+        services.AddScoped(ObjectTypeRepositoryFactory);
+        services.AddScoped(DistinctionTypeRepositoryFactory);
+
+        services.AddScoped(IdentityRepositoryFactory);
+
         services.AddScoped(GroupRepositoryFactory);
         services.AddScoped(MemberRepositoryFactory);
         services.AddScoped(MembershipRepositoryFactory);
-        services.AddScoped(IdentityRepositoryFactory);
+
+        services.AddScoped(BusinessObjectRepositoryFactory);
 
         return services;
     }
-
 }

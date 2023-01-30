@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
-using ChristianSchulz.MultitenancyMonolith.Data;
+﻿using ChristianSchulz.MultitenancyMonolith.Data;
+using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
@@ -16,29 +16,60 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         _factory = factory.WithInMemoryData();
     }
 
+    [Fact]
+    [Trait("Category", "Endpoint.Security")]
+    public async Task Delete_ShouldBeUnauthorized_WhenNotAuthenticated()
+    {
+        // Arrange
+        var validMember = "valid-member";
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{validMember}");
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [Trait("Category", "Endpoint.Security")]
+    [InlineData(TestConfiguration.AdminIdentity)]
+    [InlineData(TestConfiguration.DefaultIdentity)]
+    [InlineData(TestConfiguration.GuestIdentity)]
+    public async Task Delete_ShouldBeForbidden_WhenNotAuthorized(string identity)
+    {
+        // Arrange
+        var validMember = "valid-member";
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{validMember}");
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
     [Theory]
     [Trait("Category", "Endpoint.Security")]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
     [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Delete_ShouldBeForbidden_WhenMemberIsNotChief(string identity, string group, string member)
+    public async Task Delete_ShouldBeForbidden_WhenNotChief(string identity, string group, string member)
     {
         // Arrange
-        var existingMember = $"existing-member-{Guid.NewGuid()}";
+        var validMember = "valid-member";
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
-        {
-            scope.ServiceProvider
-                .GetRequiredService<IRepository<Member>>()
-                .Insert(new Member
-                {
-                    Snowflake = 1,
-                    UniqueName = existingMember,
-                });
-        }
-
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{existingMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{validMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -55,23 +86,23 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Delete_ShouldSucceed_WhenExistingMemberIsGiven(string identity, string group, string member)
+    public async Task Delete_ShouldSucceed_WhenExists(string identity, string group, string member)
     {
         // Arrange
-        var existingMember = $"existing-member-{Guid.NewGuid()}";
+        var existingMember = new Member
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+        };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
-                .Insert(new Member
-                {
-                    Snowflake = 1,
-                    UniqueName = existingMember,
-                });
+                .Insert(existingMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{existingMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -87,7 +118,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
             var deletedMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
                 .GetQueryable()
-                .SingleOrDefault(x => x.UniqueName == existingMember);
+                .SingleOrDefault(x => x.UniqueName == existingMember.UniqueName);
 
             Assert.Null(deletedMember);
         }
@@ -97,10 +128,10 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Delete_ShouldFail_WhenMemberDoesNotExist(string identity, string group, string member)
+    public async Task Delete_ShouldFail_WhenAbsent(string identity, string group, string member)
     {
         // Arrange
-        var absentMember = $"absent-member-{Guid.NewGuid()}";
+        var absentMember = "absent-member";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{absentMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
@@ -119,10 +150,10 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Delete_ShouldFail_WhenMemberUniqueNameIsInvalid(string identity, string group, string member)
+    public async Task Delete_ShouldFail_WhenInvalid(string identity, string group, string member)
     {
         // Arrange
-        var invalidMember = $"INVALID_MEMBER_{Guid.NewGuid()}";
+        var invalidMember = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{invalidMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);

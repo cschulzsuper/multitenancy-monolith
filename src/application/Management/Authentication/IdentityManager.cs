@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Data;
+﻿using ChristianSchulz.MultitenancyMonolith.Data;
+using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +17,7 @@ internal sealed class IdentityManager : IIdentityManager
 
     public async ValueTask<Identity> GetAsync(long snowflake)
     {
-        IdentityValidator.EnsureSnowflake(snowflake);
+        IdentityValidation.EnsureSnowflake(snowflake);
 
         var identity = await _repository.GetAsync(snowflake);
 
@@ -26,7 +26,7 @@ internal sealed class IdentityManager : IIdentityManager
 
     public async ValueTask<Identity> GetAsync(string uniqueName)
     {
-        IdentityValidator.EnsureUniqueName(uniqueName);
+        IdentityValidation.EnsureUniqueName(uniqueName);
 
         var identity = await _repository.GetAsync(x => x.UniqueName == uniqueName);
 
@@ -38,7 +38,7 @@ internal sealed class IdentityManager : IIdentityManager
 
     public async ValueTask InsertAsync(Identity identity)
     {
-        IdentityValidator.EnsureInsertable(identity);
+        IdentityValidation.EnsureInsertable(identity);
 
         await _repository.InsertAsync(identity);
     }
@@ -49,7 +49,7 @@ internal sealed class IdentityManager : IIdentityManager
         {
             action.Invoke(identity);
 
-            IdentityValidator.EnsureUpdatable(identity);
+            IdentityValidation.EnsureUpdatable(identity);
         };
 
         await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
@@ -61,7 +61,7 @@ internal sealed class IdentityManager : IIdentityManager
         {
             action.Invoke(identity);
 
-            IdentityValidator.EnsureUpdatable(identity);
+            IdentityValidation.EnsureUpdatable(identity);
         };
 
         await _repository.UpdateOrThrowAsync(x => x.UniqueName == uniqueName, validatedAction);
@@ -69,14 +69,14 @@ internal sealed class IdentityManager : IIdentityManager
 
     public async ValueTask DeleteAsync(long snowflake)
     {
-        IdentityValidator.EnsureSnowflake(snowflake);
+        IdentityValidation.EnsureSnowflake(snowflake);
 
         await _repository.DeleteOrThrowAsync(snowflake);
     }
 
     public async ValueTask DeleteAsync(string uniqueName)
     {
-        IdentityValidator.EnsureUniqueName(uniqueName);
+        IdentityValidation.EnsureUniqueName(uniqueName);
 
         await _repository.DeleteOrThrowAsync(x => x.UniqueName == uniqueName);
     }

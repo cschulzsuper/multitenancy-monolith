@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
+using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
 
@@ -16,14 +17,17 @@ public sealed class MailAddressValidator
     {
         var rules = new IValidationRule<string>[]
         {
-        new NotNull(field),
-        new NotEmpty(field),
-        new MailAddress(field)
+            new NotNull(field),
+            new NotEmpty(field),
+            new MailAddress(field)
         };
 
         return rules;
     }
 
-    public static void Ensure(string value)
-        => _validator.Ensure(value);
+    public static void Ensure(string mailAddress)
+        => _validator.Ensure(mailAddress);
+
+    public static ValidationResult? Validate(string mailAddress)
+        => _validator.Validate(mailAddress);
 }

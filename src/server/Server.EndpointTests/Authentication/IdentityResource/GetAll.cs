@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 using Xunit;
 
@@ -17,15 +16,32 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         _factory = factory.WithInMemoryData();
     }
 
+    [Fact]
+    [Trait("Category", "Endpoint.Security")]
+    public async Task GetAll_ShouldBeUnauthorized_WhenNotAuthenticated()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/authentication/identities");
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
     [Theory]
     [Trait("Category", "Endpoint.Security")]
     [InlineData(TestConfiguration.ChiefIdentity)]
     [InlineData(TestConfiguration.DefaultIdentity)]
     [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task GetAll_ShouldBeForbidden_WhenIdentityIsNotAdmin(string identity)
+    public async Task GetAll_ShouldBeForbidden_WhenNotAdmin(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -44,7 +60,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldSucceed(string identity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authentication/identities");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/authentication/identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();

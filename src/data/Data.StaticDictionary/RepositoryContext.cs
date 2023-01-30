@@ -10,16 +10,19 @@ internal sealed class RepositoryContext<TEntity>
 
     public Func<TEntity, object> SnowflakeProvider { get; set; } = _ => Guid.Empty;
 
-    private SemaphoreSlim _lock = new SemaphoreSlim(1);
+    public ICollection<Func<IEnumerable<TEntity>, TEntity, bool>> Constrains { get; set; } = Array.Empty<Func<IEnumerable<TEntity>, TEntity, bool>>();
 
-    public IDisposable AquireLock()
+
+    private readonly SemaphoreSlim _lock = new SemaphoreSlim(1);
+
+    public IDisposable AcquireLock()
     {
         _lock.Wait();
 
         return new DataLock(_lock);
     }
 
-    public async Task<IDisposable> AquireLockAsync()
+    public async Task<IDisposable> AcquireLockAsync()
     {
         await _lock.WaitAsync();
 

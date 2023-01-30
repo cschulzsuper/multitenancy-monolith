@@ -51,6 +51,7 @@ public class Startup
         services.AddCaching();
         services.AddData();
 
+        services.AddAdministrationManagement();
         services.AddAdministrationTransport();
 
         services.AddAuthenticationManagement();
@@ -59,6 +60,7 @@ public class Startup
         services.AddAuthorizationManagement();
         services.AddAuthorizationTransport();
 
+        services.AddBusinessManagement();
         services.AddBusinessTransport();
     }
 

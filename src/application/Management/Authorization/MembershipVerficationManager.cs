@@ -8,7 +8,7 @@ internal sealed class MembershipVerficationManager : IMembershipVerficationManag
 
     public MembershipVerficationManager(IByteCacheFactory byteCacheFactory)
     {
-        _byteCache = byteCacheFactory.Create($"membership-verfication");
+        _byteCache = byteCacheFactory.Create("membership-verfication");
     }
 
     public bool Has(MembershipVerficationKey verficationKey, byte[] verfication)

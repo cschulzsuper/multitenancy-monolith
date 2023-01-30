@@ -1,36 +1,74 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Business.Requests;
+﻿using ChristianSchulz.MultitenancyMonolith.Objects.Business;
+using ChristianSchulz.MultitenancyMonolith.Application.Business.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Business.Responses;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Business;
 
 internal sealed class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 {
-    public ValueTask<BusinessObjectResponse> GetAsync(string uniqueName)
+
+    private readonly IBusinessObjectManager _businessObjectManager;
+
+    public BusinessObjectRequestHandler(IBusinessObjectManager businessObjectManager)
     {
-        throw new NotImplementedException();
+        _businessObjectManager = businessObjectManager;
     }
 
-    public IAsyncEnumerable<BusinessObjectResponse> GetAll()
+    public async ValueTask<BusinessObjectResponse> GetAsync(string uniqueName)
     {
-        throw new NotImplementedException();
+        var businessObject = await _businessObjectManager.GetAsync(uniqueName);
+
+        var response = new BusinessObjectResponse
+        {
+            UniqueName = businessObject.UniqueName
+        };
+
+        return response;
     }
 
-    public ValueTask<BusinessObjectResponse> InsertAsync(BusinessObjectRequest request)
+    public async IAsyncEnumerable<BusinessObjectResponse> GetAll()
     {
-        throw new NotImplementedException();
+        var businessObjects = _businessObjectManager.GetAsyncEnumerable();
+
+        await foreach (var businessObject in businessObjects)
+        {
+            var response = new BusinessObjectResponse
+            {
+                UniqueName = businessObject.UniqueName
+            };
+
+            yield return response;
+        }
     }
 
-    public ValueTask UpdateAsync(string uniqueName, BusinessObjectRequest request)
+    public async ValueTask<BusinessObjectResponse> InsertAsync(BusinessObjectRequest request)
     {
-        throw new NotImplementedException();
+        var businessObject = new BusinessObject
+        {
+            UniqueName = request.UniqueName
+        };
+
+        await _businessObjectManager.InsertAsync(businessObject);
+
+        var response = new BusinessObjectResponse
+        {
+            UniqueName = businessObject.UniqueName
+        };
+
+        return response;
     }
 
-    public ValueTask DeleteAsync(string uniqueName)
+    public async ValueTask UpdateAsync(string uniqueName, BusinessObjectRequest request)
     {
-        throw new NotImplementedException();
+        await _businessObjectManager.UpdateAsync(uniqueName,
+            businessObject =>
+            {
+                businessObject.UniqueName = request.UniqueName;
+            });
     }
+
+    public async ValueTask DeleteAsync(string uniqueName)
+        => await _businessObjectManager.DeleteAsync(uniqueName);
 }

@@ -63,19 +63,17 @@ If you are developing an ASP.NET Core application yourself and are looking for a
   * /29 A nice gem is to make the swagger ui available in staging environments with the necessity of providing an access token for it. https://github.com/cschulzsuper/multitenancy-monolith/commit/c262d72a03ed0a7cb784a390acb3ba5501e352a9
 
 * Domain specific swagger files
-  * /30 Maybe it is nice for clients to have separated swagger files. I grouped endpoints by domains (`authentication`, `administration`, `business`, `foundation`) and provide a swagger file for each of them. e6356978f1e1f9865900870d7053bd4935bac251
+  * /30 Maybe it is nice for clients to have separated swagger files. I grouped endpoints by domains (`authentication`, `administration`, `business`, `foundation`) and provide a swagger file for each of them. https://github.com/cschulzsuper/multitenancy-monolith/commit/e6356978f1e1f9865900870d7053bd4935bac251
 
 * Custom properties
-  * /31 How about the ability to add custom properties to REST resources. I have defined management API for this feature, and regrouped the endpoints once again. 
+  * /31 How about the ability to add custom properties to REST resources. I have defined management API for this feature, and regrouped the endpoints once again. https://github.com/cschulzsuper/multitenancy-monolith/commit/fa9e2b77d06613f4f417ab8c15c064587ab546a5 
+  * /32 Major commit. The complete draft to manage custom properties including all endpoint tests and some improvements to the validation logic. An example business object endpoint is also implemented.
 
 # Next
 
-* Custom properties: Aggregate extension management
-* Custom properties: Distinct aggregate type management
-* Custom properties: Index properties in data layer
+* Custom properties: Custom properties for business objects
 
 # Backlog
 
 * ORM: Entity Framework In-Memroy provider
 * ORM: Entity Framework SQL Server provider 
-* Business: Example endpoint

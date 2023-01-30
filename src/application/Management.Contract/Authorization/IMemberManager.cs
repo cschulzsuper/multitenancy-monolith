@@ -1,7 +1,6 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Aggregates.Administration;
+﻿using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authorization;

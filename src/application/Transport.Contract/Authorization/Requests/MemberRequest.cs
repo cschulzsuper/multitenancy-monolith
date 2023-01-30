@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authorization.Requests;
 
 public class MemberRequest
 {
-    [Required]
-    [StringLength(140)]
+    [UniqueName]
     public required string UniqueName { get; init; }
 }
