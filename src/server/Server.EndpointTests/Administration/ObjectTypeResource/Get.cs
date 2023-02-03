@@ -82,10 +82,10 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("area", "business")),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("collection", "business-objects")),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("displayName", "Business Object")),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("uniqueName", "business-object")));
+            x => Assert.Equal(("area", "business"), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("collection", "business-objects"), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("displayName", "Business Object"), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("uniqueName", "business-object"), (x.Key, (string?) x.Value)));
     }
 
     [Theory]

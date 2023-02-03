@@ -21,7 +21,10 @@ public static class BusinessObjectResource
             .WithTags("Business Object API");
 
         resource
-            .MapGet(string.Empty, GetAll);
+            .MapGet(string.Empty, GetAll)
+            .RequireAuthorization(ploicy => ploicy
+                .RequireRole("member", "observer")
+                .RequireClaim("scope", "endpoints"));
 
         resource
             .MapGet("{businessObject}", Get)

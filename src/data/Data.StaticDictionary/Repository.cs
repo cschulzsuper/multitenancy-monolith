@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data;
+namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
 internal sealed class Repository<TEntity> : IRepository<TEntity>
     where TEntity : class, ICloneable
@@ -168,36 +168,19 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
 
     private void EnsureInsertable(TEntity entity)
     {
-        foreach (var constrain in _context.Constrains)
-        {
-            var values = _context.Data.Values;
+        var values = _context.Data.Values;
 
-            var valid = constrain.Invoke(values, entity);
-
-            if (!valid)
-            {
-                throw new RepositoryException($"Entity {typeof(TEntity).Name} violates constrain");
-            }
-        }
+        _context.Ensurance.Invoke(values, entity);
     }
 
     private void EnsureUpdatable(object snowflake, TEntity entity)
     {
-        foreach (var constrain in _context.Constrains)
-        {
-            var values = _context.Data
-                .Where(x => !x.Key.Equals(snowflake))
-                .Select(x => x.Value);
+        var values = _context.Data
+            .Where(x => !x.Key.Equals(snowflake))
+            .Select(x => x.Value);
 
-            var valid = constrain.Invoke(values, entity);
-
-            if (!valid)
-            {
-                throw new RepositoryException($"Entity {typeof(TEntity).Name} violates constrain");
-            }
-        }
+        _context.Ensurance.Invoke(values, entity);
     }
-
 
     public void Insert(TEntity entity)
     {

@@ -3,7 +3,7 @@ using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data;
+namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
 public static class _Configure
 {
@@ -29,11 +29,10 @@ public static class _Configure
     public static IServiceProvider ConfigureIdentities(this IServiceProvider services)
     {
         var identities = services
-            .GetRequiredService<IConfiguration>()
-            .GetRequiredSection(IdentitiesConfigurationKey)
-            .Get<Identity[]>()
-
-            ?? throw new RepositoryException($"Could not get `{IdentitiesConfigurationKey}` configuration");
+                             .GetRequiredService<IConfiguration>()
+                             .GetRequiredSection(IdentitiesConfigurationKey)
+                             .Get<Identity[]>()
+                         ?? throw new RepositoryException($"Could not get `{IdentitiesConfigurationKey}` configuration");
 
         using var scope = services.CreateScope();
 
@@ -51,7 +50,7 @@ public static class _Configure
         var groupSections = configuration.GetRequiredSection(MembersConfigurationKey).GetChildren();
 
         var groups = groupSections
-            .Select(group => new Group { UniqueName = group.Key })
+            .Select(group => new Group {UniqueName = group.Key})
             .ToArray();
 
         using var scope = services.CreateScope();
@@ -91,11 +90,10 @@ public static class _Configure
     public static IServiceProvider ConfigureMemberships(this IServiceProvider services)
     {
         var memberships = services
-            .GetRequiredService<IConfiguration>()
-            .GetRequiredSection(MembershipsConfigurationKey)
-            .Get<Membership[]>()
-
-            ?? throw new RepositoryException($"Could not get `{MembershipsConfigurationKey}` configuration");
+                              .GetRequiredService<IConfiguration>()
+                              .GetRequiredSection(MembershipsConfigurationKey)
+                              .Get<Membership[]>()
+                          ?? throw new RepositoryException($"Could not get `{MembershipsConfigurationKey}` configuration");
 
         Group[] groups;
         Identity[] identities;
@@ -133,5 +131,4 @@ public static class _Configure
 
         return services;
     }
-
 }

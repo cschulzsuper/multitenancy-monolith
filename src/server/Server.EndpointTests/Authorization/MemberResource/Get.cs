@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authorization.MemberResource;
@@ -118,7 +119,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content,
-            x => Assert.Equal((x.Key, (string?) x.Value), ("uniqueName", existingMember.UniqueName)));
+            x => Assert.Equal(("uniqueName", existingMember.UniqueName), (x.Key, (string?) x.Value)));
     }
 
     [Theory]

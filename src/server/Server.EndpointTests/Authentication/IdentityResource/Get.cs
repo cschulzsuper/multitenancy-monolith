@@ -95,8 +95,8 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("mailAddress", existingIdentity.MailAddress)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("uniqueName", existingIdentity.UniqueName)));
+            x => Assert.Equal(("mailAddress", existingIdentity.MailAddress), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("uniqueName", existingIdentity.UniqueName), (x.Key, (string?) x.Value)));
     }
 
     [Theory]

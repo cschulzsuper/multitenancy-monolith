@@ -1,6 +1,6 @@
 ﻿using IdGen;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data;
+namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
 public class SnowflakeGenerator
 {
@@ -8,7 +8,7 @@ public class SnowflakeGenerator
 
     public SnowflakeGenerator()
     {
-        _idGenerator= new IdGenerator(0);
+        _idGenerator = new IdGenerator(0);
     }
 
     public long Next()

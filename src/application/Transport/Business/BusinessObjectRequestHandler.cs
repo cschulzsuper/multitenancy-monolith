@@ -8,7 +8,6 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Business;
 
 internal sealed class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 {
-
     private readonly IBusinessObjectManager _businessObjectManager;
 
     public BusinessObjectRequestHandler(IBusinessObjectManager businessObjectManager)
@@ -22,7 +21,8 @@ internal sealed class BusinessObjectRequestHandler : IBusinessObjectRequestHandl
 
         var response = new BusinessObjectResponse
         {
-            UniqueName = businessObject.UniqueName
+            UniqueName = businessObject.UniqueName,
+            CustomProperties = new Dictionary<string, object>(businessObject.CustomProperties)
         };
 
         return response;
@@ -36,7 +36,8 @@ internal sealed class BusinessObjectRequestHandler : IBusinessObjectRequestHandl
         {
             var response = new BusinessObjectResponse
             {
-                UniqueName = businessObject.UniqueName
+                UniqueName = businessObject.UniqueName,
+                CustomProperties = new Dictionary<string, object>(businessObject.CustomProperties)
             };
 
             yield return response;
@@ -47,14 +48,16 @@ internal sealed class BusinessObjectRequestHandler : IBusinessObjectRequestHandl
     {
         var businessObject = new BusinessObject
         {
-            UniqueName = request.UniqueName
+            UniqueName = request.UniqueName,
+            CustomProperties = new Dictionary<string, object>(request.CustomProperties)
         };
 
         await _businessObjectManager.InsertAsync(businessObject);
 
         var response = new BusinessObjectResponse
         {
-            UniqueName = businessObject.UniqueName
+            UniqueName = businessObject.UniqueName,
+            CustomProperties = new Dictionary<string, object>(businessObject.CustomProperties)
         };
 
         return response;
@@ -66,6 +69,7 @@ internal sealed class BusinessObjectRequestHandler : IBusinessObjectRequestHandl
             businessObject =>
             {
                 businessObject.UniqueName = request.UniqueName;
+                businessObject.CustomProperties = new Dictionary<string, object>(request.CustomProperties);
             });
     }
 

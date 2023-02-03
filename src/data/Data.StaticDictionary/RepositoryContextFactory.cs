@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data;
+namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
 internal sealed class RepositoryContextFactory<TEntity>
 {
@@ -10,28 +10,28 @@ internal sealed class RepositoryContextFactory<TEntity>
         => Create(string.Empty);
 
     public RepositoryContext<TEntity> Create(
-        Func<TEntity, object> snowflakeFactory, 
+        Func<TEntity, object> snowflakeFactory,
         Func<TEntity, object> snowflakeProvider,
-        params Func<IEnumerable<TEntity>, TEntity, bool>[] constrains)
-        => Create(string.Empty, snowflakeFactory, snowflakeProvider, constrains);
+        Action<IEnumerable<TEntity>, TEntity> ensurance)
+        => Create(string.Empty, snowflakeFactory, snowflakeProvider, ensurance);
 
-    public RepositoryContext<TEntity> Create(string multitenancyDiscirmantor)
+    public RepositoryContext<TEntity> Create(string multitenancyDiscriminator)
     {
-        var repositoryContext = _contexts.GetOrAdd(multitenancyDiscirmantor, new RepositoryContext<TEntity>());
+        var repositoryContext = _contexts.GetOrAdd(multitenancyDiscriminator, new RepositoryContext<TEntity>());
 
         return repositoryContext;
     }
 
-    public RepositoryContext<TEntity> Create(string multitenancyDiscirmantor, 
-        Func<TEntity, object> snowflakeFactory, 
+    public RepositoryContext<TEntity> Create(string multitenancyDiscriminator,
+        Func<TEntity, object> snowflakeFactory,
         Func<TEntity, object> snowflakeProvider,
-        params Func<IEnumerable<TEntity>, TEntity, bool>[] constrains)
+        Action<IEnumerable<TEntity>, TEntity> ensurance)
     {
-        var repositoryContext = Create(multitenancyDiscirmantor);
+        var repositoryContext = Create(multitenancyDiscriminator);
 
         repositoryContext.SnowflakeFactory = snowflakeFactory;
         repositoryContext.SnowflakeProvider = snowflakeProvider;
-        repositoryContext.Constrains = constrains;
+        repositoryContext.Ensurance = ensurance;
 
         return repositoryContext;
     }

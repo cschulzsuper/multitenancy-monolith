@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data;
+namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
 public static partial class _ServiceScopes
 {

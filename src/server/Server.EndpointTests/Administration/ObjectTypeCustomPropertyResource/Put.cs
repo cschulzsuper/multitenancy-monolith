@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.ObjectTypeCustomPropertyResource;
@@ -31,7 +32,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "put-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -65,7 +66,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "put-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -100,7 +101,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "put-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -127,7 +128,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = $"existing-object-type-custom-property--{Guid.NewGuid()}",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -203,7 +204,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "put-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -248,7 +249,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "put-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -293,7 +294,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "put-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -320,7 +321,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "existingFooBar",
             PropertyType = "string"
         };
 
@@ -328,7 +329,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = $"additional-object-type-custom-property-{Guid.NewGuid()}",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "additionalFooBar",
             PropertyType = "string"
         };
 
@@ -356,7 +357,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             additionalObjectTypeCustomProperty.UniqueName,
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -416,7 +417,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = (string?) null,
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -461,7 +462,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = string.Empty,
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -506,7 +507,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = new string(Enumerable.Repeat('a', 141).ToArray()),
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -551,7 +552,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "Invalid",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -596,7 +597,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = (string?) null,
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -641,7 +642,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = string.Empty,
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -686,7 +687,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = new string(Enumerable.Repeat('a', 141).ToArray()),
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "string"
         };
 
@@ -886,6 +887,84 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    public async Task Put_ShouldFail_WhenPropertyNameExists(string identity, string group, string member)
+    {
+        // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
+        var additionalObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"additional-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "additionalFooBar",
+            PropertyType = "string"
+        };
+
+        var existingObjectType = new ObjectType
+        {
+            Snowflake = 1,
+            UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty, additionalObjectTypeCustomProperty
+            }
+        };
+
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<ObjectType>>()
+                .Insert(existingObjectType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+
+        var putObjectTypeCustomProperty = new
+        {
+            UniqueName = $"put-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = additionalObjectTypeCustomProperty.PropertyName,
+            PropertyType = "string"
+        };
+
+        request.Content = JsonContent.Create(putObjectTypeCustomProperty);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            var unchangedObjectTypeCustomProperty = scope.ServiceProvider
+                .GetRequiredService<IRepository<ObjectType>>()
+                .GetQueryable()
+                .Single(x => x.UniqueName == existingObjectType.UniqueName)
+                .CustomProperties
+                .SingleOrDefault(x =>
+                    x.UniqueName == existingObjectTypeCustomProperty.UniqueName &&
+                    x.PropertyName == existingObjectTypeCustomProperty.PropertyName &&
+                    x.PropertyType == existingObjectTypeCustomProperty.PropertyType &&
+                    x.DisplayName == existingObjectTypeCustomProperty.DisplayName);
+
+            Assert.NotNull(unchangedObjectTypeCustomProperty);
+        }
+    }
+
+    [Theory]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
     public async Task Put_ShouldFail_WhenPropertyTypeNull(string identity, string group, string member)
     {
         // Arrange
@@ -911,7 +990,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = (string?) null
         };
 
@@ -956,7 +1035,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = string.Empty
         };
 
@@ -1001,7 +1080,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "putFooBar",
             PropertyType = "Invalid"
         };
 

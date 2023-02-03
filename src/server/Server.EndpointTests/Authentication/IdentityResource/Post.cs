@@ -103,8 +103,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("mailAddress", postIdentity.MailAddress)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("uniqueName", postIdentity.UniqueName)));
+            x => Assert.Equal(("mailAddress", postIdentity.MailAddress), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("uniqueName", postIdentity.UniqueName), (x.Key, (string?) x.Value)));
 
         using (var scope = _factory.Services.CreateScope())
         {

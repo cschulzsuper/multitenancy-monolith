@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.ObjectTypeCustomPropertyResource;
@@ -31,7 +32,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -64,7 +65,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -98,7 +99,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -130,7 +131,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = $"post-object-type-custom-property-{Guid.NewGuid()}",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -147,11 +148,11 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("displayName", postObjectTypeCustomProperty.DisplayName)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("objectType", existingObjectType)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("propertyName", postObjectTypeCustomProperty.PropertyName)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("propertyType", postObjectTypeCustomProperty.PropertyType)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("uniqueName", postObjectTypeCustomProperty.UniqueName)));
+            x => Assert.Equal(("displayName", postObjectTypeCustomProperty.DisplayName), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("objectType", existingObjectType), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("propertyName", postObjectTypeCustomProperty.PropertyName), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("propertyType", postObjectTypeCustomProperty.PropertyType), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("uniqueName", postObjectTypeCustomProperty.UniqueName), (x.Key, (string?) x.Value)));
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
@@ -197,7 +198,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = $"post-object-type-custom-property-{Guid.NewGuid()}",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -214,11 +215,11 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("displayName", postObjectTypeCustomProperty.DisplayName)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("objectType", existingObjectType.UniqueName)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("propertyName", postObjectTypeCustomProperty.PropertyName)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("propertyType", postObjectTypeCustomProperty.PropertyType)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("uniqueName", postObjectTypeCustomProperty.UniqueName)));
+            x => Assert.Equal(("displayName", postObjectTypeCustomProperty.DisplayName), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("objectType", existingObjectType.UniqueName), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("propertyName", postObjectTypeCustomProperty.PropertyName), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("propertyType", postObjectTypeCustomProperty.PropertyType), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("uniqueName", postObjectTypeCustomProperty.UniqueName), (x.Key, (string?) x.Value)));
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
@@ -253,7 +254,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -280,7 +281,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = $"existing-object-type-custom-property--{Guid.NewGuid()}",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -308,7 +309,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = existingObjectTypeCustomProperty.UniqueName,
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -356,7 +357,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = (string?) null,
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -397,7 +398,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = string.Empty,
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -438,7 +439,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = new string(Enumerable.Repeat('a', 141).ToArray()),
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -479,7 +480,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "Invalid",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -520,7 +521,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = (string?) null,
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -561,7 +562,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = string.Empty,
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -602,7 +603,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = new string(Enumerable.Repeat('a', 141).ToArray()),
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "string"
         };
 
@@ -625,6 +626,77 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             .SingleOrDefault(x => x.UniqueName == postObjectTypeCustomProperty.UniqueName);
 
         Assert.Null(createdObjectTypeCustomProperty);
+    }
+
+    [Theory]
+    [Trait("Category", "Endpoint")]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
+    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
+    public async Task Post_ShouldFail_WhenPropertyNameExists(string identity, string group, string member)
+    {
+        // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
+        var existingObjectType = new ObjectType
+        {
+            Snowflake = 1,
+            UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
+        };
+
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<ObjectType>>()
+                .Insert(existingObjectType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+
+        var postObjectTypeCustomProperty = new
+        {
+            UniqueName = $"post-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = existingObjectTypeCustomProperty.PropertyName,
+            PropertyType = "string"
+        };
+
+        request.Content = JsonContent.Create(postObjectTypeCustomProperty);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            var unchangedObjectTypeCustomProperty = scope.ServiceProvider
+                .GetRequiredService<IRepository<ObjectType>>()
+                .GetQueryable()
+                .Single(x => x.UniqueName == existingObjectType.UniqueName)
+                .CustomProperties
+                .SingleOrDefault(x =>
+                    x.UniqueName == existingObjectTypeCustomProperty.UniqueName &&
+                    x.DisplayName == postObjectTypeCustomProperty.DisplayName &&
+                    x.PropertyName == postObjectTypeCustomProperty.PropertyName &&
+                    x.PropertyType == postObjectTypeCustomProperty.PropertyType);
+
+            Assert.NotNull(unchangedObjectTypeCustomProperty);
+        }
     }
 
     [Theory]
@@ -807,7 +879,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = (string?) null
         };
 
@@ -848,7 +920,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = string.Empty
         };
 
@@ -889,7 +961,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "postFooBar",
             PropertyType = "Invalid"
         };
 

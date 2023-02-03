@@ -1,12 +1,12 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Data;
-using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
+﻿using System.Net;
+using ChristianSchulz.MultitenancyMonolith.Data;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
+using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authorization.MemberResource;
+namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Business.BusinessObjectResource;
 
 public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -22,9 +22,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var validMember = "valid-member";
+        var validBusinessObject = "valid-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{validMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/business/business-objects/{validBusinessObject}");
 
         var client = _factory.CreateClient();
 
@@ -44,9 +44,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldBeForbidden_WhenNotAuthorized(string identity)
     {
         // Arrange
-        var validMember = "valid-member";
+        var validBusinessObject = "valid-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{validMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/business/business-objects/{validBusinessObject}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var client = _factory.CreateClient();
@@ -68,9 +68,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldBeForbidden_WhenNotChief(string identity, string group, string member)
     {
         // Arrange
-        var validMember = "valid-member";
+        var validBusinessObject = "valid-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{validMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/business/business-objects/{validBusinessObject}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -90,20 +90,20 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldSucceed_WhenExists(string identity, string group, string member)
     {
         // Arrange
-        var existingMember = new Member
+        var existingBusinessObject = new BusinessObject
         {
             Snowflake = 1,
-            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
             scope.ServiceProvider
-                .GetRequiredService<IRepository<Member>>()
-                .Insert(existingMember);
+                .GetRequiredService<IRepository<BusinessObject>>()
+                .Insert(existingBusinessObject);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{existingMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/business/business-objects/{existingBusinessObject.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -116,12 +116,12 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
-            var deletedMember = scope.ServiceProvider
-                .GetRequiredService<IRepository<Member>>()
+            var deletedIdentity = scope.ServiceProvider
+                .GetRequiredService<IRepository<BusinessObject>>()
                 .GetQueryable()
-                .SingleOrDefault(x => x.UniqueName == existingMember.UniqueName);
+                .SingleOrDefault(x => x.UniqueName == existingBusinessObject.UniqueName);
 
-            Assert.Null(deletedMember);
+            Assert.Null(deletedIdentity);
         }
     }
 
@@ -132,9 +132,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldFail_WhenAbsent(string identity, string group, string member)
     {
         // Arrange
-        var absentMember = "absent-member";
+        var absentBusinessObject = "absent-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{absentMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/business/business-objects/{absentBusinessObject}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();
@@ -154,9 +154,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldFail_WhenInvalid(string identity, string group, string member)
     {
         // Arrange
-        var invalidMember = "Invalid";
+        var invalidBusinessObject = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authorization/members/{invalidMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/business/business-objects/{invalidBusinessObject}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var client = _factory.CreateClient();

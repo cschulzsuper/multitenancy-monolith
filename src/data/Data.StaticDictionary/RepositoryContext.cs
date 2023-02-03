@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data;
+namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
 internal sealed class RepositoryContext<TEntity>
 {
@@ -10,7 +10,7 @@ internal sealed class RepositoryContext<TEntity>
 
     public Func<TEntity, object> SnowflakeProvider { get; set; } = _ => Guid.Empty;
 
-    public ICollection<Func<IEnumerable<TEntity>, TEntity, bool>> Constrains { get; set; } = Array.Empty<Func<IEnumerable<TEntity>, TEntity, bool>>();
+    public Action<IEnumerable<TEntity>, TEntity> Ensurance { get; set; } = (_, _) => { };
 
 
     private readonly SemaphoreSlim _lock = new SemaphoreSlim(1);

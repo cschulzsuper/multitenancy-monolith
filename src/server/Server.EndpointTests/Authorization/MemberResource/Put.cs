@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authorization.MemberResource;

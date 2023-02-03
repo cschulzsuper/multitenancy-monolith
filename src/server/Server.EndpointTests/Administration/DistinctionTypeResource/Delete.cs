@@ -3,6 +3,7 @@ using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.DistinctionTypeResource;

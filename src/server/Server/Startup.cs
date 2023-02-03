@@ -4,7 +4,6 @@ using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 using ChristianSchulz.MultitenancyMonolith.Application.Business;
 using ChristianSchulz.MultitenancyMonolith.Caching;
-using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerUI;
@@ -20,6 +19,8 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
+using ChristianSchulz.MultitenancyMonolith.Server.JsonConversion;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
@@ -34,6 +35,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => { options.SerializerOptions.Converters.Add(new ObjectJsonConverter()); });
+
         services.AddAuthentication().AddBadge(options => options.Configure());
         services.AddRequestUser();
         services.AddAuthorization();
@@ -99,7 +102,7 @@ public class Startup
             {
                 endpoints.MapSwagger()
                     .RequireAuthorization(ploicy => ploicy
-                    .RequireClaim("scope", "swagger-json"));
+                        .RequireClaim("scope", "swagger-json"));
             }
 
             var apiEndpoints = endpoints.MapGroup("api");
@@ -159,6 +162,6 @@ public class Startup
             };
         }
 
-        await context.Response.WriteAsJsonAsync(problem, (JsonSerializerOptions?)null, "application/problem+json");
+        await context.Response.WriteAsJsonAsync(problem, (JsonSerializerOptions?) null, "application/problem+json");
     }
 }

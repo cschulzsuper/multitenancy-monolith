@@ -16,7 +16,7 @@ public sealed class CustomPropertyNameAttribute : ValidationAttribute
 
     public ValidationResult? _validationResult;
 
-    public string _field = "custome property name";
+    public string _field = "custom property name";
 
     public override bool IsValid(object? value)
     {

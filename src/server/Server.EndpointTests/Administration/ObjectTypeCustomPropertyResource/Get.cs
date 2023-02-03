@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.ObjectTypeCustomPropertyResource;
@@ -112,11 +113,11 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("displayName", existingObjectTypeCustomProperty.DisplayName)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("objectType", existingObjectType.UniqueName)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("propertyName", existingObjectTypeCustomProperty.PropertyName)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("propertyType", existingObjectTypeCustomProperty.PropertyType)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("uniqueName", existingObjectTypeCustomProperty.UniqueName)));
+            x => Assert.Equal(("displayName", existingObjectTypeCustomProperty.DisplayName), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("objectType", existingObjectType.UniqueName), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("propertyName", existingObjectTypeCustomProperty.PropertyName), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("propertyType", existingObjectTypeCustomProperty.PropertyType), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("uniqueName", existingObjectTypeCustomProperty.UniqueName), (x.Key, (string?) x.Value)));
     }
 
     [Theory]

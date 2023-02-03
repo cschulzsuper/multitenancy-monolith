@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.ObjectTypeCustomPropertyResource;
@@ -76,7 +77,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = $"existing-object-type-custom-property-1-{Guid.NewGuid()}",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "fooBar1",
             PropertyType = "string"
         };
 
@@ -84,7 +85,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = $"existing-object-type-custom-property-2-{Guid.NewGuid()}",
             DisplayName = "Foo Bar",
-            PropertyName = "fooBar",
+            PropertyName = "fooBar2",
             PropertyType = "string"
         };
 

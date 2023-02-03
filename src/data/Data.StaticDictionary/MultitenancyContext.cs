@@ -1,7 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
-using System.Security.Claims;
+﻿using System.Security.Claims;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data;
+namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
 internal sealed class MultitenancyContext
 {

@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.DistinctionTypeResource;
@@ -135,9 +136,9 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("displayName", postDistinctionType.DisplayName)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("objectType", postDistinctionType.ObjectType)),
-            x => Assert.Equal((x.Key, (string?) x.Value), ("uniqueName", postDistinctionType.UniqueName)));
+            x => Assert.Equal(("displayName", postDistinctionType.DisplayName), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("objectType", postDistinctionType.ObjectType), (x.Key, (string?) x.Value)),
+            x => Assert.Equal(("uniqueName", postDistinctionType.UniqueName), (x.Key, (string?) x.Value)));
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {

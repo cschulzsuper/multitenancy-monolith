@@ -17,6 +17,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\shared\Security.Claims\Security.Claims.csproj" />
+		<ProjectReference Include="..\Data.StaticDictionary.Model\Data.StaticDictionary.Model.csproj" />
 		<ProjectReference Include="..\Objects\Objects.csproj" />
 		<ProjectReference Include="..\Data.Contract\Data.Contract.csproj" />
 	</ItemGroup>
