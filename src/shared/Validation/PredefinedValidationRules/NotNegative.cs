@@ -9,7 +9,7 @@ public sealed class NotNegative<T> : IValidationRule<T>
 
     public NotNegative(string field)
     {
-        _validationMessage = $"Field '{field}' cannot be negative!";
+        _validationMessage = string.Format(ValidationErrors.ValueIsNegative, field);
     }
 
     public string ValidationMessage => _validationMessage;

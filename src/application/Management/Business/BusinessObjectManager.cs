@@ -19,18 +19,18 @@ internal sealed class BusinessObjectManager : IBusinessObjectManager
     {
         BusinessObjectValidation.EnsureSnowflake(snowflake);
 
-        var businessObject = await _repository.GetAsync(snowflake);
+        var @object = await _repository.GetAsync(snowflake);
 
-        return businessObject;
+        return @object;
     }
 
-    public async ValueTask<BusinessObject> GetAsync(string uniqueName)
+    public async ValueTask<BusinessObject> GetAsync(string businessObject)
     {
-        BusinessObjectValidation.EnsureUniqueName(uniqueName);
+        BusinessObjectValidation.EnsureBusinessObject(businessObject);
 
-        var businessObject = await _repository.GetAsync(x => x.UniqueName == uniqueName);
+        var @object = await _repository.GetAsync(x => x.UniqueName == businessObject);
 
-        return businessObject;
+        return @object;
     }
 
     public IAsyncEnumerable<BusinessObject> GetAsyncEnumerable()
@@ -45,26 +45,26 @@ internal sealed class BusinessObjectManager : IBusinessObjectManager
 
     public async ValueTask UpdateAsync(long snowflake, Action<BusinessObject> action)
     {
-        var validatedAction = (BusinessObject businessObject) =>
+        var validatedAction = (BusinessObject @object) =>
         {
-            action.Invoke(businessObject);
+            action.Invoke(@object);
 
-            BusinessObjectValidation.EnsureUpdatable(businessObject);
+            BusinessObjectValidation.EnsureUpdatable(@object);
         };
 
         await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
     }
 
-    public async ValueTask UpdateAsync(string uniqueName, Action<BusinessObject> action)
+    public async ValueTask UpdateAsync(string businessObject, Action<BusinessObject> action)
     {
-        var validatedAction = (BusinessObject businessObject) =>
+        var validatedAction = (BusinessObject @object) =>
         {
-            action.Invoke(businessObject);
+            action.Invoke(@object);
 
-            BusinessObjectValidation.EnsureUpdatable(businessObject);
+            BusinessObjectValidation.EnsureUpdatable(@object);
         };
 
-        await _repository.UpdateOrThrowAsync(x => x.UniqueName == uniqueName, validatedAction);
+        await _repository.UpdateOrThrowAsync(x => x.UniqueName == businessObject, validatedAction);
     }
 
     public async ValueTask DeleteAsync(long snowflake)
@@ -74,10 +74,10 @@ internal sealed class BusinessObjectManager : IBusinessObjectManager
         await _repository.DeleteOrThrowAsync(snowflake);
     }
 
-    public async ValueTask DeleteAsync(string uniqueName)
+    public async ValueTask DeleteAsync(string businessObject)
     {
-        BusinessObjectValidation.EnsureUniqueName(uniqueName);
+        BusinessObjectValidation.EnsureBusinessObject(businessObject);
 
-        await _repository.DeleteOrThrowAsync(x => x.UniqueName == uniqueName);
+        await _repository.DeleteOrThrowAsync(x => x.UniqueName == businessObject);
     }
 }

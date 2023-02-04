@@ -6,7 +6,7 @@ public sealed partial class MailAddress : IValidationRule<string>
 
     public MailAddress(string field)
     {
-        _validationMessage = $"Field '{field}' must be a valid mail address!";
+        _validationMessage = string.Format(ValidationErrors.ValueNotMailAddress, field);
     }
 
     public string ValidationMessage => _validationMessage;

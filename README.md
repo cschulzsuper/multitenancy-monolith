@@ -68,11 +68,14 @@ If you are developing an ASP.NET Core application yourself and are looking for a
 * Custom properties
   * /31 How about the ability to add custom properties to REST resources. I have defined management API for this feature, and regrouped the endpoints once again. https://github.com/cschulzsuper/multitenancy-monolith/commit/fa9e2b77d06613f4f417ab8c15c064587ab546a5 
   * /32 Major commit. The complete draft to manage custom properties including all endpoint tests and some improvements to the validation logic. An example business object endpoint is also implemented. https://github.com/cschulzsuper/multitenancy-monolith/commit/6afd43a64242e838a797f96d2b5b1cad648d0858
-  * /33 Completion of custom properties for the business objects example entity. Refactoring of the repository service factories and extension of the entity constrains assertion in the repository.
+  * /33 Completion of custom properties for the business objects example entity. Refactoring of the repository service factories and extension of the entity constrains assertion in the repository. https://github.com/cschulzsuper/multitenancy-monolith/commit/816de3717c29827787ada5a235b6bfc3a178ae66
+
+* Error message assertions
+  * /34 Draft implementation to assert the error messages in the endpoint tests. Static classes are used to define the error messages.
 
 # Next
 
-* Endpoint Tests: Error message assertion
+* Endpoint Tests: Error message assertions
 
 # Backlog
 

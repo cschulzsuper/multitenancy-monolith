@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary.Model</RootNamespace>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

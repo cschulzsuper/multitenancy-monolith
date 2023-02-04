@@ -1,4 +1,11 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Objects.Business;
+﻿using ChristianSchulz.MultitenancyMonolith.Metadata;
+
+namespace ChristianSchulz.MultitenancyMonolith.Objects.Business;
+
+[ObjectAnnotation("business-object", 
+    DisplayName = "Business Object",
+    Area = "business",
+    Collection = "business-objects")]
 
 public sealed class BusinessObject : ICloneable
 {

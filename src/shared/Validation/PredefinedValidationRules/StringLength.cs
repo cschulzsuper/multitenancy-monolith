@@ -10,7 +10,7 @@ public sealed class StringLength : IValidationRule<string>
     {
         _length = length;
 
-        _validationMessage = $"Field '{field}' must not exceed 140 chracters!";
+        _validationMessage = string.Format(ValidationErrors.ValueTooLong, field, length);
     }
 
     public string ValidationMessage => _validationMessage;

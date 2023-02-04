@@ -6,7 +6,7 @@ public sealed class NotEmpty : IValidationRule<string>
 
     public NotEmpty(string field)
     {
-        _validationMessage = $"Field '{field}' cannot be empty!";
+        _validationMessage = string.Format(ValidationErrors.ValueIsEmpty, field);
     }
 
     public string ValidationMessage => _validationMessage;

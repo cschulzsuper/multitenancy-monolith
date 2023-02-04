@@ -1,4 +1,4 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary.Model
+﻿namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel
 {
     public sealed class ModelException : Exception
     {

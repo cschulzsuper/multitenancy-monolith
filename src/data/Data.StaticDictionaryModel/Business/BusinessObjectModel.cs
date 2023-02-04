@@ -2,12 +2,12 @@
 using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary.Model.Business;
+namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Business;
 
 public class BusinessObjectModel : IModel<BusinessObject>
 {
     public static object SetSnowflake(BusinessObject entity, object snowflake)
-        => entity.Snowflake = (long) snowflake;
+        => entity.Snowflake = (long)snowflake;
 
     public static object GetSnowflake(BusinessObject entity)
         => entity.Snowflake;

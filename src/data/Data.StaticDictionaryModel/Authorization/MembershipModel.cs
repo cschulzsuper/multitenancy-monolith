@@ -1,11 +1,11 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary.Model.Authorization;
+namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Authorization;
 
 public class MembershipModel : IModel<Membership>
 {
     public static object SetSnowflake(Membership entity, object snowflake)
-        => entity.Snowflake = (long) snowflake;
+        => entity.Snowflake = (long)snowflake;
 
     public static object GetSnowflake(Membership entity)
         => entity.Snowflake;

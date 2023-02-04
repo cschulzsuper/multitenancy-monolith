@@ -9,6 +9,8 @@ internal static class BusinessObjectValidation
     private readonly static Validator<BusinessObject> _insertValidator;
     private readonly static Validator<BusinessObject> _updateValidator;
 
+    private readonly static Validator<string> _businessObjectValidator;
+
     static BusinessObjectValidation()
     {
         _insertValidator = new Validator<BusinessObject>();
@@ -18,6 +20,10 @@ internal static class BusinessObjectValidation
         _updateValidator = new Validator<BusinessObject>();
         _updateValidator.AddRules(x => x.Snowflake, SnowflakeValidator.CreateRules());
         _updateValidator.AddRules(x => x.UniqueName, UniqueNameValidator.CreateRules());
+
+        _businessObjectValidator = new Validator<string>();
+        _businessObjectValidator.AddRules(x => x, UniqueNameValidator.CreateRules("business object"));
+
     }
 
     internal static void EnsureInsertable(BusinessObject businessObject)
@@ -29,7 +35,7 @@ internal static class BusinessObjectValidation
     internal static void EnsureSnowflake(long snowflake)
         => SnowflakeValidator.Ensure(snowflake);
 
-    internal static void EnsureUniqueName(string uniqueName)
-        => UniqueNameValidator.Ensure(uniqueName);
+    internal static void EnsureBusinessObject(string businessObject)
+        => _businessObjectValidator.Ensure(businessObject);
 
 }

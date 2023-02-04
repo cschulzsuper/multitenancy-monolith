@@ -1,8 +1,8 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary.Model;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary.Model.Administration;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary.Model.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary.Model.Authorization;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary.Model.Business;
+﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Administration;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Authorization;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Business;
 using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;

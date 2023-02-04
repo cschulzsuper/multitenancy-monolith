@@ -10,6 +10,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\shared\Validation\Validation.csproj" />
+	  <ProjectReference Include="..\Metadata\Metadata.csproj" />
 	</ItemGroup>
 
 </Project>

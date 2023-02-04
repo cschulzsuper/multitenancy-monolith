@@ -1,10 +1,12 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using ChristianSchulz.MultitenancyMonolith.Objects.Business;
+using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -207,6 +209,12 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
+        Assert.NotNull(content);
+
+        var detail = content.SingleOrDefault(x => x.Key == "detail").Value;
+        Assert.Equal(string.Format(RepositoryErrors.ObjectNotFound, "business object"), detail?.GetValue<string>());
     }
 
     [Theory]
@@ -233,5 +241,11 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
+        Assert.NotNull(content);
+
+        var detail = content.SingleOrDefault(x => x.Key == "detail").Value;
+        Assert.Equal(string.Format(ValidationErrors.ValueNotKebabCased,"business object"), detail?.GetValue<string>());
     }
 }

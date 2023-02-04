@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using ChristianSchulz.MultitenancyMonolith.Metadata;
+using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data;
@@ -12,7 +14,8 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            throw new RepositoryException($"{typeof(TEntity).Name} `{snowflake}` does not exist");
+            throw new RepositoryException(string.Format(RepositoryErrors.ObjectNotFoundWithSnowflake,
+                ExtractEntityName<TEntity>()));
         }
 
         return entity;
@@ -24,7 +27,8 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            throw new RepositoryException($"Single entity of type '{typeof(TEntity).Name}' does not exist");
+            throw new RepositoryException(string.Format(RepositoryErrors.ObjectNotFound,
+                ExtractEntityName<TEntity>()));
         }
 
         return entity;
@@ -36,7 +40,8 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            throw new RepositoryException($"{typeof(TEntity).Name} `{snowflake}` does not exist");
+            throw new RepositoryException(string.Format(RepositoryErrors.ObjectNotFoundWithSnowflake,
+                ExtractEntityName<TEntity>()));
         }
 
         return entity;
@@ -48,7 +53,8 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            throw new RepositoryException($"Single entity of type '{typeof(TEntity).Name}' does not exist");
+            throw new RepositoryException(string.Format(RepositoryErrors.ObjectNotFound,
+                ExtractEntityName<TEntity>()));
         }
 
         return entity;
@@ -164,6 +170,24 @@ public static class RepositoryExtensions
         if (rowsAffected > expectedRows)
         {
             throw new UnreachableException($"Unexpected result of affected rows '{rowsAffected}' after deleting '{expectedRows}' entities of type '{typeof(TEntity).Name}'");
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static string ExtractEntityName<TEntity>()
+    {
+        var entityType = typeof(TEntity);
+
+        var objectTypeDefintion = entityType.GetCustomAttribute<ObjectAnnotationAttribute>();
+
+        if (objectTypeDefintion != null)
+        {
+            return objectTypeDefintion.UniqueName
+                .Replace('-',' ');
+        }
+        else
+        {
+            return entityType.Name;
         }
     }
 }

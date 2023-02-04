@@ -12,7 +12,7 @@ public sealed class Allowed : IValidationRule<string>
     {
         _allowedValues = allowedValues;
 
-        _validationMessage = $"The value for '{field}' is not allowed!";
+        _validationMessage = string.Format(ValidationErrors.ValueNotAllowed, field);
     }
 
     public string ValidationMessage => _validationMessage;

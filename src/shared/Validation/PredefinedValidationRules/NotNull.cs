@@ -6,7 +6,7 @@ public sealed class NotNull : IValidationRule<string>
 
     public NotNull(string field)
     {
-        _validationMessage = $"Field '{field}' cannot be null!";
+        _validationMessage = string.Format(ValidationErrors.ValueIsNull, field);
     }
 
     public string ValidationMessage => _validationMessage;

@@ -8,7 +8,7 @@ public sealed partial class CamelCase : IValidationRule<string>
 
     public CamelCase(string field)
     {
-        _validationMessage = $"Field '{field}' must be camelCased!";
+        _validationMessage = string.Format(ValidationErrors.ValueNotCamelCased, field);
     }
 
     public string ValidationMessage => _validationMessage;

@@ -9,7 +9,7 @@ public sealed class Zero<T> : IValidationRule<T>
 
     public Zero(string field)
     {
-        _validationMessage = $"Field '{field}' must be zero!";
+        _validationMessage = string.Format(ValidationErrors.ValueNotZero, field);
     }
 
     public string ValidationMessage => _validationMessage;

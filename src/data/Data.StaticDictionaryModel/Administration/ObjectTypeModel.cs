@@ -1,11 +1,11 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary.Model.Administration;
+namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Administration;
 
 public class ObjectTypeModel : IModel<ObjectType>
 {
     public static object SetSnowflake(ObjectType entity, object snowflake)
-        => entity.Snowflake = (long) snowflake;
+        => entity.Snowflake = (long)snowflake;
 
     public static object GetSnowflake(ObjectType entity)
         => entity.Snowflake;

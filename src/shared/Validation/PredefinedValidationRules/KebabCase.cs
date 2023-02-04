@@ -8,7 +8,7 @@ public sealed partial class KebabCase : IValidationRule<string>
 
     public KebabCase(string field)
     {
-        _validationMessage = $"Field '{field}' must be kebab-cased!";
+        _validationMessage = string.Format(ValidationErrors.ValueNotKebabCased, field);
     }
 
     public string ValidationMessage => _validationMessage;

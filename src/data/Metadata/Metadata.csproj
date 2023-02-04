@@ -5,11 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Data</RootNamespace>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Metadata</RootNamespace>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\Metadata\Metadata.csproj" />
-	</ItemGroup>
 
 </Project>

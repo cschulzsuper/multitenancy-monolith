@@ -71,7 +71,7 @@ public sealed class Validator<T>
             validationResult != ValidationResult.Success)
         {
             throw new ValidationException(validationResult.ErrorMessage
-                                          ?? $"The '{typeof(T).Name}' value is not valid.");
+                                          ?? string.Format(ValidationErrors.ValueNotValid, typeof(T).Name));
         }
     }
 
