@@ -286,7 +286,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
@@ -342,7 +342,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
@@ -364,12 +364,21 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameNull(string identity, string group, string member)
     {
         // Arrange
+        var existingDistinctionTypeCustomProperty = new DistinctionTypeCustomProperty
+        {
+            UniqueName = $"existing-distinction-type-custom-property-{Guid.NewGuid()}"
+        };
+
         var existingDistinctionType = new DistinctionType
         {
             Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
-            DisplayName = "Existing Distinction Type"
+            DisplayName = "Existing Distinction Type",
+            CustomProperties = new List<DistinctionTypeCustomProperty>()
+            {
+                existingDistinctionTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -379,9 +388,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{validDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{existingDistinctionTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionTypeCustomProperty = new
@@ -408,12 +415,21 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameEmpty(string identity, string group, string member)
     {
         // Arrange
+        var existingDistinctionTypeCustomProperty = new DistinctionTypeCustomProperty
+        {
+            UniqueName = $"existing-distinction-type-custom-property-{Guid.NewGuid()}"
+        };
+
         var existingDistinctionType = new DistinctionType
         {
             Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
-            DisplayName = "Existing Distinction Type"
+            DisplayName = "Existing Distinction Type",
+            CustomProperties = new List<DistinctionTypeCustomProperty>()
+            {
+                existingDistinctionTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -423,9 +439,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{validDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{existingDistinctionTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionTypeCustomProperty = new
@@ -452,12 +466,21 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameTooLong(string identity, string group, string member)
     {
         // Arrange
+        var existingDistinctionTypeCustomProperty = new DistinctionTypeCustomProperty
+        {
+            UniqueName = $"existing-distinction-type-custom-property-{Guid.NewGuid()}"
+        };
+
         var existingDistinctionType = new DistinctionType
         {
             Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
-            DisplayName = "Existing Distinction Type"
+            DisplayName = "Existing Distinction Type",
+            CustomProperties = new List<DistinctionTypeCustomProperty>()
+            {
+                existingDistinctionTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -467,9 +490,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{validDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{existingDistinctionTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionTypeCustomProperty = new
@@ -496,12 +517,21 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameInvalid(string identity, string group, string member)
     {
         // Arrange
+        var existingDistinctionTypeCustomProperty = new DistinctionTypeCustomProperty
+        {
+            UniqueName = $"existing-distinction-type-custom-property-{Guid.NewGuid()}"
+        };
+
         var existingDistinctionType = new DistinctionType
         {
             Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
-            DisplayName = "Existing Distinction Type"
+            DisplayName = "Existing Distinction Type",
+            CustomProperties = new List<DistinctionTypeCustomProperty>()
+            {
+                existingDistinctionTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -511,9 +541,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{validDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{existingDistinctionTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionTypeCustomProperty = new

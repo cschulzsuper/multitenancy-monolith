@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel;
-using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
+﻿using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Administration;
 
@@ -15,20 +14,20 @@ public class DistinctionTypeModel : IModel<DistinctionType>
 
     public static void Ensure(IServiceProvider _, IEnumerable<DistinctionType> data, DistinctionType entity)
     {
-        var customPropertyConflict = entity.CustomProperties
+        var customPropertyUniqueNameConflict = entity.CustomProperties
             .Select(x => x.UniqueName)
-            .Distinct()
-            .Count() != entity.CustomProperties.Count;
+            .GroupBy(x => x)
+            .FirstOrDefault(x => x.Count() > 1);
 
-        if (customPropertyConflict)
+        if (customPropertyUniqueNameConflict != null)
         {
-            throw new ModelException("Custom property unique name conflict");
+            ModelException.ThrowUniqueNameConflict<ObjectTypeCustomProperty>(customPropertyUniqueNameConflict.Key);
         }
 
         var uniqueNameConflict = data.Any(x => x.UniqueName == entity.UniqueName);
         if (uniqueNameConflict)
         {
-            throw new ModelException("Unique name conflict");
+            ModelException.ThrowUniqueNameConflict<DistinctionType>(entity.UniqueName);
         }
     }
 }

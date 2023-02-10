@@ -21,7 +21,7 @@ public class MembershipModel : IModel<Membership>
 
         if (membershipConflict)
         {
-            throw new ModelException("Membership conflict");
+            ModelException.ThrowObjectConflict<Membership>($"{entity.Identity}/{entity.Group}/{entity.Member}");
         }
     }
 }

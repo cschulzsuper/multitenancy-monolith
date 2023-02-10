@@ -5,8 +5,16 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 public static class ClaimsPrincipalExtensions
 {
     public static string GetClaim(this ClaimsPrincipal principal, string claim)
-        => GetClaimOrDefault(principal, claim)
-            ?? throw new ClaimsException($"Could not find '{claim}' claim.");
+    {
+        var claimValue = GetClaimOrDefault(principal, claim);
+
+        if (claimValue == null)
+        {
+            ClaimsException.ThrowClaimNotFound(claim);
+        }
+
+        return claimValue;
+    }
 
     public static string? GetClaimOrDefault(this ClaimsPrincipal principal, string claim)
         => principal.Claims.SingleOrDefault(x => x.Type == claim)?.Value;

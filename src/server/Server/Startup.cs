@@ -132,18 +132,19 @@ public class Startup
         else
         {
             var exception = exceptionHandlerPathFeature.Error;
-            var httpMethod = context.Request.Method;
+            var exceptionErrorCode = exception.Data.Contains("error-code")
+                ? exception.Data["error-code"]?.ToString()
+                : null;
 
-            var statusCode = (exception, httpMethod) switch
+            var statusCode = (exception, exceptionErrorCode) switch
             {
-                _ when exception is NotImplementedException => StatusCodes.Status501NotImplemented,
+                (NotImplementedException, _) => StatusCodes.Status501NotImplemented,
 
-                _ when HttpMethods.IsGet(httpMethod) => StatusCodes.Status404NotFound,
-                _ when HttpMethods.IsHead(httpMethod) => StatusCodes.Status404NotFound,
-                _ when HttpMethods.IsPost(httpMethod) => StatusCodes.Status400BadRequest,
-                _ when HttpMethods.IsPut(httpMethod) => StatusCodes.Status400BadRequest,
-                _ when HttpMethods.IsPatch(httpMethod) => StatusCodes.Status400BadRequest,
-                _ when HttpMethods.IsDelete(httpMethod) => StatusCodes.Status400BadRequest,
+                (_, "object-not-found") => StatusCodes.Status404NotFound,
+                (_, "security") => StatusCodes.Status403Forbidden,
+                (_, "object-conflict") => StatusCodes.Status409Conflict,
+                (_, "object-invalid") => StatusCodes.Status400BadRequest,
+                (_, "value-invalid") => StatusCodes.Status400BadRequest,
 
                 _ => StatusCodes.Status500InternalServerError
             };
@@ -155,6 +156,7 @@ public class Startup
 
             problem = new ProblemDetails
             {
+                Type = exceptionErrorCode,
                 Instance = context.Request.Path,
                 Title = errorMessageAttribute?.ErrorMessage ?? "Could not process request",
                 Status = statusCode,

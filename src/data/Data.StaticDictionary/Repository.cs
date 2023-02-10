@@ -192,7 +192,11 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
                 EnsureInsertable(entity);
                 return entity;
             },
-            (_, _) => throw new RepositoryException($"Entity {typeof(TEntity).Name} with snowflake {snowflake} already existst"));
+            (snowflake, entity) =>
+            {
+                RepositoryException.ThrowObjectConflict<TEntity>(snowflake);
+                return entity;
+            });
     }
 
     public void Insert(params TEntity[] entities)
@@ -230,23 +234,16 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
 
         if (found)
         {
-            try
-            {
-                _context.Data.AddOrUpdate(snowflake,
-                    _ => throw new Exception(),
-                    (_, _) =>
-                    {
-                        var updated = (TEntity) entity!.Clone();
-                        action(updated);
-                        EnsureUpdatable(snowflake, updated);
+            _context.Data.AddOrUpdate(snowflake,
+                _ => throw new Exception(),
+                (_, _) =>
+                {
+                    var updated = (TEntity) entity!.Clone();
+                    action(updated);
+                    EnsureUpdatable(snowflake, updated);
 
-                        return updated;
-                    });
-            }
-            catch
-            {
-                return 0;
-            }
+                    return updated;
+                });
 
             return 1;
         }

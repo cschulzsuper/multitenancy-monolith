@@ -1,22 +1,18 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public class ClaimsException : Exception
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+
+public sealed class ClaimsException : Exception
 {
-    public ClaimsException()
-        : base()
+    private ClaimsException(string message) : base(message) { }
+
+    [DoesNotReturn]
+    public static void ThrowClaimNotFound(string claim)
     {
+        var exception = new ClaimsException($"Could not find '{claim}' claim.");
 
-    }
+        exception.Data["error-code"] = "claim-not-found";
 
-    public ClaimsException(string message)
-        : base(message)
-    {
-
-    }
-
-    public ClaimsException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-
+        throw exception;
     }
 }

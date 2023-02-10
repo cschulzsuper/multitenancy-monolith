@@ -166,7 +166,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 }

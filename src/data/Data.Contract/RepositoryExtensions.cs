@@ -1,7 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Metadata;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data;
@@ -14,8 +12,7 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            throw new RepositoryException(string.Format(RepositoryErrors.ObjectNotFoundWithSnowflake,
-                ExtractEntityName<TEntity>()));
+            RepositoryException.ThrowObjectNotFound<TEntity>(snowflake);
         }
 
         return entity;
@@ -27,8 +24,7 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            throw new RepositoryException(string.Format(RepositoryErrors.ObjectNotFound,
-                ExtractEntityName<TEntity>()));
+            RepositoryException.ThrowObjectNotFound<TEntity>();
         }
 
         return entity;
@@ -40,8 +36,7 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            throw new RepositoryException(string.Format(RepositoryErrors.ObjectNotFoundWithSnowflake,
-                ExtractEntityName<TEntity>()));
+            RepositoryException.ThrowObjectNotFound<TEntity>(snowflake);
         }
 
         return entity;
@@ -53,8 +48,7 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            throw new RepositoryException(string.Format(RepositoryErrors.ObjectNotFound,
-                ExtractEntityName<TEntity>()));
+            RepositoryException.ThrowObjectNotFound<TEntity>();
         }
 
         return entity;
@@ -150,7 +144,7 @@ public static class RepositoryExtensions
     {
         if (rowsAffected == 0)
         {
-            throw new RepositoryException($"{typeof(TEntity).Name} '{snowflake}' could not be deleted");
+            RepositoryException.ThrowObjectNotFound<TEntity>();
         }
 
         if (rowsAffected != 1)
@@ -164,7 +158,7 @@ public static class RepositoryExtensions
     {
         if (rowsAffected < expectedRows)
         {
-            throw new RepositoryException($"Entities of type '{typeof(TEntity).Name}' could not be deleted");
+            RepositoryException.ThrowObjectsNotFound<TEntity>(expectedRows, rowsAffected);
         }
 
         if (rowsAffected > expectedRows)
@@ -173,21 +167,5 @@ public static class RepositoryExtensions
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static string ExtractEntityName<TEntity>()
-    {
-        var entityType = typeof(TEntity);
 
-        var objectTypeDefintion = entityType.GetCustomAttribute<ObjectAnnotationAttribute>();
-
-        if (objectTypeDefintion != null)
-        {
-            return objectTypeDefintion.UniqueName
-                .Replace('-',' ');
-        }
-        else
-        {
-            return entityType.Name;
-        }
-    }
 }

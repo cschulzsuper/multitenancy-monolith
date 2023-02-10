@@ -31,7 +31,7 @@ internal sealed class DistinctionTypeCustomPropertyRequestHandler : IDistinction
 
             if (distinctionTypeCustomProperty == null)
             {
-                throw new TransportException($"Custom property '{uniqueName}' not found");
+                TransportException.ThrowNotFound<DistinctionTypeCustomProperty>(uniqueName);
             }
 
             distinctionType.CustomProperties.Remove(distinctionTypeCustomProperty);
@@ -44,13 +44,16 @@ internal sealed class DistinctionTypeCustomPropertyRequestHandler : IDistinction
 
     public async ValueTask<DistinctionTypeCustomPropertyResponse> GetAsync(string distinctionType, string uniqueName)
     {
+        DistinctionTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
+
         var distinctionTypeGet = await _distinctionTypeManager.GetAsync(distinctionType);
+
         var distinctionTypeCustomProperty = distinctionTypeGet.CustomProperties
             .SingleOrDefault(x => x.UniqueName == uniqueName);
 
         if (distinctionTypeCustomProperty == null)
         {
-            throw new TransportException($"Distinction type custom property '{uniqueName}' not found");
+            TransportException.ThrowNotFound<DistinctionTypeCustomProperty>(uniqueName);
         }
 
         var response = new DistinctionTypeCustomPropertyResponse
@@ -97,6 +100,8 @@ internal sealed class DistinctionTypeCustomPropertyRequestHandler : IDistinction
 
     public async ValueTask UpdateAsync(string distinctionType, string uniqueName, DistinctionTypeCustomPropertyRequest request)
     {
+        DistinctionTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
+
         await _distinctionTypeManager.UpdateAsync(distinctionType,
             distinctionTypeUpdate =>
             {
@@ -107,6 +112,8 @@ internal sealed class DistinctionTypeCustomPropertyRequestHandler : IDistinction
 
     public async ValueTask DeleteAsync(string distinctionType, string uniqueName)
     {
+        DistinctionTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
+
         await _distinctionTypeManager.UpdateAsync(distinctionType,
             distinctionTypeUpdate => _deleteAction.Invoke(distinctionTypeUpdate, uniqueName));
     }

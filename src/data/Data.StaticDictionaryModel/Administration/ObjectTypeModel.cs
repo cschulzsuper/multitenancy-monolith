@@ -16,28 +16,28 @@ public class ObjectTypeModel : IModel<ObjectType>
     {
         var customPropertyUniqueNameConflict = entity.CustomProperties
             .Select(x => x.UniqueName)
-            .Distinct()
-            .Count() != entity.CustomProperties.Count;
+            .GroupBy(x => x)
+            .FirstOrDefault(x => x.Count() > 1);
 
-        if (customPropertyUniqueNameConflict)
+        if (customPropertyUniqueNameConflict != null)
         {
-            throw new ModelException("Custom property unqiue name conflict");
+            ModelException.ThrowUniqueNameConflict<ObjectTypeCustomProperty>(customPropertyUniqueNameConflict.Key);
         }
 
         var customPropertyNameConflict = entity.CustomProperties
             .Select(x => x.PropertyName)
-            .Distinct()
-            .Count() != entity.CustomProperties.Count;
+            .GroupBy(x => x)
+            .FirstOrDefault(x => x.Count() > 1);
 
-        if (customPropertyNameConflict)
+        if (customPropertyNameConflict != null)
         {
-            throw new ModelException("Custom property name conflict");
+            ModelException.ThrowPropertyNameConflict<ObjectTypeCustomProperty>(customPropertyNameConflict.Key);
         }
 
         var uniqueNameConflict = data.Any(x => x.UniqueName == entity.UniqueName);
         if (uniqueNameConflict)
         {
-            throw new ModelException("Unique name conflict");
+            ModelException.ThrowUniqueNameConflict<ObjectTypeCustomProperty>(entity.UniqueName);
         }
     }
 }

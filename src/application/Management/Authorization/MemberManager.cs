@@ -45,6 +45,8 @@ internal sealed class MemberManager : IMemberManager
 
     public async ValueTask UpdateAsync(long snowflake, Action<Member> action)
     {
+        MemberValidation.EnsureSnowflake(snowflake);
+
         var validatedAction = (Member member) =>
         {
             action.Invoke(member);
@@ -57,6 +59,8 @@ internal sealed class MemberManager : IMemberManager
 
     public async ValueTask UpdateAsync(string uniqueName, Action<Member> action)
     {
+        MemberValidation.EnsureUniqueName(uniqueName);
+
         var validatedAction = (Member member) =>
         {
             action.Invoke(member);

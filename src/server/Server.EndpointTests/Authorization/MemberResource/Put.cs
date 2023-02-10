@@ -209,7 +209,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
@@ -232,7 +232,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             UniqueName = $"additional-identity-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -255,9 +255,9 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
             var unchangedMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -277,9 +277,20 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameNull(string identity, string group, string member)
     {
         // Arrange
-        var validMember = "valid-member";
+        var existingMember = new Member
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{validMember}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .Insert(existingMember);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putMember = new
@@ -306,9 +317,20 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameEmpty(string identity, string group, string member)
     {
         // Arrange
-        var validMember = "valid-member";
+        var existingMember = new Member
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{validMember}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .Insert(existingMember);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putMember = new
@@ -335,9 +357,20 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameTooLong(string identity, string group, string member)
     {
         // Arrange
-        var validMember = "valid-member";
+        var existingMember = new Member
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{validMember}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .Insert(existingMember);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putMember = new
@@ -364,9 +397,20 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameInvalid(string identity, string group, string member)
     {
         // Arrange
-        var validMember = "valid-member";
+        var existingMember = new Member
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{validMember}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .Insert(existingMember);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putMember = new

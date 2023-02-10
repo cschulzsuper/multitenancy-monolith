@@ -70,8 +70,7 @@ public sealed class Validator<T>
         if (validationResult != null &&
             validationResult != ValidationResult.Success)
         {
-            throw new ValidationException(validationResult.ErrorMessage
-                                          ?? string.Format(ValidationErrors.ValueNotValid, typeof(T).Name));
+            ValidationException.Throw(validationResult, value);
         }
     }
 

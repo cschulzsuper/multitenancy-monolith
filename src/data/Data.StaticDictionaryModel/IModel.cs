@@ -1,13 +1,12 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel
+﻿namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel;
+
+public interface IModel<T>
 {
-    public interface IModel<T>
-    {
-        static abstract object SetSnowflake(T entity, object snowflake);
+    static abstract object SetSnowflake(T entity, object snowflake);
 
-        static abstract object GetSnowflake(T entity);
+    static abstract object GetSnowflake(T entity);
 
-        static abstract bool Multitenancy { get; }
+    static abstract bool Multitenancy { get; }
 
-        static abstract void Ensure(IServiceProvider _, IEnumerable<T> data, T entity);
-    }
+    static abstract void Ensure(IServiceProvider _, IEnumerable<T> data, T entity);
 }

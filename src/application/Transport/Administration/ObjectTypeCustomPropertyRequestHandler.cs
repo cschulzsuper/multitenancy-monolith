@@ -34,7 +34,7 @@ internal sealed class ObjectTypeCustomPropertyRequestHandler : IObjectTypeCustom
 
             if (objectTypeCustomProperty == null)
             {
-                throw new TransportException($"Custom property '{uniqueName}' not found");
+                TransportException.ThrowNotFound<ObjectTypeCustomProperty>(uniqueName);
             }
 
             objectType.CustomProperties.Remove(objectTypeCustomProperty);
@@ -47,16 +47,18 @@ internal sealed class ObjectTypeCustomPropertyRequestHandler : IObjectTypeCustom
 
     public async ValueTask<ObjectTypeCustomPropertyResponse> GetAsync(string objectType, string uniqueName)
     {
+        ObjectTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
+
         var objectTypeGet = await _objectTypeManager.GetOrDefaultAsync(objectType);
         if (objectTypeGet == null)
         {
-            throw new TransportException($"No custom properties found for object type '{objectType}'");
+            TransportException.ThrowNotFound<ObjectTypeCustomProperty>(uniqueName);
         }
 
         var objectTypeCustomProperty = objectTypeGet.CustomProperties.SingleOrDefault(x => x.UniqueName == uniqueName);
         if (objectTypeCustomProperty == null)
         {
-            throw new TransportException($"Object type custom property '{uniqueName}' not found");
+            TransportException.ThrowNotFound<ObjectTypeCustomProperty>(uniqueName);
         }
 
         var response = new ObjectTypeCustomPropertyResponse
@@ -132,6 +134,8 @@ internal sealed class ObjectTypeCustomPropertyRequestHandler : IObjectTypeCustom
 
     public async ValueTask UpdateAsync(string objectType, string uniqueName, ObjectTypeCustomPropertyRequest request)
     {
+        ObjectTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
+
         await _objectTypeManager.UpdateAsync(objectType,
             objectTypeUpdate =>
             {
@@ -142,6 +146,8 @@ internal sealed class ObjectTypeCustomPropertyRequestHandler : IObjectTypeCustom
 
     public async ValueTask DeleteAsync(string objectType, string uniqueName)
     {
+        ObjectTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
+
         await _objectTypeManager.UpdateAsync(objectType,
             objectTypeUpdate => _deleteAction.Invoke(objectTypeUpdate, uniqueName));
     }

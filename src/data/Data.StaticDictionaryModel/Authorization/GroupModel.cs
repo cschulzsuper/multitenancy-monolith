@@ -17,7 +17,7 @@ public class GroupModel : IModel<Group>
         var uniqueNameConflict = data.Any(x => x.UniqueName == entity.UniqueName);
         if (uniqueNameConflict)
         {
-            throw new ModelException("Unique name conflict");
+            ModelException.ThrowUniqueNameConflict<Group>(entity.UniqueName);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Metadata;
-using ChristianSchulz.MultitenancyMonolith.Objects.Business;
+﻿using ChristianSchulz.MultitenancyMonolith.Objects.Business;
+using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;

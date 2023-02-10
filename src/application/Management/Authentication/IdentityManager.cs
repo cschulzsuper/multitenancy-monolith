@@ -45,6 +45,8 @@ internal sealed class IdentityManager : IIdentityManager
 
     public async ValueTask UpdateAsync(long snowflake, Action<Identity> action)
     {
+        IdentityValidation.EnsureSnowflake(snowflake);
+
         var validatedAction = (Identity identity) =>
         {
             action.Invoke(identity);
@@ -57,6 +59,8 @@ internal sealed class IdentityManager : IIdentityManager
 
     public async ValueTask UpdateAsync(string uniqueName, Action<Identity> action)
     {
+        IdentityValidation.EnsureUniqueName(uniqueName);
+
         var validatedAction = (Identity identity) =>
         {
             action.Invoke(identity);

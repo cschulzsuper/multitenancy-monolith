@@ -16,9 +16,14 @@ internal sealed class ByteCache : IByteCache
     public byte[] Get(string key)
     {
         var cacheKey = $"{_prefix}.{key}";
+        var cacheValue = _distributedCache.Get(cacheKey);
 
-        return _distributedCache.Get(cacheKey)
-            ?? throw new CachingException($"Could not find cached entry for key '{cacheKey}'");
+        if(cacheValue == null)
+        {
+            CachingException.ThrowCacheKeyNotFound(cacheKey);
+        }
+
+        return cacheValue;
     }
 
     public bool Has(string key, byte[] value)

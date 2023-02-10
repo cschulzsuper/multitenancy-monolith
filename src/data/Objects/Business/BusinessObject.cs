@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Metadata;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Business;
 

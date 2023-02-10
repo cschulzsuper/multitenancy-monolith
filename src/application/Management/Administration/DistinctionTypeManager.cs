@@ -1,4 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Data;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,8 @@ internal sealed class DistinctionTypeManager : IDistinctionTypeManager
 
     public async ValueTask UpdateAsync(long snowflake, Action<DistinctionType> action)
     {
+        IdentityValidation.EnsureSnowflake(snowflake);
+
         var validatedAction = (DistinctionType distinctionType) =>
         {
             action.Invoke(distinctionType);
@@ -57,6 +60,8 @@ internal sealed class DistinctionTypeManager : IDistinctionTypeManager
 
     public async ValueTask UpdateAsync(string uniqueName, Action<DistinctionType> action)
     {
+        DistinctionTypeValidation.EnsureUniqueName(uniqueName);
+
         var validatedAction = (DistinctionType distinctionType) =>
         {
             action.Invoke(distinctionType);

@@ -189,7 +189,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
@@ -240,7 +240,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
         using (var scope = _factory.Services.CreateScope())
         {
@@ -263,9 +263,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameNull(string identity)
     {
         // Arrange
-        var validIdentity = "valid-identity";
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost",
+            Secret = "existing-foo-bar"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{validIdentity}");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -293,9 +306,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameEmpty(string identity)
     {
         // Arrange
-        var validIdentity = "valid-identity";
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost",
+            Secret = "existing-foo-bar"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{validIdentity}");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -323,9 +349,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameTooLong(string identity)
     {
         // Arrange
-        var validIdentity = "valid-identity";
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost",
+            Secret = "existing-foo-bar"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{validIdentity}");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -353,9 +392,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameInvalid(string identity)
     {
         // Arrange
-        var validIdentity = "valid-identity";
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost",
+            Secret = "existing-foo-bar"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{validIdentity}");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -383,9 +435,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenSecretNull(string identity)
     {
         // Arrange
-        var validIdentity = "valid-identity";
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost",
+            Secret = "existing-foo-bar"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{validIdentity}");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -413,9 +478,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenSecretEmpty(string identity)
     {
         // Arrange
-        var validIdentity = "valid-identity";
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost",
+            Secret = "existing-foo-bar"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{validIdentity}");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -443,9 +521,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenSecretTooLong(string identity)
     {
         // Arrange
-        var validIdentity = "valid-identity";
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost",
+            Secret = "existing-foo-bar"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{validIdentity}");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -473,9 +564,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressNull(string identity)
     {
         // Arrange
-        var validIdentity = "valid-identity";
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost",
+            Secret = "existing-foo-bar"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{validIdentity}");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -503,9 +607,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressEmpty(string identity)
     {
         // Arrange
-        var validIdentity = "valid-identity";
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost",
+            Secret = "existing-foo-bar"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{validIdentity}");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new
@@ -533,9 +650,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressInvalid(string identity)
     {
         // Arrange
-        var validIdentity = "valid-identity";
+        var existingIdentity = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost",
+            Secret = "existing-foo-bar"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{validIdentity}");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authentication/identities/{existingIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
 
         var putIdentity = new

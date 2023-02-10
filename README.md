@@ -70,12 +70,9 @@ If you are developing an ASP.NET Core application yourself and are looking for a
   * /32 Major commit. The complete draft to manage custom properties including all endpoint tests and some improvements to the validation logic. An example business object endpoint is also implemented. https://github.com/cschulzsuper/multitenancy-monolith/commit/6afd43a64242e838a797f96d2b5b1cad648d0858
   * /33 Completion of custom properties for the business objects example entity. Refactoring of the repository service factories and extension of the entity constrains assertion in the repository. https://github.com/cschulzsuper/multitenancy-monolith/commit/816de3717c29827787ada5a235b6bfc3a178ae66
 
-* Error message assertions
-  * /34 Draft implementation to assert the error messages in the endpoint tests. Static classes are used to define the error messages.
-
-# Next
-
-* Endpoint Tests: Error message assertions
+* Status code assertions
+  * /34 Draft implementation to assert the error messages in the endpoint tests. Static classes are used to define the error messages. https://github.com/cschulzsuper/multitenancy-monolith/commit/f09e0b99e132bbd81ab806ab22965fc142b61d7e
+  * /35 Extending the exception handling to allow better status codes in problem details. The status codes are asserted in the endpoint tests.
 
 # Backlog
 

@@ -306,7 +306,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
@@ -369,7 +369,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
@@ -395,10 +395,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameNull(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -408,9 +420,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -440,10 +450,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameEmpty(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -453,9 +475,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -485,10 +505,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameTooLong(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -498,9 +530,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -530,10 +560,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameInvalid(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -543,9 +585,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -575,10 +615,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenDisplayNameNull(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -588,9 +640,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -620,10 +670,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenDisplayNameEmpty(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -633,9 +695,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -665,10 +725,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenDisplayNameTooLong(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -678,9 +750,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -710,10 +780,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenPropertyNameNull(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -723,9 +805,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -755,10 +835,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenPropertyNameEmpty(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -768,9 +860,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -800,10 +890,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenPropertyNameTooLong(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -813,9 +915,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -845,10 +945,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenPropertyNameInvalid(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -858,9 +970,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -942,7 +1052,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
@@ -968,10 +1078,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenPropertyTypeNull(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -981,9 +1103,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -1013,10 +1133,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenPropertyTypeEmpty(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -1026,9 +1158,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new
@@ -1058,10 +1188,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenPropertyTypeInvalid(string identity, string group, string member)
     {
         // Arrange
+        var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
+        {
+            UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
+            DisplayName = "Foo Bar",
+            PropertyName = "existingFooBar",
+            PropertyType = "string"
+        };
+
         var existingObjectType = new ObjectType
         {
             Snowflake = 1,
             UniqueName = "business-object",
+            CustomProperties = new List<ObjectTypeCustomProperty>
+            {
+                existingObjectTypeCustomProperty
+            }
         };
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -1071,9 +1213,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putObjectTypeCustomProperty = new

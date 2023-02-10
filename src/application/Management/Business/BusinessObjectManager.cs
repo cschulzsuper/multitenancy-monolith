@@ -1,4 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Data;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,8 @@ internal sealed class BusinessObjectManager : IBusinessObjectManager
 
     public async ValueTask UpdateAsync(long snowflake, Action<BusinessObject> action)
     {
+        IdentityValidation.EnsureSnowflake(snowflake);
+
         var validatedAction = (BusinessObject @object) =>
         {
             action.Invoke(@object);
@@ -57,6 +60,8 @@ internal sealed class BusinessObjectManager : IBusinessObjectManager
 
     public async ValueTask UpdateAsync(string businessObject, Action<BusinessObject> action)
     {
+        BusinessObjectValidation.EnsureBusinessObject(businessObject);
+
         var validatedAction = (BusinessObject @object) =>
         {
             action.Invoke(@object);

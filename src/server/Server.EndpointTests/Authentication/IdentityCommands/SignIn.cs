@@ -50,7 +50,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.PostAsJsonAsync(requestUrl, requestBody);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
@@ -70,7 +70,7 @@ public sealed class SignIn : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.PostAsJsonAsync(requestUrl, requestBody);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 }

@@ -57,7 +57,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         var postBusinessObject = new
         {
-            UniqueName = "post-business-object"
+            UniqueName = "post-business-object",
+            CustomProperties = new Dictionary<string, object>()
         };
 
         request.Content = JsonContent.Create(postBusinessObject);
@@ -86,7 +87,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         var postBusinessObject = new
         {
-            UniqueName = "post-business-object"
+            UniqueName = "post-business-object",
+            CustomProperties = new Dictionary<string, object>()
         };
 
         request.Content = JsonContent.Create(postBusinessObject);
@@ -310,7 +312,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         var postBusinessObject = new
         {
-            UniqueName = existingBusinessObject.UniqueName
+            UniqueName = existingBusinessObject.UniqueName,
+            CustomProperties = new Dictionary<string, object>()
         };
 
         request.Content = JsonContent.Create(postBusinessObject);
@@ -321,7 +324,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
@@ -349,7 +352,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         var postBusinessObject = new
         {
-            UniqueName = (string?) null
+            UniqueName = (string?) null,
+            CustomProperties = new Dictionary<string, object>()
         };
 
         request.Content = JsonContent.Create(postBusinessObject);
@@ -385,7 +389,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         var postBusinessObject = new
         {
-            UniqueName = string.Empty
+            UniqueName = string.Empty,
+            CustomProperties = new Dictionary<string, object>()
         };
 
         request.Content = JsonContent.Create(postBusinessObject);
@@ -421,7 +426,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         var postBusinessObject = new
         {
-            UniqueName = new string(Enumerable.Repeat('a', 141).ToArray())
+            UniqueName = new string(Enumerable.Repeat('a', 141).ToArray()),
+            CustomProperties = new Dictionary<string, object>()
         };
 
         request.Content = JsonContent.Create(postBusinessObject);
@@ -457,7 +463,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         var postBusinessObject = new
         {
-            UniqueName = "Invalid"
+            UniqueName = "Invalid",
+            CustomProperties = new Dictionary<string, object>()
         };
 
         request.Content = JsonContent.Create(postBusinessObject);

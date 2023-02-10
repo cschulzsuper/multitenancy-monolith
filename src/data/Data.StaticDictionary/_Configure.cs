@@ -2,6 +2,7 @@
 using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
@@ -32,7 +33,7 @@ public static class _Configure
                              .GetRequiredService<IConfiguration>()
                              .GetRequiredSection(IdentitiesConfigurationKey)
                              .Get<Identity[]>()
-                         ?? throw new RepositoryException($"Could not get `{IdentitiesConfigurationKey}` configuration");
+                         ?? throw new UnreachableException($"Could not get `{IdentitiesConfigurationKey}` configuration");
 
         using var scope = services.CreateScope();
 
@@ -71,7 +72,7 @@ public static class _Configure
         var groupedMembers = groupSections
             .ToDictionary(
                 group => group.Key,
-                group => group.Get<Member[]>() ?? throw new RepositoryException($"Could not get `{MembersConfigurationKey}` configuration for group `{group.Key}`"));
+                group => group.Get<Member[]>() ?? throw new UnreachableException($"Could not get `{MembersConfigurationKey}` configuration for group `{group.Key}`"));
 
         foreach (var group in groupedMembers.Keys)
         {
@@ -93,7 +94,7 @@ public static class _Configure
                               .GetRequiredService<IConfiguration>()
                               .GetRequiredSection(MembershipsConfigurationKey)
                               .Get<Membership[]>()
-                          ?? throw new RepositoryException($"Could not get `{MembershipsConfigurationKey}` configuration");
+                          ?? throw new UnreachableException($"Could not get `{MembershipsConfigurationKey}` configuration");
 
         Group[] groups;
         Identity[] identities;

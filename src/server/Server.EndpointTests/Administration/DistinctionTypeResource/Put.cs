@@ -226,7 +226,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
@@ -278,7 +278,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
         using (var scope = _factory.Services.CreateMultitenancyScope(group))
         {
@@ -302,9 +302,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameNull(string identity, string group, string member)
     {
         // Arrange
-        var validDistinctionType = "valid-distinction-type";
+        var existingDistinctionType = new DistinctionType
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
+            ObjectType = "business-object",
+            DisplayName = "Existing Distinction Type"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<DistinctionType>>()
+                .Insert(existingDistinctionType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionType = new
@@ -333,9 +346,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameEmpty(string identity, string group, string member)
     {
         // Arrange
-        var validDistinctionType = "valid-distinction-type";
+        var existingDistinctionType = new DistinctionType
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
+            ObjectType = "business-object",
+            DisplayName = "Existing Distinction Type"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<DistinctionType>>()
+                .Insert(existingDistinctionType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionType = new
@@ -364,9 +390,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameTooLong(string identity, string group, string member)
     {
         // Arrange
-        var validDistinctionType = "valid-distinction-type";
+        var existingDistinctionType = new DistinctionType
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
+            ObjectType = "business-object",
+            DisplayName = "Existing Distinction Type"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<DistinctionType>>()
+                .Insert(existingDistinctionType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionType = new
@@ -395,9 +434,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameInvalid(string identity, string group, string member)
     {
         // Arrange
-        var validDistinctionType = "valid-distinction-type";
+        var existingDistinctionType = new DistinctionType
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
+            ObjectType = "business-object",
+            DisplayName = "Existing Distinction Type"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<DistinctionType>>()
+                .Insert(existingDistinctionType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionType = new
@@ -426,9 +478,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenDisplayNameNull(string identity, string group, string member)
     {
         // Arrange
-        var validDistinctionType = "valid-distinction-type";
+        var existingDistinctionType = new DistinctionType
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
+            ObjectType = "business-object",
+            DisplayName = "Existing Distinction Type"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<DistinctionType>>()
+                .Insert(existingDistinctionType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionType = new
@@ -457,9 +522,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenDisplayNameEmpty(string identity, string group, string member)
     {
         // Arrange
-        var validDistinctionType = "valid-distinction-type";
+        var existingDistinctionType = new DistinctionType
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
+            ObjectType = "business-object",
+            DisplayName = "Existing Distinction Type"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<DistinctionType>>()
+                .Insert(existingDistinctionType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionType = new
@@ -488,9 +566,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenDisplayNameTooLong(string identity, string group, string member)
     {
         // Arrange
-        var validDistinctionType = "valid-distinction-type";
+        var existingDistinctionType = new DistinctionType
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
+            ObjectType = "business-object",
+            DisplayName = "Existing Distinction Type"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<DistinctionType>>()
+                .Insert(existingDistinctionType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionType = new
@@ -519,9 +610,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenObjectTypeNull(string identity, string group, string member)
     {
         // Arrange
-        var validDistinctionType = "valid-distinction-type";
+        var existingDistinctionType = new DistinctionType
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
+            ObjectType = "business-object",
+            DisplayName = "Existing Distinction Type"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<DistinctionType>>()
+                .Insert(existingDistinctionType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionType = new
@@ -550,9 +654,22 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenObjectTypeEmpty(string identity, string group, string member)
     {
         // Arrange
-        var validDistinctionType = "valid-distinction-type";
+        var existingDistinctionType = new DistinctionType
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
+            ObjectType = "business-object",
+            DisplayName = "Existing Distinction Type"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<DistinctionType>>()
+                .Insert(existingDistinctionType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionType = new
@@ -578,12 +695,25 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     [Trait("Category", "Endpoint")]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
     [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFailWhenObjectTypeInvalid(string identity, string group, string member)
+    public async Task Put_ShouldFail_WhenObjectTypeInvalid(string identity, string group, string member)
     {
         // Arrange
-        var validDistinctionType = "valid-distinction-type";
+        var existingDistinctionType = new DistinctionType
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
+            ObjectType = "business-object",
+            DisplayName = "Existing Distinction Type"
+        };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
+        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<DistinctionType>>()
+                .Insert(existingDistinctionType);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
 
         var putDistinctionType = new

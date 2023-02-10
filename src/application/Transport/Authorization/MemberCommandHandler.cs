@@ -32,12 +32,12 @@ internal sealed class MemberCommandHandler : IMemberCommandHandler
 
         if (!_allowedClients.Contains(command.Client))
         {
-            throw new TransportException($"Client '{client}' is not allowed to sign in");
+            TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in");
         }
 
         if (command.Client != _user.GetClaimOrDefault("client"))
         {
-            throw new TransportException($"Not allowed to switch to client '{client}'");
+            TransportException.ThrowSecurityViolation($"Not allowed to switch to client '{client}'");
         }
 
 
@@ -54,7 +54,7 @@ internal sealed class MemberCommandHandler : IMemberCommandHandler
 
             if (!found)
             {
-                throw new TransportException($"Member '{member}' does not exist in group '{group}'");
+                TransportException.ThrowSecurityViolation($"Member '{member}' does not exist in group '{group}'");
             }
 
             var verfication = Guid.NewGuid().ToByteArray();

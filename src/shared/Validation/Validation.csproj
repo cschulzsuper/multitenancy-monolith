@@ -8,5 +8,9 @@
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Shared.Validation</RootNamespace>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Metadata\Metadata.csproj" />
+	</ItemGroup>
+
 
 </Project>

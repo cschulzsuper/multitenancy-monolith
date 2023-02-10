@@ -28,7 +28,7 @@ internal sealed class IdentityCommandHandler : IIdentityCommandHandler
 
         if (!_allowedClients.Contains(command.Client))
         {
-            throw new TransportException($"Client '{client}' is not allowed to sign in");
+            TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in");
         }
 
         lock (_signInLock)
@@ -40,7 +40,7 @@ internal sealed class IdentityCommandHandler : IIdentityCommandHandler
 
             if (!found)
             {
-                throw new TransportException($"Could not match identity '{identity}' against secret");
+                TransportException.ThrowSecurityViolation($"Could not match identity '{identity}' against secret");
             }
 
             var verification = Guid.NewGuid().ToByteArray();

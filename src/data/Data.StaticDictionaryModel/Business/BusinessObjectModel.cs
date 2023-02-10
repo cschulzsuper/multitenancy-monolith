@@ -37,7 +37,7 @@ public class BusinessObjectModel : IModel<BusinessObject>
 
                 if (objectTypeCustomProperty.PropertyType != entityCustomPropertyType)
                 {
-                    throw new ModelException("Custom property type mismatch");
+                    ModelException.ThrowPropertyTypeMismatch<BusinessObject>(entityCustomPropertyKey);
                 }
             }
         }
@@ -49,7 +49,7 @@ public class BusinessObjectModel : IModel<BusinessObject>
         var uniqueNameConflict = data.Any(x => x.UniqueName == entity.UniqueName);
         if (uniqueNameConflict)
         {
-            throw new ModelException("Unique name conflict");
+            ModelException.ThrowUniqueNameConflict<BusinessObject>(entity.UniqueName);
         }
     }
 }

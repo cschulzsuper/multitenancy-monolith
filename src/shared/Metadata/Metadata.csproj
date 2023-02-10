@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Metadata</RootNamespace>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Shared.Metadata</RootNamespace>
 	</PropertyGroup>
 
 </Project>
