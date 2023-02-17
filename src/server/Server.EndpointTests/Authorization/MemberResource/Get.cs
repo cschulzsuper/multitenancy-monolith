@@ -5,10 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System;
+using ChristianSchulz.MultitenancyMonolith.Server;
+using System.Linq;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authorization.MemberResource;
+namespace Authorization.MemberResource;
 
 public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -16,89 +20,21 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
     public Get(WebApplicationFactory<Program> factory)
     {
-        _factory = factory.WithInMemoryData();
+        _factory = factory.Mock();
     }
 
     [Fact]
-    [Trait("Category", "Endpoint.Security")]
-    public async Task Get_ShouldBeUnauthorized_WhenNotAuthenticated()
-    {
-        // Arrange
-        var validMember = "valid-member";
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authorization/members/{validMember}");
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.DefaultIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Get_ShouldBeForbidden_WhenNotAuthorized(string identity)
-    {
-        // Arrange
-        var validMember = "valid-member";
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authorization/members/{validMember}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Get_ShouldBeForbidden_WhenNotChief(string identity, string group, string member)
-    {
-        // Arrange
-        var validMember = "valid-member";
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authorization/members/{validMember}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Get_ShouldSucceed_WhenExists(string identity, string group, string member)
+    public async Task Get_ShouldSucceed_WhenExists()
     {
         // Arrange
         var existingMember = new Member
         {
             Snowflake = 1,
-            UniqueName = $"existing-identity-{Guid.NewGuid()}"
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "default@localhost.local"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -106,7 +42,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authorization/members/{existingMember.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
 
@@ -118,23 +54,19 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
-        Assert.Collection(content,
-            x => Assert.Equal(("uniqueName", existingMember.UniqueName), (x.Key, (string?) x.Value)));
+        Assert.Collection(content.OrderBy(x => x.Key),
+            x => Assert.Equal(("mailAddress", existingMember.MailAddress), (x.Key, (string?)x.Value)),
+            x => Assert.Equal(("uniqueName", existingMember.UniqueName), (x.Key, (string?)x.Value)));
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Get_ShouldFail_WhenAbsent(string identity, string group, string member)
+    [Fact]
+    public async Task Get_ShouldFail_WhenAbsent()
     {
         // Arrange
         var absentMember = "absent-member";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authorization/members/{absentMember}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
 
@@ -146,19 +78,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Get_ShouldFail_WhenInvalid(string identity, string group, string member)
+    [Fact]
+    public async Task Get_ShouldFail_WhenInvalid()
     {
         // Arrange
         var invalidMember = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/authorization/members/{invalidMember}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
 

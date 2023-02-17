@@ -4,10 +4,14 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Linq;
+using System;
+using ChristianSchulz.MultitenancyMonolith.Server;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.DistinctionTypeResource;
+namespace Administration.DistinctionTypeResource;
 
 public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -15,107 +19,11 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
     public Put(WebApplicationFactory<Program> factory)
     {
-        _factory = factory.WithInMemoryData();
+        _factory = factory.Mock();
     }
 
     [Fact]
-    [Trait("Category", "Endpoint.Security")]
-    public async Task Put_ShouldBeUnauthorized_WhenNotAuthenticated()
-    {
-        // Arrange
-        var validDistinctionType = "valid-distinction-type";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
-
-        var putDistinctionType = new
-        {
-            UniqueName = "put-distinction-type",
-            ObjectType = "business-object",
-            DisplayName = "Put Distinction Type"
-        };
-
-        request.Content = JsonContent.Create(putDistinctionType);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.DefaultIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Put_ShouldBeForbidden_WhenNotAuthorized(string identity)
-    {
-        // Arrange
-        var validDistinctionType = "valid-distinction-type";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var putDistinctionType = new
-        {
-            UniqueName = "put-distinction-type",
-            ObjectType = "business-object",
-            DisplayName = "Put Distinction Type"
-        };
-
-        request.Content = JsonContent.Create(putDistinctionType);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Put_ShouldBeForbidden_WhenNotChief(string identity, string group, string member)
-    {
-        // Arrange
-        var validDistinctionType = "valid-distinction-type";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{validDistinctionType}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
-
-        var putDistinctionType = new
-        {
-            UniqueName = "put-distinction-type",
-            ObjectType = "business-object",
-            DisplayName = "Put Distinction Type"
-        };
-
-        request.Content = JsonContent.Create(putDistinctionType);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldSucceed_WhenObjectTypeBusinessObject(string identity, string group, string member)
+    public async Task Put_ShouldSucceed_WhenObjectTypeBusinessObject()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -126,7 +34,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -134,7 +42,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
@@ -153,7 +61,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var changedDistinctionType = scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -168,17 +76,14 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenInvalid(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenInvalid()
     {
         // Arrange
         var invalidDistinctionType = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{invalidDistinctionType}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
@@ -199,17 +104,14 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenAbsent(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenAbsent()
     {
         // Arrange
         var absentDistinctionType = "absent-distinction-type";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{absentDistinctionType}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
@@ -230,11 +132,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameExists(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameExists()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -253,7 +152,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Additional Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -261,7 +160,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
@@ -280,7 +179,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var unchangedDistinctionType = scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -295,11 +194,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameNull(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -310,7 +206,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -318,11 +214,11 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
-            UniqueName = (string?) null,
+            UniqueName = (string?)null,
             ObjectType = "business-object",
             DisplayName = "Put Distinction Type"
         };
@@ -339,11 +235,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameEmpty(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -354,7 +247,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -362,7 +255,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
@@ -383,11 +276,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameTooLong(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -398,7 +288,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -406,7 +296,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
@@ -427,11 +317,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameInvalid(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -442,7 +329,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -450,7 +337,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
@@ -471,11 +358,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenDisplayNameNull(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenDisplayNameNull()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -486,7 +370,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -494,13 +378,13 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
             UniqueName = "put-distinction-type",
             ObjectType = "business-object",
-            DisplayName = (string?) null,
+            DisplayName = (string?)null,
         };
 
         request.Content = JsonContent.Create(putDistinctionType);
@@ -515,11 +399,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenDisplayNameEmpty(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenDisplayNameEmpty()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -530,7 +411,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -538,7 +419,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
@@ -559,11 +440,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenDisplayNameTooLong(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenDisplayNameTooLong()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -574,7 +452,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -582,7 +460,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
@@ -603,11 +481,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenObjectTypeNull(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenObjectTypeNull()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -618,7 +493,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -626,12 +501,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
             UniqueName = "put-distinction-type",
-            ObjectType = (string?) null,
+            ObjectType = (string?)null,
             DisplayName = "New Distinction Type"
         };
 
@@ -647,11 +522,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenObjectTypeEmpty(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenObjectTypeEmpty()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -662,7 +534,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -670,7 +542,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {
@@ -691,11 +563,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenObjectTypeInvalid(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenObjectTypeInvalid()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -706,7 +575,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -714,7 +583,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
         {

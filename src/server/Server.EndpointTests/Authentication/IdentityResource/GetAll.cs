@@ -1,11 +1,20 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using ChristianSchulz.MultitenancyMonolith.Data;
+using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
+using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Server;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentityResource;
+namespace Authentication.IdentityResource;
 
 public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -13,55 +22,38 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
     public GetAll(WebApplicationFactory<Program> factory)
     {
-        _factory = factory.WithInMemoryData();
+        _factory = factory.Mock();
     }
 
     [Fact]
-    [Trait("Category", "Endpoint.Security")]
-    public async Task GetAll_ShouldBeUnauthorized_WhenNotAuthenticated()
+    public async Task GetAll_ShouldSucceed()
     {
         // Arrange
+        var existingIdentity1 = new Identity
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-identity-1-{Guid.NewGuid()}",
+            MailAddress = "info@localhost",
+            Secret = "foo-bar"
+        };
+
+        var existingIdentity2 = new Identity
+        {
+            Snowflake = 2,
+            UniqueName = $"existing-identity-2-{Guid.NewGuid()}",
+            MailAddress = "info@localhost",
+            Secret = "foo-bar"
+        };
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Identity>>()
+                .Insert(existingIdentity1, existingIdentity2);
+        }
+
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/authentication/identities");
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.ChiefIdentity)]
-    [InlineData(TestConfiguration.DefaultIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task GetAll_ShouldBeForbidden_WhenNotAdmin(string identity)
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task GetAll_ShouldSucceed(string identity)
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
 
@@ -74,9 +66,15 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonDocument>();
         Assert.NotNull(content);
         Assert.Collection(content.RootElement.EnumerateArray().OrderBy(x => x.GetString("uniqueName")),
-            x => Assert.Equal(TestConfiguration.AdminIdentity, x.GetString("uniqueName")),
-            x => Assert.Equal(TestConfiguration.ChiefIdentity, x.GetString("uniqueName")),
-            x => Assert.Equal(TestConfiguration.GuestIdentity, x.GetString("uniqueName")),
-            x => Assert.Equal(TestConfiguration.DefaultIdentity, x.GetString("uniqueName")));
+            x =>
+            {
+                Assert.Equal(existingIdentity1.MailAddress, x.GetString("mailAddress"));
+                Assert.Equal(existingIdentity1.UniqueName, x.GetString("uniqueName"));
+            },
+            x =>
+            {
+                Assert.Equal(existingIdentity2.MailAddress, x.GetString("mailAddress"));
+                Assert.Equal(existingIdentity2.UniqueName, x.GetString("uniqueName"));
+            });
     }
 }

@@ -18,40 +18,38 @@ public static class BusinessObjectResource
     {
         var resource = endpoints
             .MapGroup("/business-objects")
-            .WithTags("Business Object API");
-
-        resource
-            .MapGet(string.Empty, GetAll)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("member", "observer")
+            .WithTags("Business Object API")
+            .RequireAuthorization(policy => policy
+                .RequireClaim("badge", "member")
                 .RequireClaim("scope", "endpoints"));
 
         resource
+            .MapGet(string.Empty, GetAll)
+            .RequireAuthorization(policy => policy
+                .RequireRole("member", "member-observer"));
+
+        resource
             .MapGet("{businessObject}", Get)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("member", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("member", "member-observer"))
             .WithErrorMessage(CouldNotQueryBusinessObject);
 
         resource
             .MapPost(string.Empty, Post)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotCreateBusinessObject);
 
         resource
             .MapPut("{businessObject}", Put)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotUpdateBusinessObject);
 
         resource
             .MapDelete("{businessObject}", Delete)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotDeleteBusinessObject);
 
         return endpoints;

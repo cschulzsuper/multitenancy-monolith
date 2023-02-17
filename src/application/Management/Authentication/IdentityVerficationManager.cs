@@ -2,18 +2,18 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
-internal sealed class IdentityVerficationManager : IIdentityVerficationManager
+internal sealed class IdentityVerificationManager : IIdentityVerificationManager
 {
     private readonly IByteCache _byteCache;
 
-    public IdentityVerficationManager(IByteCacheFactory byteCacheFactory)
+    public IdentityVerificationManager(IByteCacheFactory byteCacheFactory)
     {
-        _byteCache = byteCacheFactory.Create("identity-verfication");
+        _byteCache = byteCacheFactory.Create("identity-verification");
     }
 
-    public bool Has(IdentityVerficationKey verficationKey, byte[] verfication)
-        => _byteCache.Has($"{verficationKey.Identity}:{verficationKey.Client}", verfication);
+    public bool Has(IdentityVerificationKey verificationKey, byte[] verification)
+        => _byteCache.Has($"{verificationKey.Identity}:{verificationKey.Client}", verification);
 
-    public void Set(IdentityVerficationKey verficationKey, byte[] verfication)
-        => _byteCache.Set($"{verficationKey.Identity}:{verficationKey.Client}", verfication);
+    public void Set(IdentityVerificationKey verificationKey, byte[] verification)
+        => _byteCache.Set($"{verificationKey.Identity}:{verificationKey.Client}", verification);
 }

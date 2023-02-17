@@ -14,20 +14,21 @@ internal static class ObjectTypeResource
     {
         var resource = endpoints
             .MapGroup("/object-types")
-            .WithTags("Object Type API");
+            .WithTags("Object Type API")
+            .RequireAuthorization(policy => policy
+                .RequireClaim("badge", "member")
+                .RequireClaim("scope", "endpoints"));
 
         resource
             .MapGet(string.Empty, GetAll)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("member", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("member", "member-observer"))
             .WithErrorMessage(CouldNotQueryObjectTypes);
 
         resource
             .MapGet("{objectType}", Get)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("member", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("member", "member-observer"))
             .WithErrorMessage(CouldNotQueryObjectType);
 
         return endpoints;

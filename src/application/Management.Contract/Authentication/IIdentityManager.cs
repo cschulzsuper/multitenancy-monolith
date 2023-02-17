@@ -13,6 +13,8 @@ public interface IIdentityManager
 
     IQueryable<Identity> GetAll();
 
+    ValueTask<bool> ExistsAsync(string identity, string secret);
+
     ValueTask InsertAsync(Identity identity);
 
     ValueTask UpdateAsync(long snowflake, Action<Identity> action);
@@ -22,4 +24,5 @@ public interface IIdentityManager
     ValueTask DeleteAsync(long snowflake);
 
     ValueTask DeleteAsync(string uniqueName);
+    
 }

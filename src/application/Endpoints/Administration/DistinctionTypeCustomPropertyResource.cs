@@ -18,41 +18,39 @@ internal static class DistinctionTypeCustomPropertyResource
     {
         var resource = endpoints
             .MapGroup("/distinction-types/{distinctionType}/custom-properties")
-            .WithTags("Distinction Type Custom Property API");
+            .WithTags("Distinction Type Custom Property API")
+            .RequireAuthorization(policy => policy
+                .RequireClaim("badge", "member")
+                .RequireClaim("scope", "endpoints"));
 
         resource
             .MapGet(string.Empty, GetAll)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("member", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("member", "member-observer"))
             .WithErrorMessage(CouldNotQueryDistinctionTypeCustomProperties);
 
         resource
             .MapGet("{customProperty}", Get)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("member", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("member", "member-observer"))
             .WithErrorMessage(CouldNotQueryDistinctionTypeCustomProperty);
 
         resource
             .MapPost(string.Empty, Post)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotCreateDistinctionTypeCustomProperty);
 
         resource
             .MapPut("{customProperty}", Put)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotUpdateDistinctionTypeCustomProperty);
 
         resource
             .MapDelete("{customProperty}", Delete)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotDeleteDistinctionTypeCustomProperty);
 
         return endpoints;

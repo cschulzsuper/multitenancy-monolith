@@ -9,6 +9,8 @@ internal static class IdentityValidation
     private readonly static Validator<Identity> _insertValidator;
     private readonly static Validator<Identity> _updateValidator;
 
+    private readonly static Validator<string> _identityValidator;
+
     static IdentityValidation()
     {
         _insertValidator = new Validator<Identity>();
@@ -22,6 +24,9 @@ internal static class IdentityValidation
         _updateValidator.AddRules(x => x.UniqueName, UniqueNameValidator.CreateRules());
         _updateValidator.AddRules(x => x.Secret, SecretValidator.CreateRules());
         _updateValidator.AddRules(x => x.MailAddress, MailAddressValidator.CreateRules());
+
+        _identityValidator = new Validator<string>();
+        _identityValidator.AddRules(x => x, UniqueNameValidator.CreateRules("identity"));
     }
 
     internal static void EnsureInsertable(Identity identity)
@@ -33,7 +38,7 @@ internal static class IdentityValidation
     internal static void EnsureSnowflake(long snowflake)
         => SnowflakeValidator.Ensure(snowflake);
 
-    internal static void EnsureUniqueName(string uniqueName)
-        => UniqueNameValidator.Ensure(uniqueName);
+    internal static void EnsureIdentity(string identity)
+        => _identityValidator.Ensure(identity);
 
 }

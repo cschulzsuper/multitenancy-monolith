@@ -9,6 +9,12 @@
 
 * `endpoint-tests`
 
-  The `endpoint-tests` must provide this value during authentication. 
+  The `endpoint-tests` must use this value for testing. 
 
   * The `endpoints-tests` client will have the `endpoints` `scope` to access all `endpoints`.
+
+* `security-tests`
+
+  The `security-tests` must use this value for testing. 
+
+  * The `security-tests` client will have the `endpoints` `scope` to access all `endpoints`.

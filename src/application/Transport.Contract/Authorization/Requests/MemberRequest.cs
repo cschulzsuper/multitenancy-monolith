@@ -6,4 +6,7 @@ public class MemberRequest
 {
     [UniqueName]
     public required string UniqueName { get; init; }
+
+    [MailAddress]
+    public required string MailAddress { get; init; }
 }

@@ -5,10 +5,15 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using ChristianSchulz.MultitenancyMonolith.Server;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.DistinctionTypeCustomPropertyResource;
+namespace Administration.DistinctionTypeCustomPropertyResource;
 
 public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -16,101 +21,11 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
     public Post(WebApplicationFactory<Program> factory)
     {
-        _factory = factory.WithInMemoryData();
+        _factory = factory.Mock();
     }
 
     [Fact]
-    [Trait("Category", "Endpoint.Security")]
-    public async Task Post_ShouldBeUnauthorized_WhenNotAuthenticated()
-    {
-        // Arrange
-        var validDistinctionType = "required-distinction-type";
-
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/distinction-types/{validDistinctionType}/custom-properties");
-
-        var postDistinctionTypeCustomProperty = new
-        {
-            UniqueName = "post-distinction-type-custom-property"
-        };
-
-        request.Content = JsonContent.Create(postDistinctionTypeCustomProperty);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.DefaultIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Post_ShouldBeForbidden_WhenNotAuthorized(string identity)
-    {
-        // Arrange
-        var validDistinctionType = "required-distinction-type";
-
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/distinction-types/{validDistinctionType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var postDistinctionTypeCustomProperty = new
-        {
-            UniqueName = "post-distinction-type-custom-property"
-        };
-
-        request.Content = JsonContent.Create(postDistinctionTypeCustomProperty);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Post_ShouldBeForbidden_WhenNotChief(string identity, string group, string member)
-    {
-        // Arrange
-        var validDistinctionType = "required-distinction-type";
-
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/distinction-types/{validDistinctionType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
-
-        var postDistinctionTypeCustomProperty = new
-        {
-            UniqueName = "post-distinction-type-custom-property"
-        };
-
-        request.Content = JsonContent.Create(postDistinctionTypeCustomProperty);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Post_ShouldSucceed_WhenValid(string identity, string group, string member)
+    public async Task Post_ShouldSucceed_WhenValid()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -121,7 +36,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -129,7 +44,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
         {
@@ -149,10 +64,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
-            x => Assert.Equal(("distinctionType", existingDistinctionType.UniqueName), (x.Key, (string?) x.Value)),
-            x => Assert.Equal(("uniqueName", postDistinctionTypeCustomProperty.UniqueName), (x.Key, (string?) x.Value)));
+            x => Assert.Equal(("distinctionType", existingDistinctionType.UniqueName), (x.Key, (string?)x.Value)),
+            x => Assert.Equal(("uniqueName", postDistinctionTypeCustomProperty.UniqueName), (x.Key, (string?)x.Value)));
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var createdDistinctionTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -165,17 +80,14 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Post_ShouldFail_WhenInvalidDistinctionType(string identity, string group, string member)
+    [Fact]
+    public async Task Post_ShouldFail_WhenInvalidDistinctionType()
     {
         // Arrange
         var invalidDistinctionType = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/distinction-types/{invalidDistinctionType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
         {
@@ -194,11 +106,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Post_ShouldFail_WhenUniqueNameExists(string identity, string group, string member)
+    [Fact]
+    public async Task Post_ShouldFail_WhenUniqueNameExists()
     {
         // Arrange
         var existingDistinctionTypeCustomProperty = new DistinctionTypeCustomProperty
@@ -218,7 +127,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -226,7 +135,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
         {
@@ -245,11 +154,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Post_ShouldFail_WhenUniqueNameNull(string identity, string group, string member)
+    [Fact]
+    public async Task Post_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -260,7 +166,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -268,11 +174,11 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
         {
-            UniqueName = (string?) null
+            UniqueName = (string?)null
         };
 
         request.Content = JsonContent.Create(postDistinctionTypeCustomProperty);
@@ -286,7 +192,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var createdDistinctionTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -301,11 +207,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Post_ShouldFail_WhenUniqueNameEmpty(string identity, string group, string member)
+    [Fact]
+    public async Task Post_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -316,7 +219,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -324,7 +227,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
         {
@@ -342,7 +245,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var createdDistinctionTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -357,11 +260,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Post_ShouldFail_WhenUniqueNameTooLong(string identity, string group, string member)
+    [Fact]
+    public async Task Post_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -372,7 +272,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -380,7 +280,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
         {
@@ -398,7 +298,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var createdDistinctionTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -413,11 +313,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Post_ShouldFail_WhenUniqueNameInvalid(string identity, string group, string member)
+    [Fact]
+    public async Task Post_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -428,7 +325,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -436,7 +333,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
         {
@@ -454,7 +351,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var createdDistinctionTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()

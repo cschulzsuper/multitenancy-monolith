@@ -9,17 +9,19 @@ public interface IMemberManager
 {
     ValueTask<Member> GetAsync(long snowflake);
 
-    ValueTask<Member> GetAsync(string uniqueName);
+    ValueTask<Member> GetAsync(string member);
+
+    ValueTask<Member?> GetOrDefaultAsync(string member);
 
     IAsyncEnumerable<Member> GetAsyncEnumerable();
 
-    ValueTask InsertAsync(Member member);
+    ValueTask InsertAsync(Member @object);
 
     ValueTask UpdateAsync(long snowflake, Action<Member> action);
 
-    ValueTask UpdateAsync(string uniqueName, Action<Member> action);
+    ValueTask UpdateAsync(string member, Action<Member> action);
 
     ValueTask DeleteAsync(long snowflake);
 
-    ValueTask DeleteAsync(string uniqueName);
+    ValueTask DeleteAsync(string member);
 }

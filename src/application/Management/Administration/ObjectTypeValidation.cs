@@ -10,12 +10,12 @@ internal static class ObjectTypeValidation
     private readonly static Validator<ObjectType> _insertValidator;
     private readonly static Validator<ObjectType> _updateValidator;
 
-    private readonly static Validator<string> _unqiueNameValidator;
+    private readonly static Validator<string> _uniqueNameValidator;
 
     static ObjectTypeValidation()
     {
-        _unqiueNameValidator = new Validator<string>();
-        _unqiueNameValidator.AddRules(x => x, ObjectTypeValidator.CreateRules("unique name"));
+        _uniqueNameValidator = new Validator<string>();
+        _uniqueNameValidator.AddRules(x => x, ObjectTypeValidator.CreateRules("unique name"));
 
         _insertValidator = new Validator<ObjectType>();
         _insertValidator.AddRules(x => x.Snowflake, ZeroValidator<long>.CreateRules("snowflake"));
@@ -51,5 +51,5 @@ internal static class ObjectTypeValidation
         => SnowflakeValidator.Ensure(snowflake);
 
     public static void EnsureUniqueName(string uniqueName)
-        => _unqiueNameValidator.Ensure(uniqueName);
+        => _uniqueNameValidator.Ensure(uniqueName);
 }

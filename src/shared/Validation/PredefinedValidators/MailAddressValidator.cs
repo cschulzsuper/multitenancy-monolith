@@ -19,6 +19,7 @@ public sealed class MailAddressValidator
         {
             new NotNull(field),
             new NotEmpty(field),
+            new LowerCase(field),
             new MailAddress(field)
         };
 

@@ -1,4 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Authentication;
 

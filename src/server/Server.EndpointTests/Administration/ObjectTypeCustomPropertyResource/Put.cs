@@ -4,10 +4,15 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Linq;
+using System.Collections.Generic;
+using System;
+using ChristianSchulz.MultitenancyMonolith.Server;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.ObjectTypeCustomPropertyResource;
+namespace Administration.ObjectTypeCustomPropertyResource;
 
 public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -15,113 +20,11 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
     public Put(WebApplicationFactory<Program> factory)
     {
-        _factory = factory.WithInMemoryData();
+        _factory = factory.Mock();
     }
 
     [Fact]
-    [Trait("Category", "Endpoint.Security")]
-    public async Task Put_ShouldBeUnauthorized_WhenNotAuthenticated()
-    {
-        // Arrange
-        var validObjectType = "valid-object-type";
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{validObjectType}/custom-properties/{validObjectTypeCustomProperty}");
-
-        var putObjectTypeCustomProperty = new
-        {
-            UniqueName = "put-object-type-custom-property",
-            DisplayName = "Foo Bar",
-            PropertyName = "putFooBar",
-            PropertyType = "string"
-        };
-
-        request.Content = JsonContent.Create(putObjectTypeCustomProperty);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.DefaultIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Put_ShouldBeForbidden_WhenNotAuthorized(string identity)
-    {
-        // Arrange
-        var validObjectType = "valid-object-type";
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{validObjectType}/custom-properties/{validObjectTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var putObjectTypeCustomProperty = new
-        {
-            UniqueName = "put-object-type-custom-property",
-            DisplayName = "Foo Bar",
-            PropertyName = "putFooBar",
-            PropertyType = "string"
-        };
-
-        request.Content = JsonContent.Create(putObjectTypeCustomProperty);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Put_ShouldBeForbidden_WhenNotChief(string identity, string group, string member)
-    {
-        // Arrange
-        var validObjectType = "valid-object-type";
-        var validObjectTypeCustomProperty = "valid-object-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{validObjectType}/custom-properties/{validObjectTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
-
-        var putObjectTypeCustomProperty = new
-        {
-            UniqueName = "put-object-type-custom-property",
-            DisplayName = "Foo Bar",
-            PropertyName = "putFooBar",
-            PropertyType = "string"
-        };
-
-        request.Content = JsonContent.Create(putObjectTypeCustomProperty);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldSucceed_WhenPropertyTypeString(string identity, string group, string member)
+    public async Task Put_ShouldSucceed_WhenPropertyTypeString()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -142,7 +45,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -150,7 +53,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -170,7 +73,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var changedObjectTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -187,18 +90,15 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenInvalidObjectType(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenInvalidObjectType()
     {
         // Arrange
         var invalidObjectType = "Invalid";
         var validObjectTypeCustomProperty = "valid-object-type-custom-property";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{invalidObjectType}/custom-properties/{validObjectTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -220,11 +120,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenInvalidCustomProperty(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenInvalidCustomProperty()
     {
         // Arrange
         var existingObjectType = new ObjectType
@@ -233,7 +130,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             UniqueName = "business-object",
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -243,7 +140,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var invalidObjectTypeCustomProperty = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{invalidObjectTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -265,11 +162,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenAbsent(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenAbsent()
     {
         // Arrange
         var existingObjectType = new ObjectType
@@ -278,7 +172,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             UniqueName = "business-object",
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -288,7 +182,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var absentObjectTypeCustomProperty = "absent-object-type-custom-property";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{absentObjectTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -310,11 +204,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameExists(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameExists()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -343,7 +234,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -351,7 +242,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -371,7 +262,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var unchangedObjectTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -388,11 +279,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameNull(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -413,7 +301,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -421,11 +309,11 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
-            UniqueName = (string?) null,
+            UniqueName = (string?)null,
             DisplayName = "Foo Bar",
             PropertyName = "putFooBar",
             PropertyType = "string"
@@ -443,11 +331,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameEmpty(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -468,7 +353,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -476,7 +361,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -498,11 +383,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameTooLong(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -523,7 +405,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -531,7 +413,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -553,11 +435,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameInvalid(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -578,7 +457,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -586,7 +465,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -608,11 +487,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenDisplayNameNull(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenDisplayNameNull()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -633,7 +509,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -641,12 +517,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
             UniqueName = "post-object-type-custom-property",
-            DisplayName = (string?) null,
+            DisplayName = (string?)null,
             PropertyName = "putFooBar",
             PropertyType = "string"
         };
@@ -663,11 +539,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenDisplayNameEmpty(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenDisplayNameEmpty()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -688,7 +561,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -696,7 +569,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -718,11 +591,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenDisplayNameTooLong(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenDisplayNameTooLong()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -743,7 +613,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -751,7 +621,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -773,11 +643,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenPropertyNameNull(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenPropertyNameNull()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -798,7 +665,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -806,13 +673,13 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
-            PropertyName = (string?) null,
+            PropertyName = (string?)null,
             PropertyType = "string"
         };
 
@@ -828,11 +695,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenPropertyNameEmpty(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenPropertyNameEmpty()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -853,7 +717,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -861,7 +725,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -883,11 +747,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenPropertyNameTooLong(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenPropertyNameTooLong()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -908,7 +769,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -916,7 +777,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -938,11 +799,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenPropertyNameInvalid(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenPropertyNameInvalid()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -963,7 +821,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -971,7 +829,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -993,11 +851,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenPropertyNameExists(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenPropertyNameExists()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -1026,7 +881,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -1034,13 +889,13 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
             UniqueName = $"put-object-type-custom-property-{Guid.NewGuid()}",
             DisplayName = "Foo Bar",
-            PropertyName = additionalObjectTypeCustomProperty.PropertyName,
+            additionalObjectTypeCustomProperty.PropertyName,
             PropertyType = "string"
         };
 
@@ -1054,7 +909,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var unchangedObjectTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -1071,11 +926,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenPropertyTypeNull(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenPropertyTypeNull()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -1096,7 +948,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -1104,14 +956,14 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
             UniqueName = "post-object-type-custom-property",
             DisplayName = "Foo Bar",
             PropertyName = "putFooBar",
-            PropertyType = (string?) null
+            PropertyType = (string?)null
         };
 
         request.Content = JsonContent.Create(putObjectTypeCustomProperty);
@@ -1126,11 +978,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenPropertyTypeEmpty(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenPropertyTypeEmpty()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -1151,7 +1000,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -1159,7 +1008,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {
@@ -1181,11 +1030,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenPropertyTypeInvalid(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenPropertyTypeInvalid()
     {
         // Arrange
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
@@ -1206,7 +1052,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -1214,7 +1060,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/administration/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
         {

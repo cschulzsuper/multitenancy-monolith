@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 
-public static class _Services
+public static class AuthorizationTransportServices
 {
     public static IServiceCollection AddAuthorizationTransport(this IServiceCollection services)
     {

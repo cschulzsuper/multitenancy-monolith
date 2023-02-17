@@ -4,10 +4,15 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System;
+using System.Linq;
+using ChristianSchulz.MultitenancyMonolith.Server;
+using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authorization.MemberResource;
+namespace Authorization.MemberResource;
 
 public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -15,109 +20,21 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
     public Put(WebApplicationFactory<Program> factory)
     {
-        _factory = factory.WithInMemoryData();
+        _factory = factory.Mock();
     }
 
     [Fact]
-    [Trait("Category", "Endpoint.Security")]
-    public async Task Put_ShouldBeUnauthorized_WhenNotAuthenticated()
-    {
-        // Arrange
-        var validMember = "valid-member";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{validMember}");
-
-        var putMember = new
-        {
-            UniqueName = "put-member"
-        };
-
-        request.Content = JsonContent.Create(putMember);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.DefaultIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Put_ShouldBeForbidden_WhenNotAuthorized(string identity)
-    {
-        // Arrange
-        var validMember = "valid-member";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{validMember}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var putMember = new
-        {
-            UniqueName = "put-member"
-        };
-
-        request.Content = JsonContent.Create(putMember);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Put_ShouldBeForbidden_WhenNotChief(string identity, string group, string member)
-    {
-        // Arrange
-        var validMember = "valid-member";
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{validMember}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
-
-        var putMember = new
-        {
-            UniqueName = "put-member"
-        };
-
-        request.Content = JsonContent.Create(putMember);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldSucceed_WhenValid(string identity, string group, string member)
+    public async Task Put_ShouldSucceed_WhenValid()
     {
         // Arrange
         var existingMember = new Member
         {
             Snowflake = 1,
-            UniqueName = $"existing-member-{Guid.NewGuid()}"
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "default@localhost.local"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -125,11 +42,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putMember = new
         {
-            UniqueName = $"put-member-{Guid.NewGuid()}"
+            UniqueName = $"put-member-{Guid.NewGuid()}",
+            MailAddress = "default@localhost.local"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -142,7 +60,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var changedMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -155,21 +73,19 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenInvalid(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenInvalid()
     {
         // Arrange
         var invalidMember = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{invalidMember}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putMember = new
         {
-            UniqueName = "put-member"
+            UniqueName = "put-member",
+            MailAddress = "default@localhost.local"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -184,21 +100,19 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenAbsent(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenAbsent()
     {
         // Arrange
         var absentMember = "absent-member";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{absentMember}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putMember = new
         {
-            UniqueName = "put-member"
+            UniqueName = "put-member",
+            MailAddress = "default@localhost.local"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -213,26 +127,25 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameExists(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameExists()
     {
         // Arrange
         var existingMember = new Member
         {
             Snowflake = 1,
-            UniqueName = $"existing-identity-{Guid.NewGuid()}"
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "default@localhost.local",
         };
 
         var additionalMember = new Member
         {
             Snowflake = 2,
-            UniqueName = $"additional-identity-{Guid.NewGuid()}"
+            UniqueName = $"additional-member-{Guid.NewGuid()}",
+            MailAddress = "default@localhost.local"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -240,11 +153,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putMember = new
         {
-            UniqueName = additionalMember.UniqueName
+            UniqueName = additionalMember.UniqueName,
+            MailAddress = "default@localhost.local"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -257,7 +171,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var unchangedMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -270,20 +184,18 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameNull(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
         var existingMember = new Member
         {
             Snowflake = 1,
-            UniqueName = $"existing-identity-{Guid.NewGuid()}"
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "default@localhost.local"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -291,11 +203,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putMember = new
         {
-            UniqueName = (string?) null
+            UniqueName = (string?)null,
+            MailAddress = "default@localhost.local"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -310,20 +223,18 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameEmpty(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
         var existingMember = new Member
         {
             Snowflake = 1,
-            UniqueName = $"existing-identity-{Guid.NewGuid()}"
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "default@localhost.local"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -331,11 +242,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putMember = new
         {
-            UniqueName = string.Empty
+            UniqueName = string.Empty,
+            MailAddress = "default@localhost.local"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -350,20 +262,18 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameTooLong(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
         var existingMember = new Member
         {
             Snowflake = 1,
-            UniqueName = $"existing-identity-{Guid.NewGuid()}"
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "default@localhost.local"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -371,11 +281,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putMember = new
         {
             UniqueName = new string(Enumerable.Repeat('a', 141).ToArray()),
+            MailAddress = "default@localhost.local"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -390,20 +301,18 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Put_ShouldFail_WhenUniqueNameInvalid(string identity, string group, string member)
+    [Fact]
+    public async Task Put_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
         var existingMember = new Member
         {
             Snowflake = 1,
-            UniqueName = $"existing-identity-{Guid.NewGuid()}"
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "default@localhost.local"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<Member>>()
@@ -411,11 +320,207 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putMember = new
         {
             UniqueName = "Invalid",
+            MailAddress = "default@localhost.local"
+        };
+
+        request.Content = JsonContent.Create(putMember);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Put_ShouldFail_WhenMailAddressNull()
+    {
+        // Arrange
+        var existingMember = new Member
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost"
+        };
+
+        using (var scope = _factory.CreateMultitenancyScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .Insert(existingMember);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var putMember = new
+        {
+            UniqueName = "put-member",
+            MailAddress = (string?)null
+        };
+
+        request.Content = JsonContent.Create(putMember);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Put_ShouldFail_WhenMailAddressEmpty()
+    {
+        // Arrange
+        var existingMember = new Member
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost"
+        };
+
+        using (var scope = _factory.CreateMultitenancyScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .Insert(existingMember);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var putMember = new
+        {
+            UniqueName = "put-member",
+            MailAddress = string.Empty
+        };
+
+        request.Content = JsonContent.Create(putMember);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Put_ShouldFail_WhenMailAddressTooLongEmpty()
+    {
+        // Arrange
+        var existingMember = new Member
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost"
+        };
+
+        using (var scope = _factory.CreateMultitenancyScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .Insert(existingMember);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var putMember = new
+        {
+            UniqueName = "put-member",
+            MailAddress = $"{new string(Enumerable.Repeat('a', 64).ToArray())}@{new string(Enumerable.Repeat('a', 190).ToArray())}"
+        };
+
+        request.Content = JsonContent.Create(putMember);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Put_ShouldFail_WhenMailAddressLocalPartTooLongEmpty()
+    {
+        // Arrange
+        var existingMember = new Member
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost"
+        };
+
+        using (var scope = _factory.CreateMultitenancyScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .Insert(existingMember);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var putMember = new
+        {
+            UniqueName = "put-member",
+            MailAddress = $"{new string(Enumerable.Repeat('a', 65).ToArray())}@{new string(Enumerable.Repeat('a', 1).ToArray())}"
+        };
+
+        request.Content = JsonContent.Create(putMember);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Put_ShouldFail_WhenMailAddressInvalid()
+    {
+        // Arrange
+        var existingMember = new Member
+        {
+            Snowflake = 1,
+            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            MailAddress = "existing-info@localhost"
+        };
+
+        using (var scope = _factory.CreateMultitenancyScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<Member>>()
+                .Insert(existingMember);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/authorization/members/{existingMember.UniqueName}");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var putMember = new
+        {
+            UniqueName = "put-member",
+            MailAddress = "put-foo-bar"
         };
 
         request.Content = JsonContent.Create(putMember);

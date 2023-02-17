@@ -1,39 +1,38 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
+using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
+[SuppressMessage("Style", "IDE1006:Naming Styles")]
 public static class _Configure
 {
     private const string IdentitiesConfigurationKey
         = "SeedData:Authentication:Identities";
 
-    private const string MembershipsConfigurationKey
-        = "SeedData:Administration:Memberships";
-
     private const string MembersConfigurationKey
         = "SeedData:Administration:Members";
 
-    public static IServiceProvider ConfigureData(this IServiceProvider services)
-    {
-        services.ConfigureIdentities();
-        services.ConfigureGroups();
-        services.ConfigureMembers();
-        services.ConfigureMemberships();
-
-        return services;
-    }
+    private const string TickerUsersConfigurationKey
+        = "SeedData:Ticker:TickerUsers";
 
     public static IServiceProvider ConfigureIdentities(this IServiceProvider services)
     {
         var identities = services
                              .GetRequiredService<IConfiguration>()
-                             .GetRequiredSection(IdentitiesConfigurationKey)
-                             .Get<Identity[]>()
-                         ?? throw new UnreachableException($"Could not get `{IdentitiesConfigurationKey}` configuration");
+                             .GetSection(IdentitiesConfigurationKey)?
+                             .Get<Identity[]>();
+
+        if (identities == null)
+        {
+            return services;
+        }
 
         using var scope = services.CreateScope();
 
@@ -48,7 +47,11 @@ public static class _Configure
     {
         var configuration = services.GetRequiredService<IConfiguration>();
 
-        var groupSections = configuration.GetRequiredSection(MembersConfigurationKey).GetChildren();
+        var groupSections = configuration.GetSection(MembersConfigurationKey)?.GetChildren();
+        if (groupSections == null)
+        {
+            return services;
+        }
 
         var groups = groupSections
             .Select(group => new Group {UniqueName = group.Key})
@@ -67,7 +70,11 @@ public static class _Configure
     {
         var configuration = services.GetRequiredService<IConfiguration>();
 
-        var groupSections = configuration.GetRequiredSection(MembersConfigurationKey).GetChildren();
+        var groupSections = configuration.GetSection(MembersConfigurationKey)?.GetChildren();
+        if (groupSections == null)
+        {
+            return services;
+        }
 
         var groupedMembers = groupSections
             .ToDictionary(
@@ -88,46 +95,30 @@ public static class _Configure
         return services;
     }
 
-    public static IServiceProvider ConfigureMemberships(this IServiceProvider services)
+    public static IServiceProvider ConfigureTickerUsers(this IServiceProvider services)
     {
-        var memberships = services
-                              .GetRequiredService<IConfiguration>()
-                              .GetRequiredSection(MembershipsConfigurationKey)
-                              .Get<Membership[]>()
-                          ?? throw new UnreachableException($"Could not get `{MembershipsConfigurationKey}` configuration");
+        var configuration = services.GetRequiredService<IConfiguration>();
 
-        Group[] groups;
-        Identity[] identities;
-
-        using (var scope = services.CreateScope())
+        var groupSections = configuration.GetSection(TickerUsersConfigurationKey)?.GetChildren();
+        if (groupSections == null)
         {
-            groups = scope.ServiceProvider
-                .GetRequiredService<IRepository<Group>>()
-                .GetQueryable()
-                .ToArray();
-
-            identities = scope.ServiceProvider
-                .GetRequiredService<IRepository<Identity>>()
-                .GetQueryable()
-                .ToArray();
+            return services;
         }
 
-        foreach (var group in groups)
+        var groupedTickerUsers = groupSections
+            .ToDictionary(
+                group => group.Key,
+                group => group.Get<TickerUser[]>() ?? throw new UnreachableException($"Could not get `{TickerUsersConfigurationKey}` configuration for group `{group.Key}`"));
+
+        foreach (var group in groupedTickerUsers.Keys)
         {
-            using var scope = services.CreateMultitenancyScope(group.UniqueName);
+            var tickerUsers = groupedTickerUsers[group];
 
-            var members = scope.ServiceProvider
-                .GetRequiredService<IRepository<Member>>()
-                .GetQueryable()
-                .ToArray();
-
-            var membershipsForGroup = memberships
-                .Where(membership => membership.Group == group.UniqueName)
-                .ToArray();
+            using var scope = services.CreateMultitenancyScope(group);
 
             scope.ServiceProvider
-                .GetRequiredService<IRepository<Membership>>()
-                .Insert(membershipsForGroup);
+                .GetRequiredService<IRepository<TickerUser>>()
+                .Insert(tickerUsers);
         }
 
         return services;

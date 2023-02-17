@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data;

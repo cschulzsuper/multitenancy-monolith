@@ -13,11 +13,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\shared\Security\Security.csproj" />
+		<ProjectReference Include="..\..\shared\Security.Authentication.Badge\Security.Authentication.Badge.csproj" />
 		<ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
 	</ItemGroup>
 

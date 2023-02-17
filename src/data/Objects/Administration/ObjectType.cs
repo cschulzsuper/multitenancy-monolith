@@ -1,5 +1,14 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Objects.Administration;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace ChristianSchulz.MultitenancyMonolith.Objects.Administration;
+
+[ObjectAnnotation("object-type",
+    DisplayName = "Object Type",
+    Area = "administration",
+    Collection = "object-types")]
 public sealed class ObjectType : ICloneable
 {
     public object Clone()

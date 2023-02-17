@@ -4,9 +4,7 @@ using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 using ChristianSchulz.MultitenancyMonolith.Application.Business;
 using ChristianSchulz.MultitenancyMonolith.Caching;
-using ChristianSchulz.MultitenancyMonolith.Server.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
-using ChristianSchulz.MultitenancyMonolith.Server.SwaggerUI;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 using Microsoft.AspNetCore.Builder;
@@ -20,7 +18,9 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
-using ChristianSchulz.MultitenancyMonolith.Server.JsonConversion;
+using ChristianSchulz.MultitenancyMonolith.Server.Security;
+using ChristianSchulz.MultitenancyMonolith.Server.Middleware;
+using ChristianSchulz.MultitenancyMonolith.Server.Json;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
@@ -35,14 +35,16 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => { options.SerializerOptions.Converters.Add(new ObjectJsonConverter()); });
+        services.ConfigureJsonOptions();
 
         services.AddAuthentication().AddBadge(options => options.Configure());
-        services.AddRequestUser();
         services.AddAuthorization();
 
+        services.AddCors();
+
+        services.AddRequestUser();
+
         services.AddEndpointsApiExplorer();
-        services.AddHttpContextAccessor();
 
         services.AddSwaggerGen(options =>
         {
@@ -52,7 +54,12 @@ public class Startup
         });
 
         services.AddCaching();
-        services.AddData();
+
+        services.AddStaticDictionary();
+        services.AddStaticDictionaryAdministrationData();
+        services.AddStaticDictionaryAuthenticationData();
+        services.AddStaticDictionaryAuthorizationData();
+        services.AddStaticDictionaryBusinessData();
 
         services.AddAdministrationManagement();
         services.AddAdministrationTransport();
@@ -71,24 +78,20 @@ public class Startup
     {
         if (!_environment.IsProduction())
         {
-            app.ApplicationServices.ConfigureData();
+            app.ApplicationServices.ConfigureIdentities();
+            app.ApplicationServices.ConfigureGroups();
+            app.ApplicationServices.ConfigureMembers();
         }
 
         app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
 
         app.UseHttpsRedirection();
 
-        if (!_environment.IsProduction())
-        {
-            app.UseSwaggerUI(options =>
-            {
-                options.ConfigureSwaggerEndpoints();
-                options.UseAccessTokenRequestInterceptor();
-            });
-        }
-
         app.UseRouting();
 
+        app.UseCors(config => config.WithOrigins("https://localhost:7272"));
+
+        app.UseAuthenticationScope();
         app.UseAuthentication();
         app.UseAuthorization();
 
@@ -101,20 +104,20 @@ public class Startup
             else
             {
                 endpoints.MapSwagger()
-                    .RequireAuthorization(ploicy => ploicy
+                    .RequireAuthorization(policy => policy
                         .RequireClaim("scope", "swagger-json"));
             }
 
             var apiEndpoints = endpoints.MapGroup("api");
 
             apiEndpoints.MapAdministrationEndpoints();
-            apiEndpoints.MapAuthorizationEndpoints();
             apiEndpoints.MapAuthenticationEndpoints();
+            apiEndpoints.MapAuthorizationEndpoints();
             apiEndpoints.MapBusinessEndpoints();
         });
     }
 
-    public async Task HandleError(HttpContext context)
+    private static async Task HandleError(HttpContext context)
     {
         ProblemDetails problem;
 
@@ -139,6 +142,7 @@ public class Startup
             var statusCode = (exception, exceptionErrorCode) switch
             {
                 (NotImplementedException, _) => StatusCodes.Status501NotImplemented,
+                (BadHttpRequestException, _) => StatusCodes.Status400BadRequest,
 
                 (_, "object-not-found") => StatusCodes.Status404NotFound,
                 (_, "security") => StatusCodes.Status403Forbidden,

@@ -1,5 +1,14 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Objects.Administration;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace ChristianSchulz.MultitenancyMonolith.Objects.Administration;
+
+[ObjectAnnotation("distinction-type",
+    DisplayName = "Distinction Type",
+    Area = "administration",
+    Collection = "distinction-types")]
 public sealed class DistinctionType : ICloneable
 {
     public object Clone()

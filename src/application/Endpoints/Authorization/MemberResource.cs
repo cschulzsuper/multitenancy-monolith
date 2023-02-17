@@ -18,41 +18,39 @@ internal static class MemberResource
     {
         var resource = endpoints
             .MapGroup("/members")
-            .WithTags("Member API");
+            .WithTags("Member API")
+            .RequireAuthorization(policy => policy
+                .RequireClaim("badge", "member")
+                .RequireClaim("scope", "endpoints"));
 
         resource
             .MapGet(string.Empty, GetAll)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief", "chief-observer"))
             .WithErrorMessage(CouldNotQueryMembers);
 
         resource
             .MapGet("{member}", Get)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief", "chief-observer"))
             .WithErrorMessage(CouldNotQueryMember);
 
         resource
             .MapPost(string.Empty, Post)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotCreateMember);
 
         resource
             .MapPut("{member}", Put)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotUpdateMember);
 
         resource
             .MapDelete("{member}", Delete)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotDeleteMember);
 
         return endpoints;

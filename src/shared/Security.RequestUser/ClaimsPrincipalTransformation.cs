@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 

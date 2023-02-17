@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel;
@@ -49,6 +50,18 @@ public sealed class ModelException : Exception
         var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
 
         var exception = new ModelException($"Property name '{propertyName}' of object '{objectType}' causes conflict.");
+
+        exception.Data["error-code"] = "object-conflict";
+
+        throw exception;
+    }
+
+    [DoesNotReturn]
+    public static void ThrowMailAddressConflict<TEntity>(string mailAddress)
+    {
+        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+
+        var exception = new ModelException($"Mail address '{mailAddress}' of object '{objectType}' causes conflict.");
 
         exception.Data["error-code"] = "object-conflict";
 

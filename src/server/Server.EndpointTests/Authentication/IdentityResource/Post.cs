@@ -1,13 +1,18 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentityResource;
+namespace Authentication.IdentityResource;
 
 public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -15,73 +20,15 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
     public Post(WebApplicationFactory<Program> factory)
     {
-        _factory = factory.WithInMemoryData();
+        _factory = factory.Mock();
     }
 
     [Fact]
-    [Trait("Category", "Endpoint.Security")]
-    public async Task Post_ShouldBeUnauthorized_WhenNotAuthenticated()
+    public async Task Post_ShouldSucceed_WhenValid()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-
-        var postIdentity = new
-        {
-            UniqueName = "post-identity",
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
-        };
-
-        request.Content = JsonContent.Create(postIdentity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.ChiefIdentity)]
-    [InlineData(TestConfiguration.DefaultIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Post_ShouldBeForbidden_WhenNotAdmin(string identity)
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var postIdentity = new
-        {
-            UniqueName = "post-identity",
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
-        };
-
-        request.Content = JsonContent.Create(postIdentity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldSucceed_WhenValid(string identity)
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
@@ -103,8 +50,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
-            x => Assert.Equal(("mailAddress", postIdentity.MailAddress), (x.Key, (string?) x.Value)),
-            x => Assert.Equal(("uniqueName", postIdentity.UniqueName), (x.Key, (string?) x.Value)));
+            x => Assert.Equal(("mailAddress", postIdentity.MailAddress), (x.Key, (string?)x.Value)),
+            x => Assert.Equal(("uniqueName", postIdentity.UniqueName), (x.Key, (string?)x.Value)));
 
         using (var scope = _factory.Services.CreateScope())
         {
@@ -120,10 +67,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenUniqueNameExists(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenUniqueNameExists()
     {
         // Arrange
         var existingIdentity = new Identity
@@ -142,11 +87,11 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
-            UniqueName = existingIdentity.UniqueName,
+            existingIdentity.UniqueName,
             MailAddress = "info@localhost",
             Secret = "foo-bar"
         };
@@ -177,18 +122,16 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenUniqueNameNull(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
-            UniqueName = (string?) null,
+            UniqueName = (string?)null,
             MailAddress = "info@localhost",
             Secret = "foo-bar"
         };
@@ -214,14 +157,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdIdentity);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenUniqueNameEmpty(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
@@ -251,14 +192,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdIdentity);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenUniqueNameTooLong(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
@@ -288,14 +227,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdIdentity);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenUniqueNameInvalid(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
@@ -325,20 +262,18 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdIdentity);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenSecretNull(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenSecretNull()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
             UniqueName = "post-identity",
             MailAddress = "info@localhost",
-            Secret = (string?) null,
+            Secret = (string?)null,
         };
 
         request.Content = JsonContent.Create(postIdentity);
@@ -362,14 +297,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdIdentity);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenSecretEmpty(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenSecretEmpty()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
@@ -399,14 +332,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdIdentity);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenSecretTooLong(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenSecretTooLong()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
@@ -436,19 +367,17 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdIdentity);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenMailAddressNull(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenMailAddressNull()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
             UniqueName = "post-identity",
-            MailAddress = (string?) null,
+            MailAddress = (string?)null,
             Secret = "foo-bar"
         };
 
@@ -473,14 +402,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdIdentity);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenMailAddressEmpty(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenMailAddressEmpty()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
@@ -510,14 +437,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdIdentity);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenMailAddressTooLongEmpty(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenMailAddressTooLongEmpty()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
@@ -547,14 +472,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdIdentity);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenMailAddressLocalPartTooLongEmpty(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenMailAddressLocalPartTooLongEmpty()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {
@@ -584,14 +507,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdIdentity);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Post_ShouldFail_WhenMailAddressInvalid(string identity)
+    [Fact]
+    public async Task Post_ShouldFail_WhenMailAddressInvalid()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postIdentity = new
         {

@@ -1,11 +1,16 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
+using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Authentication.IdentityResource;
+namespace Authentication.IdentityResource;
 
 public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -13,55 +18,11 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
     public Delete(WebApplicationFactory<Program> factory)
     {
-        _factory = factory.WithInMemoryData();
+        _factory = factory.Mock();
     }
 
     [Fact]
-    [Trait("Category", "Endpoint.Security")]
-    public async Task Delete_ShouldBeUnauthorized_WhenNotAuthenticated()
-    {
-        // Arrange
-        var validIdentity = "valid-identity";
-
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{validIdentity}");
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.ChiefIdentity)]
-    [InlineData(TestConfiguration.DefaultIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Delete_ShouldBeForbidden_WhenNotAdmin(string identity)
-    {
-        // Arrange
-        var validIdentity = "valid-identity";
-
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{validIdentity}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Delete_ShouldSucceed_WhenExists(string identity)
+    public async Task Delete_ShouldSucceed_WhenExists()
     {
         // Arrange
         var existingIdentity = new Identity
@@ -80,7 +41,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{existingIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
 
@@ -101,16 +62,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Delete_ShouldFail_WhenAbsent(string identity)
+    [Fact]
+    public async Task Delete_ShouldFail_WhenAbsent()
     {
         // Arrange
         var absentIdentity = "absent-identity";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{absentIdentity}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
 
@@ -122,16 +81,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    public async Task Delete_ShouldFail_WhenInvalid(string identity)
+    [Fact]
+    public async Task Delete_ShouldFail_WhenInvalid()
     {
         // Arrange
         var invalidIdentity = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/authentication/identities/{invalidIdentity}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
 

@@ -1,88 +1,88 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authorization.Commands;
+using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 
 internal sealed class MemberCommandHandler : IMemberCommandHandler
 {
-    private readonly IMembershipManager _membershipManager;
-    private readonly IMembershipVerficationManager _membershipVerficationManager;
+    private readonly IMemberManager _memberManager;
+    private readonly IMemberVerificationManager _memberVerificationManager;
     private readonly ClaimsPrincipal _user;
 
-    private readonly string[] _allowedClients = { "swagger", "endpoint-tests" };
-
-    private readonly static object _signInLock = new();
+    private readonly string[] _allowedClients = { "swagger", "security-tests" };
 
     public MemberCommandHandler(
-        IMembershipManager membershipManager,
-        IMembershipVerficationManager membershipVerficationManager,
+        IMemberManager memberManager,
+        IMemberVerificationManager memberVerificationManager,
         ClaimsPrincipal user)
     {
-        _membershipManager = membershipManager;
-        _membershipVerficationManager = membershipVerficationManager;
+        _memberManager = memberManager;
+        _memberVerificationManager = memberVerificationManager;
         _user = user;
     }
 
-    public ClaimsIdentity SignIn(string group, string member, MemberSignInCommand command)
+    public async ValueTask<ClaimsIdentity> AuthAsync(MemberAuthCommand command)
     {
+
         var client = command.Client;
 
         if (!_allowedClients.Contains(command.Client))
         {
-            TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in");
+            TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in.");
         }
 
         if (command.Client != _user.GetClaimOrDefault("client"))
         {
-            TransportException.ThrowSecurityViolation($"Not allowed to switch to client '{client}'");
+            TransportException.ThrowSecurityViolation($"Not allowed to switch to client '{client}'.");
         }
 
-
-        lock (_signInLock)
+        var member = await _memberManager.GetOrDefaultAsync(command.Member);
+        if (member == null)
         {
-            var identity = _user.GetClaim("identity");
+            TransportException.ThrowSecurityViolation($"Member '{command.Member}' is not in group '{command.Group}'.");
+        }
 
-            var found = _membershipManager
-                .GetQueryable()
-                .Any(x =>
-                    x.Group == group &&
-                    x.Member == member &&
-                    x.Identity == identity);
+        var identity = _user.GetClaim("identity");
+        var identityFound = member.Identities.Any(x => x.UniqueName == identity);
 
-            if (!found)
-            {
-                TransportException.ThrowSecurityViolation($"Member '{member}' does not exist in group '{group}'");
-            }
+        if (!identityFound)
+        {
+            TransportException.ThrowSecurityViolation($"Can not sign in as member '{command.Member}' in group '{command.Group}'.");
+        }
 
-            var verfication = Guid.NewGuid().ToByteArray();
+        var verification = Guid.NewGuid().ToByteArray();
 
-            var verfifytionKey = new MembershipVerficationKey
-            {
-                Client = client,
-                Group = group,
-                Member = member
-            };
+        var verificationKey = new MemberVerificationKey
+        {
+            Client = client,
+            Identity = identity,
+            Group = command.Group,
+            Member = command.Member
+        };
 
-            _membershipVerficationManager.Set(verfifytionKey, verfication);
+        _memberVerificationManager.Set(verificationKey, verification);
 
-            var verficationnValue = Convert.ToBase64String(verfication);
+        var verificationnValue = Convert.ToBase64String(verification);
 
-            var claims = new Claim[]
-            {
+        var claims = new Claim[]
+        {
+            new Claim("type", "member"),
             new Claim("client", client),
             new Claim("identity", identity),
-            new Claim("group", group),
-            new Claim("member", member),
-            new Claim("verification", verficationnValue, ClaimValueTypes.Base64Binary)
-            };
+            new Claim("group", command.Group),
+            new Claim("member", command.Member),
+            new Claim("verification", verificationnValue, ClaimValueTypes.Base64Binary)
+        };
 
-            var claimsIdentity = new ClaimsIdentity(claims, "Badge");
+        var claimsIdentity = new ClaimsIdentity(claims, "Badge");
 
-            return claimsIdentity;
-        }
+        return claimsIdentity;
+
     }
 
     public void Verify() { }

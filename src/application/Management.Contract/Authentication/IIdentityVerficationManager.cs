@@ -1,8 +1,8 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
-public interface IIdentityVerficationManager
+public interface IIdentityVerificationManager
 {
-    bool Has(IdentityVerficationKey verficationKey, byte[] verfication);
+    bool Has(IdentityVerificationKey verificationKey, byte[] verification);
 
-    void Set(IdentityVerficationKey verficationKey, byte[] verfication);
+    void Set(IdentityVerificationKey verificationKey, byte[] verification);
 }

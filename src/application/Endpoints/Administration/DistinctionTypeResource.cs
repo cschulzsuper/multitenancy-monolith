@@ -18,41 +18,39 @@ internal static class DistinctionTypeResource
     {
         var resource = endpoints
             .MapGroup("/distinction-types")
-            .WithTags("Distinction Type API");
+            .WithTags("Distinction Type API")
+            .RequireAuthorization(policy => policy
+                .RequireClaim("badge", "member")
+                .RequireClaim("scope", "endpoints"));
 
         resource
             .MapGet(string.Empty, GetAll)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("member", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("member", "member-observer"))
             .WithErrorMessage(CouldNotQueryDistinctionTypes);
 
         resource
             .MapGet("{distinctionType}", Get)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("member", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("member", "member-observer"))
             .WithErrorMessage(CouldNotQueryDistinctionType);
 
         resource
             .MapPost(string.Empty, Post)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotCreateDistinctionType);
 
         resource
             .MapPut("{distinctionType}", Put)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotUpdateDistinctionType);
 
         resource
             .MapDelete("{distinctionType}", Delete)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotDeleteDistinctionType);
 
         return endpoints;

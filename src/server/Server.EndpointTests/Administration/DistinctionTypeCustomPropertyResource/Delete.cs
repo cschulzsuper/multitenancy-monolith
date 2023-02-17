@@ -3,10 +3,15 @@ using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using ChristianSchulz.MultitenancyMonolith.Server;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.DistinctionTypeCustomPropertyResource;
+namespace Administration.DistinctionTypeCustomPropertyResource;
 
 public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -14,83 +19,11 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
     public Delete(WebApplicationFactory<Program> factory)
     {
-        _factory = factory.WithInMemoryData();
+        _factory = factory.Mock();
     }
 
     [Fact]
-    [Trait("Category", "Endpoint.Security")]
-    public async Task Delete_ShouldBeUnauthorized_WhenNotAuthenticated()
-    {
-        // Arrange
-        var validDistinctionType = "valid-distinction-type";
-        var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/administration/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.DefaultIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task Delete_ShouldBeForbidden_WhenNotAuthorized(string identity)
-    {
-        // Arrange
-        var validDistinctionType = "valid-distinction-type";
-        var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/administration/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Delete_ShouldBeForbidden_WhenNotChief(string identity, string group, string member)
-    {
-        // Arrange
-        var validDistinctionType = "valid-distinction-type";
-        var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
-
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/administration/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Delete_ShouldSucceed_WhenExists(string identity, string group, string member)
+    public async Task Delete_ShouldSucceed_WhenExists()
     {
         // Arrange
         var existingDistinctionTypeCustomProperty = new DistinctionTypeCustomProperty
@@ -110,7 +43,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -118,7 +51,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{existingDistinctionTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
 
@@ -128,7 +61,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             var deletedDistinctionTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -141,18 +74,15 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Delete_ShouldFail_WhenInvalidDistinctionType(string identity, string group, string member)
+    [Fact]
+    public async Task Delete_ShouldFail_WhenInvalidDistinctionType()
     {
         // Arrange
         var invalidDistinctionType = "Invalid";
         var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/administration/distinction-types/{invalidDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
 
@@ -164,11 +94,8 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Delete_ShouldFail_WhenInvalidCustomProperty(string identity, string group, string member)
+    [Fact]
+    public async Task Delete_ShouldFail_WhenInvalidCustomProperty()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -179,7 +106,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -189,7 +116,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         var invalidDistinctionTypeCustomProperty = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{invalidDistinctionTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
 
@@ -201,11 +128,8 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group1, TestConfiguration.Group1Chief)]
-    [InlineData(TestConfiguration.ChiefIdentity, TestConfiguration.Group2, TestConfiguration.Group2Chief)]
-    public async Task Delete_ShouldFail_WhenAbsent(string identity, string group, string member)
+    [Fact]
+    public async Task Delete_ShouldFail_WhenAbsent()
     {
         // Arrange
         var existingDistinctionType = new DistinctionType
@@ -216,7 +140,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -226,7 +150,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         var absentDistinctionTypeCustomProperty = "absent-distinction-type-custom-property";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{absentDistinctionTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
 

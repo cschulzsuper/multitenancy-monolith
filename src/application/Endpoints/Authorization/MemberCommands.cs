@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Authorization.Commands;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Serialization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
@@ -7,6 +9,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 
 internal static class MemberCommands
 {
+    private const string CouldNotAuthMember = "Could not auth member";
     private const string CouldNotVerifyMember = "Could not verify member";
 
     public static IEndpointRouteBuilder MapMemberCommands(this IEndpointRouteBuilder endpoints)
@@ -16,16 +19,27 @@ internal static class MemberCommands
             .WithTags("Member Commands");
 
         commands
+            .MapPost("/me/auth", Auth)
+            .RequireAuthorization(policy => policy
+                .RequireClaim("badge", "identity"))
+            .WithErrorMessage(CouldNotAuthMember)
+            .WithAuthentication()
+            .AddEndpointFilter<BadgeResultEndpointFilter>();
+
+        commands
             .MapPost("/me/verify", Verify)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("member", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireClaim("badge", "member"))
             .WithErrorMessage(CouldNotVerifyMember);
 
         return endpoints;
     }
 
+    private static Delegate Auth =>
+        (IMemberCommandHandler commandHandler, MemberAuthCommand command)
+            => commandHandler.AuthAsync(command);
+
     private static Delegate Verify =>
-        (IMemberCommandHandler requestHandler)
-            => requestHandler.Verify();
+        (IMemberCommandHandler commandHandler)
+            => commandHandler.Verify();
 }

@@ -1,8 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Application.Business;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
-using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

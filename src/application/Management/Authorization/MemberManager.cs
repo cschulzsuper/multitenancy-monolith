@@ -24,13 +24,22 @@ internal sealed class MemberManager : IMemberManager
         return member;
     }
 
-    public async ValueTask<Member> GetAsync(string uniqueName)
+    public async ValueTask<Member> GetAsync(string member)
     {
-        MemberValidation.EnsureUniqueName(uniqueName);
+        MemberValidation.EnsureMember(member);
 
-        var member = await _repository.GetAsync(x => x.UniqueName == uniqueName);
+        var @object = await _repository.GetAsync(x => x.UniqueName == member);
 
-        return member;
+        return @object;
+    }
+
+    public async ValueTask<Member?> GetOrDefaultAsync(string member)
+    {
+        MemberValidation.EnsureMember(member);
+
+        var @object = await _repository.GetOrDefaultAsync(x => x.UniqueName == member);
+
+        return @object;
     }
 
     public IAsyncEnumerable<Member> GetAsyncEnumerable()
@@ -57,18 +66,18 @@ internal sealed class MemberManager : IMemberManager
         await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
     }
 
-    public async ValueTask UpdateAsync(string uniqueName, Action<Member> action)
+    public async ValueTask UpdateAsync(string member, Action<Member> action)
     {
-        MemberValidation.EnsureUniqueName(uniqueName);
+        MemberValidation.EnsureMember(member);
 
-        var validatedAction = (Member member) =>
+        var validatedAction = (Member @object) =>
         {
-            action.Invoke(member);
+            action.Invoke(@object);
 
-            MemberValidation.EnsureUpdatable(member);
+            MemberValidation.EnsureUpdatable(@object);
         };
 
-        await _repository.UpdateOrThrowAsync(x => x.UniqueName == uniqueName, validatedAction);
+        await _repository.UpdateOrThrowAsync(x => x.UniqueName == member, validatedAction);
     }
 
     public async ValueTask DeleteAsync(long snowflake)
@@ -78,10 +87,10 @@ internal sealed class MemberManager : IMemberManager
         await _repository.DeleteOrThrowAsync(snowflake);
     }
 
-    public async ValueTask DeleteAsync(string uniqueName)
+    public async ValueTask DeleteAsync(string member)
     {
-        MemberValidation.EnsureUniqueName(uniqueName);
+        MemberValidation.EnsureMember(member);
 
-        await _repository.DeleteOrThrowAsync(x => x.UniqueName == uniqueName);
+        await _repository.DeleteOrThrowAsync(x => x.UniqueName == member);
     }
 }

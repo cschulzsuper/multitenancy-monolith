@@ -6,10 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Xunit;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using ChristianSchulz.MultitenancyMonolith.Server;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.EndpointTests.Administration.DistinctionTypeCustomPropertyResource;
+namespace Administration.DistinctionTypeCustomPropertyResource;
 
 public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -17,60 +22,11 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
     public GetAll(WebApplicationFactory<Program> factory)
     {
-        _factory = factory.WithInMemoryData();
+        _factory = factory.Mock();
     }
 
     [Fact]
-    [Trait("Category", "Endpoint.Security")]
-    public async Task GetAll_ShouldBeUnauthorized_WhenNotAuthenticated()
-    {
-        // Arrange
-        var validDistinctionType = "valid-distinction-type";
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/administration/distinction-types/{validDistinctionType}/custom-properties");
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint.Security")]
-    [InlineData(TestConfiguration.AdminIdentity)]
-    [InlineData(TestConfiguration.DefaultIdentity)]
-    [InlineData(TestConfiguration.GuestIdentity)]
-    public async Task GetAll_ShouldBeForbidden_WhenNotAuthorized(string identity)
-    {
-        // Arrange
-        var validDistinctionType = "valid-distinction-type";
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/administration/distinction-types/{validDistinctionType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader(identity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
-    }
-
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task GetAll_ShouldSucceed(string identity, string group, string member)
+    public async Task GetAll_ShouldSucceed()
     {
         // Arrange
         var existingDistinctionTypeCustomProperty1 = new DistinctionTypeCustomProperty
@@ -95,7 +51,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.Services.CreateMultitenancyScope(group))
+        using (var scope = _factory.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -103,7 +59,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/administration/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
 
@@ -128,21 +84,14 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             });
     }
 
-    [Theory]
-    [Trait("Category", "Endpoint")]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.AdminIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.DefaultIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group1, TestConfiguration.Group1Member)]
-    [InlineData(TestConfiguration.GuestIdentity, TestConfiguration.Group2, TestConfiguration.Group2Member)]
-    public async Task Get_ShouldFail_WhenInvalidDistinctionType(string identity, string group, string member)
+    [Fact]
+    public async Task Get_ShouldFail_WhenInvalidDistinctionType()
     {
         // Arrange
         var invalidDistinctionType = "Invalid-distinction-type";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/administration/distinction-types/{invalidDistinctionType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(identity, group, member);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
 

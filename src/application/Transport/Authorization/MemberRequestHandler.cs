@@ -22,6 +22,7 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         var response = new MemberResponse
         {
             UniqueName = member.UniqueName,
+            MailAddress = member.MailAddress
         };
 
         return response;
@@ -35,7 +36,8 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         {
             var response = new MemberResponse
             {
-                UniqueName = member.UniqueName
+                UniqueName = member.UniqueName,
+                MailAddress = member.MailAddress
             };
 
             yield return response;
@@ -46,7 +48,8 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
     {
         var member = new Member
         {
-            UniqueName = request.UniqueName
+            UniqueName = request.UniqueName,
+            MailAddress = request.MailAddress
         };
 
         await _memberManager.InsertAsync(member);
@@ -54,6 +57,7 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         var response = new MemberResponse
         {
             UniqueName = member.UniqueName,
+            MailAddress = member.MailAddress
         };
 
         return response;
@@ -64,6 +68,7 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
             member =>
             {
                 member.UniqueName = request.UniqueName;
+                member.MailAddress = request.MailAddress;
             });
 
     public async ValueTask DeleteAsync(string uniqueName)

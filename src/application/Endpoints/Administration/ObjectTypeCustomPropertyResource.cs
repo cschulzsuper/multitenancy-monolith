@@ -18,41 +18,39 @@ internal static class ObjectTypeCustomPropertyResource
     {
         var resource = endpoints
             .MapGroup("/object-types/{objectType}/custom-properties")
-            .WithTags("Object Type Custom Property API");
+            .WithTags("Object Type Custom Property API")
+            .RequireAuthorization(policy => policy
+                .RequireClaim("badge", "member")
+                .RequireClaim("scope", "endpoints"));
 
         resource
             .MapGet(string.Empty, GetAll)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("member", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("member", "member-observer"))
             .WithErrorMessage(CouldNotQueryObjectTypeCustomProperties);
 
         resource
             .MapGet("{customProperty}", Get)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("member", "observer")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("member", "member-observer"))
             .WithErrorMessage(CouldNotQueryObjectTypeCustomProperty);
 
         resource
             .MapPost(string.Empty, Post)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotCreateObjectTypeCustomProperty);
 
         resource
             .MapPut("{customProperty}", Put)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotUpdateObjectTypeCustomProperty);
 
         resource
             .MapDelete("{customProperty}", Delete)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("chief")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("chief"))
             .WithErrorMessage(CouldNotDeleteObjectTypeCustomProperty);
 
         return endpoints;

@@ -1,4 +1,6 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
+﻿using System;
+
+namespace ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 
 public sealed class Identity : ICloneable
 {

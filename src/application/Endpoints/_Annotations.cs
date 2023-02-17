@@ -12,3 +12,9 @@ public sealed class ErrorMessageAttribute : Attribute
         ErrorMessage = errorMessage;
     }
 }
+
+[AttributeUsage(AttributeTargets.Method)]
+public sealed class AuthenticationAttribute : Attribute
+{
+
+}

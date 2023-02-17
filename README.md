@@ -72,7 +72,14 @@ If you are developing an ASP.NET Core application yourself and are looking for a
 
 * Status code assertions
   * /34 Draft implementation to assert the error messages in the endpoint tests. Static classes are used to define the error messages. https://github.com/cschulzsuper/multitenancy-monolith/commit/f09e0b99e132bbd81ab806ab22965fc142b61d7e
-  * /35 Extending the exception handling to allow better status codes in problem details. The status codes are asserted in the endpoint tests.
+  * /35 Extending the exception handling to allow better status codes in problem details. The status codes are asserted in the endpoint tests.https://github.com/cschulzsuper/multitenancy-monolith/commit/d1c48acea69f646447510391c48a7eb2f4d7c3b7
+
+* Ticker 
+  * /36 A hard test on my architecture. At some point the monolith will be separated. A ticket service the runs as a secondary service. 🤔 That was the easy part, the hard part was restructuring authentication and all endpoint tests again. 
+
+# Current
+
+* Ticker: Secondary Service in the Monolith 🤔
 
 # Backlog
 

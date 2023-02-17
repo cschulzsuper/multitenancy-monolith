@@ -1,6 +1,6 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 
-public sealed class IdentityVerficationKey
+public sealed class IdentityVerificationKey
 {
     public required string Client { get; init; }
 

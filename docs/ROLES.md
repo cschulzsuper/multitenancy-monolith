@@ -8,15 +8,15 @@
 
   Condition: `Identity == "admin"`
 
-* `default`
+* `identity`
 
   Normal identities can sign in as a member. 
 
   Condition: `!string.IsNullOrEmpty(Identity)`
 
-* `secure`
+* `demo`
 
-  Secure identities can modify personal identity settings and the identity secret.
+  Demo identities have restrictions and can not modify most data.
 
   Condition: `Identity != "demo"`
 
@@ -28,14 +28,21 @@
 
   Condition: `Member.StartsWith("chief-")`
 
+* `chief-observer`
+
+  Chief observers can only view data that is accessible to a chief. 
+
+  Condition:  `Identity == "demo" && Member.StartsWith("chief-")`
+
 * `member`
 
   Normal members have limited access to the member endpoints. 
 
   Condition: `!string.IsNullOrEmpty(Member)`
 
-* `observer`
+* `member`-observer`
 
-  Observers can only access HTTP GET endpoints. 
+  Member observers can only view data that is accessible to a member. 
 
   Condition:  `Identity == "demo" && !string.IsNullOrEmpty(Member)`
+

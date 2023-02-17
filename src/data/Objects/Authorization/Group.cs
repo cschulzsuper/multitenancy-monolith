@@ -1,4 +1,6 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
+﻿using System;
+
+namespace ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 
 public sealed class Group : ICloneable
 {

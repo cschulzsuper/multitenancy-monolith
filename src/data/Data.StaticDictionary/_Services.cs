@@ -3,33 +3,65 @@ using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Administra
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Authorization;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Business;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 using ChristianSchulz.MultitenancyMonolith.Objects.Business;
+using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
-public static partial class _Services
+[SuppressMessage("Style", "IDE1006:Naming Styles")]
+public static class _Services
 {
-    public static IServiceCollection AddData(this IServiceCollection services)
+    public static IServiceCollection AddStaticDictionary(this IServiceCollection services)
     {
         services.AddSingleton<SnowflakeGenerator>();
 
         services.AddSingleton(typeof(RepositoryContextFactory<>));
         services.AddScoped<MultitenancyContext>();
 
+        return services;
+    }
+
+    public static IServiceCollection AddStaticDictionaryAdministrationData(this IServiceCollection services)
+    {
         services.AddScoped(CreateRepository<ObjectTypeModel, ObjectType>);
         services.AddScoped(CreateRepository<DistinctionTypeModel, DistinctionType>);
 
+        return services;
+    }
+
+    public static IServiceCollection AddStaticDictionaryAuthenticationData(this IServiceCollection services)
+    {
         services.AddScoped(CreateRepository<IdentityModel, Identity>);
 
+        return services;
+    }
+
+    public static IServiceCollection AddStaticDictionaryAuthorizationData(this IServiceCollection services)
+    {
         services.AddScoped(CreateRepository<GroupModel, Group>);
         services.AddScoped(CreateRepository<MemberModel, Member>);
-        services.AddScoped(CreateRepository<MembershipModel, Membership>);
 
+        return services;
+    }
+
+    public static IServiceCollection AddStaticDictionaryBusinessData(this IServiceCollection services)
+    {
         services.AddScoped(CreateRepository<BusinessObjectModel, BusinessObject>);
+
+        return services;
+    }
+
+    public static IServiceCollection AddStaticDictionaryTickerData(this IServiceCollection services)
+    {
+        services.AddScoped(CreateRepository<TickerUserModel, TickerUser>);
+        services.AddScoped(CreateRepository<TickerMessageModel, TickerMessage>);
 
         return services;
     }

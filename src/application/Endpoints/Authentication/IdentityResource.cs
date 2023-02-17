@@ -18,41 +18,39 @@ internal static class IdentityResource
     {
         var resource = endpoints
             .MapGroup("/identities")
-            .WithTags("Identity API");
+            .WithTags("Identity API")
+            .RequireAuthorization(policy => policy
+                .RequireClaim("badge", "identity")
+                .RequireClaim("scope", "endpoints"));
 
         resource
             .MapGet(string.Empty, GetAll)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("admin")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("admin"))
             .WithErrorMessage(CouldNotQueryIdentities);
 
         resource
             .MapGet("{identity}", Get)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("admin")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("admin"))
             .WithErrorMessage(CouldNotQueryIdentity);
 
         resource
             .MapPost(string.Empty, Post)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("admin")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("admin"))
             .WithErrorMessage(CouldNotCreateIdentity);
 
         resource
             .MapPut("{identity}", Put)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("admin")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("admin"))
             .WithErrorMessage(CouldNotUpdateIdentity);
 
         resource
             .MapDelete("{identity}", Delete)
-            .RequireAuthorization(ploicy => ploicy
-                .RequireRole("admin")
-                .RequireClaim("scope", "endpoints"))
+            .RequireAuthorization(policy => policy
+                .RequireRole("admin"))
             .WithErrorMessage(CouldNotDeleteIdentity);
 
         return endpoints;

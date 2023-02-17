@@ -43,3 +43,9 @@
 * `BusinessObject`
 
   Example business type, that can be extened by custom properties. 
+
+## Ticker
+
+* `Ticker`
+
+  Example that is located in a separate service. 

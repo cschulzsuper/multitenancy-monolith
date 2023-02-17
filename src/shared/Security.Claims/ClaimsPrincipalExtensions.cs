@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 
