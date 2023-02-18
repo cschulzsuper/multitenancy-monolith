@@ -75,7 +75,8 @@ If you are developing an ASP.NET Core application yourself and are looking for a
   * /35 Extending the exception handling to allow better status codes in problem details. The status codes are asserted in the endpoint tests.https://github.com/cschulzsuper/multitenancy-monolith/commit/d1c48acea69f646447510391c48a7eb2f4d7c3b7
 
 * Ticker 
-  * /36 A hard test on my architecture. At some point the monolith will be separated. A ticket service the runs as a secondary service. 🤔 That was the easy part, the hard part was restructuring authentication and all endpoint tests again. 
+  * /36 A hard test on my architecture. At some point the monolith will be separated. A ticket service the runs as a secondary service. 🤔 That was the easy part, the hard part was restructuring authentication and all endpoint tests again. https://github.com/cschulzsuper/multitenancy-monolith/commit/b27ca630f7627030521f3abddbd74c486183e3bb
+  * /37 The separation of services caused hard coded urls as part of `Cors` and `Swagger`. Introducing components that provide configurations to the rest of the application will help to keep it flexibil.
 
 # Current
 

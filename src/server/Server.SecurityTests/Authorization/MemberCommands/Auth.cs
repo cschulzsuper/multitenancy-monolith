@@ -1,4 +1,3 @@
-using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;

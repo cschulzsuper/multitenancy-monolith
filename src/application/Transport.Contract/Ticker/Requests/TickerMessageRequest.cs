@@ -16,6 +16,4 @@ public class TickerMessageRequest
 
     [MailAddress]
     public required string TickerUser { get; set; }
-
-    public required string Object { get; set; }
 }

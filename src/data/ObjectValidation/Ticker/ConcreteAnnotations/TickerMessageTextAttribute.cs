@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Administration.ConcreteValidators;
+﻿using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,7 +11,7 @@ public sealed class TickerMessageTextAttribute : ValidationAttribute
     static TickerMessageTextAttribute()
     {
         _validator = new Validator<string>();
-        _validator.AddRules(x => x, CustomPropertyNameValidator.CreateRules("{0}"));
+        _validator.AddRules(x => x, TickerMessageTextValidator.CreateRules("{0}"));
     }
 
     public ValidationResult? _validationResult;

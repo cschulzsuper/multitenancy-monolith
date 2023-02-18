@@ -1,7 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Application.Authorization;
-using ChristianSchulz.MultitenancyMonolith.Application.Ticker;
-using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Serialization;
 using Microsoft.AspNetCore.Hosting;
@@ -50,6 +48,14 @@ internal static class MockWebApplication
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
+        {"AllowedClients:0:UniqueName", "swagger"},
+        {"AllowedClients:0:Scopes:0", "swagger-json"},
+        {"AllowedClients:0:Scopes:1", "endpoints"},
+        {"AllowedClients:1:UniqueName", "endpoint-tests"},
+        {"AllowedClients:1:Scopes:1", "endpoints"},
+        {"AllowedClients:2:UniqueName", "security-tests"},
+        {"AllowedClients:2:Scopes:1", "endpoints"},
+
         {"SeedData:Authentication:Identities:0:UniqueName", IdentityAdmin},
         {"SeedData:Authentication:Identities:0:MailAddress", IdentityAdminMailAddress},
         {"SeedData:Authentication:Identities:0:Secret", IdentityAdminSecret},

@@ -1,5 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data;
-using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Authentication;

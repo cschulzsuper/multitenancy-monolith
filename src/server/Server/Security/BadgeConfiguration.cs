@@ -1,4 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
+﻿using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Mapping;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Server.Security;
 
 internal static class BadgeConfiguration
 {
-    public static void Configure(this BadgeAuthenticationOptions options)
+    public static void Configure(this BadgeAuthenticationOptions options, ICollection<AllowedClient> allowedClients)
     {
         options.ClaimActions.MapRoleClaimForAdmin();
         options.ClaimActions.MapRoleClaimForIdentity();
@@ -21,8 +22,13 @@ internal static class BadgeConfiguration
         options.ClaimActions.MapRoleClaimForMember();
         options.ClaimActions.MapRoleClaimForMemberObserver();
 
-        options.ClaimActions.MapScopeClaimForEndpoints();
-        options.ClaimActions.MapScopeClaimForSwaggerJson();
+        foreach(var allowedClient in allowedClients)
+        {
+            foreach (var scope in allowedClient.Scopes)
+            {
+                options.ClaimActions.MapScopeClaim(allowedClient.UniqueName, scope);
+            }
+        }
 
         options.Events.OnValidatePrincipal = context =>
         {
@@ -89,16 +95,9 @@ internal static class BadgeConfiguration
 
         ? "member-observer" : null);
 
-    private static void MapScopeClaimForEndpoints(this ICollection<ClaimAction> claimActions)
+    private static void MapScopeClaim(this ICollection<ClaimAction> claimActions, string client, string scope)
         => claimActions.MapCustomClaim("scope", claims =>
-            claims.Any(x => x.Type == "client" && x.Value == "endpoint-tests") ||
-            claims.Any(x => x.Type == "client" && x.Value == "security-tests")
+            claims.Any(x => x.Type == "client" && x.Value == client)
 
-            ? "endpoints" : null);
-
-    private static void MapScopeClaimForSwaggerJson(this ICollection<ClaimAction> claimActions)
-        => claimActions.MapCustomClaim("scope", claims =>
-            claims.Any(x => x.Type == "client" && x.Value == "swagger")
-
-            ? "swagger-json" : null);
+            ? scope : null);
 }

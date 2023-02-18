@@ -20,8 +20,7 @@ public sealed class TickerMessageTextValidator
         {
             new NotNull(field),
             new NotEmpty(field),
-            new CamelCase(field),
-            new StringLength(field, 400),
+            new StringLength(field, 4000),
         };
 
         return rules;

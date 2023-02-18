@@ -29,44 +29,44 @@ internal static class SwaggerGenOptionsExtensions
 
     public static SwaggerGenOptions ConfigureSwaggerDocs(this SwaggerGenOptions options)
     {
-        options.SwaggerDoc("v1-server", new()
+        options.SwaggerDoc("v1", new()
         {
             Title = "Multitenancy Monolith V1 (server/api)",
-            Version = "v1-server"
+            Version = "v1"
         });
 
-        options.SwaggerDoc("v1-server-administration", new()
+        options.SwaggerDoc("v1-administration", new()
         {
             Title = "Multitenancy Monolith V1 (server/api/administration)",
-            Version = "v1-server-administration"
+            Version = "v1-administration"
         });
 
-        options.SwaggerDoc("v1-server-authentication", new()
+        options.SwaggerDoc("v1-authentication", new()
         {
             Title = "Multitenancy Monolith V1 (server/api/authentication)",
-            Version = "v1-server-authentication"
+            Version = "v1-authentication"
         });
 
-        options.SwaggerDoc("v1-server-authorization", new()
+        options.SwaggerDoc("v1-authorization", new()
         {
             Title = "Multitenancy Monolith V1 (server/api/authorization)",
-            Version = "v1-server-authorization"
+            Version = "v1-authorization"
         });
 
-        options.SwaggerDoc("v1-server-business", new()
+        options.SwaggerDoc("v1-business", new()
         {
             Title = "Multitenancy Monolith V1 (server/api/business)",
-            Version = "v1-server-business"
+            Version = "v1-business"
         });
 
         options.DocInclusionPredicate((docName, apiDesc) =>
         {
-            if (docName == "v1-server")
+            if (docName == "v1")
             {
                 return true;
             }
 
-            if (docName.Equals($"v1-server-{apiDesc.GroupName}"))
+            if (docName.Equals($"v1-{apiDesc.GroupName}"))
             {
                 return true;
             }

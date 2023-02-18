@@ -21,23 +21,29 @@ using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Server.Security;
 using ChristianSchulz.MultitenancyMonolith.Server.Middleware;
 using ChristianSchulz.MultitenancyMonolith.Server.Json;
+using ChristianSchulz.MultitenancyMonolith.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
 public class Startup
 {
     private readonly IWebHostEnvironment _environment;
+    private readonly IConfiguration _configuration;
 
-    public Startup(IWebHostEnvironment environment)
+    public Startup(
+        IWebHostEnvironment environment,
+        IConfiguration configuration)
     {
         _environment = environment;
+        _configuration = configuration;
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
         services.ConfigureJsonOptions();
 
-        services.AddAuthentication().AddBadge(options => options.Configure());
+        services.AddAuthentication().AddBadge(options => options.Configure(new AllowedClientsProvider(_configuration).Get()));
         services.AddAuthorization();
 
         services.AddCors();
@@ -54,6 +60,7 @@ public class Startup
         });
 
         services.AddCaching();
+        services.AddConfiguration();
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryAdministrationData();

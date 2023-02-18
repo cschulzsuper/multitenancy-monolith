@@ -11,8 +11,6 @@ using System.Net.Http;
 using System;
 using System.Linq;
 using ChristianSchulz.MultitenancyMonolith.Server;
-using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
-using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 
 namespace Authorization.MemberResource;
 
@@ -35,7 +33,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postMember = new
         {
             UniqueName = $"post-member-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(postMember);
@@ -73,7 +71,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         using (var scope = _factory.CreateMultitenancyScope())
@@ -89,7 +87,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postMember = new
         {
             UniqueName = existingMember.UniqueName,
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(postMember);
@@ -126,7 +124,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postMember = new
         {
             UniqueName = (string?)null,
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(postMember);
@@ -160,7 +158,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postMember = new
         {
             UniqueName = string.Empty,
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(postMember);
@@ -194,7 +192,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postMember = new
         {
             UniqueName = new string(Enumerable.Repeat('a', 141).ToArray()),
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(postMember);
@@ -228,7 +226,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postMember = new
         {
             UniqueName = "Invalid",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(postMember);
@@ -321,7 +319,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Post_ShouldFail_WhenMailAddressTooLongEmpty()
+    public async Task Post_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authorization/members");
@@ -355,7 +353,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Post_ShouldFail_WhenMailAddressLocalPartTooLongEmpty()
+    public async Task Post_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authorization/members");

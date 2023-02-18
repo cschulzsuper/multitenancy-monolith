@@ -32,14 +32,14 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         {
             Snowflake = 1,
             UniqueName = $"existing-member-1-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         var existingMember2 = new Member
         {
             Snowflake = 2,
             UniqueName = $"existing-member-2-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         using (var scope = _factory.CreateMultitenancyScope())

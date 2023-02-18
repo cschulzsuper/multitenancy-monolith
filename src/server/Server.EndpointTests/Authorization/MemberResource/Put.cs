@@ -10,7 +10,6 @@ using System.Net.Http;
 using System;
 using System.Linq;
 using ChristianSchulz.MultitenancyMonolith.Server;
-using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
 
 namespace Authorization.MemberResource;
 
@@ -31,7 +30,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         using (var scope = _factory.CreateMultitenancyScope())
@@ -47,7 +46,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putMember = new
         {
             UniqueName = $"put-member-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -85,7 +84,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putMember = new
         {
             UniqueName = "put-member",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -112,7 +111,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putMember = new
         {
             UniqueName = "put-member",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -135,14 +134,14 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local",
+            MailAddress = "default@localhost",
         };
 
         var additionalMember = new Member
         {
             Snowflake = 2,
             UniqueName = $"additional-member-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         using (var scope = _factory.CreateMultitenancyScope())
@@ -158,7 +157,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putMember = new
         {
             UniqueName = additionalMember.UniqueName,
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -192,7 +191,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         using (var scope = _factory.CreateMultitenancyScope())
@@ -208,7 +207,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putMember = new
         {
             UniqueName = (string?)null,
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -231,7 +230,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         using (var scope = _factory.CreateMultitenancyScope())
@@ -247,7 +246,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putMember = new
         {
             UniqueName = string.Empty,
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -270,7 +269,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         using (var scope = _factory.CreateMultitenancyScope())
@@ -286,7 +285,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putMember = new
         {
             UniqueName = new string(Enumerable.Repeat('a', 141).ToArray()),
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -309,7 +308,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         using (var scope = _factory.CreateMultitenancyScope())
@@ -325,7 +324,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putMember = new
         {
             UniqueName = "Invalid",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         request.Content = JsonContent.Create(putMember);
@@ -419,7 +418,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Put_ShouldFail_WhenMailAddressTooLongEmpty()
+    public async Task Put_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
         var existingMember = new Member
@@ -458,7 +457,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Put_ShouldFail_WhenMailAddressLocalPartTooLongEmpty()
+    public async Task Put_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
         var existingMember = new Member

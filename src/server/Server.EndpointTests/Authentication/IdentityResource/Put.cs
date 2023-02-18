@@ -564,7 +564,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Put_ShouldFail_WhenMailAddressTooLongEmpty()
+    public async Task Put_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
         var existingIdentity = new Identity
@@ -605,7 +605,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Put_ShouldFail_WhenMailAddressLocalPartTooLongEmpty()
+    public async Task Put_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
         var existingIdentity = new Identity

@@ -438,7 +438,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Post_ShouldFail_WhenMailAddressTooLongEmpty()
+    public async Task Post_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");
@@ -473,7 +473,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Post_ShouldFail_WhenMailAddressLocalPartTooLongEmpty()
+    public async Task Post_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authentication/identities");

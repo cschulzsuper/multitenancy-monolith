@@ -17,11 +17,13 @@ internal static class MockWebApplication
 
     public const string Group = "group";
     public const string Member = "default";
-    public const string Mail = "default@localhost.local";
+    public const string Mail = "default@localhost";
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
-
+        {"AllowedClients:0:UniqueName", "endpoint-tests"},
+        {"AllowedClients:0:Scopes:0", "swagger-json"},
+        {"AllowedClients:0:Scopes:1", "endpoints"},
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory)

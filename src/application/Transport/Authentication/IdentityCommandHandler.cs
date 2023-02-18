@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication.Commands;
+using ChristianSchulz.MultitenancyMonolith.Configuration;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -10,22 +11,23 @@ internal sealed class IdentityCommandHandler : IIdentityCommandHandler
 {
     private readonly IIdentityManager _identityManager;
     private readonly IIdentityVerificationManager _identityVerificationManager;
-
-    private readonly string[] _allowedClients = { "swagger", "security-tests" };
+    private readonly IAllowedClientsProvider _allowedClientsProvider;
 
     public IdentityCommandHandler(
         IIdentityManager identityManager,
-        IIdentityVerificationManager identityVerificationManager)
+        IIdentityVerificationManager identityVerificationManager,
+        IAllowedClientsProvider allowedClientsProvider)
     {
         _identityManager = identityManager;
         _identityVerificationManager = identityVerificationManager;
+        _allowedClientsProvider = allowedClientsProvider;
     }
 
     public async ValueTask<ClaimsIdentity> AuthAsync(IdentityAuthCommand command)
     {
         var client = command.Client;
 
-        if (!_allowedClients.Contains(command.Client))
+        if (_allowedClientsProvider.Get().All(x => x.UniqueName != client))
         {
             TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in");
         }

@@ -24,7 +24,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Post_ShouldSucceed_WhenValid()
+    public async Task Post_ShouldSucceed_WhenPriorityLow()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
@@ -34,7 +34,6 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Text = $"post-ticker-message-{Guid.NewGuid()}",
             Priority = "low",
-            Object = "business-objects/default",
             TickerUser = MockWebApplication.Mail
         };
 
@@ -51,26 +50,549 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonObject>();
         Assert.NotNull(content);
         Assert.Collection(content.OrderBy(x => x.Key),
-            x => Assert.Equal(("object", postTickerMessage.Object), (x.Key, (string?)x.Value)),
-            x => Assert.Equal(("objectDisplayName", string.Empty), (x.Key, (string?)x.Value)),
             x => Assert.Equal(("priority", postTickerMessage.Priority), (x.Key, (string?)x.Value)),
             x => Assert.Equal("snowflake", x.Key),
             x => Assert.Equal(("text", postTickerMessage.Text), (x.Key, (string?)x.Value)),
             x => Assert.Equal(("tickerUser", postTickerMessage.TickerUser), (x.Key, (string?)x.Value)),
-            x => Assert.Equal(("tickerUserDisplayName", string.Empty), (x.Key, (string?)x.Value)),
             x => Assert.Equal("timestamp", x.Key));
 
         using (var scope = _factory.CreateMultitenancyScope())
         {
-            var createdBusinessObject = scope.ServiceProvider
+            var createdTickerMessage = scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerMessage>>()
                 .GetQueryable()
-                .SingleOrDefault(x =>
-                    x.Priority == postTickerMessage.Priority &&
-                    x.Text == postTickerMessage.Text &&
-                    x.Object == postTickerMessage.Object);
+                .SingleOrDefault();
 
-            Assert.NotNull(createdBusinessObject);
+            Assert.NotNull(createdTickerMessage);
+            Assert.Equal(postTickerMessage.TickerUser, createdTickerMessage.TickerUser);
+            Assert.Equal(postTickerMessage.Text, createdTickerMessage.Text);
+            Assert.Equal(postTickerMessage.Priority, createdTickerMessage.Priority);
         }
+    }
+
+    [Fact]
+    public async Task Post_ShouldSucceed_WhenPriorityDefault()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = $"post-ticker-message-{Guid.NewGuid()}",
+            Priority = "default",
+            TickerUser = MockWebApplication.Mail
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
+        Assert.NotNull(content);
+        Assert.Collection(content.OrderBy(x => x.Key),
+            x => Assert.Equal(("priority", postTickerMessage.Priority), (x.Key, (string?)x.Value)),
+            x => Assert.Equal("snowflake", x.Key),
+            x => Assert.Equal(("text", postTickerMessage.Text), (x.Key, (string?)x.Value)),
+            x => Assert.Equal(("tickerUser", postTickerMessage.TickerUser), (x.Key, (string?)x.Value)),
+            x => Assert.Equal("timestamp", x.Key));
+
+        using (var scope = _factory.CreateMultitenancyScope())
+        {
+            var createdTickerMessage = scope.ServiceProvider
+                .GetRequiredService<IRepository<TickerMessage>>()
+                .GetQueryable()
+                .SingleOrDefault();
+
+            Assert.NotNull(createdTickerMessage);
+            Assert.Equal(postTickerMessage.TickerUser, createdTickerMessage.TickerUser);
+            Assert.Equal(postTickerMessage.Text, createdTickerMessage.Text);
+            Assert.Equal(postTickerMessage.Priority, createdTickerMessage.Priority);
+        }
+    }
+
+    [Fact]
+    public async Task Post_ShouldSucceed_WhenPriorityHigh()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = $"post-ticker-message-{Guid.NewGuid()}",
+            Priority = "high",
+            TickerUser = MockWebApplication.Mail
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
+        Assert.NotNull(content);
+        Assert.Collection(content.OrderBy(x => x.Key),
+            x => Assert.Equal(("priority", postTickerMessage.Priority), (x.Key, (string?)x.Value)),
+            x => Assert.Equal("snowflake", x.Key),
+            x => Assert.Equal(("text", postTickerMessage.Text), (x.Key, (string?)x.Value)),
+            x => Assert.Equal(("tickerUser", postTickerMessage.TickerUser), (x.Key, (string?)x.Value)),
+            x => Assert.Equal("timestamp", x.Key));
+
+        using (var scope = _factory.CreateMultitenancyScope())
+        {
+            var createdTickerMessage = scope.ServiceProvider
+                .GetRequiredService<IRepository<TickerMessage>>()
+                .GetQueryable()
+                .SingleOrDefault();
+
+            Assert.NotNull(createdTickerMessage);
+            Assert.Equal(postTickerMessage.TickerUser, createdTickerMessage.TickerUser);
+            Assert.Equal(postTickerMessage.Text, createdTickerMessage.Text);
+            Assert.Equal(postTickerMessage.Priority, createdTickerMessage.Priority);
+        }
+    }
+
+    [Fact]
+    public async Task Post_ShouldSucceed_WhenPriorityCatastrophe()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = $"post-ticker-message-{Guid.NewGuid()}",
+            Priority = "catastrophe",
+            TickerUser = MockWebApplication.Mail
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
+        Assert.NotNull(content);
+        Assert.Collection(content.OrderBy(x => x.Key),
+            x => Assert.Equal(("priority", postTickerMessage.Priority), (x.Key, (string?)x.Value)),
+            x => Assert.Equal("snowflake", x.Key),
+            x => Assert.Equal(("text", postTickerMessage.Text), (x.Key, (string?)x.Value)),
+            x => Assert.Equal(("tickerUser", postTickerMessage.TickerUser), (x.Key, (string?)x.Value)),
+            x => Assert.Equal("timestamp", x.Key));
+
+        using (var scope = _factory.CreateMultitenancyScope())
+        {
+            var createdTickerMessage = scope.ServiceProvider
+                .GetRequiredService<IRepository<TickerMessage>>()
+                .GetQueryable()
+                .SingleOrDefault();
+
+            Assert.NotNull(createdTickerMessage);
+            Assert.Equal(postTickerMessage.TickerUser, createdTickerMessage.TickerUser);
+            Assert.Equal(postTickerMessage.Text, createdTickerMessage.Text);
+            Assert.Equal(postTickerMessage.Priority, createdTickerMessage.Priority);
+        }
+    }
+
+    [Fact]
+    public async Task Post_ShouldFail_WhenTextNull()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = (string?)null,
+            Priority = "low",
+            TickerUser = MockWebApplication.Mail
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.Null(createdTickerUser);
+    }
+
+    [Fact]
+    public async Task Post_ShouldFail_WhenTextEmpty()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = string.Empty,
+            Priority = "low",
+            TickerUser = MockWebApplication.Mail
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.Null(createdTickerUser);
+    }
+
+    [Fact]
+    public async Task Post_ShouldFail_WhenTextTooLong()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = new string(Enumerable.Repeat('a', 4001).ToArray()),
+            Priority = "low",
+            TickerUser = MockWebApplication.Mail
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.Null(createdTickerUser);
+    }
+
+    [Fact]
+    public async Task Post_ShouldFail_WhenPriorityNull()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = $"post-ticker-message",
+            Priority = (string?)null,
+            TickerUser = MockWebApplication.Mail
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.Null(createdTickerUser);
+    }
+
+    [Fact]
+    public async Task Post_ShouldFail_WhenPriorityEmpty()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = $"post-ticker-message",
+            Priority = string.Empty,
+            TickerUser = MockWebApplication.Mail
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.Null(createdTickerUser);
+    }
+
+    [Fact]
+    public async Task Post_ShouldFail_WhenPriorityInvalid()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = $"post-ticker-message",
+            Priority = "invalid",
+            TickerUser = MockWebApplication.Mail
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.Null(createdTickerUser);
+    }
+
+    [Fact]
+    public async Task Post_ShouldFail_WhenTickerUserNull()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = $"post-ticker-message",
+            Priority = "low",
+            TickerUser = (string?)null
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.Null(createdTickerUser);
+    }
+
+    [Fact]
+    public async Task Post_ShouldFail_WhenTickerUserEmpty()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = $"post-ticker-message",
+            Priority = "low",
+            TickerUser = string.Empty
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.Null(createdTickerUser);
+    }
+
+    [Fact]
+    public async Task Post_ShouldFail_WhenTickerUserTooLong()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = $"post-ticker-message",
+            Priority = "low",
+            TickerUser = $"{new string(Enumerable.Repeat('a', 64).ToArray())}@{new string(Enumerable.Repeat('a', 190).ToArray())}"
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.Null(createdTickerUser);
+    }
+
+    [Fact]
+    public async Task Post_ShouldFail_WhenTickerUserLocalPartTooLong()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = $"post-ticker-message",
+            Priority = "low",
+            TickerUser = $"{new string(Enumerable.Repeat('a', 65).ToArray())}@{new string(Enumerable.Repeat('a', 1).ToArray())}"
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.Null(createdTickerUser);
+    }
+
+    [Fact]
+    public async Task Post_ShouldFail_WhenTickerUserInvalid()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerMessage = new
+        {
+            Text = $"post-ticker-message",
+            Priority = "low",
+            TickerUser = "Invalid"
+        };
+
+        request.Content = JsonContent.Create(postTickerMessage);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.Null(createdTickerUser);
     }
 }

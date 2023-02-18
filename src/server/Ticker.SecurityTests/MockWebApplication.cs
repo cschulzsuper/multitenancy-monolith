@@ -24,12 +24,18 @@ internal static class MockWebApplication
     public const string Group = "group";
     public const string Member = "default";
 
-    public const string TickerUserMailAddress = "default@localhost.local";
-    public const string TickerUserSecret = "1234";
+    public const string TickerUserMailAddress = "default@localhost";
+    public const string TickerUserSecret = "default";
     public const string TickerUserDisplayName = "Default";
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
+        {"AllowedClients:0:UniqueName", "swagger"},
+        {"AllowedClients:0:Scopes:0", "swagger-json"},
+        {"AllowedClients:0:Scopes:1", "endpoints"},
+        {"AllowedClients:1:UniqueName", "security-tests"},
+        {"AllowedClients:1:Scopes:1", "endpoints"},
+
         {$"SeedData:Ticker:TickerUsers:{Group}:0:MailAddress", TickerUserMailAddress},
         {$"SeedData:Ticker:TickerUsers:{Group}:0:Secret", TickerUserSecret},
         {$"SeedData:Ticker:TickerUsers:{Group}:0:DisplayName", TickerUserDisplayName},

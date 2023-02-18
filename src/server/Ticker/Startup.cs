@@ -1,6 +1,8 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
+using ChristianSchulz.MultitenancyMonolith.Application.Administration;
 using ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Caching;
+using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Json;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Middleware;
@@ -13,6 +15,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -24,17 +27,21 @@ namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 public class Startup
 {
     private readonly IWebHostEnvironment _environment;
+    private readonly IConfiguration _configuration;
 
-    public Startup(IWebHostEnvironment environment)
+    public Startup(
+        IWebHostEnvironment environment,
+        IConfiguration configuration)
     {
         _environment = environment;
+        _configuration = configuration;
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
         services.ConfigureJsonOptions();
 
-        services.AddAuthentication().AddBadge(options => options.Configure());
+        services.AddAuthentication().AddBadge(options => options.Configure(new AllowedClientsProvider(_configuration).Get()));
         services.AddAuthorization();
 
         services.AddCors();
@@ -51,6 +58,7 @@ public class Startup
         });
 
         services.AddCaching();
+        services.AddConfiguration();
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryTickerData();

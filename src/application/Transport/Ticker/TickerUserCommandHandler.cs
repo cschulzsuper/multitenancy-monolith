@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
+using ChristianSchulz.MultitenancyMonolith.Configuration;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -10,22 +11,23 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
 {
     private readonly ITickerUserManager _tickerUserManager;
     private readonly ITickerUserVerificationManager _tickerUserVerificationManager;
-
-    private readonly string[] _allowedClients = { "swagger", "security-tests" };
+    private readonly IAllowedClientsProvider _allowedClientsProvider;
 
     public TickerUserCommandHandler(
         ITickerUserManager tickerUserManager,
-        ITickerUserVerificationManager tickerUserVerificationManager)
+        ITickerUserVerificationManager tickerUserVerificationManager,
+        IAllowedClientsProvider allowedClientsProvider)
     {
         _tickerUserManager = tickerUserManager;
         _tickerUserVerificationManager = tickerUserVerificationManager;
+        _allowedClientsProvider = allowedClientsProvider;
     }
 
     public async ValueTask<ClaimsIdentity> AuthAsync(TickerUserAuthCommand command)
     {
         var client = command.Client;
 
-        if (!_allowedClients.Contains(command.Client))
+        if (_allowedClientsProvider.Get().All(x => x.UniqueName != client))
         {
             TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in");
         }

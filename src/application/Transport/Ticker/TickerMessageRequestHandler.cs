@@ -37,10 +37,7 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
             Text = @object.Text,
             Priority = @object.Priority,
             Timestamp = @object.Timestamp,
-            TickerUser = @object.TickerUser,
-            TickerUserDisplayName = @object.TickerUserDisplayName,
-            Object = @object.Object,
-            ObjectDisplayName = @object.ObjectDisplayName
+            TickerUser = @object.TickerUser
         };
 
         return response;
@@ -72,10 +69,7 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
                 Text = @object.Text,
                 Priority = @object.Priority,
                 Timestamp = @object.Timestamp,
-                TickerUser = @object.TickerUser,
-                TickerUserDisplayName = @object.TickerUserDisplayName,
-                Object = @object.Object,
-                ObjectDisplayName = @object.ObjectDisplayName
+                TickerUser = @object.TickerUser
             };
 
             yield return response;
@@ -91,8 +85,7 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
             Text = request.Text,
             Priority = request.Priority,
             Timestamp = DateTime.UtcNow.Ticks,
-            TickerUser = request.TickerUser,
-            Object = request.Object,
+            TickerUser = request.TickerUser
         };
 
         await _tickerMessageManager.InsertAsync(@object);
@@ -103,10 +96,7 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
             Text = @object.Text,
             Priority = @object.Priority,
             Timestamp = @object.Timestamp,
-            TickerUser = @object.TickerUser,
-            TickerUserDisplayName = @object.TickerUserDisplayName,
-            Object = @object.Object,
-            ObjectDisplayName = @object.ObjectDisplayName
+            TickerUser = @object.TickerUser
         };
 
         return response;
@@ -124,7 +114,6 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
                 @object.Text = request.Text;
                 @object.Priority = request.Priority;
                 @object.TickerUser = request.TickerUser;
-                @object.Object = request.Object;
             });
     }
 

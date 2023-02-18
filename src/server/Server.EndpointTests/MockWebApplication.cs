@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
@@ -18,7 +16,7 @@ internal static class MockWebApplication
     public const string Client = "endpoint-tests";
 
     public const string Identity = "admin";
-    public const string MailAddress = "default@localhost.local";
+    public const string MailAddress = "default@localhost";
     public const string Secret = "default";
 
     public const string Group = "group";
@@ -26,7 +24,13 @@ internal static class MockWebApplication
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
-
+        {"AllowedClients:0:UniqueName", "swagger"},
+        {"AllowedClients:0:Scopes:0", "swagger-json"},
+        {"AllowedClients:0:Scopes:1", "endpoints"},
+        {"AllowedClients:1:UniqueName", "endpoint-tests"},
+        {"AllowedClients:1:Scopes:1", "endpoints"},
+        {"AllowedClients:2:UniqueName", "security-tests"},
+        {"AllowedClients:2:Scopes:1", "endpoints"}
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory)

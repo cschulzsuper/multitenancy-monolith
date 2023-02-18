@@ -17,8 +17,8 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData("v1")]
     [InlineData("v1-ticker")]
-    [InlineData("v1-ticker-ticker")]
     public async Task Get_ShouldBeUnauthorized_WhenNotAuthenticated(string doc)
     {
         // Arrange
@@ -35,10 +35,10 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData("v1", MockWebApplication.MockMember)]
+    [InlineData("v1", MockWebApplication.MockTicker)]
     [InlineData("v1-ticker", MockWebApplication.MockMember)]
     [InlineData("v1-ticker", MockWebApplication.MockTicker)]
-    [InlineData("v1-ticker-ticker", MockWebApplication.MockMember)]
-    [InlineData("v1-ticker-ticker", MockWebApplication.MockTicker)]
     public async Task Get_ShouldBeForbidden_WhenInvalidClient(string doc, int mock)
     {
         // Arrange
@@ -56,10 +56,10 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData("v1", MockWebApplication.MockMember)]
+    [InlineData("v1", MockWebApplication.MockTicker)]
     [InlineData("v1-ticker", MockWebApplication.MockMember)]
     [InlineData("v1-ticker", MockWebApplication.MockTicker)]
-    [InlineData("v1-ticker-ticker", MockWebApplication.MockMember)]
-    [InlineData("v1-ticker-ticker", MockWebApplication.MockTicker)]
     public async Task Get_ShouldSucceed_WhenValidClient(string doc, int mock)
     {
         // Arrange

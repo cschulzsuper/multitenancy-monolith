@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using Microsoft.AspNetCore.Builder;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -38,28 +40,15 @@ public static class SwaggerUIOptionsExtensions
         return options;
     }
 
-    public static SwaggerUIOptions ConfigureSwaggerEndpoints(this SwaggerUIOptions options)
+    public static SwaggerUIOptions ConfigureSwaggerEndpoints(this SwaggerUIOptions options, ICollection<SwaggerDocs> swaggerDocs)
     {
-        options.SwaggerEndpoint("https://localhost:7207/swagger/v1-server/swagger.json",
-            "Multitenancy Monolith V1 (server/api)");
+        foreach(var swaggerDoc in swaggerDocs)
+        {
+            var hostUri = new Uri(swaggerDoc.Host);
+            var fullUri = new Uri(hostUri, swaggerDoc.Path);
 
-        options.SwaggerEndpoint("https://localhost:7207/swagger/v1-server-administration/swagger.json",
-            "Multitenancy Monolith V1 (server/api/administration)");
-
-        options.SwaggerEndpoint("https://localhost:7207/swagger/v1-server-authentication/swagger.json",
-            "Multitenancy Monolith V1 (server/api/authentication)");
-
-        options.SwaggerEndpoint("https://localhost:7207/swagger/v1-server-authorization/swagger.json",
-            "Multitenancy Monolith V1 (server/api/authorization)");
-
-        options.SwaggerEndpoint("https://localhost:7207/swagger/v1-server-business/swagger.json",
-            "Multitenancy Monolith V1 (server/api/business)");
-
-        options.SwaggerEndpoint("https://localhost:7206/swagger/v1-ticker/swagger.json",
-            "Multitenancy Monolith V1 (ticker/api)");
-
-        options.SwaggerEndpoint("https://localhost:7206/swagger/v1-ticker-ticker/swagger.json",
-            "Multitenancy Monolith V1 (ticker/api/ticker)");
+            options.SwaggerEndpoint(fullUri.AbsoluteUri, swaggerDoc.DisplayName);
+        }
 
         return options;
     }

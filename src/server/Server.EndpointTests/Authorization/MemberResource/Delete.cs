@@ -29,7 +29,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         {
             Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
-            MailAddress = "default@localhost.local"
+            MailAddress = "default@localhost"
         };
 
         using (var scope = _factory.CreateMultitenancyScope())

@@ -22,12 +22,4 @@ public sealed class TickerMessage : ICloneable
 
 
     public required string TickerUser { get; set; }
-
-    public string TickerUserDisplayName { get; set; } = string.Empty;
-
-
-    public required string Object { get; set; }
-
-    public string ObjectDisplayName { get; set; } = string.Empty;
-
 }
