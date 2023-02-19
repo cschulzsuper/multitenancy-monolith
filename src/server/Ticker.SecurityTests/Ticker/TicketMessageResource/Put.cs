@@ -8,20 +8,22 @@ using Xunit;
 
 namespace Ticker.TicketMessageResource;
 
-public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
-    public Post(WebApplicationFactory<Program> factory)
+    public Put(WebApplicationFactory<Program> factory)
     {
         _factory = factory.Mock();
     }
 
     [Fact]
-    public async Task Post_ShouldBeUnauthorized_WhenNotAuthenticated()
+    public async Task Put_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var validTickerMessage = 1;
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{validTickerMessage}");
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
@@ -36,11 +38,13 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
-    public async Task Post_ShouldFail_WhenNotAuthorized(int mock)
+    public async Task Put_ShouldFail_WhenNotAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
+        var validTickerMessage = 1;
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{validTickerMessage}");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
@@ -55,10 +59,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockTicker)]
-    public async Task Post_ShouldBeForbidden_WhenNotAuthorized(int mock)
+    public async Task Put_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var validTickerMessage = 1;
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{validTickerMessage}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 
@@ -75,10 +81,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
     [InlineData(MockWebApplication.MockTicker)]
-    public async Task Post_ShouldBeUnauthorized_WhenInvalid(int mock)
+    public async Task Post_ShouldBeForbidden_WhenInvalid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var validTickerMessage = 1;
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{validTickerMessage}");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 

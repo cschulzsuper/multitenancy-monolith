@@ -1,5 +1,4 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
-using ChristianSchulz.MultitenancyMonolith.Application.Administration;
 using ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Caching;
 using ChristianSchulz.MultitenancyMonolith.Configuration;

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System.Diagnostics;
 
 namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 

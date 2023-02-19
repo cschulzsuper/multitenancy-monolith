@@ -8,5 +8,7 @@ public interface ITickerUserCommandHandler
 {
     ValueTask<ClaimsIdentity> AuthAsync(TickerUserAuthCommand command);
 
+    ValueTask<ClaimsIdentity> ConfirmAsync(TickerUserConfirmCommand command);
+
     void Verify();
 }

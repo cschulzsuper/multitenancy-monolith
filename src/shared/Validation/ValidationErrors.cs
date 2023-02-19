@@ -10,6 +10,8 @@ public static class ValidationErrors
 
     public const string ValueNotMailAddress = "Value '{0}' must be a valid mail address.";
 
+    public const string ValueIsDefault = "Value '{0}' cannot be default.";
+
     public const string ValueIsEmpty = "Value '{0}' cannot be empty.";
 
     public const string ValueIsNegative = "Value '{0}' cannot be negative.";

@@ -76,7 +76,8 @@ If you are developing an ASP.NET Core application yourself and are looking for a
 
 * Ticker 
   * /36 A hard test on my architecture. At some point the monolith will be separated. A ticket service the runs as a secondary service. 🤔 That was the easy part, the hard part was restructuring authentication and all endpoint tests again. https://github.com/cschulzsuper/multitenancy-monolith/commit/b27ca630f7627030521f3abddbd74c486183e3bb
-  * /37 The separation of services caused hard coded urls as part of `Cors` and `Swagger`. Introducing components that provide configurations to the rest of the application will help to keep it flexibil.
+  * /37 The separation of services caused hard coded urls as part of `Cors` and `Swagger`. Introducing components that provide configurations to the rest of the application will help to keep it flexibil. https://github.com/cschulzsuper/multitenancy-monolith/commit/8809d4cefdb494ce347f402ee03aaf2c2e84ba6d
+  * /38 A confirm flow makes it possible to authenticate once as a ticker user before it is necessary to confirm the ticker user. An integration tests ensures the flow always succeeds. 
 
 # Current
 

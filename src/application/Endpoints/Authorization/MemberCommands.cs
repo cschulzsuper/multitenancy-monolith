@@ -23,7 +23,7 @@ internal static class MemberCommands
             .RequireAuthorization(policy => policy
                 .RequireClaim("badge", "identity"))
             .WithErrorMessage(CouldNotAuthMember)
-            .WithAuthentication()
+            .Authenticates()
             .AddEndpointFilter<BadgeResultEndpointFilter>();
 
         commands

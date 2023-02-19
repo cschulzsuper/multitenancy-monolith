@@ -30,7 +30,7 @@ public static class TickerMessageResource
             .WithErrorMessage(CouldNotQueryTickerMessages);
 
         resource
-            .MapGet("{TickerMessage}", Get)
+            .MapGet("{tickerMessage}", Get)
             .RequireAuthorization(policy => policy
                 .RequireRole("member"))
             .WithErrorMessage(CouldNotQueryTickerMessage);
@@ -42,13 +42,13 @@ public static class TickerMessageResource
             .WithErrorMessage(CouldNotCreateTickerMessage);
 
         resource
-            .MapPut("{TickerMessage}", Put)
+            .MapPut("{tickerMessage}", Put)
             .RequireAuthorization(policy => policy
                 .RequireRole("member"))
             .WithErrorMessage(CouldNotUpdateTickerMessage);
 
         resource
-            .MapDelete("{TickerMessage}", Delete)
+            .MapDelete("{tickerMessage}", Delete)
             .RequireAuthorization(policy => policy
                 .RequireRole("member"))
             .WithErrorMessage(CouldNotDeleteTickerMessage);

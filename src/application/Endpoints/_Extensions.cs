@@ -17,8 +17,8 @@ internal static class _Extensions
         return builder;
     }
 
-    public static TBuilder WithAuthentication<TBuilder>(this TBuilder builder)
-    where TBuilder : IEndpointConventionBuilder
+    public static TBuilder Authenticates<TBuilder>(this TBuilder builder)
+        where TBuilder : IEndpointConventionBuilder
     {
         builder.Add(endpointBuilder =>
         {

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -35,6 +36,26 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockChief)]
+    public async Task Delete_ShouldFail_WhenNotAuthorized(int mock)
+    {
+        // Arrange
+        var validBusinessObject = "valid-business-object";
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/business/business-objects/{validBusinessObject}");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Theory]
     [InlineData(MockWebApplication.MockAdmin)]
     [InlineData(MockWebApplication.MockIdentity)]
     [InlineData(MockWebApplication.MockDemo)]
@@ -56,6 +77,32 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChief)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
+    [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
+    public async Task Delete_ShouldBeUnauthorized_WhenInvalid(int mock)
+    {
+        // Arrange
+        var validBusinessObject = "valid-business-object";
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/business/business-objects/{validBusinessObject}");
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock); ;
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 }

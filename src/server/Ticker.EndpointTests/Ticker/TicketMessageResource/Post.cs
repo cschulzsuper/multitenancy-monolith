@@ -34,7 +34,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Text = $"post-ticker-message-{Guid.NewGuid()}",
             Priority = "low",
-            TickerUser = MockWebApplication.Mail
+            TickerUser = $"{Guid.NewGuid()}@localhost"
         };
 
         request.Content = JsonContent.Create(postTickerMessage);
@@ -81,7 +81,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Text = $"post-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
-            TickerUser = MockWebApplication.Mail
+            TickerUser = $"{Guid.NewGuid()}@localhost"
         };
 
         request.Content = JsonContent.Create(postTickerMessage);
@@ -128,7 +128,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Text = $"post-ticker-message-{Guid.NewGuid()}",
             Priority = "high",
-            TickerUser = MockWebApplication.Mail
+            TickerUser = $"{Guid.NewGuid()}@localhost"
         };
 
         request.Content = JsonContent.Create(postTickerMessage);
@@ -175,7 +175,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Text = $"post-ticker-message-{Guid.NewGuid()}",
             Priority = "catastrophe",
-            TickerUser = MockWebApplication.Mail
+            TickerUser = $"{Guid.NewGuid()}@localhost"
         };
 
         request.Content = JsonContent.Create(postTickerMessage);
@@ -222,7 +222,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Text = (string?)null,
             Priority = "low",
-            TickerUser = MockWebApplication.Mail
+            TickerUser = $"{Guid.NewGuid()}@localhost"
         };
 
         request.Content = JsonContent.Create(postTickerMessage);
@@ -257,7 +257,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Text = string.Empty,
             Priority = "low",
-            TickerUser = MockWebApplication.Mail
+            TickerUser = $"{Guid.NewGuid()}@localhost"
         };
 
         request.Content = JsonContent.Create(postTickerMessage);
@@ -292,7 +292,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Text = new string(Enumerable.Repeat('a', 4001).ToArray()),
             Priority = "low",
-            TickerUser = MockWebApplication.Mail
+            TickerUser = $"{Guid.NewGuid()}@localhost"
         };
 
         request.Content = JsonContent.Create(postTickerMessage);
@@ -327,7 +327,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Text = $"post-ticker-message",
             Priority = (string?)null,
-            TickerUser = MockWebApplication.Mail
+            TickerUser = $"{Guid.NewGuid()}@localhost"
         };
 
         request.Content = JsonContent.Create(postTickerMessage);
@@ -362,7 +362,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Text = $"post-ticker-message",
             Priority = string.Empty,
-            TickerUser = MockWebApplication.Mail
+            TickerUser = $"{Guid.NewGuid()}@localhost"
         };
 
         request.Content = JsonContent.Create(postTickerMessage);
@@ -397,7 +397,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         {
             Text = $"post-ticker-message",
             Priority = "invalid",
-            TickerUser = MockWebApplication.Mail
+            TickerUser = $"{Guid.NewGuid()}@localhost"
         };
 
         request.Content = JsonContent.Create(postTickerMessage);

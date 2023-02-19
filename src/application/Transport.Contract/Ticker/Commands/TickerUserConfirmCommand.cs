@@ -1,11 +1,11 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedAnnotations;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
 
-public class TickerUserAuthCommand
+public class TickerUserConfirmCommand
 {
-
     [Required]
     [StringLength(140)]
     public required string Client { get; init; }
@@ -18,4 +18,8 @@ public class TickerUserAuthCommand
 
     [Secret]
     public required string Secret { get; init; }
+
+    [Display(Name = "secret token")]
+    [Token]
+    public required Guid SecretToken { get; set; }
 }

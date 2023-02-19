@@ -46,6 +46,10 @@
 
 ## Ticker
 
-* `Ticker`
+* `TickerUser`
+
+  Example that is located in a separate service. 
+
+* `TickerMessage`
 
   Example that is located in a separate service. 

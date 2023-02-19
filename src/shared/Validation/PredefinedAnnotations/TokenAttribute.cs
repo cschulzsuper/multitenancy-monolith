@@ -1,31 +1,30 @@
-﻿using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Administration.ConcreteValidators;
-using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
 using System.ComponentModel.DataAnnotations;
 
-namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Administration.ConcreteAnnotations;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedAnnotations;
 
-public sealed class CustomPropertyTypeAttribute : ValidationAttribute
+public sealed class TokenAttribute : ValidationAttribute
 {
     private readonly static Validator<string> _validator;
 
-    static CustomPropertyTypeAttribute()
+    static TokenAttribute()
     {
         _validator = new Validator<string>();
-        _validator.AddRules(x => x, CustomPropertyNameValidator.CreateRules("{0}"));
+        _validator.AddRules(x => x, SecretValidator.CreateRules("{0}"));
     }
 
     public ValidationResult? _validationResult;
 
-    public string _field = "custom property type";
+    public string _field = "token";
 
     public override bool IsValid(object? value)
     {
-        if (value is not string customPropertyType)
+        if (value is not string token)
         {
             return false;
         }
 
-        _validationResult = _validator.Validate(customPropertyType);
+        _validationResult = _validator.Validate(token);
 
         return _validationResult == ValidationResult.Success;
     }

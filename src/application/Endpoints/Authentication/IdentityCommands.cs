@@ -21,6 +21,7 @@ internal static class IdentitySignInEndpoints
         commands
             .MapPost("/me/auth", Auth)
             .WithErrorMessage(CouldNotSignInIdentity)
+            .Authenticates()
             .AddEndpointFilter<BadgeResultEndpointFilter>();
 
         commands

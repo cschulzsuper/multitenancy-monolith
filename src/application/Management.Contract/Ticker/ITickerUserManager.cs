@@ -1,13 +1,16 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
+using System;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 public interface ITickerUserManager
 {
-    ValueTask<TickerUser?> GetOrDefaultAsync(string ticketUser);
+    ValueTask<TickerUser> GetAsync(string ticketUser);
 
-    ValueTask<bool> ExistsAsync(string tickerUser, string secret);
+    ValueTask<TickerUser?> GetOrDefaultAsync(string tickerUser);
 
     ValueTask InsertAsync(TickerUser @object);
+
+    ValueTask UpdateOrDefaultAsync(string tickerUser, Action<TickerUser> action, Action @default);
 }

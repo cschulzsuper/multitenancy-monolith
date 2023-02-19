@@ -57,43 +57,65 @@ public static class RepositoryExtensions
     }
 
     public static void UpdateOrThrow<TEntity>(this IRepository<TEntity> repository, object snowflake, Action<TEntity> action)
+        => UpdateOrThrow(repository, snowflake, action, null!);
+
+    public static void UpdateOrThrow<TEntity>(this IRepository<TEntity> repository, object snowflake, Action<TEntity> action, Action @default)
     {
         repository.Execute(repository =>
         {
             var rowsAffected = repository.Update(snowflake, action);
+            DefaultSingleAffectedRow<TEntity>(rowsAffected, @default);
             EnsureSingleAffectedRow<TEntity>(rowsAffected, snowflake);
         });
     }
 
     public static void UpdateOrThrow<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, Action<TEntity> action)
-        => UpdateOrThrow(repository, query, 1, action);
+        => UpdateOrThrow(repository, query, 1, action, null!);
+
+    public static void UpdateOrThrow<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, Action<TEntity> action, Action @default)
+        => UpdateOrThrow(repository, query, 1, action, @default);
 
     public static void UpdateOrThrow<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows, Action<TEntity> action)
+        => UpdateOrThrow(repository,query, expectedRows, action, null!);
+
+    public static void UpdateOrThrow<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows, Action<TEntity> action, Action @default)
     {
         repository.Execute(repository =>
         {
             var rowsAffected = repository.Update(query, action);
+            DefaultSingleAffectedRow<TEntity>(rowsAffected, @default);
             EnsureRelevantRows<TEntity>(rowsAffected, expectedRows);
         });
     }
 
     public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, object snowflake, Action<TEntity> action)
+        => await UpdateOrThrowAsync(repository, snowflake, action, null!);
+
+    public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, object snowflake, Action<TEntity> action, Action @default)
     {
         await repository.ExecuteAsync(async repository =>
         {
             var rowsAffected = await repository.UpdateAsync(snowflake, action);
+            DefaultSingleAffectedRow<TEntity>(rowsAffected, @default);
             EnsureSingleAffectedRow<TEntity>(rowsAffected, snowflake);
         });
     }
 
     public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, Action<TEntity> action)
-        => await UpdateOrThrowAsync(repository, query, 1, action);
+        => await UpdateOrThrowAsync(repository, query, 1, action, null!);
+    
+    public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, Action<TEntity> action, Action @default)
+        => await UpdateOrThrowAsync(repository, query, 1, action, @default);
 
     public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows, Action<TEntity> action)
+        => await UpdateOrThrowAsync(repository, query, expectedRows, action, null!);
+
+    public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows, Action<TEntity> action, Action @default)
     {
         await repository.ExecuteAsync(async repository =>
         {
             var rowsAffected = await repository.UpdateAsync(query, action);
+            DefaultSingleAffectedRow<TEntity>(rowsAffected, @default);
             EnsureRelevantRows<TEntity>(rowsAffected, expectedRows);
         });
     }
@@ -142,6 +164,15 @@ public static class RepositoryExtensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void DefaultSingleAffectedRow<TEntity>(int rowsAffected, Action? @default)
+    {
+        if (rowsAffected == 0)
+        {
+            @default?.Invoke();
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void EnsureSingleAffectedRow<TEntity>(int rowsAffected, object snowflake)
     {
         if (rowsAffected == 0)
@@ -158,6 +189,11 @@ public static class RepositoryExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void EnsureRelevantRows<TEntity>(int rowsAffected, int expectedRows)
     {
+        if (rowsAffected == 0 &&  expectedRows == 1)
+        {
+            RepositoryException.ThrowObjectNotFound<TEntity>();
+        }
+
         if (rowsAffected < expectedRows)
         {
             RepositoryException.ThrowObjectsNotFound<TEntity>(expectedRows, rowsAffected);
@@ -168,6 +204,4 @@ public static class RepositoryExtensions
             throw new UnreachableException($"Unexpected result of affected rows '{rowsAffected}' after deleting '{expectedRows}' entities of type '{typeof(TEntity).Name}'");
         }
     }
-
-
 }

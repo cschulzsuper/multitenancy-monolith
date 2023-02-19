@@ -32,9 +32,9 @@ public sealed class TickerMessageTextAttribute : ValidationAttribute
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if (validationContext.DisplayName != validationContext.MemberName)
+        if (validationContext.DisplayName == validationContext.MemberName)
         {
-            _field = validationContext.DisplayName;
+            validationContext.DisplayName = _field;
         }
 
         return base.IsValid(value, validationContext);

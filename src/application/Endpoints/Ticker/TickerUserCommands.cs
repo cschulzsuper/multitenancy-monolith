@@ -10,6 +10,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 public static class TickerUserCommands
 {
     private const string CouldNotAuthTickerUser = "Could not auth ticker user";
+    private const string CouldNotConfirmTickerUser = "Could not confirm ticker user";
     private const string CouldNotVerifyTickerUser = "Could not verify ticker user";
 
     public static IEndpointRouteBuilder MapTickerUserCommands(this IEndpointRouteBuilder endpoints)
@@ -21,7 +22,13 @@ public static class TickerUserCommands
         commands
             .MapPost("/me/auth",Auth)
             .WithErrorMessage(CouldNotAuthTickerUser)
-            .WithAuthentication()
+            .Authenticates()
+            .AddEndpointFilter<BadgeResultEndpointFilter>();
+
+        commands
+            .MapPost("/me/confirm", Confirm)
+            .WithErrorMessage(CouldNotConfirmTickerUser)
+            .Authenticates()
             .AddEndpointFilter<BadgeResultEndpointFilter>();
 
         commands
@@ -36,6 +43,10 @@ public static class TickerUserCommands
     private static Delegate Auth =>
         (ITickerUserCommandHandler commandHandler, TickerUserAuthCommand command)
             => commandHandler.AuthAsync(command);
+
+    private static Delegate Confirm =>
+        (ITickerUserCommandHandler commandHandler, TickerUserConfirmCommand command)
+            => commandHandler.ConfirmAsync(command);
 
     private static Delegate Verify =>
         (ITickerUserCommandHandler commandHandler)

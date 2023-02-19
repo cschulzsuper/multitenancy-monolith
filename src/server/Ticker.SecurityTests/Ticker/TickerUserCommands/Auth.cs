@@ -52,7 +52,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         var authRequest = new
         {
             Client = "absent",
-            MockWebApplication.Group,
+            Group = MockWebApplication.Group,
             Mail = MockWebApplication.TickerUserMailAddress,
             Secret = MockWebApplication.TickerUserSecret
         };

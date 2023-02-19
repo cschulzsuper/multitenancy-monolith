@@ -2,10 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteAnnotations;
-using System.Xml.Linq;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
-using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedAnnotations;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using System;

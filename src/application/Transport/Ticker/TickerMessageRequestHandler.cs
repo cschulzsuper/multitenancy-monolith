@@ -5,8 +5,6 @@ using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Responses;
 using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Requests;
 using System.Linq;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
-using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
@@ -16,20 +14,14 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
 
     private readonly string? _currentTickerUser;
 
-    public TickerMessageRequestHandler(
-        ITickerMessageManager tickerMessageManager, 
-        ClaimsPrincipal user)
+    public TickerMessageRequestHandler(ITickerMessageManager tickerMessageManager)
     {
         _tickerMessageManager = tickerMessageManager;
-        
-        _currentTickerUser = user.GetClaimOrDefault("mailAddress");
     }
 
     public async ValueTask<TickerMessageResponse> GetAsync(long tickerMessage)
     {
         var @object = await _tickerMessageManager.GetAsync(tickerMessage);
-
-        EnsureCurrentTickerUser(@object.TickerUser);
 
         var response = new TickerMessageResponse
         {
@@ -78,8 +70,6 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
 
     public async ValueTask<TickerMessageResponse> InsertAsync(TickerMessageRequest request)
     {
-        EnsureCurrentTickerUser(request.TickerUser);
-
         var @object = new TickerMessage
         {
             Text = request.Text,
@@ -104,13 +94,9 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
 
     public async ValueTask UpdateAsync(long tickerMessage, TickerMessageRequest request)
     {
-        EnsureCurrentTickerUser(request.TickerUser);
-
         await _tickerMessageManager.UpdateAsync(tickerMessage,
             @object =>
             {
-                EnsureCurrentTickerUser(@object.TickerUser);
-
                 @object.Text = request.Text;
                 @object.Priority = request.Priority;
                 @object.TickerUser = request.TickerUser;
@@ -118,24 +104,5 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
     }
 
     public async ValueTask DeleteAsync(long tickerMessage)
-    {
-        if (_currentTickerUser != null)
-        {
-            var @object = await _tickerMessageManager.GetAsync(tickerMessage);
-            EnsureCurrentTickerUser(@object.TickerUser);
-        }
-
-        await _tickerMessageManager.DeleteAsync(tickerMessage);
-    }
-
-
-
-    private void EnsureCurrentTickerUser(string tickerUser)
-    {
-        if (_currentTickerUser != null &&
-            _currentTickerUser != tickerUser)
-        {
-            TransportException.ThrowSecurityViolation($"Ticker message operation is not allowed.");
-        }
-    }
+        => await _tickerMessageManager.DeleteAsync(tickerMessage);
 }

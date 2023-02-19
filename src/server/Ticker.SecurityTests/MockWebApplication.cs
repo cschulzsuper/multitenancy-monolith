@@ -38,6 +38,8 @@ internal static class MockWebApplication
 
         {$"SeedData:Ticker:TickerUsers:{Group}:0:MailAddress", TickerUserMailAddress},
         {$"SeedData:Ticker:TickerUsers:{Group}:0:Secret", TickerUserSecret},
+        {$"SeedData:Ticker:TickerUsers:{Group}:0:SecretState", "confirmed"},
+        {$"SeedData:Ticker:TickerUsers:{Group}:0:SecretToken", $"{Guid.NewGuid()}"},
         {$"SeedData:Ticker:TickerUsers:{Group}:0:DisplayName", TickerUserDisplayName},
     };
 

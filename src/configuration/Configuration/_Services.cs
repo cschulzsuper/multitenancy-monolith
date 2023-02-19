@@ -1,8 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
+namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 
 [SuppressMessage("Style", "IDE1006:Naming Styles")]
 public static class _Services

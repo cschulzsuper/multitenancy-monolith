@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
+
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
 
 internal static class BadgeConfiguration
