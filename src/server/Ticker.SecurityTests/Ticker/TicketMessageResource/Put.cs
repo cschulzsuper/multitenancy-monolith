@@ -38,13 +38,13 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
-    public async Task Put_ShouldFail_WhenNotAuthorized(int mock)
+    public async Task Put_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
         var validTickerMessage = 1;
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{validTickerMessage}");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();

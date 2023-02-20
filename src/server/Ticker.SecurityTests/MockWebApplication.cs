@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker;
+using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Serialization;
@@ -24,9 +25,33 @@ internal static class MockWebApplication
     public const string Group = "group";
     public const string Member = "default";
 
-    public const string TickerUserMailAddress = "default@localhost";
-    public const string TickerUserSecret = "default";
-    public const string TickerUserDisplayName = "Default";
+    public const string ConfirmedMailAddress = "confirmed@localhost";
+    public const string ConfirmedSecret = "confirmed";
+    public const string ConfirmedDisplayName = "Confirmed";
+    public readonly static Guid ConfirmedSecretToken = Guid.NewGuid();
+
+    public const string InvalidMailAddress = "invalid@localhost";
+    public const string InvalidSecret = "invalid";
+    public const string InvalidDisplayName = "Invalid";
+    public readonly static Guid InvalidSecretToken = Guid.NewGuid();
+
+    public const string PendingMailAddress = "pending@localhost";
+    public const string PendingSecret = "pending";
+    public const string PendingDisplayName = "Pending";
+    public readonly static Guid PendingSecretToken = Guid.NewGuid();
+
+    public const string TemporaryMailAddress = "temporary@localhost";
+    public const string TemporarySecret = "temporary";
+    public const string TemporaryDisplayName = "Temporary";
+    public readonly static Guid TemporarySecretToken = Guid.NewGuid();
+
+    public static readonly IDictionary<string, Guid> SecretTokens = new Dictionary<string, Guid>
+    {
+        [ConfirmedMailAddress] = ConfirmedSecretToken,
+        [InvalidMailAddress] = InvalidSecretToken,
+        [PendingMailAddress] = PendingSecretToken,
+        [TemporaryMailAddress] = TemporarySecretToken,
+    };
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
@@ -36,11 +61,29 @@ internal static class MockWebApplication
         {"AllowedClients:1:UniqueName", "security-tests"},
         {"AllowedClients:1:Scopes:1", "endpoints"},
 
-        {$"SeedData:Ticker:TickerUsers:{Group}:0:MailAddress", TickerUserMailAddress},
-        {$"SeedData:Ticker:TickerUsers:{Group}:0:Secret", TickerUserSecret},
-        {$"SeedData:Ticker:TickerUsers:{Group}:0:SecretState", "confirmed"},
-        {$"SeedData:Ticker:TickerUsers:{Group}:0:SecretToken", $"{Guid.NewGuid()}"},
-        {$"SeedData:Ticker:TickerUsers:{Group}:0:DisplayName", TickerUserDisplayName},
+        {$"SeedData:Ticker:TickerUsers:{Group}:0:MailAddress", ConfirmedMailAddress},
+        {$"SeedData:Ticker:TickerUsers:{Group}:0:Secret", ConfirmedSecret},
+        {$"SeedData:Ticker:TickerUsers:{Group}:0:SecretState", TickerUserSecretStates.Confirmed},
+        {$"SeedData:Ticker:TickerUsers:{Group}:0:SecretToken", $"{ConfirmedSecretToken}" },
+        {$"SeedData:Ticker:TickerUsers:{Group}:0:DisplayName", ConfirmedDisplayName},
+
+        {$"SeedData:Ticker:TickerUsers:{Group}:1:MailAddress", InvalidMailAddress},
+        {$"SeedData:Ticker:TickerUsers:{Group}:1:Secret", InvalidSecret},
+        {$"SeedData:Ticker:TickerUsers:{Group}:1:SecretState", TickerUserSecretStates.Invalid},
+        {$"SeedData:Ticker:TickerUsers:{Group}:1:SecretToken", $"{InvalidSecretToken}" },
+        {$"SeedData:Ticker:TickerUsers:{Group}:1:DisplayName", InvalidDisplayName},
+
+        {$"SeedData:Ticker:TickerUsers:{Group}:2:MailAddress", TemporaryMailAddress},
+        {$"SeedData:Ticker:TickerUsers:{Group}:2:Secret", TemporarySecret},
+        {$"SeedData:Ticker:TickerUsers:{Group}:2:SecretState", TickerUserSecretStates.Temporary},
+        {$"SeedData:Ticker:TickerUsers:{Group}:2:SecretToken", $"{PendingSecretToken}" },
+        {$"SeedData:Ticker:TickerUsers:{Group}:2:DisplayName", TemporaryDisplayName},
+
+        {$"SeedData:Ticker:TickerUsers:{Group}:3:MailAddress", PendingMailAddress},
+        {$"SeedData:Ticker:TickerUsers:{Group}:3:Secret", PendingSecret},
+        {$"SeedData:Ticker:TickerUsers:{Group}:3:SecretState", TickerUserSecretStates.Pending},
+        {$"SeedData:Ticker:TickerUsers:{Group}:3:SecretToken", $"{PendingSecretToken}" },
+        {$"SeedData:Ticker:TickerUsers:{Group}:3:DisplayName", PendingDisplayName},
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory)
@@ -89,7 +132,7 @@ internal static class MockWebApplication
         {
             Client = client,
             Group = Group,
-            Mail = TickerUserMailAddress,
+            Mail = ConfirmedMailAddress,
         };
 
         using var scope = factory.Services.CreateScope();
@@ -103,7 +146,7 @@ internal static class MockWebApplication
             new Claim("badge", "ticker"),
             new Claim("client", client),
             new Claim("group", Group),
-            new Claim("mail", TickerUserMailAddress),
+            new Claim("mail", ConfirmedMailAddress),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -148,7 +191,7 @@ internal static class MockWebApplication
             new Claim("badge", "ticker"),
             new Claim("client", Client),
             new Claim("group", Group),
-            new Claim("mail", TickerUserMailAddress),
+            new Claim("mail", InvalidMailAddress),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 

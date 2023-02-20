@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -23,13 +22,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
-
-        var postBusinessObject = new
-        {
-            UniqueName = "post-business-object"
-        };
-
-        request.Content = JsonContent.Create(postBusinessObject);
+        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
@@ -38,6 +31,25 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [InlineData(MockWebApplication.MockChief)]
+    public async Task Put_ShouldFail_WhenAuthorized(int mock)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
+        request.Content = JsonContent.Create(new object());
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 
@@ -53,14 +65,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);;
-
-        var postBusinessObject = new
-        {
-            UniqueName = "post-business-object",
-            CustomProperties = new Dictionary<string, object>()
-        };
-
-        request.Content = JsonContent.Create(postBusinessObject);
+        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 

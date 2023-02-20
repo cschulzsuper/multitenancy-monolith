@@ -1,6 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Requests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System;
 
@@ -57,7 +58,11 @@ public static class TickerMessageResource
     }
 
     private static Delegate GetAll =>
-        (ITickerMessageRequestHandler requestHandler, string query, int skip, int take)
+        (ITickerMessageRequestHandler requestHandler, 
+            [FromQuery(Name = "q")] string? query, 
+            [FromQuery(Name = "s")] int? skip, 
+            [FromQuery(Name = "t")] int? take)
+
             => requestHandler.GetAll(query, skip, take);
 
     private static Delegate Get =>

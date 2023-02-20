@@ -33,6 +33,10 @@ internal sealed class TickerMessageManager : ITickerMessageManager
         TickerMessageValidation.EnsureInsertable(tickerMessage);
 
         await _repository.InsertAsync(tickerMessage);
+
+        // TODO A event and event handler to generate bookmark
+        // _eventStorage.Add(@object.Snowflake, "ticker-message-inserted");
+
     }
 
     public async ValueTask UpdateAsync(long snowflake, Action<TickerMessage> action)

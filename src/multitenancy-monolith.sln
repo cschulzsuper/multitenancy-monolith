@@ -71,7 +71,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ticker.MultitenancyTests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.MultitenancyTests", "server\Server.MultitenancyTests\Server.MultitenancyTests.csproj", "{895C3B3E-5C3D-411A-9E49-59843AA3228A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticker.IntegrationTests", "server\Ticker.IntegrationTests\Ticker.IntegrationTests.csproj", "{AF9C3156-A66A-4861-85A9-F63C96350D53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ticker.IntegrationTests", "server\Ticker.IntegrationTests\Ticker.IntegrationTests.csproj", "{AF9C3156-A66A-4861-85A9-F63C96350D53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

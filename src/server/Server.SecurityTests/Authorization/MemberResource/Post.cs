@@ -51,7 +51,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/authorization/members");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var postMember = new
         {

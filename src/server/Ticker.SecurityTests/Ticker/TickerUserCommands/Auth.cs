@@ -18,8 +18,10 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         _factory = factory.Mock();
     }
 
-    [Fact]
-    public async Task Auth_ShouldSucceed_WhenValid()
+    [Theory]
+    [InlineData(MockWebApplication.ConfirmedMailAddress, MockWebApplication.ConfirmedSecret)]
+    [InlineData(MockWebApplication.TemporaryMailAddress, MockWebApplication.TemporarySecret)]
+    public async Task Auth_ShouldSucceed_WhenValid(string mail, string secret)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
@@ -28,8 +30,8 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         {
             Client = MockWebApplication.Client,
             Group = MockWebApplication.Group,
-            Mail = MockWebApplication.TickerUserMailAddress,
-            Secret = MockWebApplication.TickerUserSecret
+            Mail = mail,
+            Secret = secret
         };
 
         request.Content = JsonContent.Create(authRequest);
@@ -43,6 +45,34 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
+    [Theory]
+    [InlineData(MockWebApplication.PendingMailAddress, MockWebApplication.PendingSecret)]
+    [InlineData(MockWebApplication.InvalidMailAddress, MockWebApplication.InvalidSecret)]
+    public async Task Auth_ShouldBeForbidden_WhenSecretStateInvalid(string mail, string secret)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
+
+        var authRequest = new
+        {
+            Client = MockWebApplication.Client,
+            Group = MockWebApplication.Group,
+            Mail = mail,
+            Secret = secret
+        };
+
+        request.Content = JsonContent.Create(authRequest);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
     [Fact]
     public async Task Auth_ShouldBeForbidden_WhenClientAbsent()
     {
@@ -53,8 +83,8 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         {
             Client = "absent",
             Group = MockWebApplication.Group,
-            Mail = MockWebApplication.TickerUserMailAddress,
-            Secret = MockWebApplication.TickerUserSecret
+            Mail = MockWebApplication.ConfirmedMailAddress,
+            Secret = MockWebApplication.ConfirmedSecret
         };
 
         request.Content = JsonContent.Create(authRequest);
@@ -79,8 +109,8 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         {
             MockWebApplication.Client,
             Group = "absent",
-            Mail = MockWebApplication.TickerUserMailAddress,
-            Secret = MockWebApplication.TickerUserSecret
+            Mail = MockWebApplication.ConfirmedMailAddress,
+            Secret = MockWebApplication.ConfirmedSecret
         };
 
         request.Content = JsonContent.Create(authRequest);
@@ -106,7 +136,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
             MockWebApplication.Client,
             MockWebApplication.Group,
             Mail = "absent@localhost.com",
-            Secret = MockWebApplication.TickerUserSecret
+            Secret = MockWebApplication.ConfirmedSecret
         };
 
         request.Content = JsonContent.Create(authRequest);
@@ -131,7 +161,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         {
             MockWebApplication.Client,
             MockWebApplication.Group,
-            Mail = MockWebApplication.TickerUserMailAddress,
+            Mail = MockWebApplication.ConfirmedMailAddress,
             Secret = "inavlid"
         };
 

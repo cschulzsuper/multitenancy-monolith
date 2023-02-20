@@ -2,6 +2,7 @@
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -12,22 +13,29 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
 {
     private readonly ITickerUserManager _tickerUserManager;
+    private readonly ITickerMessageManager _tickerMessageManager;
     private readonly ITickerUserVerificationManager _tickerUserVerificationManager;
     private readonly IAllowedClientsProvider _allowedClientsProvider;
+    private readonly ClaimsPrincipal _user;
 
     public TickerUserCommandHandler(
         ITickerUserManager tickerUserManager,
         ITickerUserVerificationManager tickerUserVerificationManager,
-        IAllowedClientsProvider allowedClientsProvider)
+        ITickerMessageManager tickerMessageManager,
+        IAllowedClientsProvider allowedClientsProvider,
+        ClaimsPrincipal user)
     {
         _tickerUserManager = tickerUserManager;
+        _tickerMessageManager = tickerMessageManager;
         _tickerUserVerificationManager = tickerUserVerificationManager;
         _allowedClientsProvider = allowedClientsProvider;
+        _user = user;
     }
 
     public async ValueTask<ClaimsIdentity> AuthAsync(TickerUserAuthCommand command)
     {
         var client = command.Client;
+
         if (_allowedClientsProvider.Get().All(x => x.UniqueName != client))
         {
             TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in");
@@ -45,6 +53,10 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
                     @object.Secret = command.Secret;
                     @object.SecretState = TickerUserSecretStates.Pending;
                     @object.SecretToken = Guid.NewGuid();
+
+                    // TODO Add event to notify ticker user about pending secret
+                    // _eventStorage.Add(@object.Snowflake, "ticker-user-secret-pending");
+
                     break;
 
                 case TickerUserSecretStates.Pending:
@@ -66,10 +78,9 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
 
         var defaultAction = () => TransportException.ThrowSecurityViolation($"Ticker user '{command.Mail}' does not exist");
 
-        await _tickerUserManager.UpdateOrDefaultAsync(command.Mail, updateAction, defaultAction);
+        await _tickerUserManager.UpdateAsync(command.Mail, updateAction, defaultAction);
 
         var verification = Guid.NewGuid().ToByteArray();
-
         var verificationKey = new TickerUserVerificationKey
         {
             Group = command.Group,
@@ -98,6 +109,7 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
     public async ValueTask<ClaimsIdentity> ConfirmAsync(TickerUserConfirmCommand command)
     {
         var client = command.Client;
+
         if (_allowedClientsProvider.Get().All(x => x.UniqueName != client))
         {
             TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in");
@@ -139,7 +151,7 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
 
         var defaultAction = () => TransportException.ThrowSecurityViolation($"Ticker user '{command.Mail}' does not exist");
 
-        await _tickerUserManager.UpdateOrDefaultAsync(command.Mail, updateAction, defaultAction);
+        await _tickerUserManager.UpdateAsync(command.Mail, updateAction, defaultAction);
 
         var verification = Guid.NewGuid().ToByteArray();
 
@@ -168,6 +180,18 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
         return claimsIdentity;
     }
 
+    public async ValueTask PostAsync(TickerUserPostCommand command)
+    {
+        var @object = new TickerMessage
+        {
+            Text = command.Text,
+            Priority = TickerMessagePriorities.Low,
+            Timestamp = DateTime.UtcNow.Ticks,
+            TickerUser = _user.GetClaim("mail")
+        };
+
+        await _tickerMessageManager.InsertAsync(@object);
+    }
 
     public void Verify() { }
 }

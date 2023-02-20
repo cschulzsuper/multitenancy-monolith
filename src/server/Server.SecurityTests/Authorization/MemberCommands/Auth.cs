@@ -71,7 +71,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authorization/members/me/auth");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var authRequest = new
         {
@@ -99,7 +99,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authorization/members/me/auth");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var authRequest = new
         {
@@ -131,7 +131,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authorization/members/me/auth");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var authRequest = new
         {
@@ -163,7 +163,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/authorization/members/me/auth");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var authRequest = new
         {

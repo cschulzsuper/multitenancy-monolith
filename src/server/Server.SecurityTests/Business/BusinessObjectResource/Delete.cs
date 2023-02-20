@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -37,13 +36,13 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockChief)]
-    public async Task Delete_ShouldFail_WhenNotAuthorized(int mock)
+    public async Task Delete_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
         var validBusinessObject = "valid-business-object";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/business/business-objects/{validBusinessObject}");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
 
@@ -94,7 +93,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         var validBusinessObject = "valid-business-object";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/business/business-objects/{validBusinessObject}");
-        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock); ;
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
 

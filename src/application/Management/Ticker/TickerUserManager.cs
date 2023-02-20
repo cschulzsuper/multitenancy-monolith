@@ -40,7 +40,7 @@ public class TickerUserManager : ITickerUserManager
         await _repository.InsertAsync(@object);
     }
 
-    public async ValueTask UpdateOrDefaultAsync(string tickerUser, Action<TickerUser> action, Action @default)
+    public async ValueTask UpdateAsync(string tickerUser, Action<TickerUser> action, Action @default)
     {
         TickerUserValidation.EnsureTicketUser(tickerUser);
 

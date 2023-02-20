@@ -37,7 +37,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
-    public async Task Delete_ShouldFail_WhenNotAuthorized(int mock)
+    public async Task Delete_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
         var validTickerMessage = 1;

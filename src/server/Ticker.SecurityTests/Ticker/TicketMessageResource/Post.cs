@@ -36,7 +36,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
-    public async Task Post_ShouldFail_WhenNotAuthorized(int mock)
+    public async Task Post_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");

@@ -31,6 +31,8 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
         await TickerUser_Auth_ShouldSucceed_WithSecretStatePending();
         await TickerUser_Auth_ShouldBeForbidden();
 
+        // TODO Verfiy ticker user was notified once implemented
+
         await TickerUser_Confirm_ShouldSucceedd_WithSecretStateConfirmed();
         await TickerUser_Confirm_ShouldBeForbidden();
 
@@ -52,12 +54,11 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
             SecretToken = MockWebApplication.TicketUserSecretToken,
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
-        {
-            await scope.ServiceProvider
-                .GetRequiredService<IRepository<TickerUser>>()
-                .InsertAsync(existingTickerUser);
-        }
+        using var scope = _factory.CreateMultitenancyScope();
+
+        await scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .InsertAsync(existingTickerUser);
     }
 
     private async Task TickerUser_Auth_ShouldSucceed_WithSecretStatePending()
@@ -82,16 +83,15 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, authResponse.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope())
-        {
-            var @object = scope.ServiceProvider
-                .GetRequiredService<IRepository<TickerUser>>()
-                .GetQueryable()
-                .Single();
+        using var scope = _factory.CreateMultitenancyScope();
 
-            Assert.Equal(TickerUserSecretStates.Pending, @object.SecretState);
-            Assert.NotEqual(MockWebApplication.TicketUserSecretToken, @object.SecretToken);
-        }
+        var @object = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .Single();
+
+        Assert.Equal(TickerUserSecretStates.Pending, @object.SecretState);
+        Assert.NotEqual(MockWebApplication.TicketUserSecretToken, @object.SecretToken);
     }
 
     private async Task TickerUser_Auth_ShouldBeForbidden()
@@ -223,15 +223,14 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, authResponse.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope())
-        {
-            var @object = scope.ServiceProvider
-                .GetRequiredService<IRepository<TickerUser>>()
-                .GetQueryable()
-                .Single();
+        using var scope = _factory.CreateMultitenancyScope();
 
-            Assert.Equal(TickerUserSecretStates.Confirmed, @object.SecretState);
-            Assert.NotEqual(Guid.Empty, @object.SecretToken);
-        }
+        var @object = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .Single();
+
+        Assert.Equal(TickerUserSecretStates.Confirmed, @object.SecretState);
+        Assert.NotEqual(Guid.Empty, @object.SecretToken);
     }
 }

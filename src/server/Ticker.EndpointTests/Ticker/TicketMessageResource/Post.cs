@@ -238,12 +238,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var createdTickerUser = scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerUser>>()
+        var createdTickerMessage = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
             .GetQueryable()
             .SingleOrDefault();
 
-        Assert.Null(createdTickerUser);
+        Assert.Null(createdTickerMessage);
     }
 
     [Fact]
@@ -273,12 +273,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var createdTickerUser = scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerUser>>()
+        var createdTickerMessage = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
             .GetQueryable()
             .SingleOrDefault();
 
-        Assert.Null(createdTickerUser);
+        Assert.Null(createdTickerMessage);
     }
 
     [Fact]
@@ -308,12 +308,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var createdTickerUser = scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerUser>>()
+        var createdTickerMessage = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
             .GetQueryable()
             .SingleOrDefault();
 
-        Assert.Null(createdTickerUser);
+        Assert.Null(createdTickerMessage);
     }
 
     [Fact]
@@ -343,12 +343,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var createdTickerUser = scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerUser>>()
+        var createdTickerMessage = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
             .GetQueryable()
             .SingleOrDefault();
 
-        Assert.Null(createdTickerUser);
+        Assert.Null(createdTickerMessage);
     }
 
     [Fact]
@@ -378,12 +378,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var createdTickerUser = scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerUser>>()
+        var createdTickerMessage = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
             .GetQueryable()
             .SingleOrDefault();
 
-        Assert.Null(createdTickerUser);
+        Assert.Null(createdTickerMessage);
     }
 
     [Fact]
@@ -413,12 +413,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var createdTickerUser = scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerUser>>()
+        var createdTickerMessage = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
             .GetQueryable()
             .SingleOrDefault();
 
-        Assert.Null(createdTickerUser);
+        Assert.Null(createdTickerMessage);
     }
 
     [Fact]
@@ -448,12 +448,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var createdTickerUser = scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerUser>>()
+        var createdTickerMessage = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
             .GetQueryable()
             .SingleOrDefault();
 
-        Assert.Null(createdTickerUser);
+        Assert.Null(createdTickerMessage);
     }
 
     [Fact]
@@ -483,12 +483,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var createdTickerUser = scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerUser>>()
+        var createdTickerMessage = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
             .GetQueryable()
             .SingleOrDefault();
 
-        Assert.Null(createdTickerUser);
+        Assert.Null(createdTickerMessage);
     }
 
     [Fact]
@@ -518,12 +518,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var createdTickerUser = scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerUser>>()
+        var createdTickerMessage = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
             .GetQueryable()
             .SingleOrDefault();
 
-        Assert.Null(createdTickerUser);
+        Assert.Null(createdTickerMessage);
     }
 
     [Fact]
@@ -553,12 +553,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var createdTickerUser = scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerUser>>()
+        var createdTickerMessage = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
             .GetQueryable()
             .SingleOrDefault();
 
-        Assert.Null(createdTickerUser);
+        Assert.Null(createdTickerMessage);
     }
 
     [Fact]
@@ -588,11 +588,11 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var createdTickerUser = scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerUser>>()
+        var createdTickerMessage = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
             .GetQueryable()
             .SingleOrDefault();
 
-        Assert.Null(createdTickerUser);
+        Assert.Null(createdTickerMessage);
     }
 }

@@ -195,7 +195,8 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
             _ =>
             {
                 EnsureInsertable(entity);
-                return entity;
+                var inserted = (TEntity)entity!.Clone();
+                return inserted;
             },
             (snowflake, entity) =>
             {

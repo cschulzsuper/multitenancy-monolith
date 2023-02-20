@@ -1,11 +1,11 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Server;
+using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
-namespace Business.BusinessObjectResource;
+namespace Ticker.TicketMessageResource;
 
 public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -20,9 +20,9 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var validBusinessObject = "valid-business-object";
+        var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{validBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-messages/{validTickerMessage}");
 
         var client = _factory.CreateClient();
 
@@ -34,17 +34,15 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 
+
     [Theory]
-    [InlineData(MockWebApplication.MockChief)]
-    [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
-    [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Get_ShouldFail_WhenAuthorized(int mock)
+    public async Task GetAll_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
-        var validBusinessObject = "valid-business-object";
+        var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{validBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-messages/{validTickerMessage}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -58,16 +56,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(MockWebApplication.MockAdmin)]
-    [InlineData(MockWebApplication.MockIdentity)]
-    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockTicker)]
     public async Task Get_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
-        var validBusinessObject = "valid-business-object";
+        var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{validBusinessObject}");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);;
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-messages/{validTickerMessage}");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
 

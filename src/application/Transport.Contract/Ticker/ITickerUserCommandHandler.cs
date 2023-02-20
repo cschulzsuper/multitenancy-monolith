@@ -10,5 +10,7 @@ public interface ITickerUserCommandHandler
 
     ValueTask<ClaimsIdentity> ConfirmAsync(TickerUserConfirmCommand command);
 
+    ValueTask PostAsync(TickerUserPostCommand command);
+
     void Verify();
 }

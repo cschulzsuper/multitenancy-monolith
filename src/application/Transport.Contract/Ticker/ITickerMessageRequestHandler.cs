@@ -9,7 +9,7 @@ public interface ITickerMessageRequestHandler
 {
     ValueTask<TickerMessageResponse> GetAsync(long tickerMessage);
 
-    IAsyncEnumerable<TickerMessageResponse> GetAll(string query, int skip, int take);
+    IAsyncEnumerable<TickerMessageResponse> GetAll(string? query, int? skip, int? take);
 
     ValueTask<TickerMessageResponse> InsertAsync(TickerMessageRequest request);
 

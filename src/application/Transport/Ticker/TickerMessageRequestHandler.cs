@@ -12,8 +12,6 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
 {
     private readonly ITickerMessageManager _tickerMessageManager;
 
-    private readonly string? _currentTickerUser;
-
     public TickerMessageRequestHandler(ITickerMessageManager tickerMessageManager)
     {
         _tickerMessageManager = tickerMessageManager;
@@ -35,20 +33,13 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
         return response;
     }
 
-    public async IAsyncEnumerable<TickerMessageResponse> GetAll(string query, int skip, int take)
+    public async IAsyncEnumerable<TickerMessageResponse> GetAll(string? query, int? skip, int? take)
     {
         var objects = _tickerMessageManager.GetAsyncEnumerable(
             query =>
-            {          
-                if (_currentTickerUser != null)
-                {
-                    query = query
-                        .Where(x => x.TickerUser == _currentTickerUser);
-                }
-
-                query = query
-                    .Skip(skip)
-                    .Take(take);
+            {
+                query = skip != null ? query.Skip(skip.Value) : query;
+                query = take != null ? query.Take(take.Value) : query;
 
                 return query;
             });

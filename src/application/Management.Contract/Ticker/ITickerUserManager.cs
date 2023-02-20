@@ -12,5 +12,5 @@ public interface ITickerUserManager
 
     ValueTask InsertAsync(TickerUser @object);
 
-    ValueTask UpdateOrDefaultAsync(string tickerUser, Action<TickerUser> action, Action @default);
+    ValueTask UpdateAsync(string tickerUser, Action<TickerUser> action, Action @default);
 }
