@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
@@ -12,6 +11,7 @@ using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Ticker.TickerUserCommands;
 
@@ -19,9 +19,9 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
-    public Post(WebApplicationFactory<Program> factory)
+    public Post(WebApplicationFactory<Program> factory, ITestOutputHelper output)
     {
-        _factory = factory.Mock();
+        _factory = factory.Mock(output);
     }
 
     [Fact]

@@ -30,7 +30,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingBusinessObject = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 
@@ -79,7 +78,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingBusinessObject = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 
@@ -140,7 +138,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         var existingObjectType = new ObjectType
         {
-            Snowflake = 1,
             UniqueName = "business-object",
             CustomProperties = new List<ObjectTypeCustomProperty>
             {
@@ -150,7 +147,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         var existingBusinessObject = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 
@@ -266,13 +262,11 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingBusinessObject = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 
         var additionalBusinessObject = new BusinessObject
         {
-            Snowflake = 2,
             UniqueName = $"additional-business-object-{Guid.NewGuid()}"
         };
 
@@ -321,7 +315,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingBusinessObject = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 
@@ -359,7 +352,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingBusinessObject = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 
@@ -397,7 +389,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingBusinessObject = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 
@@ -435,7 +426,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingBusinessObject = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 

@@ -58,6 +58,7 @@ public class Startup
 
         services.AddCaching();
         services.AddConfiguration();
+        services.AddOrchestration();
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryTickerData();
@@ -90,6 +91,7 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.UseEndpointEvents();
         app.UseEndpoints(endpoints =>
         {
             if (_environment.IsDevelopment())

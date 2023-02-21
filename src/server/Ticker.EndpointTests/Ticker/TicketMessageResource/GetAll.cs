@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -7,8 +6,6 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Data;
-using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
-using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using Microsoft.AspNetCore.Authentication;
@@ -33,7 +30,6 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage1 = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-1-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -42,7 +38,6 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
         var existingTickerMessage2 = new TickerMessage
         {
-            Snowflake = 2,
             Text = $"existing-ticker-message-2-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",

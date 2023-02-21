@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -7,8 +6,6 @@ using System.Net.Http.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Data;
-using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
-using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -32,7 +29,6 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",

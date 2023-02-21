@@ -11,10 +11,14 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 internal sealed class TickerMessageManager : ITickerMessageManager
 {
     private readonly IRepository<TickerMessage> _repository;
+    private readonly IEventStorage _eventStorage;
 
-    public TickerMessageManager(IRepository<TickerMessage> repository)
+    public TickerMessageManager(
+        IRepository<TickerMessage> repository,
+        IEventStorage eventStorage)
     {
         _repository = repository;
+        _eventStorage = eventStorage;
     }
 
     public async ValueTask<TickerMessage> GetAsync(long snowflake)
@@ -28,15 +32,14 @@ internal sealed class TickerMessageManager : ITickerMessageManager
     public IAsyncEnumerable<TickerMessage> GetAsyncEnumerable(Func<IQueryable<TickerMessage>, IQueryable<TickerMessage>> query)
         => _repository.GetAsyncEnumerable(query);
 
-    public async ValueTask InsertAsync(TickerMessage tickerMessage)
+    public async ValueTask InsertAsync(TickerMessage @object)
     {
-        TickerMessageValidation.EnsureInsertable(tickerMessage);
+        TickerMessageValidation.EnsureInsertable(@object);
 
-        await _repository.InsertAsync(tickerMessage);
+        await _repository.InsertAsync(@object);
 
         // TODO A event and event handler to generate bookmark
-        // _eventStorage.Add(@object.Snowflake, "ticker-message-inserted");
-
+        _eventStorage.Add("ticker-message-inserted", @object.Snowflake);
     }
 
     public async ValueTask UpdateAsync(long snowflake, Action<TickerMessage> action)

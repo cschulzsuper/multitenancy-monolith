@@ -28,7 +28,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };
@@ -132,14 +131,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "default@localhost",
         };
 
         var additionalMember = new Member
         {
-            Snowflake = 2,
             UniqueName = $"additional-member-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };
@@ -189,7 +186,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };
@@ -228,7 +224,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };
@@ -267,7 +262,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };
@@ -306,7 +300,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };
@@ -345,7 +338,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost"
         };
@@ -384,7 +376,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost"
         };
@@ -423,7 +414,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost"
         };
@@ -462,7 +452,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost"
         };
@@ -501,7 +490,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost"
         };

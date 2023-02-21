@@ -30,7 +30,6 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType1 = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-1-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type 1"
@@ -38,7 +37,6 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
         var existingDistinctionType2 = new DistinctionType
         {
-            Snowflake = 2,
             UniqueName = $"existing-distinction-type-2-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type 2"

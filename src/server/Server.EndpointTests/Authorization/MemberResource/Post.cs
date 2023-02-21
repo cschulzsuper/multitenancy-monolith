@@ -69,7 +69,6 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };

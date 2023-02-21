@@ -27,7 +27,6 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingBusinessObject = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 

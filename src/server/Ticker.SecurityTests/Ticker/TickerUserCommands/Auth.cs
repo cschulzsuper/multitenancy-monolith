@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Ticker.TickerUserCommands;
 
@@ -13,9 +14,9 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
     private readonly WebApplicationFactory<Program> _factory;
 
-    public Auth(WebApplicationFactory<Program> factory)
+    public Auth(WebApplicationFactory<Program> factory, ITestOutputHelper output)
     {
-        _factory = factory.Mock();
+        _factory = factory.Mock(output);
     }
 
     [Theory]

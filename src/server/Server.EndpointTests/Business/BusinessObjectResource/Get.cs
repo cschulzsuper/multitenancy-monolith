@@ -31,7 +31,6 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingBusinessObject = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 
@@ -79,7 +78,6 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
         var existingObjectType = new ObjectType
         {
-            Snowflake = 1,
             UniqueName = "business-object",
             CustomProperties = new List<ObjectTypeCustomProperty>
             {
@@ -89,7 +87,6 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
         var existingBusinessObject = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-{Guid.NewGuid()}",
             CustomProperties = new Dictionary<string, object>
             {

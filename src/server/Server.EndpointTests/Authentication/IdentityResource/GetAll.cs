@@ -30,7 +30,6 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity1 = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-1-{Guid.NewGuid()}",
             MailAddress = "info@localhost",
             Secret = "foo-bar"
@@ -38,7 +37,6 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
         var existingIdentity2 = new Identity
         {
-            Snowflake = 2,
             UniqueName = $"existing-identity-2-{Guid.NewGuid()}",
             MailAddress = "info@localhost",
             Secret = "foo-bar"

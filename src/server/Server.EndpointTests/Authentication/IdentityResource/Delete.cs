@@ -27,7 +27,6 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "info@localhost",
             Secret = "foo-bar"

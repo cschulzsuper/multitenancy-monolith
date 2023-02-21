@@ -47,7 +47,6 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
         var existingObjectType = new ObjectType
         {
-            Snowflake = 1,
             UniqueName = "business-object",
             CustomProperties = new List<ObjectTypeCustomProperty>
             {

@@ -17,19 +17,22 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
     private readonly ITickerUserVerificationManager _tickerUserVerificationManager;
     private readonly IAllowedClientsProvider _allowedClientsProvider;
     private readonly ClaimsPrincipal _user;
+    private readonly IEventStorage _eventStorage;
 
     public TickerUserCommandHandler(
         ITickerUserManager tickerUserManager,
         ITickerUserVerificationManager tickerUserVerificationManager,
         ITickerMessageManager tickerMessageManager,
         IAllowedClientsProvider allowedClientsProvider,
-        ClaimsPrincipal user)
+        ClaimsPrincipal user,
+        IEventStorage eventStorage)
     {
         _tickerUserManager = tickerUserManager;
         _tickerMessageManager = tickerMessageManager;
         _tickerUserVerificationManager = tickerUserVerificationManager;
         _allowedClientsProvider = allowedClientsProvider;
         _user = user;
+        _eventStorage = eventStorage;
     }
 
     public async ValueTask<ClaimsIdentity> AuthAsync(TickerUserAuthCommand command)
@@ -55,7 +58,7 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
                     @object.SecretToken = Guid.NewGuid();
 
                     // TODO Add event to notify ticker user about pending secret
-                    // _eventStorage.Add(@object.Snowflake, "ticker-user-secret-pending");
+                    _eventStorage.Add("ticker-user-secret-pending", @object.Snowflake);
 
                     break;
 

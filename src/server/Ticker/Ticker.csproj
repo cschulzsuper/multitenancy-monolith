@@ -16,6 +16,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\application\Endpoints\Endpoints.csproj" />
 		<ProjectReference Include="..\..\application\Management\Management.csproj" />
+		<ProjectReference Include="..\..\application\Orchestration\Orchestration.csproj" />
 		<ProjectReference Include="..\..\application\Transport\Transport.csproj" />
 		<ProjectReference Include="..\..\configuration\Configuration\Configuration.csproj" />
 		<ProjectReference Include="..\..\data\Caching\Caching.csproj" />

@@ -28,7 +28,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -138,7 +137,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -146,7 +144,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         var additionalIdentity = new Identity
         {
-            Snowflake = 2,
             UniqueName = $"additional-identity-{Guid.NewGuid()}",
             MailAddress = "additional-info@localhost",
             Secret = "additional-foo-bar"
@@ -200,7 +197,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -241,7 +237,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -282,7 +277,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -323,7 +317,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -364,7 +357,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -405,7 +397,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -446,7 +437,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -487,7 +477,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -528,7 +517,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -569,7 +557,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -610,7 +597,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"
@@ -651,7 +637,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"

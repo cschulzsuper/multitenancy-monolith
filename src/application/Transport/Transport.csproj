@@ -22,6 +22,7 @@
 		<ProjectReference Include="..\..\shared\Security.Claims\Security.Claims.csproj" />
 		<ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
 		<ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />
+		<ProjectReference Include="..\Orchestration.Contract\Orchestration.Contract.csproj" />
 		<ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
 	</ItemGroup>
 

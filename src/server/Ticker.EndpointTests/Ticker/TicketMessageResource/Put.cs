@@ -28,7 +28,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -80,10 +79,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldSucceed_WhenPriorityDefault()
     {
         // Arrange
-        // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "low",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -137,7 +134,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -192,7 +188,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -302,7 +297,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -359,7 +353,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -416,7 +409,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -473,7 +465,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -530,7 +521,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -587,7 +577,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -644,7 +633,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -701,7 +689,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -758,7 +745,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -815,7 +801,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",
@@ -872,7 +857,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",

@@ -38,7 +38,6 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
         var existingObjectType = new ObjectType
         {
-            Snowflake = 1,
             UniqueName = "business-object",
             CustomProperties = new List<ObjectTypeCustomProperty>
             {
@@ -100,7 +99,6 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingObjectType = new ObjectType
         {
-            Snowflake = 1,
             UniqueName = "business-object"
         };
 
@@ -132,7 +130,6 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingObjectType = new ObjectType
         {
-            Snowflake = 1,
             UniqueName = "business-object",
         };
 

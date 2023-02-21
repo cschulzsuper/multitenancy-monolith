@@ -46,7 +46,6 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
 
         var existingTickerUser = new TickerUser
         {
-            Snowflake = 1,
             DisplayName = "Default",
             MailAddress = MockWebApplication.TicketUserMail,
             Secret = MockWebApplication.TicketUserSecret,

@@ -30,14 +30,12 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingMember1 = new Member
         {
-            Snowflake = 1,
             UniqueName = $"existing-member-1-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };
 
         var existingMember2 = new Member
         {
-            Snowflake = 2,
             UniqueName = $"existing-member-2-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };

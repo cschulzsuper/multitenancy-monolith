@@ -27,7 +27,6 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingTickerMessage = new TickerMessage
         {
-            Snowflake = 1,
             Text = $"existing-ticker-message-{Guid.NewGuid()}",
             Priority = "default",
             TickerUser = $"{Guid.NewGuid()}@localhost",

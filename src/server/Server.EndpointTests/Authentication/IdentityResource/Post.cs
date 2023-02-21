@@ -73,7 +73,6 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingIdentity = new Identity
         {
-            Snowflake = 1,
             UniqueName = $"existing-identity-{Guid.NewGuid()}",
             MailAddress = "existing-info@localhost",
             Secret = "existing-foo-bar"

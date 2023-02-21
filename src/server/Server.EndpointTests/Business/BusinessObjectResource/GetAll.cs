@@ -32,13 +32,11 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingBusinessObject1 = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-1-{Guid.NewGuid()}"
         };
 
         var existingBusinessObject2 = new BusinessObject
         {
-            Snowflake = 2,
             UniqueName = $"existing-business-object-2-{Guid.NewGuid()}"
         };
 
@@ -89,7 +87,6 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
         var existingObjectType = new ObjectType
         {
-            Snowflake = 1,
             UniqueName = "business-object",
             CustomProperties = new List<ObjectTypeCustomProperty>
             {
@@ -99,7 +96,6 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
         var existingBusinessObject1 = new BusinessObject
         {
-            Snowflake = 1,
             UniqueName = $"existing-business-object-1-{Guid.NewGuid()}",
             CustomProperties = new Dictionary<string, object>
             {
@@ -109,7 +105,6 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
         var existingBusinessObject2 = new BusinessObject
         {
-            Snowflake = 2,
             UniqueName = $"existing-business-object-2-{Guid.NewGuid()}",
             CustomProperties = new Dictionary<string, object>
             {

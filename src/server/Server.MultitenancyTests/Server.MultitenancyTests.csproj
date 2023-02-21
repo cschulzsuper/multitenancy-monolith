@@ -25,7 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Ticker\Ticker.csproj" />
+	  <ProjectReference Include="..\Server\Server.csproj" />
 	</ItemGroup>
 
 </Project>

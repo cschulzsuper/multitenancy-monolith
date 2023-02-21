@@ -28,7 +28,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
@@ -138,7 +137,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
@@ -146,7 +144,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         var additionalDistinctionType = new DistinctionType
         {
-            Snowflake = 2,
             UniqueName = $"additional-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Additional Distinction Type"
@@ -200,7 +197,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
@@ -241,7 +237,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
@@ -282,7 +277,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
@@ -323,7 +317,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
@@ -364,7 +357,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
@@ -405,7 +397,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
@@ -446,7 +437,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
@@ -487,7 +477,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
@@ -528,7 +517,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
@@ -569,7 +557,6 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"

@@ -13,9 +13,6 @@ using System.Text.Json;
 
 internal static class MockWebApplication
 {
-    public const int MockMember = 1;
-    public const int MockTicker = 2;
-
     public const string Client = "multitenancy-tests";
 
     public const string Group1 = "group-1";

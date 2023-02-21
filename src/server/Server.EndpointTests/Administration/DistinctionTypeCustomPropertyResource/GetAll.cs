@@ -41,7 +41,6 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
         var existingDistinctionType = new DistinctionType
         {
-            Snowflake = 1,
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type",

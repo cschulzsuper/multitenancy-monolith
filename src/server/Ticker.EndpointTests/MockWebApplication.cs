@@ -2,14 +2,17 @@
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Serialization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
+using Xunit.Abstractions;
 
 internal static class MockWebApplication
 {
@@ -26,11 +29,18 @@ internal static class MockWebApplication
         {"AllowedClients:0:Scopes:1", "endpoints"},
     };
 
-    public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory)
+    public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory, ITestOutputHelper? output = null)
         => factory.WithWebHostBuilder(app => app
             .ConfigureServices(services => 
             {
                 services.AddSingleton<BadgeValidator, MockBadgeValidator>();
+            })
+            .ConfigureLogging(loggingBuilder =>
+            {
+                if (output != null)
+                {
+                    loggingBuilder.Services.AddSingleton<ILoggerProvider>(serviceProvider => new XunitLoggerProvider(output));
+                }
             })
             .ConfigureAppConfiguration((_, config) =>
             {
