@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
@@ -17,11 +17,11 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\application\Endpoints\Endpoints.csproj" />
 	  <ProjectReference Include="..\..\application\Management\Management.csproj" />
-	  <ProjectReference Include="..\..\application\Orchestration\Orchestration.csproj" />
 	  <ProjectReference Include="..\..\application\Transport\Transport.csproj" />
 	  <ProjectReference Include="..\..\configuration\Configuration\Configuration.csproj" />
 	  <ProjectReference Include="..\..\data\Caching\Caching.csproj" />
 	  <ProjectReference Include="..\..\data\Data.StaticDictionary\Data.StaticDictionary.csproj" />
+	  <ProjectReference Include="..\..\shared\EventBus\EventBus.csproj" />
 	  <ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
 	</ItemGroup>
 

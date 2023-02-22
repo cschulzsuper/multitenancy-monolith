@@ -42,7 +42,7 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         }
     }
 
-    public async ValueTask ExecuteAsync(Func<IRepository<TEntity>, ValueTask> func)
+    public async Task ExecuteAsync(Func<IRepository<TEntity>, Task> func)
     {
         using var _ = await _context.AcquireLockAsync();
 
@@ -81,16 +81,16 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         return entity != null;
     }
 
-    public ValueTask<bool> ExistsAsync(object snowflake)
+    public Task<bool> ExistsAsync(object snowflake)
     {
         var entity = Exists(snowflake);
-        return ValueTask.FromResult(entity);
+        return Task.FromResult(entity);
     }
 
-    public ValueTask<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
+    public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
     {
         var entity = Exists(predicate);
-        return ValueTask.FromResult(entity);
+        return Task.FromResult(entity);
     }
 
     public TEntity? GetOrDefault(object snowflake)
@@ -108,16 +108,16 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         return entity;
     }
 
-    public ValueTask<TEntity?> GetOrDefaultAsync(object snowflake)
+    public Task<TEntity?> GetOrDefaultAsync(object snowflake)
     {
         var entity = GetOrDefault(snowflake);
-        return ValueTask.FromResult(entity);
+        return Task.FromResult(entity);
     }
 
-    public ValueTask<TEntity?> GetOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+    public Task<TEntity?> GetOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
     {
         var entity = GetOrDefault(predicate);
-        return ValueTask.FromResult(entity);
+        return Task.FromResult(entity);
     }
 
     public IQueryable<TEntity> GetQueryable()
@@ -131,7 +131,7 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
     public async IAsyncEnumerable<TEntity> GetAsyncEnumerable(
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await ValueTask.CompletedTask;
+        await Task.CompletedTask;
 
         var entities = _context.Data.Values;
 
@@ -144,7 +144,7 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
     public async IAsyncEnumerable<TEntity> GetAsyncEnumerable(Expression<Func<TEntity, bool>> predicate,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await ValueTask.CompletedTask;
+        await Task.CompletedTask;
 
         var entities = _context.Data.Values
             .Where(predicate.Compile())
@@ -159,7 +159,7 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
     public async IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> query,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await ValueTask.CompletedTask;
+        await Task.CompletedTask;
 
         var entities = query
             .Invoke(_context.Data.Values.AsQueryable())
@@ -216,22 +216,22 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         }
     }
 
-    public ValueTask InsertAsync(TEntity entity)
+    public Task InsertAsync(TEntity entity)
     {
         Insert(entity);
-        return ValueTask.CompletedTask;
+        return Task.CompletedTask;
     }
 
-    public ValueTask InsertAsync(params TEntity[] entities)
+    public Task InsertAsync(params TEntity[] entities)
     {
         Insert(entities);
-        return ValueTask.CompletedTask;
+        return Task.CompletedTask;
     }
 
-    public ValueTask InsertAsync(ICollection<TEntity> entities)
+    public Task InsertAsync(ICollection<TEntity> entities)
     {
         Insert(entities);
-        return ValueTask.CompletedTask;
+        return Task.CompletedTask;
     }
 
     public int Update(object snowflake, Action<TEntity> action)
@@ -273,16 +273,16 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         return rowsAffected;
     }
 
-    public ValueTask<int> UpdateAsync(object snowflake, Action<TEntity> action)
+    public Task<int> UpdateAsync(object snowflake, Action<TEntity> action)
     {
         var rowsAffected = Update(snowflake, action);
-        return ValueTask.FromResult(rowsAffected);
+        return Task.FromResult(rowsAffected);
     }
 
-    public ValueTask<int> UpdateAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action)
+    public Task<int> UpdateAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action)
     {
         var rowsAffected = Update(predicate, action);
-        return ValueTask.FromResult(rowsAffected);
+        return Task.FromResult(rowsAffected);
     }
 
     public int Delete(object snowflake)
@@ -307,15 +307,15 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         return rowsAffected;
     }
 
-    public ValueTask<int> DeleteAsync(object snowflake)
+    public Task<int> DeleteAsync(object snowflake)
     {
         var rowsAffected = Delete(snowflake);
-        return ValueTask.FromResult(rowsAffected);
+        return Task.FromResult(rowsAffected);
     }
 
-    public ValueTask<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+    public Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
     {
         var rowsAffected = Delete(predicate);
-        return ValueTask.FromResult(rowsAffected);
+        return Task.FromResult(rowsAffected);
     }
 }

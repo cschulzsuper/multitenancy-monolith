@@ -7,14 +7,14 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 public interface IObjectTypeCustomPropertyRequestHandler
 {
-    ValueTask<ObjectTypeCustomPropertyResponse> GetAsync(string objectType, string uniqueName);
+    Task<ObjectTypeCustomPropertyResponse> GetAsync(string objectType, string uniqueName);
 
     IAsyncEnumerable<ObjectTypeCustomPropertyResponse> GetAll(string objectType);
 
-    ValueTask<ObjectTypeCustomPropertyResponse> InsertAsync(string objectType, ObjectTypeCustomPropertyRequest request);
+    Task<ObjectTypeCustomPropertyResponse> InsertAsync(string objectType, ObjectTypeCustomPropertyRequest request);
 
-    ValueTask UpdateAsync(string objectType, string uniqueName, ObjectTypeCustomPropertyRequest request);
+    Task UpdateAsync(string objectType, string uniqueName, ObjectTypeCustomPropertyRequest request);
 
-    ValueTask DeleteAsync(string objectType, string uniqueName);
+    Task DeleteAsync(string objectType, string uniqueName);
 
 }

@@ -7,13 +7,13 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 
 public interface IMemberRequestHandler
 {
-    ValueTask<MemberResponse> GetAsync(string uniqueName);
+    Task<MemberResponse> GetAsync(string uniqueName);
 
     IAsyncEnumerable<MemberResponse> GetAll();
 
-    ValueTask<MemberResponse> InsertAsync(MemberRequest request);
+    Task<MemberResponse> InsertAsync(MemberRequest request);
 
-    ValueTask UpdateAsync(string uniqueName, MemberRequest request);
+    Task UpdateAsync(string uniqueName, MemberRequest request);
 
-    ValueTask DeleteAsync(string uniqueName);
+    Task DeleteAsync(string uniqueName);
 }

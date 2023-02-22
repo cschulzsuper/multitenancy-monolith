@@ -12,7 +12,7 @@ using System.Linq;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using System.Collections.Generic;
 
-namespace Ticker.TicketMessageResource;
+namespace Business.BusinessObjectResource;
 
 public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 {

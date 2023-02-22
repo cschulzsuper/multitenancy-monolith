@@ -7,14 +7,14 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 public interface IDistinctionTypeRequestHandler
 {
-    ValueTask<DistinctionTypeResponse> GetAsync(string uniqueName);
+    Task<DistinctionTypeResponse> GetAsync(string uniqueName);
 
     IAsyncEnumerable<DistinctionTypeResponse> GetAll();
 
-    ValueTask<DistinctionTypeResponse> InsertAsync(DistinctionTypeRequest request);
+    Task<DistinctionTypeResponse> InsertAsync(DistinctionTypeRequest request);
 
-    ValueTask UpdateAsync(string uniqueName, DistinctionTypeRequest request);
+    Task UpdateAsync(string uniqueName, DistinctionTypeRequest request);
 
-    ValueTask DeleteAsync(string uniqueName);
+    Task DeleteAsync(string uniqueName);
 
 }

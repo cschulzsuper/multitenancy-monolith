@@ -27,7 +27,7 @@ internal sealed class MemberCommandHandler : IMemberCommandHandler
         _user = user;
     }
 
-    public async ValueTask<ClaimsIdentity> AuthAsync(MemberAuthCommand command)
+    public async Task<ClaimsIdentity> AuthAsync(MemberAuthCommand command)
     {
         var client = command.Client;
 

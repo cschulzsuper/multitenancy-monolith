@@ -16,7 +16,7 @@ internal sealed class DistinctionTypeRequestHandler : IDistinctionTypeRequestHan
         _distinctionTypeManager = distinctionTypeManager;
     }
 
-    public async ValueTask<DistinctionTypeResponse> GetAsync(string uniqueName)
+    public async Task<DistinctionTypeResponse> GetAsync(string uniqueName)
     {
         var distinctionType = await _distinctionTypeManager.GetAsync(uniqueName);
 
@@ -47,7 +47,7 @@ internal sealed class DistinctionTypeRequestHandler : IDistinctionTypeRequestHan
         }
     }
 
-    public async ValueTask<DistinctionTypeResponse> InsertAsync(DistinctionTypeRequest request)
+    public async Task<DistinctionTypeResponse> InsertAsync(DistinctionTypeRequest request)
     {
         var distinctionType = new DistinctionType
         {
@@ -68,7 +68,7 @@ internal sealed class DistinctionTypeRequestHandler : IDistinctionTypeRequestHan
         return response;
     }
 
-    public async ValueTask UpdateAsync(string uniqueName, DistinctionTypeRequest request)
+    public async Task UpdateAsync(string uniqueName, DistinctionTypeRequest request)
     {
         await _distinctionTypeManager.UpdateAsync(uniqueName,
             distinctionType =>
@@ -79,6 +79,6 @@ internal sealed class DistinctionTypeRequestHandler : IDistinctionTypeRequestHan
             });
     }
 
-    public async ValueTask DeleteAsync(string uniqueName)
+    public async Task DeleteAsync(string uniqueName)
         => await _distinctionTypeManager.DeleteAsync(uniqueName);
 }

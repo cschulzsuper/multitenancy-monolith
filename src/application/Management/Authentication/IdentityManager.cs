@@ -15,7 +15,7 @@ internal sealed class IdentityManager : IIdentityManager
         _repository = repository;
     }
 
-    public async ValueTask<Identity> GetAsync(long snowflake)
+    public async Task<Identity> GetAsync(long snowflake)
     {
         IdentityValidation.EnsureSnowflake(snowflake);
 
@@ -24,7 +24,7 @@ internal sealed class IdentityManager : IIdentityManager
         return identity;
     }
 
-    public async ValueTask<Identity> GetAsync(string identity)
+    public async Task<Identity> GetAsync(string identity)
     {
         IdentityValidation.EnsureIdentity(identity);
 
@@ -36,7 +36,7 @@ internal sealed class IdentityManager : IIdentityManager
     public IQueryable<Identity> GetAll()
         => _repository.GetQueryable();
 
-    public async ValueTask<bool> ExistsAsync(string identity, string secret)
+    public async Task<bool> ExistsAsync(string identity, string secret)
     {
         IdentityValidation.EnsureIdentity(identity);
 
@@ -48,14 +48,14 @@ internal sealed class IdentityManager : IIdentityManager
         return exists;
     }
 
-    public async ValueTask InsertAsync(Identity @object)
+    public async Task InsertAsync(Identity @object)
     {
         IdentityValidation.EnsureInsertable(@object);
 
         await _repository.InsertAsync(@object);
     }
 
-    public async ValueTask UpdateAsync(long snowflake, Action<Identity> action)
+    public async Task UpdateAsync(long snowflake, Action<Identity> action)
     {
         IdentityValidation.EnsureSnowflake(snowflake);
 
@@ -69,7 +69,7 @@ internal sealed class IdentityManager : IIdentityManager
         await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
     }
 
-    public async ValueTask UpdateAsync(string identity, Action<Identity> action)
+    public async Task UpdateAsync(string identity, Action<Identity> action)
     {
         IdentityValidation.EnsureIdentity(identity);
 
@@ -83,14 +83,14 @@ internal sealed class IdentityManager : IIdentityManager
         await _repository.UpdateOrThrowAsync(x => x.UniqueName == identity, validatedAction);
     }
 
-    public async ValueTask DeleteAsync(long snowflake)
+    public async Task DeleteAsync(long snowflake)
     {
         IdentityValidation.EnsureSnowflake(snowflake);
 
         await _repository.DeleteOrThrowAsync(snowflake);
     }
 
-    public async ValueTask DeleteAsync(string identity)
+    public async Task DeleteAsync(string identity)
     {
         IdentityValidation.EnsureIdentity(identity);
 

@@ -42,7 +42,7 @@ internal sealed class DistinctionTypeCustomPropertyRequestHandler : IDistinction
         _distinctionTypeManager = distinctionTypeManager;
     }
 
-    public async ValueTask<DistinctionTypeCustomPropertyResponse> GetAsync(string distinctionType, string uniqueName)
+    public async Task<DistinctionTypeCustomPropertyResponse> GetAsync(string distinctionType, string uniqueName)
     {
         DistinctionTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
 
@@ -84,7 +84,7 @@ internal sealed class DistinctionTypeCustomPropertyRequestHandler : IDistinction
         }
     }
 
-    public async ValueTask<DistinctionTypeCustomPropertyResponse> InsertAsync(string distinctionType, DistinctionTypeCustomPropertyRequest request)
+    public async Task<DistinctionTypeCustomPropertyResponse> InsertAsync(string distinctionType, DistinctionTypeCustomPropertyRequest request)
     {
         await _distinctionTypeManager.UpdateAsync(distinctionType,
             distinctionTypeUpdate => _insertAction.Invoke(distinctionTypeUpdate, request));
@@ -98,7 +98,7 @@ internal sealed class DistinctionTypeCustomPropertyRequestHandler : IDistinction
         return response;
     }
 
-    public async ValueTask UpdateAsync(string distinctionType, string uniqueName, DistinctionTypeCustomPropertyRequest request)
+    public async Task UpdateAsync(string distinctionType, string uniqueName, DistinctionTypeCustomPropertyRequest request)
     {
         DistinctionTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
 
@@ -110,7 +110,7 @@ internal sealed class DistinctionTypeCustomPropertyRequestHandler : IDistinction
             });
     }
 
-    public async ValueTask DeleteAsync(string distinctionType, string uniqueName)
+    public async Task DeleteAsync(string distinctionType, string uniqueName)
     {
         DistinctionTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
 

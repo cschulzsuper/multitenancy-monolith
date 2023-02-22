@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
@@ -19,10 +19,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\configuration\Configuration.Contract\Configuration.Contract.csproj" />
+		<ProjectReference Include="..\..\shared\EventBus.Contract\EventBus.Contract.csproj" />
 		<ProjectReference Include="..\..\shared\Security.Claims\Security.Claims.csproj" />
 		<ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
 		<ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />
-		<ProjectReference Include="..\Orchestration.Contract\Orchestration.Contract.csproj" />
 		<ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
 	</ItemGroup>
 

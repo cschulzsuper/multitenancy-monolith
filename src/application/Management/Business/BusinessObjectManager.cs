@@ -16,7 +16,7 @@ internal sealed class BusinessObjectManager : IBusinessObjectManager
         _repository = repository;
     }
 
-    public async ValueTask<BusinessObject> GetAsync(long snowflake)
+    public async Task<BusinessObject> GetAsync(long snowflake)
     {
         BusinessObjectValidation.EnsureSnowflake(snowflake);
 
@@ -25,7 +25,7 @@ internal sealed class BusinessObjectManager : IBusinessObjectManager
         return @object;
     }
 
-    public async ValueTask<BusinessObject> GetAsync(string businessObject)
+    public async Task<BusinessObject> GetAsync(string businessObject)
     {
         BusinessObjectValidation.EnsureBusinessObject(businessObject);
 
@@ -37,14 +37,14 @@ internal sealed class BusinessObjectManager : IBusinessObjectManager
     public IAsyncEnumerable<BusinessObject> GetAsyncEnumerable()
         => _repository.GetAsyncEnumerable();
 
-    public async ValueTask InsertAsync(BusinessObject businessObject)
+    public async Task InsertAsync(BusinessObject businessObject)
     {
         BusinessObjectValidation.EnsureInsertable(businessObject);
 
         await _repository.InsertAsync(businessObject);
     }
 
-    public async ValueTask UpdateAsync(long snowflake, Action<BusinessObject> action)
+    public async Task UpdateAsync(long snowflake, Action<BusinessObject> action)
     {
         IdentityValidation.EnsureSnowflake(snowflake);
 
@@ -58,7 +58,7 @@ internal sealed class BusinessObjectManager : IBusinessObjectManager
         await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
     }
 
-    public async ValueTask UpdateAsync(string businessObject, Action<BusinessObject> action)
+    public async Task UpdateAsync(string businessObject, Action<BusinessObject> action)
     {
         BusinessObjectValidation.EnsureBusinessObject(businessObject);
 
@@ -72,14 +72,14 @@ internal sealed class BusinessObjectManager : IBusinessObjectManager
         await _repository.UpdateOrThrowAsync(x => x.UniqueName == businessObject, validatedAction);
     }
 
-    public async ValueTask DeleteAsync(long snowflake)
+    public async Task DeleteAsync(long snowflake)
     {
         BusinessObjectValidation.EnsureSnowflake(snowflake);
 
         await _repository.DeleteOrThrowAsync(snowflake);
     }
 
-    public async ValueTask DeleteAsync(string businessObject)
+    public async Task DeleteAsync(string businessObject)
     {
         BusinessObjectValidation.EnsureBusinessObject(businessObject);
 

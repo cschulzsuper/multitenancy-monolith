@@ -6,6 +6,6 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 
 public interface IMemberCommandHandler
 {
-    ValueTask<ClaimsIdentity> AuthAsync(MemberAuthCommand command);
+    Task<ClaimsIdentity> AuthAsync(MemberAuthCommand command);
     void Verify();
 }

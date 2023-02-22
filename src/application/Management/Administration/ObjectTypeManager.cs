@@ -16,14 +16,14 @@ internal sealed class ObjectTypeManager : IObjectTypeManager
         _repository = repository;
     }
 
-    public async ValueTask<bool> ExistsAsync(long snowflake)
+    public async Task<bool> ExistsAsync(long snowflake)
     {
         var objectType = await _repository.ExistsAsync(snowflake);
 
         return objectType;
     }
 
-    public async ValueTask<bool> ExistsAsync(string uniqueName)
+    public async Task<bool> ExistsAsync(string uniqueName)
     {
         ObjectTypeValidation.EnsureUniqueName(uniqueName);
 
@@ -32,7 +32,7 @@ internal sealed class ObjectTypeManager : IObjectTypeManager
         return objectType;
     }
 
-    public async ValueTask<ObjectType> GetAsync(long snowflake)
+    public async Task<ObjectType> GetAsync(long snowflake)
     {
         ObjectTypeValidation.EnsureSnowflake(snowflake);
 
@@ -41,7 +41,7 @@ internal sealed class ObjectTypeManager : IObjectTypeManager
         return objectType;
     }
 
-    public async ValueTask<ObjectType> GetAsync(string uniqueName)
+    public async Task<ObjectType> GetAsync(string uniqueName)
     {
         ObjectTypeValidation.EnsureUniqueName(uniqueName);
 
@@ -50,7 +50,7 @@ internal sealed class ObjectTypeManager : IObjectTypeManager
         return objectType;
     }
 
-    public async ValueTask<ObjectType?> GetOrDefaultAsync(long snowflake)
+    public async Task<ObjectType?> GetOrDefaultAsync(long snowflake)
     {
         ObjectTypeValidation.EnsureSnowflake(snowflake);
 
@@ -59,7 +59,7 @@ internal sealed class ObjectTypeManager : IObjectTypeManager
         return objectType;
     }
 
-    public async ValueTask<ObjectType?> GetOrDefaultAsync(string uniqueName)
+    public async Task<ObjectType?> GetOrDefaultAsync(string uniqueName)
     {
         ObjectTypeValidation.EnsureUniqueName(uniqueName);
 
@@ -71,14 +71,14 @@ internal sealed class ObjectTypeManager : IObjectTypeManager
     public IAsyncEnumerable<ObjectType> GetAsyncEnumerable()
         => _repository.GetAsyncEnumerable();
 
-    public async ValueTask InsertAsync(ObjectType objectType)
+    public async Task InsertAsync(ObjectType objectType)
     {
         ObjectTypeValidation.EnsureInsertable(objectType);
 
         await _repository.InsertAsync(objectType);
     }
 
-    public async ValueTask UpdateAsync(long snowflake, Action<ObjectType> action)
+    public async Task UpdateAsync(long snowflake, Action<ObjectType> action)
     {
         IdentityValidation.EnsureSnowflake(snowflake);
 
@@ -92,7 +92,7 @@ internal sealed class ObjectTypeManager : IObjectTypeManager
         await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
     }
 
-    public async ValueTask UpdateAsync(string uniqueName, Action<ObjectType> action)
+    public async Task UpdateAsync(string uniqueName, Action<ObjectType> action)
     {
         ObjectTypeValidation.EnsureUniqueName(uniqueName);
 
@@ -106,14 +106,14 @@ internal sealed class ObjectTypeManager : IObjectTypeManager
         await _repository.UpdateOrThrowAsync(x => x.UniqueName == uniqueName, validatedAction);
     }
 
-    public async ValueTask DeleteAsync(long snowflake)
+    public async Task DeleteAsync(long snowflake)
     {
         ObjectTypeValidation.EnsureSnowflake(snowflake);
 
         await _repository.DeleteOrThrowAsync(snowflake);
     }
 
-    public async ValueTask DeleteAsync(string uniqueName)
+    public async Task DeleteAsync(string uniqueName)
     {
         ObjectTypeValidation.EnsureUniqueName(uniqueName);
 

@@ -15,7 +15,7 @@ internal sealed class MemberManager : IMemberManager
         _repository = repository;
     }
 
-    public async ValueTask<Member> GetAsync(long snowflake)
+    public async Task<Member> GetAsync(long snowflake)
     {
         MemberValidation.EnsureSnowflake(snowflake);
 
@@ -24,7 +24,7 @@ internal sealed class MemberManager : IMemberManager
         return member;
     }
 
-    public async ValueTask<Member> GetAsync(string member)
+    public async Task<Member> GetAsync(string member)
     {
         MemberValidation.EnsureMember(member);
 
@@ -33,7 +33,7 @@ internal sealed class MemberManager : IMemberManager
         return @object;
     }
 
-    public async ValueTask<Member?> GetOrDefaultAsync(string member)
+    public async Task<Member?> GetOrDefaultAsync(string member)
     {
         MemberValidation.EnsureMember(member);
 
@@ -45,14 +45,14 @@ internal sealed class MemberManager : IMemberManager
     public IAsyncEnumerable<Member> GetAsyncEnumerable()
         => _repository.GetAsyncEnumerable();
 
-    public async ValueTask InsertAsync(Member member)
+    public async Task InsertAsync(Member member)
     {
         MemberValidation.EnsureInsertable(member);
 
         await _repository.InsertAsync(member);
     }
 
-    public async ValueTask UpdateAsync(long snowflake, Action<Member> action)
+    public async Task UpdateAsync(long snowflake, Action<Member> action)
     {
         MemberValidation.EnsureSnowflake(snowflake);
 
@@ -66,7 +66,7 @@ internal sealed class MemberManager : IMemberManager
         await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
     }
 
-    public async ValueTask UpdateAsync(string member, Action<Member> action)
+    public async Task UpdateAsync(string member, Action<Member> action)
     {
         MemberValidation.EnsureMember(member);
 
@@ -80,14 +80,14 @@ internal sealed class MemberManager : IMemberManager
         await _repository.UpdateOrThrowAsync(x => x.UniqueName == member, validatedAction);
     }
 
-    public async ValueTask DeleteAsync(long snowflake)
+    public async Task DeleteAsync(long snowflake)
     {
         MemberValidation.EnsureSnowflake(snowflake);
 
         await _repository.DeleteOrThrowAsync(snowflake);
     }
 
-    public async ValueTask DeleteAsync(string member)
+    public async Task DeleteAsync(string member)
     {
         MemberValidation.EnsureMember(member);
 

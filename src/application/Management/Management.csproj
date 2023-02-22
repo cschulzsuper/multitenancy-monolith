@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
@@ -16,10 +16,10 @@
 		<ProjectReference Include="..\..\data\Caching.Contract\Caching.Contract.csproj" />
 		<ProjectReference Include="..\..\data\Data.Contract\Data.Contract.csproj" />
 		<ProjectReference Include="..\..\data\ObjectValidation\ObjectValidation.csproj" />
+		<ProjectReference Include="..\..\shared\EventBus.Contract\EventBus.Contract.csproj" />
 		<ProjectReference Include="..\..\shared\Security.Claims\Security.Claims.csproj" />
 		<ProjectReference Include="..\..\shared\Validation\Validation.csproj" />
 		<ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />
-		<ProjectReference Include="..\Orchestration.Contract\Orchestration.Contract.csproj" />
 	</ItemGroup>
 
 </Project>

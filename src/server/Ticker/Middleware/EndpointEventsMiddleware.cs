@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Application;
+using ChristianSchulz.MultitenancyMonolith.Shared.EventBus;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Middleware;
 

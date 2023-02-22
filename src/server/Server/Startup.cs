@@ -23,6 +23,7 @@ using ChristianSchulz.MultitenancyMonolith.Server.Middleware;
 using ChristianSchulz.MultitenancyMonolith.Server.Json;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using Microsoft.Extensions.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Shared.EventBus;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
@@ -47,9 +48,6 @@ public class Startup
         services.AddAuthorization();
 
         services.AddCors();
-
-        services.AddRequestUser();
-
         services.AddEndpointsApiExplorer();
 
         services.AddSwaggerGen(options =>
@@ -59,9 +57,10 @@ public class Startup
             options.ConfigureAuthorization();
         });
 
+        services.AddRequestUser();
         services.AddCaching();
         services.AddConfiguration();
-        services.AddOrchestration();
+        services.AddEventBus();
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryAdministrationData();

@@ -15,7 +15,7 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         _memberManager = memberManager;
     }
 
-    public async ValueTask<MemberResponse> GetAsync(string uniqueName)
+    public async Task<MemberResponse> GetAsync(string uniqueName)
     {
         var member = await _memberManager.GetAsync(uniqueName);
 
@@ -44,7 +44,7 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         }
     }
 
-    public async ValueTask<MemberResponse> InsertAsync(MemberRequest request)
+    public async Task<MemberResponse> InsertAsync(MemberRequest request)
     {
         var member = new Member
         {
@@ -63,7 +63,7 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
         return response;
     }
 
-    public async ValueTask UpdateAsync(string uniqueName, MemberRequest request)
+    public async Task UpdateAsync(string uniqueName, MemberRequest request)
         => await _memberManager.UpdateAsync(uniqueName,
             member =>
             {
@@ -71,6 +71,6 @@ internal sealed class MemberRequestHandler : IMemberRequestHandler
                 member.MailAddress = request.MailAddress;
             });
 
-    public async ValueTask DeleteAsync(string uniqueName)
+    public async Task DeleteAsync(string uniqueName)
         => await _memberManager.DeleteAsync(uniqueName);
 }

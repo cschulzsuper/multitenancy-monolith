@@ -32,7 +32,7 @@ public static class RepositoryExtensions
         return entity;
     }
 
-    public static async ValueTask<TEntity> GetAsync<TEntity>(this IRepository<TEntity> repository, object snowflake)
+    public static async Task<TEntity> GetAsync<TEntity>(this IRepository<TEntity> repository, object snowflake)
     {
         var entity = await repository.GetOrDefaultAsync(snowflake);
 
@@ -44,7 +44,7 @@ public static class RepositoryExtensions
         return entity;
     }
 
-    public static async ValueTask<TEntity> GetAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate)
+    public static async Task<TEntity> GetAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate)
     {
         var entity = await repository.GetOrDefaultAsync(predicate);
 
@@ -88,10 +88,10 @@ public static class RepositoryExtensions
         });
     }
 
-    public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, object snowflake, Action<TEntity> action)
+    public static async Task UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, object snowflake, Action<TEntity> action)
         => await UpdateOrThrowAsync(repository, snowflake, action, null!);
 
-    public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, object snowflake, Action<TEntity> action, Action @default)
+    public static async Task UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, object snowflake, Action<TEntity> action, Action @default)
     {
         await repository.ExecuteAsync(async repository =>
         {
@@ -101,16 +101,16 @@ public static class RepositoryExtensions
         });
     }
 
-    public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, Action<TEntity> action)
+    public static async Task UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, Action<TEntity> action)
         => await UpdateOrThrowAsync(repository, query, 1, action, null!);
     
-    public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, Action<TEntity> action, Action @default)
+    public static async Task UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, Action<TEntity> action, Action @default)
         => await UpdateOrThrowAsync(repository, query, 1, action, @default);
 
-    public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows, Action<TEntity> action)
+    public static async Task UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows, Action<TEntity> action)
         => await UpdateOrThrowAsync(repository, query, expectedRows, action, null!);
 
-    public static async ValueTask UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows, Action<TEntity> action, Action @default)
+    public static async Task UpdateOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows, Action<TEntity> action, Action @default)
     {
         await repository.ExecuteAsync(async repository =>
         {
@@ -142,7 +142,7 @@ public static class RepositoryExtensions
         });
     }
 
-    public static async ValueTask DeleteOrThrowAsync<TEntity>(this IRepository<TEntity> repository, object snowflake)
+    public static async Task DeleteOrThrowAsync<TEntity>(this IRepository<TEntity> repository, object snowflake)
     {
         await repository.ExecuteAsync(async repository =>
         {
@@ -151,10 +151,10 @@ public static class RepositoryExtensions
         });
     }
 
-    public static async ValueTask DeleteOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query)
+    public static async Task DeleteOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query)
         => await DeleteOrThrowAsync(repository, query, 1);
 
-    public static async ValueTask DeleteOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows)
+    public static async Task DeleteOrThrowAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows)
     {
         await repository.ExecuteAsync(async repository =>
         {

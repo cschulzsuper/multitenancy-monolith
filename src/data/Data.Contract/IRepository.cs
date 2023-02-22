@@ -11,23 +11,23 @@ public interface IRepository<TEntity>
 {
     void Execute(Action<IRepository<TEntity>> action);
 
-    ValueTask ExecuteAsync(Func<IRepository<TEntity>, ValueTask> func);
+    Task ExecuteAsync(Func<IRepository<TEntity>, Task> func);
 
     bool Exists(object snowflake);
 
     bool Exists(Expression<Func<TEntity, bool>> predicate);
 
-    ValueTask<bool> ExistsAsync(object snowflake);
+    Task<bool> ExistsAsync(object snowflake);
 
-    ValueTask<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate);
 
     TEntity? GetOrDefault(object snowflake);
 
     TEntity? GetOrDefault(Expression<Func<TEntity, bool>> predicate);
 
-    ValueTask<TEntity?> GetOrDefaultAsync(object snowflake);
+    Task<TEntity?> GetOrDefaultAsync(object snowflake);
 
-    ValueTask<TEntity?> GetOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<TEntity?> GetOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
     IQueryable<TEntity> GetQueryable();
 
@@ -45,25 +45,25 @@ public interface IRepository<TEntity>
 
     void Insert(ICollection<TEntity> entities);
 
-    ValueTask InsertAsync(TEntity entity);
+    Task InsertAsync(TEntity entity);
 
-    ValueTask InsertAsync(params TEntity[] entities);
+    Task InsertAsync(params TEntity[] entities);
 
-    ValueTask InsertAsync(ICollection<TEntity> entities);
+    Task InsertAsync(ICollection<TEntity> entities);
 
     int Update(object snowflake, Action<TEntity> action);
 
     int Update(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action);
 
-    ValueTask<int> UpdateAsync(object snowflake, Action<TEntity> action);
+    Task<int> UpdateAsync(object snowflake, Action<TEntity> action);
 
-    ValueTask<int> UpdateAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action);
+    Task<int> UpdateAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action);
 
     int Delete(object snowflake);
 
     int Delete(Expression<Func<TEntity, bool>> predicate);
 
-    ValueTask<int> DeleteAsync(object snowflake);
+    Task<int> DeleteAsync(object snowflake);
 
-    ValueTask<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
 }

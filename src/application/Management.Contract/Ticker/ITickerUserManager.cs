@@ -6,11 +6,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 public interface ITickerUserManager
 {
-    ValueTask<TickerUser> GetAsync(string ticketUser);
+    Task<TickerUser> GetAsync(string ticketUser);
 
-    ValueTask<TickerUser?> GetOrDefaultAsync(string tickerUser);
+    Task<TickerUser?> GetOrDefaultAsync(string tickerUser);
 
-    ValueTask InsertAsync(TickerUser @object);
+    Task InsertAsync(TickerUser @object);
 
-    ValueTask UpdateAsync(string tickerUser, Action<TickerUser> action, Action @default);
+    Task UpdateAsync(string tickerUser, Action<TickerUser> action, Action @default);
 }

@@ -7,21 +7,21 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 
 public interface IMemberManager
 {
-    ValueTask<Member> GetAsync(long snowflake);
+    Task<Member> GetAsync(long snowflake);
 
-    ValueTask<Member> GetAsync(string member);
+    Task<Member> GetAsync(string member);
 
-    ValueTask<Member?> GetOrDefaultAsync(string member);
+    Task<Member?> GetOrDefaultAsync(string member);
 
     IAsyncEnumerable<Member> GetAsyncEnumerable();
 
-    ValueTask InsertAsync(Member @object);
+    Task InsertAsync(Member @object);
 
-    ValueTask UpdateAsync(long snowflake, Action<Member> action);
+    Task UpdateAsync(long snowflake, Action<Member> action);
 
-    ValueTask UpdateAsync(string member, Action<Member> action);
+    Task UpdateAsync(string member, Action<Member> action);
 
-    ValueTask DeleteAsync(long snowflake);
+    Task DeleteAsync(long snowflake);
 
-    ValueTask DeleteAsync(string member);
+    Task DeleteAsync(string member);
 }

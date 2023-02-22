@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Ticker.TicketMessageResource;
+namespace Business.BusinessObjectResource;
 
 public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -28,7 +28,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingBusinessObject = new BusinessObject
         {
-           UniqueName = $"existing-business-object-{Guid.NewGuid()}"
+            UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 
         using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))

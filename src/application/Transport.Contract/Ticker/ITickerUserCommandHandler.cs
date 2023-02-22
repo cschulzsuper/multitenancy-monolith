@@ -6,11 +6,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 public interface ITickerUserCommandHandler
 {
-    ValueTask<ClaimsIdentity> AuthAsync(TickerUserAuthCommand command);
+    Task<ClaimsIdentity> AuthAsync(TickerUserAuthCommand command);
 
-    ValueTask<ClaimsIdentity> ConfirmAsync(TickerUserConfirmCommand command);
+    Task<ClaimsIdentity> ConfirmAsync(TickerUserConfirmCommand command);
 
-    ValueTask PostAsync(TickerUserPostCommand command);
+    Task PostAsync(TickerUserPostCommand command);
 
     void Verify();
 }

@@ -7,13 +7,13 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Business;
 
 public interface IBusinessObjectRequestHandler
 {
-    ValueTask<BusinessObjectResponse> GetAsync(string uniqueName);
+    Task<BusinessObjectResponse> GetAsync(string uniqueName);
 
     IAsyncEnumerable<BusinessObjectResponse> GetAll();
 
-    ValueTask<BusinessObjectResponse> InsertAsync(BusinessObjectRequest request);
+    Task<BusinessObjectResponse> InsertAsync(BusinessObjectRequest request);
 
-    ValueTask UpdateAsync(string uniqueName, BusinessObjectRequest request);
+    Task UpdateAsync(string uniqueName, BusinessObjectRequest request);
 
-    ValueTask DeleteAsync(string uniqueName);
+    Task DeleteAsync(string uniqueName);
 }

@@ -15,7 +15,7 @@ internal sealed class BusinessObjectRequestHandler : IBusinessObjectRequestHandl
         _businessObjectManager = businessObjectManager;
     }
 
-    public async ValueTask<BusinessObjectResponse> GetAsync(string uniqueName)
+    public async Task<BusinessObjectResponse> GetAsync(string uniqueName)
     {
         var businessObject = await _businessObjectManager.GetAsync(uniqueName);
 
@@ -44,7 +44,7 @@ internal sealed class BusinessObjectRequestHandler : IBusinessObjectRequestHandl
         }
     }
 
-    public async ValueTask<BusinessObjectResponse> InsertAsync(BusinessObjectRequest request)
+    public async Task<BusinessObjectResponse> InsertAsync(BusinessObjectRequest request)
     {
         var businessObject = new BusinessObject
         {
@@ -63,7 +63,7 @@ internal sealed class BusinessObjectRequestHandler : IBusinessObjectRequestHandl
         return response;
     }
 
-    public async ValueTask UpdateAsync(string uniqueName, BusinessObjectRequest request)
+    public async Task UpdateAsync(string uniqueName, BusinessObjectRequest request)
     {
         await _businessObjectManager.UpdateAsync(uniqueName,
             businessObject =>
@@ -73,6 +73,6 @@ internal sealed class BusinessObjectRequestHandler : IBusinessObjectRequestHandl
             });
     }
 
-    public async ValueTask DeleteAsync(string uniqueName)
+    public async Task DeleteAsync(string uniqueName)
         => await _businessObjectManager.DeleteAsync(uniqueName);
 }

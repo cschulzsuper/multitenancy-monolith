@@ -14,7 +14,7 @@ public class TickerUserManager : ITickerUserManager
         _repository = repository;
     }
 
-    public async ValueTask<TickerUser> GetAsync(string tickerUser)
+    public async Task<TickerUser> GetAsync(string tickerUser)
     {
         TickerUserValidation.EnsureTicketUser(tickerUser);
 
@@ -23,7 +23,7 @@ public class TickerUserManager : ITickerUserManager
         return @object;
     }
 
-    public async ValueTask<TickerUser?> GetOrDefaultAsync(string tickerUser)
+    public async Task<TickerUser?> GetOrDefaultAsync(string tickerUser)
     {
         TickerUserValidation.EnsureTicketUser(tickerUser);
 
@@ -33,14 +33,14 @@ public class TickerUserManager : ITickerUserManager
     }
 
 
-    public async ValueTask InsertAsync(TickerUser @object)
+    public async Task InsertAsync(TickerUser @object)
     {
         TickerUserValidation.EnsureInsertable(@object);
 
         await _repository.InsertAsync(@object);
     }
 
-    public async ValueTask UpdateAsync(string tickerUser, Action<TickerUser> action, Action @default)
+    public async Task UpdateAsync(string tickerUser, Action<TickerUser> action, Action @default)
     {
         TickerUserValidation.EnsureTicketUser(tickerUser);
 

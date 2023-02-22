@@ -2,6 +2,7 @@
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
+using ChristianSchulz.MultitenancyMonolith.Shared.EventBus;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using System;
 using System.Linq;
@@ -35,7 +36,7 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
         _eventStorage = eventStorage;
     }
 
-    public async ValueTask<ClaimsIdentity> AuthAsync(TickerUserAuthCommand command)
+    public async Task<ClaimsIdentity> AuthAsync(TickerUserAuthCommand command)
     {
         var client = command.Client;
 
@@ -109,7 +110,7 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
         return claimsIdentity;
     }
 
-    public async ValueTask<ClaimsIdentity> ConfirmAsync(TickerUserConfirmCommand command)
+    public async Task<ClaimsIdentity> ConfirmAsync(TickerUserConfirmCommand command)
     {
         var client = command.Client;
 
@@ -183,7 +184,7 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
         return claimsIdentity;
     }
 
-    public async ValueTask PostAsync(TickerUserPostCommand command)
+    public async Task PostAsync(TickerUserPostCommand command)
     {
         var @object = new TickerMessage
         {

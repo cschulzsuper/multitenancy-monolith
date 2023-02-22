@@ -7,19 +7,19 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 public interface IDistinctionTypeManager
 {
-    ValueTask<DistinctionType> GetAsync(long snowflake);
+    Task<DistinctionType> GetAsync(long snowflake);
 
-    ValueTask<DistinctionType> GetAsync(string uniqueName);
+    Task<DistinctionType> GetAsync(string uniqueName);
 
     IAsyncEnumerable<DistinctionType> GetAsyncEnumerable();
 
-    ValueTask InsertAsync(DistinctionType distinctionType);
+    Task InsertAsync(DistinctionType distinctionType);
 
-    ValueTask UpdateAsync(long snowflake, Action<DistinctionType> action);
+    Task UpdateAsync(long snowflake, Action<DistinctionType> action);
 
-    ValueTask UpdateAsync(string uniqueName, Action<DistinctionType> action);
+    Task UpdateAsync(string uniqueName, Action<DistinctionType> action);
 
-    ValueTask DeleteAsync(long snowflake);
+    Task DeleteAsync(long snowflake);
 
-    ValueTask DeleteAsync(string uniqueName);
+    Task DeleteAsync(string uniqueName);
 }

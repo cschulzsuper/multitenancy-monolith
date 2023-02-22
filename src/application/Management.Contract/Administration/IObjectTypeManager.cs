@@ -7,27 +7,27 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 public interface IObjectTypeManager
 {
-    ValueTask<bool> ExistsAsync(long snowflake);
+    Task<bool> ExistsAsync(long snowflake);
 
-    ValueTask<bool> ExistsAsync(string uniqueName);
+    Task<bool> ExistsAsync(string uniqueName);
 
-    ValueTask<ObjectType> GetAsync(long snowflake);
+    Task<ObjectType> GetAsync(long snowflake);
 
-    ValueTask<ObjectType> GetAsync(string uniqueName);
+    Task<ObjectType> GetAsync(string uniqueName);
 
-    ValueTask<ObjectType?> GetOrDefaultAsync(long snowflake);
+    Task<ObjectType?> GetOrDefaultAsync(long snowflake);
 
-    ValueTask<ObjectType?> GetOrDefaultAsync(string uniqueName);
+    Task<ObjectType?> GetOrDefaultAsync(string uniqueName);
 
     IAsyncEnumerable<ObjectType> GetAsyncEnumerable();
 
-    ValueTask InsertAsync(ObjectType objectType);
+    Task InsertAsync(ObjectType objectType);
 
-    ValueTask UpdateAsync(long snowflake, Action<ObjectType> action);
+    Task UpdateAsync(long snowflake, Action<ObjectType> action);
 
-    ValueTask UpdateAsync(string uniqueName, Action<ObjectType> action);
+    Task UpdateAsync(string uniqueName, Action<ObjectType> action);
 
-    ValueTask DeleteAsync(long snowflake);
+    Task DeleteAsync(long snowflake);
 
-    ValueTask DeleteAsync(string uniqueName);
+    Task DeleteAsync(string uniqueName);
 }

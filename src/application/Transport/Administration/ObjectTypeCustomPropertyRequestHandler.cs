@@ -45,7 +45,7 @@ internal sealed class ObjectTypeCustomPropertyRequestHandler : IObjectTypeCustom
         _objectTypeManager = objectTypeManager;
     }
 
-    public async ValueTask<ObjectTypeCustomPropertyResponse> GetAsync(string objectType, string uniqueName)
+    public async Task<ObjectTypeCustomPropertyResponse> GetAsync(string objectType, string uniqueName)
     {
         ObjectTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
 
@@ -99,7 +99,7 @@ internal sealed class ObjectTypeCustomPropertyRequestHandler : IObjectTypeCustom
         }
     }
 
-    public async ValueTask<ObjectTypeCustomPropertyResponse> InsertAsync(string objectType, ObjectTypeCustomPropertyRequest request)
+    public async Task<ObjectTypeCustomPropertyResponse> InsertAsync(string objectType, ObjectTypeCustomPropertyRequest request)
     {
         var objectTypeExists = await _objectTypeManager.ExistsAsync(objectType);
 
@@ -132,7 +132,7 @@ internal sealed class ObjectTypeCustomPropertyRequestHandler : IObjectTypeCustom
         return response;
     }
 
-    public async ValueTask UpdateAsync(string objectType, string uniqueName, ObjectTypeCustomPropertyRequest request)
+    public async Task UpdateAsync(string objectType, string uniqueName, ObjectTypeCustomPropertyRequest request)
     {
         ObjectTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
 
@@ -144,7 +144,7 @@ internal sealed class ObjectTypeCustomPropertyRequestHandler : IObjectTypeCustom
             });
     }
 
-    public async ValueTask DeleteAsync(string objectType, string uniqueName)
+    public async Task DeleteAsync(string objectType, string uniqueName)
     {
         ObjectTypeCustomPropertyRequestValidation.EnsureUniqueName(uniqueName);
 

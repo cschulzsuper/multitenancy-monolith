@@ -1,6 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
+using ChristianSchulz.MultitenancyMonolith.Shared.EventBus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ internal sealed class TickerMessageManager : ITickerMessageManager
         _eventStorage = eventStorage;
     }
 
-    public async ValueTask<TickerMessage> GetAsync(long snowflake)
+    public async Task<TickerMessage> GetAsync(long snowflake)
     {
         TickerMessageValidation.EnsureSnowflake(snowflake);
 
@@ -32,7 +33,7 @@ internal sealed class TickerMessageManager : ITickerMessageManager
     public IAsyncEnumerable<TickerMessage> GetAsyncEnumerable(Func<IQueryable<TickerMessage>, IQueryable<TickerMessage>> query)
         => _repository.GetAsyncEnumerable(query);
 
-    public async ValueTask InsertAsync(TickerMessage @object)
+    public async Task InsertAsync(TickerMessage @object)
     {
         TickerMessageValidation.EnsureInsertable(@object);
 
@@ -42,7 +43,7 @@ internal sealed class TickerMessageManager : ITickerMessageManager
         _eventStorage.Add("ticker-message-inserted", @object.Snowflake);
     }
 
-    public async ValueTask UpdateAsync(long snowflake, Action<TickerMessage> action)
+    public async Task UpdateAsync(long snowflake, Action<TickerMessage> action)
     {
         IdentityValidation.EnsureSnowflake(snowflake);
 
@@ -56,7 +57,7 @@ internal sealed class TickerMessageManager : ITickerMessageManager
         await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
     }
 
-    public async ValueTask DeleteAsync(long snowflake)
+    public async Task DeleteAsync(long snowflake)
     {
         TickerMessageValidation.EnsureSnowflake(snowflake);
 

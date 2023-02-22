@@ -7,19 +7,19 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Business;
 
 public interface IBusinessObjectManager
 {
-    ValueTask<BusinessObject> GetAsync(long snowflake);
+    Task<BusinessObject> GetAsync(long snowflake);
 
-    ValueTask<BusinessObject> GetAsync(string uniqueName);
+    Task<BusinessObject> GetAsync(string uniqueName);
 
     IAsyncEnumerable<BusinessObject> GetAsyncEnumerable();
 
-    ValueTask InsertAsync(BusinessObject businessObject);
+    Task InsertAsync(BusinessObject businessObject);
 
-    ValueTask UpdateAsync(long snowflake, Action<BusinessObject> action);
+    Task UpdateAsync(long snowflake, Action<BusinessObject> action);
 
-    ValueTask UpdateAsync(string uniqueName, Action<BusinessObject> action);
+    Task UpdateAsync(string uniqueName, Action<BusinessObject> action);
 
-    ValueTask DeleteAsync(long snowflake);
+    Task DeleteAsync(long snowflake);
 
-    ValueTask DeleteAsync(string uniqueName);
+    Task DeleteAsync(string uniqueName);
 }

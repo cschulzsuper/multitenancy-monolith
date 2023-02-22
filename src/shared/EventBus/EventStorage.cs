@@ -4,24 +4,29 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.EventBus;
 
-public sealed class EventStorage : IEventStorage, IAsyncDisposable
+internal sealed class EventStorage : IEventStorage, IAsyncDisposable
 {
-    private readonly ILogger<EventStorage> _logger;
-
-    private readonly ICollection<(string Event, long Snowflake)> _events;
+    private readonly ILogger<IEventStorage> _logger;
+    private readonly IEventPublisher _publisher;
+    private readonly List<(string Event, long Snowflake)> _events;
 
     private Task _flush;
 
     private bool _flushed;
 
-    private readonly SemaphoreSlim _flushLock = new SemaphoreSlim(1);
+    private readonly SemaphoreSlim _flushLock = new(1);
 
-    public EventStorage(ILogger<EventStorage> logger)
+    public EventStorage(
+        ILogger<IEventStorage> logger,
+        IEventPublisher publisher)
     {
         _logger = logger;
+
         _events = new List<(string Event, long Snowflake)>();
+        _publisher = publisher;
+
         _flush = Task.CompletedTask;
     }
 
@@ -34,7 +39,7 @@ public sealed class EventStorage : IEventStorage, IAsyncDisposable
 
         if (_flushed == true)
         {
-            throw new Exception("Event storage is already flushing");
+            throw new Exception("Event storage is already flushed");
         }
 
         _events.Add((@event, snowflake));
@@ -60,7 +65,9 @@ public sealed class EventStorage : IEventStorage, IAsyncDisposable
             {
                 foreach (var @event in _events)
                 {
-                    _logger.LogInformation("Event '{event}' for snowflake '{snowflake}' has been flushed", @event.Event, @event.Snowflake);
+                    _publisher.PublishAsync(@event.Event, @event.Snowflake);
+
+                    _logger.LogInformation("Event '{event}' for '{snowflake}' has been flushed", @event.Event, @event.Snowflake);
                 }
 
                 _events.Clear();

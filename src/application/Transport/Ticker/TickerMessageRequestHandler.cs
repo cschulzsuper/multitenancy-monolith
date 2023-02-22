@@ -17,7 +17,7 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
         _tickerMessageManager = tickerMessageManager;
     }
 
-    public async ValueTask<TickerMessageResponse> GetAsync(long tickerMessage)
+    public async Task<TickerMessageResponse> GetAsync(long tickerMessage)
     {
         var @object = await _tickerMessageManager.GetAsync(tickerMessage);
 
@@ -59,7 +59,7 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
         }
     }
 
-    public async ValueTask<TickerMessageResponse> InsertAsync(TickerMessageRequest request)
+    public async Task<TickerMessageResponse> InsertAsync(TickerMessageRequest request)
     {
         var @object = new TickerMessage
         {
@@ -83,7 +83,7 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
         return response;
     }
 
-    public async ValueTask UpdateAsync(long tickerMessage, TickerMessageRequest request)
+    public async Task UpdateAsync(long tickerMessage, TickerMessageRequest request)
     {
         await _tickerMessageManager.UpdateAsync(tickerMessage,
             @object =>
@@ -94,6 +94,6 @@ internal sealed class TickerMessageRequestHandler : ITickerMessageRequestHandler
             });
     }
 
-    public async ValueTask DeleteAsync(long tickerMessage)
+    public async Task DeleteAsync(long tickerMessage)
         => await _tickerMessageManager.DeleteAsync(tickerMessage);
 }

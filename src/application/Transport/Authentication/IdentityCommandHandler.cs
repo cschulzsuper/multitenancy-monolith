@@ -23,7 +23,7 @@ internal sealed class IdentityCommandHandler : IIdentityCommandHandler
         _allowedClientsProvider = allowedClientsProvider;
     }
 
-    public async ValueTask<ClaimsIdentity> AuthAsync(IdentityAuthCommand command)
+    public async Task<ClaimsIdentity> AuthAsync(IdentityAuthCommand command)
     {
         var client = command.Client;
 

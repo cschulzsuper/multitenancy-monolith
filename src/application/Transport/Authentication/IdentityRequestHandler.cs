@@ -15,7 +15,7 @@ internal sealed class IdentityRequestHandler : IIdentityRequestHandler
         _identityManager = identityManager;
     }
 
-    public async ValueTask<IdentityResponse> GetAsync(string uniqueName)
+    public async Task<IdentityResponse> GetAsync(string uniqueName)
     {
         var identity = await _identityManager.GetAsync(uniqueName);
 
@@ -42,7 +42,7 @@ internal sealed class IdentityRequestHandler : IIdentityRequestHandler
         return response;
     }
 
-    public async ValueTask<IdentityResponse> InsertAsync(IdentityRequest request)
+    public async Task<IdentityResponse> InsertAsync(IdentityRequest request)
     {
         var member = new Identity
         {
@@ -62,7 +62,7 @@ internal sealed class IdentityRequestHandler : IIdentityRequestHandler
         return response;
     }
 
-    public async ValueTask UpdateAsync(string uniqueName, IdentityRequest request)
+    public async Task UpdateAsync(string uniqueName, IdentityRequest request)
     => await _identityManager.UpdateAsync(uniqueName,
         member =>
         {
@@ -71,6 +71,6 @@ internal sealed class IdentityRequestHandler : IIdentityRequestHandler
             member.MailAddress = request.MailAddress;
         });
 
-    public async ValueTask DeleteAsync(string uniqueName)
+    public async Task DeleteAsync(string uniqueName)
         => await _identityManager.DeleteAsync(uniqueName);
 }

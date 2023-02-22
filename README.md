@@ -81,7 +81,8 @@ If you are developing an ASP.NET Core application yourself and are looking for a
   * /39 A special `/post` endpoint allows a user to create a new ticker message. It is automatically created for his ticker user. https://github.com/cschulzsuper/multitenancy-monolith/commit/68bef72c842832e9d8332ba7e05ab5262d67d6ae
 
 * Events
-  * /40 An event storage abstraction allows publishing events from different places. The first implementation logs the events. Usage of `ITestOutputHelper` makes it possible to see the logs in the tests.
+  * /40 An event storage abstraction allows publishing events from different places. The first implementation logs the events. Usage of `ITestOutputHelper` makes it possible to see the logs in the tests. https://github.com/cschulzsuper/multitenancy-monolith/commit/a454630ffc358c9fb5dbdbb2ef218fd7df231297
+  * /41 Lightweight event pub/sub via `System.Threading.Channels` and switch to `net8.0`. This event implementation should be enough for the moment. This is the point where I'm kind of glad that I focused on tests early on. Green on all `683`. 
 
 # Next
 

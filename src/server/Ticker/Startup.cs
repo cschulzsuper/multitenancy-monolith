@@ -20,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ChristianSchulz.MultitenancyMonolith.Shared.EventBus;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 
@@ -45,8 +46,6 @@ public class Startup
 
         services.AddCors();
 
-        services.AddRequestUser();
-
         services.AddEndpointsApiExplorer();
 
         services.AddSwaggerGen(options =>
@@ -56,9 +55,10 @@ public class Startup
             options.ConfigureAuthorization();
         });
 
+        services.AddRequestUser();
         services.AddCaching();
         services.AddConfiguration();
-        services.AddOrchestration();
+        services.AddEventBus();
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryTickerData();

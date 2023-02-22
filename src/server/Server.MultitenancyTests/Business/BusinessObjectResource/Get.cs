@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Ticker.TicketMessageResource;
+namespace Business.BusinessObjectResource;
 
 public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 {

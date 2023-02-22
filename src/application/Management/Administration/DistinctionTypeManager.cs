@@ -16,7 +16,7 @@ internal sealed class DistinctionTypeManager : IDistinctionTypeManager
         _repository = repository;
     }
 
-    public async ValueTask<DistinctionType> GetAsync(long snowflake)
+    public async Task<DistinctionType> GetAsync(long snowflake)
     {
         DistinctionTypeValidation.EnsureSnowflake(snowflake);
 
@@ -25,7 +25,7 @@ internal sealed class DistinctionTypeManager : IDistinctionTypeManager
         return distinctionType;
     }
 
-    public async ValueTask<DistinctionType> GetAsync(string uniqueName)
+    public async Task<DistinctionType> GetAsync(string uniqueName)
     {
         DistinctionTypeValidation.EnsureUniqueName(uniqueName);
 
@@ -37,14 +37,14 @@ internal sealed class DistinctionTypeManager : IDistinctionTypeManager
     public IAsyncEnumerable<DistinctionType> GetAsyncEnumerable()
         => _repository.GetAsyncEnumerable();
 
-    public async ValueTask InsertAsync(DistinctionType distinctionType)
+    public async Task InsertAsync(DistinctionType distinctionType)
     {
         DistinctionTypeValidation.EnsureInsertable(distinctionType);
 
         await _repository.InsertAsync(distinctionType);
     }
 
-    public async ValueTask UpdateAsync(long snowflake, Action<DistinctionType> action)
+    public async Task UpdateAsync(long snowflake, Action<DistinctionType> action)
     {
         IdentityValidation.EnsureSnowflake(snowflake);
 
@@ -58,7 +58,7 @@ internal sealed class DistinctionTypeManager : IDistinctionTypeManager
         await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
     }
 
-    public async ValueTask UpdateAsync(string uniqueName, Action<DistinctionType> action)
+    public async Task UpdateAsync(string uniqueName, Action<DistinctionType> action)
     {
         DistinctionTypeValidation.EnsureUniqueName(uniqueName);
 
@@ -72,14 +72,14 @@ internal sealed class DistinctionTypeManager : IDistinctionTypeManager
         await _repository.UpdateOrThrowAsync(x => x.UniqueName == uniqueName, validatedAction);
     }
 
-    public async ValueTask DeleteAsync(long snowflake)
+    public async Task DeleteAsync(long snowflake)
     {
         DistinctionTypeValidation.EnsureSnowflake(snowflake);
 
         await _repository.DeleteOrThrowAsync(snowflake);
     }
 
-    public async ValueTask DeleteAsync(string uniqueName)
+    public async Task DeleteAsync(string uniqueName)
     {
         DistinctionTypeValidation.EnsureUniqueName(uniqueName);
 
