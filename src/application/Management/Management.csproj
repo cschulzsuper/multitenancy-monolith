@@ -9,14 +9,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-preview.1.23110.8" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\data\Caching.Contract\Caching.Contract.csproj" />
 		<ProjectReference Include="..\..\data\Data.Contract\Data.Contract.csproj" />
+		<ProjectReference Include="..\..\data\Events.Contract\Events.Contract.csproj" />
 		<ProjectReference Include="..\..\data\ObjectValidation\ObjectValidation.csproj" />
-		<ProjectReference Include="..\..\shared\EventBus.Contract\EventBus.Contract.csproj" />
 		<ProjectReference Include="..\..\shared\Security.Claims\Security.Claims.csproj" />
 		<ProjectReference Include="..\..\shared\Validation\Validation.csproj" />
 		<ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />

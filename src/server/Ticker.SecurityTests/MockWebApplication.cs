@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
+using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 using Xunit.Abstractions;
 
 internal static class MockWebApplication
@@ -66,40 +67,37 @@ internal static class MockWebApplication
         {$"SeedData:Ticker:TickerUsers:{Group}:0:MailAddress", ConfirmedMailAddress},
         {$"SeedData:Ticker:TickerUsers:{Group}:0:Secret", ConfirmedSecret},
         {$"SeedData:Ticker:TickerUsers:{Group}:0:SecretState", TickerUserSecretStates.Confirmed},
-        {$"SeedData:Ticker:TickerUsers:{Group}:0:SecretToken", $"{ConfirmedSecretToken}" },
+        {$"SeedData:Ticker:TickerUsers:{Group}:0:SecretToken", $"{ConfirmedSecretToken}"},
         {$"SeedData:Ticker:TickerUsers:{Group}:0:DisplayName", ConfirmedDisplayName},
 
         {$"SeedData:Ticker:TickerUsers:{Group}:1:MailAddress", InvalidMailAddress},
         {$"SeedData:Ticker:TickerUsers:{Group}:1:Secret", InvalidSecret},
         {$"SeedData:Ticker:TickerUsers:{Group}:1:SecretState", TickerUserSecretStates.Invalid},
-        {$"SeedData:Ticker:TickerUsers:{Group}:1:SecretToken", $"{InvalidSecretToken}" },
+        {$"SeedData:Ticker:TickerUsers:{Group}:1:SecretToken", $"{InvalidSecretToken}"},
         {$"SeedData:Ticker:TickerUsers:{Group}:1:DisplayName", InvalidDisplayName},
 
         {$"SeedData:Ticker:TickerUsers:{Group}:2:MailAddress", TemporaryMailAddress},
         {$"SeedData:Ticker:TickerUsers:{Group}:2:Secret", TemporarySecret},
         {$"SeedData:Ticker:TickerUsers:{Group}:2:SecretState", TickerUserSecretStates.Temporary},
-        {$"SeedData:Ticker:TickerUsers:{Group}:2:SecretToken", $"{PendingSecretToken}" },
+        {$"SeedData:Ticker:TickerUsers:{Group}:2:SecretToken", $"{PendingSecretToken}"},
         {$"SeedData:Ticker:TickerUsers:{Group}:2:DisplayName", TemporaryDisplayName},
 
         {$"SeedData:Ticker:TickerUsers:{Group}:3:MailAddress", PendingMailAddress},
         {$"SeedData:Ticker:TickerUsers:{Group}:3:Secret", PendingSecret},
         {$"SeedData:Ticker:TickerUsers:{Group}:3:SecretState", TickerUserSecretStates.Pending},
-        {$"SeedData:Ticker:TickerUsers:{Group}:3:SecretToken", $"{PendingSecretToken}" },
+        {$"SeedData:Ticker:TickerUsers:{Group}:3:SecretToken", $"{PendingSecretToken}"},
         {$"SeedData:Ticker:TickerUsers:{Group}:3:DisplayName", PendingDisplayName},
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory, ITestOutputHelper? output = null)
         => factory.WithWebHostBuilder(app => app
             .UseEnvironment("Staging")
-            .ConfigureServices(services =>
-            {
-                services.AddSingleton<BadgeValidator, MockBadgeValidator>();
-            })
+            .ConfigureServices(services => { services.AddSingleton<BadgeValidator, MockBadgeValidator>(); })
             .ConfigureLogging(loggingBuilder =>
             {
                 if (output != null)
                 {
-                    loggingBuilder.Services.AddSingleton<ILoggerProvider>(serviceProvider => new XunitLoggerProvider(output));
+                    loggingBuilder.Services.AddSingleton<ILoggerProvider>(_ => new XunitLoggerProvider(output));
                 }
             })
             .ConfigureAppConfiguration((_, config) =>
@@ -148,7 +146,7 @@ internal static class MockWebApplication
 
         scope.ServiceProvider
             .GetRequiredService<ITickerUserVerificationManager>()
-            .Set(verificationKey, verification);       
+            .Set(verificationKey, verification);
 
         var claims = new Claim[]
         {

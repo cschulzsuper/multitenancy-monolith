@@ -7,10 +7,8 @@ using Xunit;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using ChristianSchulz.MultitenancyMonolith.Data;
-using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using System.Linq;
 using ChristianSchulz.MultitenancyMonolith.Server;
-using System.Collections.Generic;
 using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
 
 namespace Authorization.MemberResource;

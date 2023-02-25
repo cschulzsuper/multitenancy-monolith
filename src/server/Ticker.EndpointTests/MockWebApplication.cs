@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
+using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 using Xunit.Abstractions;
 
 internal static class MockWebApplication
@@ -31,15 +32,12 @@ internal static class MockWebApplication
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory, ITestOutputHelper? output = null)
         => factory.WithWebHostBuilder(app => app
-            .ConfigureServices(services => 
-            {
-                services.AddSingleton<BadgeValidator, MockBadgeValidator>();
-            })
+            .ConfigureServices(services => { services.AddSingleton<BadgeValidator, MockBadgeValidator>(); })
             .ConfigureLogging(loggingBuilder =>
             {
                 if (output != null)
                 {
-                    loggingBuilder.Services.AddSingleton<ILoggerProvider>(serviceProvider => new XunitLoggerProvider(output));
+                    loggingBuilder.Services.AddSingleton<ILoggerProvider>(_ => new XunitLoggerProvider(output));
                 }
             })
             .ConfigureAppConfiguration((_, config) =>
@@ -84,6 +82,5 @@ internal static class MockWebApplication
         var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
 
         return new AuthenticationHeaderValue("Bearer", bearer);
-
     }
 }

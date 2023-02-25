@@ -22,8 +22,9 @@ using ChristianSchulz.MultitenancyMonolith.Server.Security;
 using ChristianSchulz.MultitenancyMonolith.Server.Middleware;
 using ChristianSchulz.MultitenancyMonolith.Server.Json;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Events;
+using ChristianSchulz.MultitenancyMonolith.Server.EventBus;
 using Microsoft.Extensions.Configuration;
-using ChristianSchulz.MultitenancyMonolith.Shared.EventBus;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
@@ -60,7 +61,7 @@ public class Startup
         services.AddRequestUser();
         services.AddCaching();
         services.AddConfiguration();
-        services.AddEventBus();
+        services.AddEvents(options => options.Configure());
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryAdministrationData();

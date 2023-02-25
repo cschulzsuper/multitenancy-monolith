@@ -82,7 +82,8 @@ If you are developing an ASP.NET Core application yourself and are looking for a
 
 * Events
   * /40 An event storage abstraction allows publishing events from different places. The first implementation logs the events. Usage of `ITestOutputHelper` makes it possible to see the logs in the tests. https://github.com/cschulzsuper/multitenancy-monolith/commit/a454630ffc358c9fb5dbdbb2ef218fd7df231297
-  * /41 Lightweight event pub/sub via `System.Threading.Channels` and switch to `net8.0`. This event implementation should be enough for the moment. This is the point where I'm kind of glad that I focused on tests early on. Green on all `683`. 
+  * /41 Lightweight events via `System.Threading.Channels` and migration to `net8.0`. This event implementation should be enough for the moment. I'm kind of glad that I focused on tests early on. Green on all `683`. 
+  * /42 Multitenancy events. This kind of implemenation is not my cup of tea, as some asynchronouse task handling is going on, but all tests give me the confidence that the implementaion is sufficient for now.
 
 # Next
 

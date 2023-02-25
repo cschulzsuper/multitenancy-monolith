@@ -2,12 +2,12 @@
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
-using ChristianSchulz.MultitenancyMonolith.Shared.EventBus;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ChristianSchulz.MultitenancyMonolith.Events;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
@@ -45,7 +45,7 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
             TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in");
         }
 
-        var updateAction = (TickerUser @object) => 
+        var updateAction = (TickerUser @object) =>
         {
             switch (@object.SecretState)
             {
@@ -72,6 +72,7 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
                     {
                         TransportException.ThrowSecurityViolation($"Secret of ticker user '{command.Mail}' is not correct");
                     }
+
                     break;
 
                 default:
@@ -136,10 +137,12 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
                     {
                         TransportException.ThrowSecurityViolation($"Secret of ticker user '{command.Mail}' is not correct");
                     }
+
                     if (@object.SecretToken != command.SecretToken)
                     {
                         TransportException.ThrowSecurityViolation($"Secret token of ticker user '{command.Mail}' is not correct");
                     }
+
                     @object.SecretState = TickerUserSecretStates.Confirmed;
                     break;
 
@@ -197,5 +200,7 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
         await _tickerMessageManager.InsertAsync(@object);
     }
 
-    public void Verify() { }
+    public void Verify()
+    {
+    }
 }

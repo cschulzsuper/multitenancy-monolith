@@ -1,55 +1,21 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-public class XunitLoggerProvider : ILoggerProvider
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Logging;
+
+public class XUnitLogger : ILogger
 {
-    private readonly ITestOutputHelper _output;
-    private readonly LogLevel _minLevel;
-    private readonly DateTimeOffset? _logStart;
-
-    public XunitLoggerProvider(ITestOutputHelper output)
-        : this(output, LogLevel.Trace)
-    {
-    }
-
-    public XunitLoggerProvider(ITestOutputHelper output, LogLevel minLevel)
-        : this(output, minLevel, null)
-    {
-    }
-
-    public XunitLoggerProvider(ITestOutputHelper output, LogLevel minLevel, DateTimeOffset? logStart)
-    {
-        _output = output;
-        _minLevel = minLevel;
-        _logStart = logStart;
-    }
-
-    public ILogger CreateLogger(string categoryName)
-    {
-        return new XunitLogger(_output, categoryName, _minLevel, _logStart);
-    }
-
-    public void Dispose()
-    {
-    }
-}
-
-public class XunitLogger : ILogger
-{
-    private static readonly string[] NewLineChars = new[] { Environment.NewLine };
+    private static readonly string[] NewLineChars = new[] {Environment.NewLine};
     private readonly string _category;
     private readonly LogLevel _minLogLevel;
     private readonly ITestOutputHelper _output;
     private readonly DateTimeOffset? _logStart;
 
-    public XunitLogger(ITestOutputHelper output, string category, LogLevel minLogLevel, DateTimeOffset? logStart)
+    public XUnitLogger(ITestOutputHelper output, string category, LogLevel minLogLevel, DateTimeOffset? logStart)
     {
         _minLogLevel = minLogLevel;
         _category = category;
@@ -58,7 +24,8 @@ public class XunitLogger : ILogger
     }
 
     public void Log<TState>(
-        LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+        Func<TState, Exception?, string> formatter)
     {
         if (!IsEnabled(logLevel))
         {
@@ -68,13 +35,11 @@ public class XunitLogger : ILogger
         // Buffer the message into a single string in order to avoid shearing the message when running across multiple threads.
         var messageBuilder = new StringBuilder();
 
-        var timestamp = _logStart.HasValue ?
-            $"{(DateTimeOffset.UtcNow - _logStart.Value).TotalSeconds.ToString("N3", CultureInfo.InvariantCulture)}s" :
-            DateTimeOffset.UtcNow.ToString("s", CultureInfo.InvariantCulture);
+        var timestamp = _logStart.HasValue ? $"{(DateTimeOffset.UtcNow - _logStart.Value).TotalSeconds.ToString("N3", CultureInfo.InvariantCulture)}s" : DateTimeOffset.UtcNow.ToString("s", CultureInfo.InvariantCulture);
 
         var firstLinePrefix = $"| [{timestamp}] {_category} {logLevel}: ";
         var lines = formatter(state, exception).Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-        messageBuilder.AppendLine(firstLinePrefix + lines.FirstOrDefault() ?? string.Empty);
+        messageBuilder.AppendLine(firstLinePrefix + (lines.FirstOrDefault() ?? string.Empty));
 
         var additionalLinePrefix = "|" + new string(' ', firstLinePrefix.Length - 1);
         foreach (var line in lines.Skip(1))
@@ -116,6 +81,7 @@ public class XunitLogger : ILogger
         => logLevel >= _minLogLevel;
 
     public IDisposable BeginScope<TState>(TState state)
+        where TState : notnull
         => new NullScope();
 
     private sealed class NullScope : IDisposable

@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
-using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;

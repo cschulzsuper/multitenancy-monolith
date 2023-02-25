@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.EventBus;
+namespace ChristianSchulz.MultitenancyMonolith.Events;
 
 internal sealed class EventStorage : IEventStorage, IAsyncDisposable
 {
@@ -78,6 +78,5 @@ internal sealed class EventStorage : IEventStorage, IAsyncDisposable
                 _flushLock.Release();
             }
         });
-
     }
 }

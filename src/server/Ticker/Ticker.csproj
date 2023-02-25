@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0-preview.1.23112.2" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 
@@ -20,7 +20,7 @@
 		<ProjectReference Include="..\..\configuration\Configuration\Configuration.csproj" />
 		<ProjectReference Include="..\..\data\Caching\Caching.csproj" />
 		<ProjectReference Include="..\..\data\Data.StaticDictionary\Data.StaticDictionary.csproj" />
-		<ProjectReference Include="..\..\shared\EventBus\EventBus.csproj" />
+		<ProjectReference Include="..\..\data\Events.ThreadingChannels\Events.ThreadingChannels.csproj" />
 	</ItemGroup>
 	
 </Project>

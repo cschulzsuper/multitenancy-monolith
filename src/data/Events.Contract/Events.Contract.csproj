@@ -4,7 +4,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Shared.EventBus</RootNamespace>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Events</RootNamespace>
 	</PropertyGroup>
 
 </Project>

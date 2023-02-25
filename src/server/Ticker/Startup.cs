@@ -20,7 +20,8 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Shared.EventBus;
+using ChristianSchulz.MultitenancyMonolith.Events;
+using _Configure = ChristianSchulz.MultitenancyMonolith.Server.Ticker.EventBus._Configure;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 
@@ -58,7 +59,7 @@ public class Startup
         services.AddRequestUser();
         services.AddCaching();
         services.AddConfiguration();
-        services.AddEventBus();
+        services.AddEvents(options => _Configure.Configure(options));
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryTickerData();
@@ -163,6 +164,6 @@ public class Startup
             };
         }
 
-        await context.Response.WriteAsJsonAsync(problem, (JsonSerializerOptions?)null, "application/problem+json");
+        await context.Response.WriteAsJsonAsync(problem, (JsonSerializerOptions?) null, "application/problem+json");
     }
 }
