@@ -9,13 +9,13 @@ internal static class _Configure
 {
     public static EventsOptions Configure(this EventsOptions options)
     {
-        options.ChannelNameResolver = provider => provider
+        options.PublicationChannelNameResolver = provider => provider
             .GetRequiredService<ClaimsPrincipal>()
             .GetClaimOrDefault("group") ?? string.Empty;
 
-        options.InvocationSetup = (context) => context.Services
+        options.SubscriptionInvocationSetup = (services, scope) => services
             .GetRequiredService<ClaimsPrincipal>()
-            .AddIdentity(new ClaimsIdentity(new[] {new Claim("group", context.Scope)}));
+            .AddIdentity(new ClaimsIdentity(new[] { new Claim("group", scope) }));
 
         return options;
     }

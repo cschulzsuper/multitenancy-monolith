@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 using System.Linq;
+using ChristianSchulz.MultitenancyMonolith.Events;
+using System.Threading;
 
 namespace Ticker.TickerUserFlows;
 
@@ -18,9 +20,18 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
+    private Action<string>? _eventPublicationInterceptorAssert = null;
+    private TaskCompletionSource _eventPublicationInterceptorTask = new TaskCompletionSource();
+
     public ConfirmFlow(WebApplicationFactory<Program> factory)
     {
         _factory = factory.Mock();
+        _factory.Services.GetRequiredService<EventsOptions>()
+            .PublicationInterceptor = (scope, @event, snowflake) =>
+            {
+                _eventPublicationInterceptorAssert?.Invoke(@event);
+                _eventPublicationInterceptorTask.SetResult();
+            };
     }
 
     [Fact]
@@ -30,8 +41,6 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
 
         await TickerUser_Auth_ShouldSucceed_WithSecretStatePending();
         await TickerUser_Auth_ShouldBeForbidden();
-
-        // TODO Verfiy ticker user was notified once implemented
 
         await TickerUser_Confirm_ShouldSucceedd_WithSecretStateConfirmed();
         await TickerUser_Confirm_ShouldBeForbidden();
@@ -63,6 +72,12 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
     private async Task TickerUser_Auth_ShouldSucceed_WithSecretStatePending()
     {
         // Arrange
+        _eventPublicationInterceptorAssert = @event => Assert.Equal("ticker-user-secret-pending", @event);
+        _eventPublicationInterceptorTask = new TaskCompletionSource();
+
+        var cancellationTokenSource = new CancellationTokenSource(2000);
+        cancellationTokenSource.Token.Register(_eventPublicationInterceptorTask.SetCanceled);
+
         var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
         var authContent = new
         {
@@ -91,6 +106,8 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
 
         Assert.Equal(TickerUserSecretStates.Pending, @object.SecretState);
         Assert.NotEqual(MockWebApplication.TicketUserSecretToken, @object.SecretToken);
+
+        await _eventPublicationInterceptorTask.Task;
     }
 
     private async Task TickerUser_Auth_ShouldBeForbidden()

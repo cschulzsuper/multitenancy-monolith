@@ -17,32 +17,25 @@ internal sealed class EventSubscriptions : IEventSubscriptions
         _subscriptions = new Dictionary<string, Func<EventValue, Task>>();
     }
 
-    public void Map<THandler>(string eventName, Func<THandler, EventSubscriptionInvocationContext, Task> subscription)
+    public void Map<THandler>(string eventName, Func<THandler, long, Task> subscription)
         where THandler : class
     {
         _subscriptions.Add(eventName,
             @event => ActionAsync(@event, subscription));
     }
 
-    private async Task ActionAsync<THandler>(EventValue @event, Func<THandler, EventSubscriptionInvocationContext, Task> subscription)
+    private async Task ActionAsync<THandler>(EventValue @event, Func<THandler, long, Task> subscription)
         where THandler : class
     {
         await using var scope = _services.CreateAsyncScope();
 
         var options = scope.ServiceProvider.GetRequiredService<EventsOptions>();
 
-        var context = new EventSubscriptionInvocationContext
-        {
-            Scope = @event.Scope,
-            Services = scope.ServiceProvider,
-            Snowflake = @event.Snowflake
-        };
-
-        options.InvocationSetup(context);
+        options.SubscriptionInvocationSetup(scope.ServiceProvider, @event.Scope);
 
         var handler = scope.ServiceProvider.GetRequiredService<THandler>();
 
-        await subscription(handler, context);
+        await subscription(handler, @event.Snowflake);
     }
 
 

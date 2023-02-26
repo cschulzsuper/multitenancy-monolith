@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
+using Events.ThreadingChannels.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,17 +13,27 @@ using Xunit.Abstractions;
 
 namespace EventPublisher;
 
-public sealed class PublishAsync
+public sealed class PublicationFlow
 {
     private readonly IServiceProvider _services;
 
-    public PublishAsync(ITestOutputHelper output)
+    public PublicationFlow(ITestOutputHelper output)
     {
         var services = new ServiceCollection();
 
-        services.AddSingleton<MockHandler>();
+        services.AddScoped<MockHandler>();
+        services.AddScoped<MockHandlerContext>();
+        services.AddSingleton<MockHandlerStatistics>();
 
-        services.AddEvents(options => { options.ChannelNameResolver = _ => $"{Guid.NewGuid()}"; });
+        services.AddEvents(options => 
+        { 
+            options.PublicationChannelNameResolver = _ => $"{Guid.NewGuid()}";
+
+            options.SubscriptionInvocationSetup = (provider, scope) =>
+            {
+                provider.GetRequiredService<MockHandlerContext>().Scope = scope;
+            };
+        });
 
         services.AddLogging(configure => configure.AddProvider(new XunitLoggerProvider(output)));
 
@@ -34,7 +45,7 @@ public sealed class PublishAsync
     [InlineData(10, 100)]
     [InlineData(100, 100)]
     [InlineData(1000, 100)]
-    public async Task PublishAsync_ShouldPublish_ToScope(int scopes, int calls)
+    public async Task PublicationFlow_ShouldPublish_ToScope(int scopes, int calls)
     {
         // Arrange
         var cancellationTokenSource = new CancellationTokenSource();
@@ -43,7 +54,7 @@ public sealed class PublishAsync
             .StartAsync(cancellationTokenSource.Token);
 
         _services.GetRequiredService<IEventSubscriptions>()
-            .Map("mock-event", (MockHandler handler, EventSubscriptionInvocationContext context) => handler.ExecuteAsync(context));
+            .Map("mock-event", (MockHandler handler, long snowflake) => handler.ExecuteAsync(snowflake));
 
         //Act
         foreach (var _ in Enumerable.Range(0, scopes))
@@ -63,13 +74,15 @@ public sealed class PublishAsync
             .GetRequiredService<NamedChannelDictionary<EventValue>>()
             .CompleteAllAsync(calls * calls);
 
-        var mockHandler = _services
-            .GetRequiredService<MockHandler>();
+        var mockHandlerStatistics = _services
+            .GetRequiredService<MockHandlerStatistics>();
 
-        Assert.All(mockHandler.CallsPerScope,
+        Assert.All(mockHandlerStatistics.CallsPerScope.Values,
             callsOfScope => Assert.Equal(calls, callsOfScope));
 
         //Finalize
+        cancellationTokenSource.Cancel();
+
         await _services
             .GetRequiredService<IHostedService>()
             .StopAsync(cancellationTokenSource.Token);

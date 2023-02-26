@@ -39,7 +39,6 @@ internal sealed class TickerMessageManager : ITickerMessageManager
 
         await _repository.InsertAsync(@object);
 
-        // TODO A event and event handler to generate bookmark
         _eventStorage.Add("ticker-message-inserted", @object.Snowflake);
     }
 

@@ -58,7 +58,6 @@ internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
                     @object.SecretState = TickerUserSecretStates.Pending;
                     @object.SecretToken = Guid.NewGuid();
 
-                    // TODO Add event to notify ticker user about pending secret
                     _eventStorage.Add("ticker-user-secret-pending", @object.Snowflake);
 
                     break;
