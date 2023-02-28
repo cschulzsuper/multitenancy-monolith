@@ -3,42 +3,48 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace ChristianSchulz.MultitenancyMonolith.Events;
 
 internal sealed class EventSubscriptions : IEventSubscriptions
 {
-    private readonly IServiceProvider _services;
-    private readonly Dictionary<string, Func<EventValue, Task>> _subscriptions;
+    private readonly ILogger<EventSubscriptions> _logger;
+    private readonly Dictionary<string, Func<IServiceProvider, long, Task>> _subscriptions;
 
-    public EventSubscriptions(IServiceProvider services)
+    public EventSubscriptions(ILogger<EventSubscriptions> logger)
     {
-        _services = services;
-        _subscriptions = new Dictionary<string, Func<EventValue, Task>>();
+        _logger = logger;
+        _subscriptions = new Dictionary<string, Func<IServiceProvider, long, Task>>();
     }
 
     public void Map<THandler>(string eventName, Func<THandler, long, Task> subscription)
         where THandler : class
     {
         _subscriptions.Add(eventName,
-            @event => ActionAsync(@event, subscription));
+            (services,snowflake) => ActionAsync(services, snowflake, subscription));
     }
 
-    private async Task ActionAsync<THandler>(EventValue @event, Func<THandler, long, Task> subscription)
+    public async Task InvokeAsync(string @event, IServiceProvider services, long snowflake)
+    {
+        var found = _subscriptions.TryGetValue(@event, out var subscription);
+        
+        if(!found)
+        {
+            _logger.LogInformation("Event '{event}' subscription for '{snowflake}' not found", @event, snowflake);
+            return;
+        }
+
+        _logger.LogInformation("Event '{event}' subscription for '{snowflake}' has been invoked", @event, snowflake);
+
+        await subscription!(services, snowflake);
+    }
+
+    private async Task ActionAsync<THandler>(IServiceProvider services, long snowflake, Func<THandler, long, Task> subscription)
         where THandler : class
     {
-        await using var scope = _services.CreateAsyncScope();
+        var handler = services.GetRequiredService<THandler>();
 
-        var options = scope.ServiceProvider.GetRequiredService<EventsOptions>();
-
-        options.SubscriptionInvocationSetup(scope.ServiceProvider, @event.Scope);
-
-        var handler = scope.ServiceProvider.GetRequiredService<THandler>();
-
-        await subscription(handler, @event.Snowflake);
+        await subscription(handler, snowflake);
     }
-
-
-    public bool TryGet(string @event, [MaybeNullWhen(false)] out Func<EventValue, Task> subscription)
-        => _subscriptions.TryGetValue(@event, out subscription);
 }

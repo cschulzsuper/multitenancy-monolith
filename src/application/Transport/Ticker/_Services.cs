@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
-public static class TickerTransportServices
+[SuppressMessage("Style", "IDE1006:Naming Styles")]
+public static class _Services
 {
     public static IServiceCollection AddTickerTransport(this IServiceCollection services)
     {

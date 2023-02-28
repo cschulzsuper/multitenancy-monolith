@@ -1,7 +1,6 @@
-﻿namespace Events.ThreadingChannels.Tests
+﻿namespace Events.ThreadingChannels.Tests;
+
+internal sealed class MockHandlerContext
 {
-    internal sealed class MockHandlerContext
-    {
-        public string Scope { get; set; } = string.Empty;
-    }
+    public string Scope { get; set; } = string.Empty;
 }

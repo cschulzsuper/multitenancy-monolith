@@ -8,13 +8,13 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 public interface ITickerMessageManager
 {
-    Task<TickerMessage> GetAsync(long snowflake);
+    Task<TickerMessage> GetAsync(long tickerMessage);
 
     IAsyncEnumerable<TickerMessage> GetAsyncEnumerable(Func<IQueryable<TickerMessage>, IQueryable<TickerMessage>> query);
 
-    Task InsertAsync(TickerMessage tickerMessage);
+    Task InsertAsync(TickerMessage @object);
 
-    Task UpdateAsync(long snowflake, Action<TickerMessage> action);
+    Task UpdateAsync(long tickerMessage, Action<TickerMessage> action);
 
-    Task DeleteAsync(long snowflake);
+    Task DeleteAsync(long tickerMessage);
 }

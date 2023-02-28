@@ -24,7 +24,7 @@ internal sealed class TickerMessageManager : ITickerMessageManager
 
     public async Task<TickerMessage> GetAsync(long snowflake)
     {
-        TickerMessageValidation.EnsureSnowflake(snowflake);
+        TickerMessageValidation.EnsureTickerMessage(snowflake);
 
         var @object = await _repository.GetAsync(snowflake);
         return @object;
@@ -58,7 +58,7 @@ internal sealed class TickerMessageManager : ITickerMessageManager
 
     public async Task DeleteAsync(long snowflake)
     {
-        TickerMessageValidation.EnsureSnowflake(snowflake);
+        TickerMessageValidation.EnsureTickerMessage(snowflake);
 
         await _repository.DeleteOrThrowAsync(snowflake);
     }

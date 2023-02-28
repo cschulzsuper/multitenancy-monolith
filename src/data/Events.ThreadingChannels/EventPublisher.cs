@@ -24,7 +24,6 @@ internal sealed class EventPublisher : IEventPublisher
         var eventValue = new EventValue
         {
             Event = @event,
-            Scope = _channel.Name,
             Snowflake = snowflake
         };
 

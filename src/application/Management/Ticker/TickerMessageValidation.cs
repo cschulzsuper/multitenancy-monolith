@@ -25,12 +25,12 @@ internal static class TickerMessageValidation
         _updateValidator.AddRules(x => x.Priority, TickerMessagePriorityValidator.CreateRules("priority"));
     }
 
-    internal static void EnsureInsertable(TickerMessage tickerMessage)
-        => _insertValidator.Ensure(tickerMessage);
+    internal static void EnsureInsertable(TickerMessage @object)
+        => _insertValidator.Ensure(@object);
 
-    public static void EnsureUpdatable(TickerMessage tickerMessage)
-        => _updateValidator.Ensure(tickerMessage);
+    public static void EnsureUpdatable(TickerMessage @object)
+        => _updateValidator.Ensure(@object);
 
-    internal static void EnsureSnowflake(long snowflake)
-        => SnowflakeValidator.Ensure(snowflake);
+    internal static void EnsureTickerMessage(long tickerMessage)
+        => SnowflakeValidator.Ensure(tickerMessage);
 }

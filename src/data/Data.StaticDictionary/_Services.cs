@@ -60,8 +60,9 @@ public static class _Services
 
     public static IServiceCollection AddStaticDictionaryTickerData(this IServiceCollection services)
     {
-        services.AddScoped(CreateRepository<TickerUserModel, TickerUser>);
+        services.AddScoped(CreateRepository<TickerBookmarkModel, TickerBookmark>);
         services.AddScoped(CreateRepository<TickerMessageModel, TickerMessage>);
+        services.AddScoped(CreateRepository<TickerUserModel, TickerUser>);
 
         return services;
     }

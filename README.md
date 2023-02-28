@@ -84,11 +84,13 @@ If you are developing an ASP.NET Core application yourself and are looking for a
   * /40 An event storage abstraction allows publishing events from different places. The first implementation logs the events. Usage of `ITestOutputHelper` makes it possible to see the logs in the tests. https://github.com/cschulzsuper/multitenancy-monolith/commit/a454630ffc358c9fb5dbdbb2ef218fd7df231297
   * /41 Lightweight events via `System.Threading.Channels` and migration to `net8.0`. This event implementation should be enough for the moment. I'm kind of glad that I focused on tests early on. Green on all `683`. https://github.com/cschulzsuper/multitenancy-monolith/commit/a151383bf8b58ddf31676a9f3d6bcf1391f4b428
   * /42 Multitenancy events. This kind of implemenation is not my cup of tea, as some asynchronouse task handling is going on, but all tests give me the confidence that the implementaion is sufficient for now. https://github.com/cschulzsuper/multitenancy-monolith/commit/047a3597fa48fc715063d9ba5cd2c0ed8cef5d50
-  * /43 Event publication interception for testability of event publication. Not a perfect solution for now, but it will work until I come up with something better.
+  * /43 Event publication interception for testability of event publication. Not a perfect solution for now, but it will work until I come up with something better. https://github.com/cschulzsuper/multitenancy-monolith/commit/9c15676cd6d1c49c612dc108abfd9a5f3baf4706
+* Ticker Orchestration
+  * /44 Handling the `ticker-message-inserted` to automatically create a bookmark for the current ticker user. Testing this event handler in an event tests, which is similar to the endpoint tests. 
 
-# Next
+# Current
 
-* Distinction type: Validate custom property against existing object type custom property
+* Ticker Orchestration: Everything related to the ticker workflows
 
 # Backlog
 

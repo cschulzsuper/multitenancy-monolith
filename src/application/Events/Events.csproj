@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Application</RootNamespace>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\data\Events.Contract\Events.Contract.csproj" />
+    <ProjectReference Include="..\Orchestration.Contract\Orchestration.Contract.csproj" />
+  </ItemGroup>
+
+</Project>

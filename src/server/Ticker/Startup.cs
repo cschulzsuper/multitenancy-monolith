@@ -66,10 +66,15 @@ public class Startup
 
         services.AddTickerManagement();
         services.AddTickerTransport();
+        services.AddTickerOrchestration();
     }
 
     public void Configure(IApplicationBuilder app)
     {
+        app.ApplicationServices
+            .GetRequiredService<IEventSubscriptions>()
+            .MapTickerEvents();
+
         if (!_environment.IsProduction())
         {
             app.ApplicationServices.ConfigureTickerUsers();

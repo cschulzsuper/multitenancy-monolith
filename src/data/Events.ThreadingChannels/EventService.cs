@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -12,17 +13,20 @@ internal sealed class EventService : BackgroundService
     private readonly ILogger<IEventSubscriptions> _logger;
     private readonly NamedChannelDictionary<EventValue> _channels;
     private readonly TaskCollection _channelListeners;
+    private readonly IServiceProvider _services;
     private readonly EventSubscriptions _subscriptions;
 
     public EventService(
         ILogger<IEventSubscriptions> logger,
         NamedChannelDictionary<EventValue> channels,
         TaskCollection channelListeners,
-        IEventSubscriptions subscriptions)
+        IEventSubscriptions subscriptions,
+        IServiceProvider services)
     {
         _logger = logger;
         _channels = channels;
         _channelListeners = channelListeners;
+        _services = services;
 
         _subscriptions = subscriptions as EventSubscriptions ??
                          throw new UnreachableException($"Parameter {subscriptions} (IEventSubscriptions) must be of type EventSubscriptions");
@@ -76,22 +80,15 @@ internal sealed class EventService : BackgroundService
                     continue;
                 }
 
-                var found = _subscriptions.TryGet(@event!.Event, out var subscription);
-                if (!found)
-                {
-                    _logger.LogInformation("Event '{event}' subscription for '{snowflake}' not found", @event.Event, @event.Snowflake);
-
-                    _ = await channel.ChannelReader
-                        .ReadAsync(cancellationToken)
-                        .ConfigureAwait(false);
-
-                    continue;
-                }
-
                 try
                 {
-                    await subscription!
-                        .Invoke(@event);
+                    await using var scope = _services.CreateAsyncScope();
+
+                    var options = scope.ServiceProvider.GetRequiredService<EventsOptions>();
+
+                    options.SubscriptionInvocationSetup(scope.ServiceProvider, channel.Name);
+
+                    await _subscriptions.InvokeAsync(@event!.Event, scope.ServiceProvider, @event.Snowflake);
 
                     _logger.LogInformation("Event '{event}' subscription for '{snowflake}' has been invoked", @event.Event, @event.Snowflake);
 
@@ -101,7 +98,7 @@ internal sealed class EventService : BackgroundService
                 }
                 catch (Exception exception) when (exception is not OperationCanceledException)
                 {
-                    _logger.LogError(exception, "Error while execution event '{event}' subscription for '{snowflake}' ", @event.Event, @event.Snowflake);
+                    _logger.LogError(exception, "Error while execution event '{event}' subscription for '{snowflake}' ", @event!.Event, @event.Snowflake);
                 }
             }
         }
