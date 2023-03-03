@@ -53,7 +53,7 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
                     TransportException.ThrowSecurityViolation($"Secret state of ticker user '{command.Mail}' is invalid");
                     break;
 
-                case TickerUserSecretStates.Temporary:
+                case TickerUserSecretStates.Reset:
                     @object.Secret = command.Secret;
                     @object.SecretState = TickerUserSecretStates.Pending;
                     @object.SecretToken = Guid.NewGuid();
@@ -127,8 +127,8 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
                     TransportException.ThrowSecurityViolation($"Secret state of ticker user '{command.Mail}' is invalid");
                     break;
 
-                case TickerUserSecretStates.Temporary:
-                    TransportException.ThrowSecurityViolation($"Secret state of ticker user '{command.Mail}' is temporary");
+                case TickerUserSecretStates.Reset:
+                    TransportException.ThrowSecurityViolation($"Secret state of ticker user '{command.Mail}' is reset");
                     break;
 
                 case TickerUserSecretStates.Pending:

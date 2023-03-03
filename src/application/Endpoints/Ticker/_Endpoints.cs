@@ -16,6 +16,7 @@ public static class _Endpoints
         business.MapContextTickerUserBookmarkResource();
         business.MapContextTickerUserCommands();
         business.MapTickerMessageResource();
+        business.MapTickerUserCommands();
         business.MapTickerUserResource();
 
         return endpoints;

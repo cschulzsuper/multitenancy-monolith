@@ -44,17 +44,17 @@ internal static class MockWebApplication
     public const string PendingDisplayName = "Pending";
     public readonly static Guid PendingSecretToken = Guid.NewGuid();
 
-    public const string TemporaryMailAddress = "temporary@localhost";
-    public const string TemporarySecret = "temporary";
-    public const string TemporaryDisplayName = "Temporary";
-    public readonly static Guid TemporarySecretToken = Guid.NewGuid();
+    public const string ResetMailAddress = "reset@localhost";
+    public const string ResetSecret = "reset";
+    public const string ResetDisplayName = "Reset";
+    public readonly static Guid ResetSecretToken = Guid.NewGuid();
 
     public static readonly IDictionary<string, Guid> SecretTokens = new Dictionary<string, Guid>
     {
         [ConfirmedMailAddress] = ConfirmedSecretToken,
         [InvalidMailAddress] = InvalidSecretToken,
         [PendingMailAddress] = PendingSecretToken,
-        [TemporaryMailAddress] = TemporarySecretToken,
+        [ResetMailAddress] = ResetSecretToken,
     };
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
@@ -77,11 +77,11 @@ internal static class MockWebApplication
         {$"SeedData:Ticker:TickerUsers:{Group}:1:SecretToken", $"{InvalidSecretToken}"},
         {$"SeedData:Ticker:TickerUsers:{Group}:1:DisplayName", InvalidDisplayName},
 
-        {$"SeedData:Ticker:TickerUsers:{Group}:2:MailAddress", TemporaryMailAddress},
-        {$"SeedData:Ticker:TickerUsers:{Group}:2:Secret", TemporarySecret},
-        {$"SeedData:Ticker:TickerUsers:{Group}:2:SecretState", TickerUserSecretStates.Temporary},
-        {$"SeedData:Ticker:TickerUsers:{Group}:2:SecretToken", $"{PendingSecretToken}"},
-        {$"SeedData:Ticker:TickerUsers:{Group}:2:DisplayName", TemporaryDisplayName},
+        {$"SeedData:Ticker:TickerUsers:{Group}:2:MailAddress", ResetMailAddress},
+        {$"SeedData:Ticker:TickerUsers:{Group}:2:Secret", ResetSecret},
+        {$"SeedData:Ticker:TickerUsers:{Group}:2:SecretState", TickerUserSecretStates.Reset},
+        {$"SeedData:Ticker:TickerUsers:{Group}:2:SecretToken", $"{ResetSecretToken}"},
+        {$"SeedData:Ticker:TickerUsers:{Group}:2:DisplayName", ResetDisplayName},
 
         {$"SeedData:Ticker:TickerUsers:{Group}:3:MailAddress", PendingMailAddress},
         {$"SeedData:Ticker:TickerUsers:{Group}:3:Secret", PendingSecret},

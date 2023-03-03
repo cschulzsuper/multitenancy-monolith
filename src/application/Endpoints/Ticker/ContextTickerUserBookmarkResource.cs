@@ -20,7 +20,7 @@ public static class ContextTickerUserBookmarkResource
             .RequireAuthorization(policy => policy
                 .RequireClaim("badge", "ticker")
                 .RequireClaim("scope", "endpoints"))
-            .WithTags("Ticker User Dependent Bookmark API");
+            .WithTags("Context Ticker User Bookmark API");
 
         resource
             .MapGet(string.Empty, GetAll)

@@ -16,14 +16,14 @@ using System.Threading;
 
 namespace Ticker.TickerUserFlows;
 
-public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
+public class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
     private Action<string>? _eventPublicationInterceptorAssert = null;
     private TaskCompletionSource _eventPublicationInterceptorTask = new TaskCompletionSource();
 
-    public ConfirmFlow(WebApplicationFactory<Program> factory)
+    public SecretFlow(WebApplicationFactory<Program> factory)
     {
         _factory = factory.Mock();
         _factory.Services.GetRequiredService<EventsOptions>()
@@ -52,7 +52,6 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
 
     private async Task TickerUser_Create_ShouldSucceed()
     {
-
         // Arrange
         var createRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users");
         createRequest.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
@@ -86,16 +85,40 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
 
     private async Task TickerUser_Reset_ShouldSucceed()
     {
-        // TODO Replace with API call once endpoint is available
-
+        // Arrange
         using var scope = _factory.CreateMultitenancyScope();
 
-        await scope.ServiceProvider
+        var existingTickerUser = scope.ServiceProvider
             .GetRequiredService<IRepository<TickerUser>>()
-            .UpdateAsync(x => x.MailAddress == MockWebApplication.TickerUserMail, @object =>
-                {
-                    @object.SecretState = TickerUserSecretStates.Temporary;
-                });
+            .GetQueryable()
+            .Single();
+
+        _eventPublicationInterceptorAssert = @event => Assert.Equal("ticker-user-secret-reset", @event);
+        _eventPublicationInterceptorTask = new TaskCompletionSource();
+
+        var cancellationTokenSource = new CancellationTokenSource(2000);
+        cancellationTokenSource.Token.Register(_eventPublicationInterceptorTask.SetCanceled);
+
+        var resetRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{existingTickerUser.Snowflake}/reset");
+        resetRequest.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var authResponse = await client.SendAsync(resetRequest);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, authResponse.StatusCode);
+
+        var resetTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.NotNull(resetTickerUser);
+        Assert.Equal(TickerUserSecretStates.Reset, resetTickerUser.SecretState);
+
+        await _eventPublicationInterceptorTask.Task;
     }
 
     private async Task TickerUser_Auth_ShouldSucceed_WithSecretStatePending()

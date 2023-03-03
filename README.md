@@ -89,12 +89,17 @@ I said monolith, but with the latests features related to a ticker system, it is
   * /43 Event publication interception for testability of event publication. Not a perfect solution for now, but it will work until I come up with something better. https://github.com/cschulzsuper/multitenancy-monolith/commit/9c15676cd6d1c49c612dc108abfd9a5f3baf4706
 * Ticker Orchestration
   * /44 Handling the `ticker-message-inserted` to automatically create a bookmark for the current ticker user. Testing this event handler in an event tests, which is similar to the endpoint tests. https://github.com/cschulzsuper/multitenancy-monolith/commit/4e0691f61a4b52b6e33374759b2c1d1f30c12252
-  * /45 Managing bookmarks for ticker messages is possible through simple endpoints. Nothing fancy in this commit.
-  * /46 Managing ticker users via endpoints was not necessary until now. Again, nothing fancy in this commit as well.
+  * /45 Managing bookmarks for ticker messages is possible through simple endpoints. Nothing fancy in this commit. https://github.com/cschulzsuper/multitenancy-monolith/commit/c4d869658f43c915a46f0266b6f75f75ae1f51ca
+  * /46 Managing ticker users via endpoints was not necessary until now. Again, nothing fancy in this commit as well. https://github.com/cschulzsuper/multitenancy-monolith/commit/ca6cfa169b5554d55bde43124a3e338dedaf2ae6
+  * /47 Resetting the secret of a ticker user was an easy implementation. Mainly, because of the foundation that was implemented in all other commits. 
 
 # Current
 
 * Ticker Orchestration: Everything related to the ticker workflow
+
+# Next
+
+* Authentictaion/Authorization: Missing endpoints and refactoring
 
 # Backlog
 

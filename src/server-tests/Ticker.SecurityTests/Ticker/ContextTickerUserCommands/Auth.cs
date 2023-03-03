@@ -21,7 +21,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.ConfirmedMailAddress, MockWebApplication.ConfirmedSecret)]
-    [InlineData(MockWebApplication.TemporaryMailAddress, MockWebApplication.TemporarySecret)]
+    [InlineData(MockWebApplication.ResetMailAddress, MockWebApplication.ResetSecret)]
     public async Task Auth_ShouldSucceed_WhenValid(string mail, string secret)
     {
         // Arrange

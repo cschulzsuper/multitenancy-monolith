@@ -49,7 +49,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [InlineData(MockWebApplication.ConfirmedMailAddress, MockWebApplication.ConfirmedSecret)]
     [InlineData(MockWebApplication.InvalidMailAddress, MockWebApplication.InvalidSecret)]
-    [InlineData(MockWebApplication.TemporaryMailAddress, MockWebApplication.TemporarySecret)]
+    [InlineData(MockWebApplication.ResetMailAddress, MockWebApplication.ResetSecret)]
     public async Task Confirm_ShouldBeForbidden_WhenSecretStateInvalid(string mail, string secret)
     {
         // Arrange

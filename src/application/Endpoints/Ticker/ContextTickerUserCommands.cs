@@ -18,7 +18,7 @@ public static class ContextTickerUserCommands
     {
         var commands = endpoints
             .MapGroup("/ticker-users/me")
-            .WithTags("Ticker User Dependent Commands");
+            .WithTags("Context Ticker User Commands");
 
         commands
             .MapPost("/auth",Auth)

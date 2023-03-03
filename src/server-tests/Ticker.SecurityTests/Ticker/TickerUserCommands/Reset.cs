@@ -1,30 +1,28 @@
 ﻿using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
-namespace Ticker.TickerUserResource;
+namespace Ticker.TickerUserCommands;
 
-public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
-    public Put(WebApplicationFactory<Program> factory)
+    public Reset(WebApplicationFactory<Program> factory)
     {
         _factory = factory.Mock();
     }
 
     [Fact]
-    public async Task Put_ShouldBeUnauthorized_WhenNotAuthenticated()
+    public async Task Reset_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
         var validTickerUser = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-users/{validTickerUser}");
-        request.Content = JsonContent.Create(new object());
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{validTickerUser}/reset");
 
         var client = _factory.CreateClient();
 
@@ -38,14 +36,13 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
-    public async Task Put_ShouldFail_WhenAuthorized(int mock)
+    public async Task Reset_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
         var validTickerUser = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-users/{validTickerUser}");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{validTickerUser}/reset");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
-        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
@@ -53,20 +50,19 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
     [Theory]
     [InlineData(MockWebApplication.MockTicker)]
-    public async Task Put_ShouldBeForbidden_WhenNotAuthorized(int mock)
+    public async Task Reset_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
         var validTickerUser = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-users/{validTickerUser}");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{validTickerUser}/reset");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
-        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
@@ -81,14 +77,13 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
     [InlineData(MockWebApplication.MockTicker)]
-    public async Task Put_ShouldBeForbidden_WhenInvalid(int mock)
+    public async Task Reset_ShouldBeForbidden_WhenInvalid(int mock)
     {
         // Arrange
         var validTickerUser = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-users/{validTickerUser}");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{validTickerUser}/reset");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
-        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
