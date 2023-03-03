@@ -4,33 +4,32 @@ using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValid
 using System;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker
+namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
+
+internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
 {
-    internal sealed class TickerUserCommandHandler : ITickerUserCommandHandler
+    private readonly ITickerUserManager _tickerUserManager;
+    private readonly IEventStorage _eventStorage;
+
+    public TickerUserCommandHandler(
+        ITickerUserManager tickerUserManager,
+        IEventStorage eventStorage)
     {
-        private readonly ITickerUserManager _tickerUserManager;
-        private readonly IEventStorage _eventStorage;
+        _tickerUserManager = tickerUserManager;
+        _eventStorage = eventStorage;
+    }
 
-        public TickerUserCommandHandler(
-            ITickerUserManager tickerUserManager,
-            IEventStorage eventStorage)
+    public async Task ResetAsync(long tickerUser)
+    {
+        var updateAction = (TickerUser @object) =>
         {
-            _tickerUserManager = tickerUserManager;
-            _eventStorage = eventStorage;
-        }
+            @object.Secret = $"{Guid.NewGuid()}";
+            @object.SecretState = TickerUserSecretStates.Reset;
+            @object.SecretToken = Guid.NewGuid();
 
-        public async Task ResetAsync(long tickerUser)
-        {
-            var updateAction = (TickerUser @object) =>
-            {
-                @object.Secret = $"{Guid.NewGuid()}";
-                @object.SecretState = TickerUserSecretStates.Reset;
-                @object.SecretToken = Guid.NewGuid();
+            _eventStorage.Add("ticker-user-secret-reset", @object.Snowflake);
+        };
 
-                _eventStorage.Add("ticker-user-secret-reset", @object.Snowflake);
-            };
-
-            await _tickerUserManager.UpdateAsync(tickerUser, updateAction);
-        }
+        await _tickerUserManager.UpdateAsync(tickerUser, updateAction);
     }
 }

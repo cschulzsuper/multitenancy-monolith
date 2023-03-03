@@ -2,6 +2,30 @@
 
 Notes on some flows that are implemented.
 
+## `TickerMessage`
+
+### Insert Flow
+
+1. `TickerMessage` is created
+    1. `TickertBookmark` is created
+    1. `TickertBookmark` is flagged `updated`
+
+### Update Flow
+
+1. `TickerMessage` is created
+    1. `TickertBookmark` is created
+    1. `TickertBookmark` is flagged `updated`
+1. `TickerBookmark` is unflagged `updated`
+1. `TickerMessage` is updated
+    1. `TickertBookmark` is flagged `updated`
+
+### Delete Flow
+1. `TickerMessage` is created
+    1. `TickertBookmark` is created
+    1. `TickertBookmark` is flagged `updated`
+1. `TickerMessage` is deleted
+    1. `TickertBookmark` is deleted
+
 ## `TickerUser`
 
 ### Secret Flow

@@ -10,52 +10,51 @@ using Microsoft.Extensions.DependencyInjection;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using Xunit.Abstractions;
 
-namespace Ticker.TickerMessageEvents
+namespace Ticker.TickerMessageEvents;
+
+public sealed class TickerMessageInserted : IClassFixture<WebApplicationFactory<Program>>
 {
-    public sealed class TickerMessageInserted : IClassFixture<WebApplicationFactory<Program>>
+    private readonly WebApplicationFactory<Program> _factory;
+
+    public TickerMessageInserted(
+        WebApplicationFactory<Program> factory,
+        ITestOutputHelper testOutputHelper)
     {
-        private readonly WebApplicationFactory<Program> _factory;
+        _factory = factory.Mock(testOutputHelper);
+    }
 
-        public TickerMessageInserted(
-            WebApplicationFactory<Program> factory,
-            ITestOutputHelper testOutputHelper)
+    [Fact]
+    public async Task TickerMessageInserted_ShouldCreateBookmark()
+    {
+        // Arrange
+        var existingTickerMessage = new TickerMessage
         {
-            _factory = factory.Mock(testOutputHelper);
-        }
+            Text = $"existing-ticker-message-{Guid.NewGuid()}",
+            Priority = "default",
+            TickerUser = MockWebApplication.Mail,
+            Timestamp = 0
+        };
 
-        [Fact]
-        public async Task TickerMessageInserted_ShouldBookmark()
-        {
-            // Arrange
-            var existingTickerMessage = new TickerMessage
-            {
-                Text = $"existing-ticker-message-{Guid.NewGuid()}",
-                Priority = "default",
-                TickerUser = MockWebApplication.Mail,
-                Timestamp = 0
-            };
+        await using var scope = _factory.CreateAsyncMultitenancyScope();
 
-            await using var scope = _factory.CreateAsyncMultitenancyScope();
+        scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerMessage>>()
+            .Insert(existingTickerMessage);
 
-            scope.ServiceProvider
-                .GetRequiredService<IRepository<TickerMessage>>()
-                .Insert(existingTickerMessage);
+        // Act
+        await scope.ServiceProvider
+            .GetRequiredService<IEventSubscriptions>()
+            .InvokeAsync("ticker-message-inserted", scope.ServiceProvider, existingTickerMessage.Snowflake);
 
-            // Act
-            await scope.ServiceProvider
-                .GetRequiredService<IEventSubscriptions>()
-                .InvokeAsync("ticker-message-inserted", scope.ServiceProvider, existingTickerMessage.Snowflake);
+        // Assert
+        var createdBookmark = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerBookmark>>()
+            .GetQueryable()
+            .SingleOrDefault();
 
-            // Assert
-            var createdBookmark = scope.ServiceProvider
-                .GetRequiredService<IRepository<TickerBookmark>>()
-                .GetQueryable()
-                .SingleOrDefault();
-
-            Assert.NotNull(createdBookmark);
-            Assert.Equal(existingTickerMessage.Snowflake, createdBookmark.TickerMessage);
-            Assert.Equal(existingTickerMessage.TickerUser, createdBookmark.TickerUser);
-            Assert.True(createdBookmark.Updated);
-        }
+        Assert.NotNull(createdBookmark);
+        Assert.Equal(existingTickerMessage.Snowflake, createdBookmark.TickerMessage);
+        Assert.Equal(existingTickerMessage.TickerUser, createdBookmark.TickerUser);
+        Assert.True(createdBookmark.Updated);
     }
 }

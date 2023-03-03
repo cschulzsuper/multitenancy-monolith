@@ -105,10 +105,10 @@ public class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         var client = _factory.CreateClient();
 
         // Act
-        var authResponse = await client.SendAsync(resetRequest);
+        var response = await client.SendAsync(resetRequest);
 
         // Assert
-        Assert.Equal(HttpStatusCode.OK, authResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var resetTickerUser = scope.ServiceProvider
             .GetRequiredService<IRepository<TickerUser>>()

@@ -3,6 +3,7 @@ using System.Linq;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
@@ -16,7 +17,11 @@ public interface ITickerBookmarkManager
 
     Task UpdateAsync(long tickerBookmark, Action<TickerBookmark> action);
 
+    Task UpdateManyAsync(Expression<Func<TickerBookmark, bool>> predicate, Action<TickerBookmark> action);
+
     Task DeleteAsync(long tickerBookmark);
 
     Task DeleteAsync(string tickerUser, long tickerMessage);
+    
+    Task DeleteManyAsync(Expression<Func<TickerBookmark, bool>> predicate);
 }

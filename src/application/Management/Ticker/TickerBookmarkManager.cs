@@ -4,6 +4,7 @@ using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
@@ -66,4 +67,19 @@ internal sealed class TickerBookmarkManager : ITickerBookmarkManager
             @object.TickerUser == tickerUser &&
             @object.TickerMessage == tickerMessage);
     }
+
+    public async Task UpdateManyAsync(Expression<Func<TickerBookmark, bool>> predicate, Action<TickerBookmark> action)
+    {
+        var validatedAction = (TickerBookmark @object) =>
+        {
+            action.Invoke(@object);
+
+            TickerBookmarkValidation.EnsureUpdatable(@object);
+        };
+
+        await _repository.UpdateAsync(predicate, validatedAction);
+    }
+
+    public async Task DeleteManyAsync(Expression<Func<TickerBookmark, bool>> predicate)
+        => await _repository.DeleteAsync(predicate);
 }

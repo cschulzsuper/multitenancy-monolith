@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Events;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
@@ -22,11 +23,12 @@ internal sealed class TickerMessageManager : ITickerMessageManager
         _eventStorage = eventStorage;
     }
 
-    public async Task<TickerMessage> GetAsync(long snowflake)
+    public async Task<TickerMessage> GetAsync(long tickerMessage)
     {
-        TickerMessageValidation.EnsureTickerMessage(snowflake);
+        TickerMessageValidation.EnsureTickerMessage(tickerMessage);
 
-        var @object = await _repository.GetAsync(snowflake);
+        var @object = await _repository.GetAsync(tickerMessage);
+
         return @object;
     }
 
@@ -42,24 +44,29 @@ internal sealed class TickerMessageManager : ITickerMessageManager
         _eventStorage.Add("ticker-message-inserted", @object.Snowflake);
     }
 
-    public async Task UpdateAsync(long snowflake, Action<TickerMessage> action)
+    public async Task UpdateAsync(long tickerMessage, Action<TickerMessage> action)
     {
-        IdentityValidation.EnsureSnowflake(snowflake);
+        IdentityValidation.EnsureSnowflake(tickerMessage);
 
         var validatedAction = (TickerMessage @object) =>
         {
             action.Invoke(@object);
 
             TickerMessageValidation.EnsureUpdatable(@object);
+
+            _eventStorage.Add("ticker-message-updated", @object.Snowflake);
         };
 
-        await _repository.UpdateOrThrowAsync(snowflake, validatedAction);
+        await _repository.UpdateOrThrowAsync(tickerMessage, validatedAction);
     }
 
-    public async Task DeleteAsync(long snowflake)
+    public async Task DeleteAsync(long tickerMessage)
     {
-        TickerMessageValidation.EnsureTickerMessage(snowflake);
+        TickerMessageValidation.EnsureTickerMessage(tickerMessage);
 
-        await _repository.DeleteOrThrowAsync(snowflake);
+        await _repository.DeleteOrThrowAsync(tickerMessage);
+
+        _eventStorage.Add("ticker-message-deleted", tickerMessage);
+
     }
 }

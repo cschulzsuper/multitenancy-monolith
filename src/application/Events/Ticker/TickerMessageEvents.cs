@@ -9,6 +9,8 @@ public static class TickerMessageEvents
     public static IEventSubscriptions MapTickerMessageEvents(this IEventSubscriptions subscriptions)
     {
         subscriptions.Map("ticker-message-inserted", Inserted);
+        subscriptions.Map("ticker-message-updated", Updated);
+        subscriptions.Map("ticker-message-deleted", Deleted);
 
         return subscriptions;
     }
@@ -16,4 +18,12 @@ public static class TickerMessageEvents
     private static Func<ITickerMessageBookmarker, long, Task> Inserted =>
         (eventHandler, tickerMessage)
             => eventHandler.BookmarkAsync(tickerMessage);
+
+    private static Func<ITickerMessageBookmarker, long, Task> Updated =>
+        (eventHandler, tickerMessage)
+            => eventHandler.RefreshAsync(tickerMessage);
+
+    private static Func<ITickerMessageBookmarker, long, Task> Deleted =>
+        (eventHandler, tickerMessage)
+            => eventHandler.PurgeAsync(tickerMessage);
 }
