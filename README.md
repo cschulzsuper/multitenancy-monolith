@@ -3,9 +3,11 @@
 
 This repository contains everything related to the development of my multitenancy monolith based on ASP.NET Core.
 
-The application focuses on the REST API, authentication and the database access layer.
+The project focuses on the REST API, authentication, validation, business logic and the database access layer. Basically everything code related and nothing deployment related.
 
 If you are developing an ASP.NET Core application yourself and are looking for a different approach, you've come to the right place.
+
+I said monolith, but with the latests features related to a ticker system, it is already evolving beyond that.
 
 # History
 
@@ -86,11 +88,12 @@ If you are developing an ASP.NET Core application yourself and are looking for a
   * /42 Multitenancy events. This kind of implemenation is not my cup of tea, as some asynchronouse task handling is going on, but all tests give me the confidence that the implementaion is sufficient for now. https://github.com/cschulzsuper/multitenancy-monolith/commit/047a3597fa48fc715063d9ba5cd2c0ed8cef5d50
   * /43 Event publication interception for testability of event publication. Not a perfect solution for now, but it will work until I come up with something better. https://github.com/cschulzsuper/multitenancy-monolith/commit/9c15676cd6d1c49c612dc108abfd9a5f3baf4706
 * Ticker Orchestration
-  * /44 Handling the `ticker-message-inserted` to automatically create a bookmark for the current ticker user. Testing this event handler in an event tests, which is similar to the endpoint tests. 
+  * /44 Handling the `ticker-message-inserted` to automatically create a bookmark for the current ticker user. Testing this event handler in an event tests, which is similar to the endpoint tests. https://github.com/cschulzsuper/multitenancy-monolith/commit/4e0691f61a4b52b6e33374759b2c1d1f30c12252
+  * /45 Managing bookmarks for ticker messages is possible through simple endpoints. Nothing fancy in this commit.
 
 # Current
 
-* Ticker Orchestration: Everything related to the ticker workflows
+* Ticker Orchestration: Everything related to the ticker workflow
 
 # Backlog
 

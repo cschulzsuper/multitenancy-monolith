@@ -1,31 +1,30 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedAnnotations;
 
-public sealed class TokenAttribute : ValidationAttribute
+public sealed class SnowflakeAttribute : ValidationAttribute
 {
-    private readonly static Validator<Guid> _validator;
+    private readonly static Validator<long> _validator;
 
-    static TokenAttribute()
+    static SnowflakeAttribute()
     {
-        _validator = new Validator<Guid>();
-        _validator.AddRules(x => x, TokenValidator.CreateRules("{0}"));
+        _validator = new Validator<long>();
+        _validator.AddRules(x => x, SnowflakeValidator.CreateRules("{0}"));
     }
 
     public ValidationResult? _validationResult;
 
-    public string _field = "token";
+    public string _field = "snowflake";
 
     public override bool IsValid(object? value)
     {
-        if (value is not Guid token)
+        if (value is not long snowflake)
         {
             return false;
         }
 
-        _validationResult = _validator.Validate(token);
+        _validationResult = _validator.Validate(snowflake);
 
         return _validationResult == ValidationResult.Success;
     }

@@ -1,9 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 

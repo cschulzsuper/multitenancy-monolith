@@ -34,10 +34,6 @@
 
   Members of a group. 
 
-* `Membership`
-
-  Assigment of members and identities. 
-
 ## Business
 
 * `BusinessObject`
@@ -53,3 +49,7 @@
 * `TickerMessage`
 
   Example that is located in a separate service. 
+
+* `TickerBookmark`
+
+  Keeps track of ticker messages bookmarked by a ticker user. 

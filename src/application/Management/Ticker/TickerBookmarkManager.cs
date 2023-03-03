@@ -56,4 +56,14 @@ internal sealed class TickerBookmarkManager : ITickerBookmarkManager
 
         await _repository.DeleteOrThrowAsync(tickerBookmark);
     }
+
+    public async Task DeleteAsync(string tickerUser, long tickerMessage)
+    {
+        TickerBookmarkValidation.EnsureTickerUser(tickerUser);
+        TickerBookmarkValidation.EnsureTickerMessage(tickerMessage);
+
+        await _repository.DeleteOrThrowAsync(@object =>
+            @object.TickerUser == tickerUser &&
+            @object.TickerMessage == tickerMessage);
+    }
 }

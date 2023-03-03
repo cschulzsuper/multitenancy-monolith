@@ -13,8 +13,10 @@ public static class _Endpoints
             .MapGroup("ticker")
             .WithGroupName("ticker");
 
-        business.MapTickerUserCommands();
+        
         business.MapTickerMessageResource();
+        business.MapTickerUserDependentBookmarkResource();
+        business.MapTickerUserDependentCommands();
 
         return endpoints;
     }
