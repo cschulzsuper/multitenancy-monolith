@@ -20,6 +20,5 @@ public sealed class TickerMessage : ICloneable
 
     public required long Timestamp { get; set; }
 
-
     public required string TickerUser { get; set; }
 }

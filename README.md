@@ -90,6 +90,7 @@ I said monolith, but with the latests features related to a ticker system, it is
 * Ticker Orchestration
   * /44 Handling the `ticker-message-inserted` to automatically create a bookmark for the current ticker user. Testing this event handler in an event tests, which is similar to the endpoint tests. https://github.com/cschulzsuper/multitenancy-monolith/commit/4e0691f61a4b52b6e33374759b2c1d1f30c12252
   * /45 Managing bookmarks for ticker messages is possible through simple endpoints. Nothing fancy in this commit.
+  * /46 Managing ticker users via endpoints was not necessary until now. Again, nothing fancy in this commit as well.
 
 # Current
 

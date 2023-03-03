@@ -1,7 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
 using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
-using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 

@@ -38,6 +38,7 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
     public async Task Exceute()
     {
         await TickerUser_Create_ShouldSucceed();
+        await TickerUser_Reset_ShouldSucceed();
 
         await TickerUser_Auth_ShouldSucceed_WithSecretStatePending();
         await TickerUser_Auth_ShouldBeForbidden();
@@ -51,22 +52,50 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
 
     private async Task TickerUser_Create_ShouldSucceed()
     {
-        // TODO Replace with API call once endpoint is available
 
-        var existingTickerUser = new TickerUser
+        // Arrange
+        var createRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users");
+        createRequest.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var createContent = new
         {
             DisplayName = "Default",
-            MailAddress = MockWebApplication.TicketUserMail,
-            Secret = MockWebApplication.TicketUserSecret,
-            SecretState = TickerUserSecretStates.Temporary,
-            SecretToken = MockWebApplication.TicketUserSecretToken,
+            MailAddress = MockWebApplication.TickerUserMail
         };
+
+        createRequest.Content = JsonContent.Create(createContent);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var authResponse = await client.SendAsync(createRequest);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, authResponse.StatusCode);
+
+        using var scope = _factory.CreateMultitenancyScope();
+
+        var createdTickerUser = scope.ServiceProvider
+            .GetRequiredService<IRepository<TickerUser>>()
+            .GetQueryable()
+            .SingleOrDefault();
+
+        Assert.NotNull(createdTickerUser);
+        Assert.Equal(TickerUserSecretStates.Invalid, createdTickerUser.SecretState);
+    }
+
+    private async Task TickerUser_Reset_ShouldSucceed()
+    {
+        // TODO Replace with API call once endpoint is available
 
         using var scope = _factory.CreateMultitenancyScope();
 
         await scope.ServiceProvider
             .GetRequiredService<IRepository<TickerUser>>()
-            .InsertAsync(existingTickerUser);
+            .UpdateAsync(x => x.MailAddress == MockWebApplication.TickerUserMail, @object =>
+                {
+                    @object.SecretState = TickerUserSecretStates.Temporary;
+                });
     }
 
     private async Task TickerUser_Auth_ShouldSucceed_WithSecretStatePending()
@@ -83,8 +112,8 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
         {
             Client = MockWebApplication.Client,
             Group = MockWebApplication.Group,
-            Mail = MockWebApplication.TicketUserMail,
-            Secret = MockWebApplication.TicketUserSecret
+            Mail = MockWebApplication.TickerUserMail,
+            Secret = MockWebApplication.TickerUserSecret
         };
 
         authRequest.Content = JsonContent.Create(authContent);
@@ -99,13 +128,14 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var @object = scope.ServiceProvider
+        var updatedTickerUser = scope.ServiceProvider
             .GetRequiredService<IRepository<TickerUser>>()
             .GetQueryable()
-            .Single();
+            .SingleOrDefault();
 
-        Assert.Equal(TickerUserSecretStates.Pending, @object.SecretState);
-        Assert.NotEqual(MockWebApplication.TicketUserSecretToken, @object.SecretToken);
+        Assert.NotNull(updatedTickerUser);
+        Assert.Equal(TickerUserSecretStates.Pending, updatedTickerUser.SecretState);
+        Assert.NotEqual(MockWebApplication.TickerUserSecretToken, updatedTickerUser.SecretToken);
 
         await _eventPublicationInterceptorTask.Task;
     }
@@ -118,8 +148,8 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
         {
             MockWebApplication.Client,
             MockWebApplication.Group,
-            Mail = MockWebApplication.TicketUserMail,
-            Secret = MockWebApplication.TicketUserSecret
+            Mail = MockWebApplication.TickerUserMail,
+            Secret = MockWebApplication.TickerUserSecret
         };
 
         authRequest.Content = JsonContent.Create(authContent);
@@ -153,8 +183,8 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
         {
             MockWebApplication.Client,
             MockWebApplication.Group,
-            Mail = MockWebApplication.TicketUserMail,
-            Secret = MockWebApplication.TicketUserSecret,
+            Mail = MockWebApplication.TickerUserMail,
+            Secret = MockWebApplication.TickerUserSecret,
             SecretToken = tickerUserSecretToken
         };
 
@@ -171,13 +201,14 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
 
         using (var scope = _factory.CreateMultitenancyScope())
         {
-            var @object = scope.ServiceProvider
+            var updatedTickerUser = scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerUser>>()
                 .GetQueryable()
-                .Single();
+                .SingleOrDefault();
 
-            Assert.Equal(TickerUserSecretStates.Confirmed, @object.SecretState);
-            Assert.NotEqual(Guid.Empty, @object.SecretToken);
+            Assert.NotNull(updatedTickerUser);
+            Assert.Equal(TickerUserSecretStates.Confirmed, updatedTickerUser.SecretState);
+            Assert.NotEqual(Guid.Empty, updatedTickerUser.SecretToken);
         }
     }
 
@@ -201,8 +232,8 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
         {
             MockWebApplication.Client,
             MockWebApplication.Group,
-            Mail = MockWebApplication.TicketUserMail,
-            Secret = MockWebApplication.TicketUserSecret,
+            Mail = MockWebApplication.TickerUserMail,
+            Secret = MockWebApplication.TickerUserSecret,
             SecretToken = tickerUserSecretToken
         };
 
@@ -225,8 +256,8 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
         {
             MockWebApplication.Client,
             MockWebApplication.Group,
-            Mail = MockWebApplication.TicketUserMail,
-            Secret = MockWebApplication.TicketUserSecret
+            Mail = MockWebApplication.TickerUserMail,
+            Secret = MockWebApplication.TickerUserSecret
         };
 
         authRequest.Content = JsonContent.Create(authContent);
@@ -241,12 +272,13 @@ public class ConfirmFlow : IClassFixture<WebApplicationFactory<Program>>
 
         using var scope = _factory.CreateMultitenancyScope();
 
-        var @object = scope.ServiceProvider
+        var updatedTickerUser = scope.ServiceProvider
             .GetRequiredService<IRepository<TickerUser>>()
             .GetQueryable()
-            .Single();
+            .SingleOrDefault();
 
-        Assert.Equal(TickerUserSecretStates.Confirmed, @object.SecretState);
-        Assert.NotEqual(Guid.Empty, @object.SecretToken);
+        Assert.NotNull(updatedTickerUser);
+        Assert.Equal(TickerUserSecretStates.Confirmed, updatedTickerUser.SecretState);
+        Assert.NotEqual(Guid.Empty, updatedTickerUser.SecretToken);
     }
 }

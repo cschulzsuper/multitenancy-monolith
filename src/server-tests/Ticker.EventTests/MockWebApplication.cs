@@ -1,21 +1,14 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
-using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Serialization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
-using System.Security.Claims;
-using System.Text.Json;
 using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 using Xunit.Abstractions;
 using ChristianSchulz.MultitenancyMonolith.Events;
-using System.Threading.Tasks;
 
 internal static class MockWebApplication
 {

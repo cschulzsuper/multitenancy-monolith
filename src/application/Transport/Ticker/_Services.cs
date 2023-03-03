@@ -9,8 +9,9 @@ public static class _Services
     public static IServiceCollection AddTickerTransport(this IServiceCollection services)
     {
         services.AddScoped<ITickerMessageRequestHandler, TickerMessageRequestHandler>();
-        services.AddScoped<ITickerUserDependentCommandHandler, TickerUserDependentCommandHandler>();
-        services.AddScoped<ITickerUserDependentBookmarkRequestHandler, TickerUserDependentBookmarkRequestHandler>();
+        services.AddScoped<ITickerUserRequestHandler, TickerUserRequestHandler>();
+        services.AddScoped<IContextTickerUserCommandHandler, ContextTickerUserCommandHandler>();
+        services.AddScoped<IContextTickerUserBookmarkRequestHandler, ContextTickerUserBookmarkRequestHandler>();
 
         return services;
     }

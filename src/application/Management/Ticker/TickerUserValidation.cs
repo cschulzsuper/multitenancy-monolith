@@ -10,6 +10,9 @@ internal static class TickerUserValidation
     private readonly static Validator<TickerUser> _insertValidator;
     private readonly static Validator<TickerUser> _updateValidator;
 
+    private readonly static Validator<long> _tickerUserSnowflakeValidator;
+    private readonly static Validator<string> _tickerUserMailAddressValidator;
+
     static TickerUserValidation()
     {
         _insertValidator = new Validator<TickerUser>();
@@ -27,6 +30,12 @@ internal static class TickerUserValidation
         _updateValidator.AddRules(x => x.SecretState, TickerUserSecretStatesValidator.CreateRules("secret state"));
         _updateValidator.AddRules(x => x.SecretToken, TokenValidator.CreateRules("secret token"));
         _updateValidator.AddRules(x => x.DisplayName, DisplayNameValidator.CreateRules());
+
+        _tickerUserSnowflakeValidator = new Validator<long>();
+        _tickerUserSnowflakeValidator.AddRules(x => x, SnowflakeValidator.CreateRules("ticker user"));
+
+        _tickerUserMailAddressValidator = new Validator<string>();
+        _tickerUserMailAddressValidator.AddRules(x => x, MailAddressValidator.CreateRules("ticker user"));
     }
 
     internal static void EnsureInsertable(TickerUser ticketUser)
@@ -35,10 +44,10 @@ internal static class TickerUserValidation
     public static void EnsureUpdatable(TickerUser ticketUser)
         => _updateValidator.Ensure(ticketUser);
 
-    internal static void EnsureSnowflake(long snowflake)
-        => SnowflakeValidator.Ensure(snowflake);
+    internal static void EnsureTickerUser(long ticketUser)
+        => _tickerUserSnowflakeValidator.Ensure(ticketUser);
 
-    internal static void EnsureTicketUser(string mailAddress)
-        => MailAddressValidator.Ensure(mailAddress);
+    internal static void EnsureTickerUser(string ticketUser)
+        => _tickerUserMailAddressValidator.Ensure(ticketUser);
 
 }

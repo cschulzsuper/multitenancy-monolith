@@ -18,6 +18,7 @@ public class TickerUserModel : IModel<TickerUser>
     public static void Ensure(IServiceProvider services, IEnumerable<TickerUser> data, TickerUser entity)
     {
         var mailAddressConflict = data.Any(x => string.Equals(x.MailAddress, entity.MailAddress, StringComparison.InvariantCultureIgnoreCase));
+        
         if (mailAddressConflict)
         {
             ModelException.ThrowMailAddressConflict<TickerUser>(entity.MailAddress);

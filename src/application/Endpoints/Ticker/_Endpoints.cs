@@ -12,11 +12,11 @@ public static class _Endpoints
         var business = endpoints
             .MapGroup("ticker")
             .WithGroupName("ticker");
-
         
+        business.MapContextTickerUserBookmarkResource();
+        business.MapContextTickerUserCommands();
         business.MapTickerMessageResource();
-        business.MapTickerUserDependentBookmarkResource();
-        business.MapTickerUserDependentCommands();
+        business.MapTickerUserResource();
 
         return endpoints;
     }
