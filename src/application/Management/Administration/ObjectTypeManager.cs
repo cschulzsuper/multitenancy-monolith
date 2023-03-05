@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using System;
@@ -80,7 +80,7 @@ internal sealed class ObjectTypeManager : IObjectTypeManager
 
     public async Task UpdateAsync(long snowflake, Action<ObjectType> action)
     {
-        IdentityValidation.EnsureSnowflake(snowflake);
+        AuthenticationIdentityValidation.EnsureSnowflake(snowflake);
 
         var validatedAction = (ObjectType objectType) =>
         {

@@ -1,11 +1,11 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Application.Authorization;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System;
+using ChristianSchulz.MultitenancyMonolith.Application.Admission;
+using ChristianSchulz.MultitenancyMonolith.Application.Access;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Security;
 
@@ -37,7 +37,7 @@ public class BadgeValidator
 
     private static bool ValidateIdentity(BadgeValidatePrincipalContext context, ICollection<Claim> badgeClaims)
     {
-        var identityVerificationManager = context.HttpContext.RequestServices.GetRequiredService<IIdentityVerificationManager>();
+        var identityVerificationManager = context.HttpContext.RequestServices.GetRequiredService<IAuthenticationIdentityVerificationManager>();
 
         var badgeClient = badgeClaims.SingleOrDefault(x => x.Type == "client");
         if (badgeClient == null)
@@ -96,7 +96,7 @@ public class BadgeValidator
             return false;
         }
 
-        var verificationKey = new MemberVerificationKey
+        var verificationKey = new AccountMemberVerificationKey
         {
             Client = badgeClient.Value,
             Identity = badgeIdentity.Value,
@@ -113,7 +113,7 @@ public class BadgeValidator
         var badgeVerificationValue = Convert.FromBase64String(badgeVerification.Value);
 
         var badgeValid = context.HttpContext.RequestServices
-            .GetRequiredService<IMemberVerificationManager>()
+            .GetRequiredService<IAccountMemberVerificationManager>()
             .Has(verificationKey, badgeVerificationValue);
 
         return badgeValid;

@@ -1,7 +1,5 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Application.Administration;
-using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Application.Authorization;
 using ChristianSchulz.MultitenancyMonolith.Application.Business;
 using ChristianSchulz.MultitenancyMonolith.Caching;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
@@ -25,6 +23,8 @@ using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Server.EventBus;
 using Microsoft.Extensions.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Application.Admission;
+using ChristianSchulz.MultitenancyMonolith.Application.Access;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
@@ -65,18 +65,18 @@ public class Startup
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryAdministrationData();
-        services.AddStaticDictionaryAuthenticationData();
-        services.AddStaticDictionaryAuthorizationData();
+        services.AddStaticDictionaryAdmissionData();
+        services.AddStaticDictionaryAccessData();
         services.AddStaticDictionaryBusinessData();
 
         services.AddAdministrationManagement();
         services.AddAdministrationTransport();
 
-        services.AddAuthenticationManagement();
-        services.AddAuthenticationTransport();
+        services.AddAdmissionManagement();
+        services.AddAdmissionTransport();
 
-        services.AddAuthorizationManagement();
-        services.AddAuthorizationTransport();
+        services.AddAccessManagement();
+        services.AddAccessTransport();
 
         services.AddBusinessManagement();
         services.AddBusinessTransport();
@@ -86,9 +86,9 @@ public class Startup
     {
         if (!_environment.IsProduction())
         {
-            app.ApplicationServices.ConfigureIdentities();
-            app.ApplicationServices.ConfigureGroups();
-            app.ApplicationServices.ConfigureMembers();
+            app.ApplicationServices.ConfigureAuthenticationIdentities();
+            app.ApplicationServices.ConfigureAccountGroups();
+            app.ApplicationServices.ConfigureAccountMembers();
         }
 
         app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
@@ -120,8 +120,8 @@ public class Startup
             var apiEndpoints = endpoints.MapGroup("api");
 
             apiEndpoints.MapAdministrationEndpoints();
-            apiEndpoints.MapAuthenticationEndpoints();
-            apiEndpoints.MapAuthorizationEndpoints();
+            apiEndpoints.MapAdmissionEndpoints();
+            apiEndpoints.MapAccessEndpoints();
             apiEndpoints.MapBusinessEndpoints();
         });
     }

@@ -20,8 +20,8 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [InlineData("v1")]
     [InlineData("v1-administration")]
-    [InlineData("v1-authentication")]
-    [InlineData("v1-authorization")]
+    [InlineData("v1-access")]
+    [InlineData("v1-admission")]
     [InlineData("v1-business")]
     public async Task Get_ShouldSucceed_WhenValid(string doc)
     {

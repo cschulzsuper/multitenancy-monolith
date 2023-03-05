@@ -28,7 +28,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var existingDistinctionType = new DistinctionType
         {
-            UniqueName = $"existing-member-{Guid.NewGuid()}",
+            UniqueName = $"existing-account-member-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type"
         };
@@ -45,7 +45,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         var putDistinctionType = new
         {
-            UniqueName = $"put-member-{Guid.NewGuid()}",
+            UniqueName = $"put-account-member-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Put Distinction Type"
         };

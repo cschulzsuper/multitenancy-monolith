@@ -1,6 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
-using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
+using ChristianSchulz.MultitenancyMonolith.Objects.Access;
+using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -12,55 +12,55 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 [SuppressMessage("Style", "IDE1006:Naming Styles")]
 public static class _Configure
 {
-    public static IServiceProvider ConfigureIdentities(this IServiceProvider services)
+    public static IServiceProvider ConfigureAuthenticationIdentities(this IServiceProvider services)
     {
-        var @objects = services
+        var authenticationIdentities = services
             .GetRequiredService<ISeedDataProvider>()
-            .Get<Identity>("Authentication", "Identities");
+            .Get<AuthenticationIdentity>("Admission", "AuthenticationIdentities");
 
         using var scope = services.CreateScope();
 
         scope.ServiceProvider
-            .GetRequiredService<IRepository<Identity>>()
-            .Insert(@objects);
+            .GetRequiredService<IRepository<AuthenticationIdentity>>()
+            .Insert(authenticationIdentities);
 
         return services;
     }
 
-    public static IServiceProvider ConfigureGroups(this IServiceProvider services)
+    public static IServiceProvider ConfigureAccountGroups(this IServiceProvider services)
     {
-        var groups = services
+        var accountGroups = services
             .GetRequiredService<ISeedDataProvider>()
-            .GetGrouped<Member>("Administration", "Members")
+            .GetGrouped<AccountMember>("Access", "AccountMembers")
             .Select(x => x.Key)
             .Distinct();
 
-        var @objects = groups
-            .Select(group => new Group {UniqueName = group})
+        var @objects = accountGroups
+            .Select(group => new AccountGroup {UniqueName = group})
             .ToArray();
 
         using var scope = services.CreateScope();
 
         scope.ServiceProvider
-            .GetRequiredService<IRepository<Group>>()
+            .GetRequiredService<IRepository<AccountGroup>>()
             .Insert(@objects);
 
         return services;
     }
 
-    public static IServiceProvider ConfigureMembers(this IServiceProvider services)
+    public static IServiceProvider ConfigureAccountMembers(this IServiceProvider services)
     {
-        var groupedMembers = services
+        var groupedAccountMembers = services
             .GetRequiredService<ISeedDataProvider>()
-            .GetGrouped<Member>("Administration", "Members");
+            .GetGrouped<AccountMember>("Access", "AccountMembers");
 
-        foreach (var group in groupedMembers)
+        foreach (var accountGroup in groupedAccountMembers)
         {
-            using var scope = services.CreateMultitenancyScope(group.Key);
+            using var scope = services.CreateMultitenancyScope(accountGroup.Key);
 
             scope.ServiceProvider
-                .GetRequiredService<IRepository<Member>>()
-                .Insert(group.Value);
+                .GetRequiredService<IRepository<AccountMember>>()
+                .Insert(accountGroup.Value);
         }
 
         return services;

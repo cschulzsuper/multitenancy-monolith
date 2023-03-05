@@ -93,7 +93,10 @@ I said monolith, but with the latests features related to a ticker system, it is
   * /45 Managing bookmarks for ticker messages is possible through simple endpoints. Nothing fancy in this commit. https://github.com/cschulzsuper/multitenancy-monolith/commit/c4d869658f43c915a46f0266b6f75f75ae1f51ca
   * /46 Managing ticker users via endpoints was not necessary until now. Again, nothing fancy in this commit as well. https://github.com/cschulzsuper/multitenancy-monolith/commit/ca6cfa169b5554d55bde43124a3e338dedaf2ae6
   * /47 Resetting the secret of a ticker user was an easy implementation. Mainly, because of the foundation that was implemented in all other commits. https://github.com/cschulzsuper/multitenancy-monolith/commit/15b57f89e5fb6219fe68eef0536ef41cfd54de17
-  * /48 Productive day. The last bit in the ticker orchestration is the flagging of the ticker bookmark updated flag after the ticker message has been changed or deleted. 
+  * /48 Productive day. The last bit in the ticker orchestration is the flagging of the ticker bookmark updated flag after the ticker message has been changed or deleted. https://github.com/cschulzsuper/multitenancy-monolith/commit/35016419362ad121c35f09757f6ba9f044af0738
+
+## Authentictaion and authorization refactoring
+  * /49 Introduction of prefixes for groups, members and identities. The new resources are `account-groups`, `account-members` and `authentication-identities`. Renaming of all related classes. 
 
 # Next
 

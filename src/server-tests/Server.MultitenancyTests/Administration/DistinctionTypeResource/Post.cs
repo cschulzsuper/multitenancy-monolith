@@ -31,7 +31,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         var postDistinctionType = new
         {
-            UniqueName = $"post-member-{Guid.NewGuid()}",
+            UniqueName = $"post-account-member-{Guid.NewGuid()}",
             ObjectType = "business-object",
             DisplayName = "Post Distinction Type"
         };

@@ -1,0 +1,16 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
+
+namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
+
+[SuppressMessage("Style", "IDE1006:Naming Styles")]
+public static class _Services
+{
+    public static IServiceCollection AddAccessManagement(this IServiceCollection services)
+    {
+        services.AddScoped<IAccountMemberManager, AccountMemberManager>();
+        services.AddScoped<IAccountMemberVerificationManager, AccountMemberVerificationManager>();
+
+        return services;
+    }
+}

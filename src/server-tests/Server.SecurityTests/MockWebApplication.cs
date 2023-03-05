@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Application.Authorization;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Access;
+using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Serialization;
 using Microsoft.AspNetCore.Hosting;
@@ -26,25 +26,25 @@ internal static class MockWebApplication
 
     public const string Client = "security-tests";
 
-    public const string IdentityAdmin = "admin";
-    public const string IdentityAdminMailAddress = "admin@localhost";
-    public const string IdentityAdminSecret = "secret";
+    public const string AuthenticationIdentityAdmin = "admin";
+    public const string AuthenticationIdentityAdminMailAddress = "admin@localhost";
+    public const string AuthenticationIdentityAdminSecret = "secret";
 
-    public const string IdentityIdentity = "identity";
-    public const string IdentityIdentityMailAddress = "identity@localhost";
-    public const string IdentityIdentitySecret = "secret";
+    public const string AuthenticationIdentityIdentity = "identity";
+    public const string AuthenticationIdentityIdentityMailAddress = "identity@localhost";
+    public const string AuthenticationIdentityIdentitySecret = "secret";
 
-    public const string IdentityDemo = "demo";
-    public const string IdentityDemoMailAddress = "demo@localhost";
-    public const string IdentityDemoSecret = "secret";
+    public const string AuthenticationIdentityDemo = "demo";
+    public const string AuthenticationIdentityDemoMailAddress = "demo@localhost";
+    public const string AuthenticationIdentityDemoSecret = "secret";
 
-    public const string Group = "group";
+    public const string AccountGroup = "group";
     
-    public const string GroupChief = "chief-member";
-    public const string GroupChiefMailAddress = "chief@localhost";
+    public const string AccountGroupChief = "chief-member";
+    public const string AccountGroupChiefMailAddress = "chief@localhost";
 
-    public const string GroupMember = "member";
-    public const string GroupMemberMailAddress = "member@localhost";
+    public const string AccountGroupMember = "member";
+    public const string AccountGroupMemberMailAddress = "member@localhost";
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
@@ -56,23 +56,23 @@ internal static class MockWebApplication
         {"AllowedClients:2:UniqueName", "security-tests"},
         {"AllowedClients:2:Scopes:1", "endpoints"},
 
-        {"SeedData:Authentication:Identities:0:UniqueName", IdentityAdmin},
-        {"SeedData:Authentication:Identities:0:MailAddress", IdentityAdminMailAddress},
-        {"SeedData:Authentication:Identities:0:Secret", IdentityAdminSecret},
-        {"SeedData:Authentication:Identities:1:UniqueName", IdentityIdentity},
-        {"SeedData:Authentication:Identities:1:MailAddress", IdentityIdentityMailAddress},
-        {"SeedData:Authentication:Identities:1:Secret", IdentityIdentitySecret},
-        {"SeedData:Authentication:Identities:2:UniqueName", IdentityDemo},
-        {"SeedData:Authentication:Identities:2:MailAddress", IdentityDemoMailAddress},
-        {"SeedData:Authentication:Identities:2:Secret", IdentityDemoSecret},
-        {$"SeedData:Administration:Members:{Group}:0:UniqueName", GroupChief},
-        {$"SeedData:Administration:Members:{Group}:0:MailAddress", GroupChiefMailAddress},
-        {$"SeedData:Administration:Members:{Group}:0:Identities:0:UniqueName", IdentityIdentity},
-        {$"SeedData:Administration:Members:{Group}:0:Identities:1:UniqueName", IdentityDemo},
-        {$"SeedData:Administration:Members:{Group}:1:UniqueName", GroupMember},
-        {$"SeedData:Administration:Members:{Group}:1:MailAddress", GroupMemberMailAddress},
-        {$"SeedData:Administration:Members:{Group}:1:Identities:0:UniqueName", IdentityIdentity},
-        {$"SeedData:Administration:Members:{Group}:1:Identities:1:UniqueName", IdentityDemo},
+        {"SeedData:Admission:AuthenticationIdentities:0:UniqueName", AuthenticationIdentityAdmin},
+        {"SeedData:Admission:AuthenticationIdentities:0:MailAddress", AuthenticationIdentityAdminMailAddress},
+        {"SeedData:Admission:AuthenticationIdentities:0:Secret", AuthenticationIdentityAdminSecret},
+        {"SeedData:Admission:AuthenticationIdentities:1:UniqueName", AuthenticationIdentityIdentity},
+        {"SeedData:Admission:AuthenticationIdentities:1:MailAddress", AuthenticationIdentityIdentityMailAddress},
+        {"SeedData:Admission:AuthenticationIdentities:1:Secret", AuthenticationIdentityIdentitySecret},
+        {"SeedData:Admission:AuthenticationIdentities:2:UniqueName", AuthenticationIdentityDemo},
+        {"SeedData:Admission:AuthenticationIdentities:2:MailAddress", AuthenticationIdentityDemoMailAddress},
+        {"SeedData:Admission:AuthenticationIdentities:2:Secret", AuthenticationIdentityDemoSecret},
+        {$"SeedData:Access:AccountMembers:{AccountGroup}:0:UniqueName", AccountGroupChief},
+        {$"SeedData:Access:AccountMembers:{AccountGroup}:0:MailAddress", AccountGroupChiefMailAddress},
+        {$"SeedData:Access:AccountMembers:{AccountGroup}:0:AuthenticationIdentities:0:UniqueName", AuthenticationIdentityIdentity},
+        {$"SeedData:Access:AccountMembers:{AccountGroup}:0:AuthenticationIdentities:1:UniqueName", AuthenticationIdentityDemo},
+        {$"SeedData:Access:AccountMembers:{AccountGroup}:1:UniqueName", AccountGroupMember},
+        {$"SeedData:Access:AccountMembers:{AccountGroup}:1:MailAddress", AccountGroupMemberMailAddress},
+        {$"SeedData:Access:AccountMembers:{AccountGroup}:1:AuthenticationIdentities:0:UniqueName", AuthenticationIdentityIdentity},
+        {$"SeedData:Access:AccountMembers:{AccountGroup}:1:AuthenticationIdentities:1:UniqueName", AuthenticationIdentityDemo},
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory)
@@ -104,20 +104,20 @@ internal static class MockWebApplication
         var verificationKey = new IdentityVerificationKey
         {
             Client = client,
-            Identity = IdentityAdmin
+            Identity = AuthenticationIdentityAdmin
         };
 
         using var scope = factory.Services.CreateScope();
 
         scope.ServiceProvider
-            .GetRequiredService<IIdentityVerificationManager>()
+            .GetRequiredService<IAuthenticationIdentityVerificationManager>()
             .Set(verificationKey, verification);
 
         var claims = new Claim[]
         {
             new Claim("badge", "identity"),
             new Claim("client", client),
-            new Claim("identity", IdentityAdmin),
+            new Claim("identity", AuthenticationIdentityAdmin),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -135,20 +135,20 @@ internal static class MockWebApplication
         var verificationKey = new IdentityVerificationKey
         {
             Client = client,
-            Identity = IdentityIdentity
+            Identity = AuthenticationIdentityIdentity
         };
 
         using var scope = factory.Services.CreateScope();
 
         scope.ServiceProvider
-            .GetRequiredService<IIdentityVerificationManager>()
+            .GetRequiredService<IAuthenticationIdentityVerificationManager>()
             .Set(verificationKey, verification);
 
         var claims = new Claim[]
         {
             new Claim("badge", "identity"),
             new Claim("client", client),
-            new Claim("identity", IdentityIdentity),
+            new Claim("identity", AuthenticationIdentityIdentity),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -166,20 +166,20 @@ internal static class MockWebApplication
         var verificationKey = new IdentityVerificationKey
         {
             Client = client,
-            Identity = IdentityDemo
+            Identity = AuthenticationIdentityDemo
         };
 
         using var scope = factory.Services.CreateScope();
 
         scope.ServiceProvider
-            .GetRequiredService<IIdentityVerificationManager>()
+            .GetRequiredService<IAuthenticationIdentityVerificationManager>()
             .Set(verificationKey, verification);
 
         var claims = new Claim[]
         {
             new Claim("badge", "identity"),
             new Claim("client", client),
-            new Claim("identity", IdentityDemo),
+            new Claim("identity", AuthenticationIdentityDemo),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -194,27 +194,27 @@ internal static class MockWebApplication
     {
         var verification = Guid.NewGuid().ToByteArray();
 
-        var verificationKey = new MemberVerificationKey
+        var verificationKey = new AccountMemberVerificationKey
         {
             Client = client,
-            Identity = IdentityIdentity,
-            Group = Group,
-            Member = GroupChief,
+            Identity = AuthenticationIdentityIdentity,
+            Group = AccountGroup,
+            Member = AccountGroupChief,
         };
 
         using var scope = factory.Services.CreateScope();
 
         scope.ServiceProvider
-            .GetRequiredService<IMemberVerificationManager>()
+            .GetRequiredService<IAccountMemberVerificationManager>()
             .Set(verificationKey, verification);
 
         var claims = new Claim[]
         {
             new Claim("badge", "member"),
             new Claim("client", client),
-            new Claim("identity", IdentityIdentity),
-            new Claim("group", Group),
-            new Claim("member", GroupChief),
+            new Claim("identity", AuthenticationIdentityIdentity),
+            new Claim("group", AccountGroup),
+            new Claim("member", AccountGroupChief),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -229,27 +229,27 @@ internal static class MockWebApplication
     {
         var verification = Guid.NewGuid().ToByteArray();
 
-        var verificationKey = new MemberVerificationKey
+        var verificationKey = new AccountMemberVerificationKey
         {
             Client = client,
-            Identity = IdentityDemo,
-            Group = Group,
-            Member = GroupChief,
+            Identity = AuthenticationIdentityDemo,
+            Group = AccountGroup,
+            Member = AccountGroupChief,
         };
 
         using var scope = factory.Services.CreateScope();
 
         scope.ServiceProvider
-            .GetRequiredService<IMemberVerificationManager>()
+            .GetRequiredService<IAccountMemberVerificationManager>()
             .Set(verificationKey, verification);
 
         var claims = new Claim[]
         {
             new Claim("badge", "member"),
             new Claim("client", client),
-            new Claim("identity", IdentityDemo),
-            new Claim("group", Group),
-            new Claim("member", GroupChief),
+            new Claim("identity", AuthenticationIdentityDemo),
+            new Claim("group", AccountGroup),
+            new Claim("member", AccountGroupChief),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -264,27 +264,27 @@ internal static class MockWebApplication
     {
         var verification = Guid.NewGuid().ToByteArray();
 
-        var verificationKey = new MemberVerificationKey
+        var verificationKey = new AccountMemberVerificationKey
         {
             Client = client,
-            Identity = IdentityIdentity,
-            Group = Group,
-            Member = GroupMember,
+            Identity = AuthenticationIdentityIdentity,
+            Group = AccountGroup,
+            Member = AccountGroupMember,
         };
 
         using var scope = factory.Services.CreateScope();
 
         scope.ServiceProvider
-            .GetRequiredService<IMemberVerificationManager>()
+            .GetRequiredService<IAccountMemberVerificationManager>()
             .Set(verificationKey, verification);
 
         var claims = new Claim[]
         {
             new Claim("badge", "member"),
             new Claim("client", client),
-            new Claim("identity", IdentityIdentity),
-            new Claim("group", Group),
-            new Claim("member", GroupMember),
+            new Claim("identity", AuthenticationIdentityIdentity),
+            new Claim("group", AccountGroup),
+            new Claim("member", AccountGroupMember),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -299,27 +299,27 @@ internal static class MockWebApplication
     {
         var verification = Guid.NewGuid().ToByteArray();
 
-        var verificationKey = new MemberVerificationKey
+        var verificationKey = new AccountMemberVerificationKey
         {
             Client = client,
-            Identity = IdentityDemo,
-            Group = Group,
-            Member = GroupMember,
+            Identity = AuthenticationIdentityDemo,
+            Group = AccountGroup,
+            Member = AccountGroupMember,
         };
 
         using var scope = factory.Services.CreateScope();
 
         scope.ServiceProvider
-            .GetRequiredService<IMemberVerificationManager>()
+            .GetRequiredService<IAccountMemberVerificationManager>()
             .Set(verificationKey, verification);
 
         var claims = new Claim[]
         {
             new Claim("badge", "member"),
             new Claim("client", client),
-            new Claim("identity", IdentityDemo),
-            new Claim("group", Group),
-            new Claim("member", GroupMember),
+            new Claim("identity", AuthenticationIdentityDemo),
+            new Claim("group", AccountGroup),
+            new Claim("member", AccountGroupMember),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -334,7 +334,7 @@ internal static class MockWebApplication
         => mock switch
         {
             MockAdmin => factory.MockInvalidAdminAuthorizationHeader(),
-            MockIdentity => factory.MockInvalidIdentityAuthorizationHeader(),
+            MockIdentity => factory.MockInvalidAuthenticationIdentityAuthorizationHeader(),
             MockDemo => factory.MockInvalidDemoAuthorizationHeader(),
             MockChief => factory.MockInvalidChiefAuthorizationHeader(),
             MockChiefObserver => factory.MockInvalidChiefObserverAuthorizationHeader(),
@@ -351,7 +351,7 @@ internal static class MockWebApplication
         {
             new Claim("badge", "identity"),
             new Claim("client", Client),
-            new Claim("identity", IdentityAdmin),
+            new Claim("identity", AuthenticationIdentityAdmin),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -362,7 +362,7 @@ internal static class MockWebApplication
         return new AuthenticationHeaderValue("Bearer", bearer);
     }
 
-    private static AuthenticationHeaderValue MockInvalidIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory)
+    private static AuthenticationHeaderValue MockInvalidAuthenticationIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory)
     {
         var verification = Guid.NewGuid().ToByteArray();
 
@@ -370,7 +370,7 @@ internal static class MockWebApplication
         {
             new Claim("badge", "identity"),
             new Claim("client", Client),
-            new Claim("identity", IdentityIdentity),
+            new Claim("identity", AuthenticationIdentityIdentity),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -389,7 +389,7 @@ internal static class MockWebApplication
         {
             new Claim("badge", "identity"),
             new Claim("client", Client),
-            new Claim("identity", IdentityDemo),
+            new Claim("identity", AuthenticationIdentityDemo),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -408,9 +408,9 @@ internal static class MockWebApplication
         {
             new Claim("badge", "member"),
             new Claim("client", Client),
-            new Claim("identity", IdentityIdentity),
-            new Claim("group", Group),
-            new Claim("member", GroupChief),
+            new Claim("identity", AuthenticationIdentityIdentity),
+            new Claim("group", AccountGroup),
+            new Claim("member", AccountGroupChief),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -429,9 +429,9 @@ internal static class MockWebApplication
         {
             new Claim("badge", "member"),
             new Claim("client", Client),
-            new Claim("identity", IdentityDemo),
-            new Claim("group", Group),
-            new Claim("member", GroupChief),
+            new Claim("identity", AuthenticationIdentityDemo),
+            new Claim("group", AccountGroup),
+            new Claim("member", AccountGroupChief),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -450,9 +450,9 @@ internal static class MockWebApplication
         {
             new Claim("badge", "member"),
             new Claim("client", Client),
-            new Claim("identity", IdentityIdentity),
-            new Claim("group", Group),
-            new Claim("member", GroupMember),
+            new Claim("identity", AuthenticationIdentityIdentity),
+            new Claim("group", AccountGroup),
+            new Claim("member", AccountGroupMember),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
@@ -471,9 +471,9 @@ internal static class MockWebApplication
         {
             new Claim("badge", "member"),
             new Claim("client", Client),
-            new Claim("identity", IdentityDemo),
-            new Claim("group", Group),
-            new Claim("member", GroupMember),
+            new Claim("identity", AuthenticationIdentityDemo),
+            new Claim("group", AccountGroup),
+            new Claim("member", AccountGroupMember),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 

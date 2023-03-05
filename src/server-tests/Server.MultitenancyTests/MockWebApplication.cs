@@ -62,7 +62,7 @@ internal static class MockWebApplication
         return new AuthenticationHeaderValue("Bearer", bearer);
     }
 
-    public static AuthenticationHeaderValue MockValidIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory, string group)
+    public static AuthenticationHeaderValue MockValidIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory)
     {
         var claims = new Claim[]
         {

@@ -1,12 +1,12 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Access;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Administration;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Authorization;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Admission;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Business;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Ticker;
+using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
-using ChristianSchulz.MultitenancyMonolith.Objects.Authentication;
-using ChristianSchulz.MultitenancyMonolith.Objects.Authorization;
+using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,17 +36,17 @@ public static class _Services
         return services;
     }
 
-    public static IServiceCollection AddStaticDictionaryAuthenticationData(this IServiceCollection services)
+    public static IServiceCollection AddStaticDictionaryAdmissionData(this IServiceCollection services)
     {
-        services.AddScoped(CreateRepository<IdentityModel, Identity>);
+        services.AddScoped(CreateRepository<AuthenticationIdentityModel, AuthenticationIdentity>);
 
         return services;
     }
 
-    public static IServiceCollection AddStaticDictionaryAuthorizationData(this IServiceCollection services)
+    public static IServiceCollection AddStaticDictionaryAccessData(this IServiceCollection services)
     {
-        services.AddScoped(CreateRepository<GroupModel, Group>);
-        services.AddScoped(CreateRepository<MemberModel, Member>);
+        services.AddScoped(CreateRepository<AccountGroupModel, AccountGroup>);
+        services.AddScoped(CreateRepository<AccountMemberModel, AccountMember>);
 
         return services;
     }

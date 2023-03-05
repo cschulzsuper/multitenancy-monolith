@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using System;
@@ -39,7 +39,7 @@ internal sealed class TickerBookmarkManager : ITickerBookmarkManager
 
     public async Task UpdateAsync(long tickerBookmark, Action<TickerBookmark> action)
     {
-        IdentityValidation.EnsureSnowflake(tickerBookmark);
+        AuthenticationIdentityValidation.EnsureSnowflake(tickerBookmark);
 
         var validatedAction = (TickerBookmark @object) =>
         {

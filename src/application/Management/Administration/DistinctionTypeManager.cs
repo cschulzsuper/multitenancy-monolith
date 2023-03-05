@@ -1,4 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Authentication;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using System;
@@ -46,7 +46,7 @@ internal sealed class DistinctionTypeManager : IDistinctionTypeManager
 
     public async Task UpdateAsync(long snowflake, Action<DistinctionType> action)
     {
-        IdentityValidation.EnsureSnowflake(snowflake);
+        AuthenticationIdentityValidation.EnsureSnowflake(snowflake);
 
         var validatedAction = (DistinctionType distinctionType) =>
         {
