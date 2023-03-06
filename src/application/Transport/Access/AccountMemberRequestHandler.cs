@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Application.Access.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Access.Responses;
@@ -28,20 +28,18 @@ internal sealed class AccountMemberRequestHandler : IAccountMemberRequestHandler
         return response;
     }
 
-    public async IAsyncEnumerable<AccountMemberResponse> GetAll()
+    public IQueryable<AccountMemberResponse> GetAll()
     {
-        var objects = _accountMemberManager.GetAsyncEnumerable();
+        var objects = _accountMemberManager.GetQueryable();
 
-        await foreach (var @object in objects)
-        {
-            var response = new AccountMemberResponse
+        var response = objects.Select(@object =>
+            new AccountMemberResponse
             {
                 UniqueName = @object.UniqueName,
                 MailAddress = @object.MailAddress
-            };
+            });
 
-            yield return response;
-        }
+        return response;
     }
 
     public async Task<AccountMemberResponse> InsertAsync(AccountMemberRequest request)

@@ -30,9 +30,9 @@ internal sealed class TickerUserVerificationManager : ITickerUserVerificationMan
     {
         var stringBuilder = new StringBuilder();
 
-        stringBuilder.Append(verificationKey.Client);
+        stringBuilder.Append(verificationKey.ClientName);
         stringBuilder.Append(':');
-        stringBuilder.Append(verificationKey.Group);
+        stringBuilder.Append(verificationKey.AccountGroup);
         stringBuilder.Append(':');
         stringBuilder.Append(verificationKey.Mail);
 

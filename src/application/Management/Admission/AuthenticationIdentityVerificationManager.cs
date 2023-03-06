@@ -11,9 +11,9 @@ internal sealed class AuthenticationIdentityVerificationManager : IAuthenticatio
         _byteCache = byteCacheFactory.Create("authentication-identity-verification");
     }
 
-    public bool Has(IdentityVerificationKey verificationKey, byte[] verification)
-        => _byteCache.Has($"{verificationKey.Identity}:{verificationKey.Client}", verification);
+    public bool Has(AuthenticationIdentityVerificationKey verificationKey, byte[] verification)
+        => _byteCache.Has($"{verificationKey.AuthenticationIdentity}:{verificationKey.ClientName}", verification);
 
-    public void Set(IdentityVerificationKey verificationKey, byte[] verification)
-        => _byteCache.Set($"{verificationKey.Identity}:{verificationKey.Client}", verification);
+    public void Set(AuthenticationIdentityVerificationKey verificationKey, byte[] verification)
+        => _byteCache.Set($"{verificationKey.AuthenticationIdentity}:{verificationKey.ClientName}", verification);
 }

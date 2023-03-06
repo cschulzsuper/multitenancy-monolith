@@ -38,11 +38,11 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
 
     public async Task<ClaimsIdentity> AuthAsync(ContextTickerUserAuthCommand command)
     {
-        var client = command.Client;
+        var clientName = command.ClientName;
 
-        if (_allowedClientsProvider.Get().All(x => x.UniqueName != client))
+        if (_allowedClientsProvider.Get().All(x => x.UniqueName != clientName))
         {
-            TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in");
+            TransportException.ThrowSecurityViolation($"Client '{clientName}' is not allowed to sign in");
         }
 
         var updateAction = (TickerUser @object) =>
@@ -87,8 +87,8 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
         var verification = Guid.NewGuid().ToByteArray();
         var verificationKey = new TickerUserVerificationKey
         {
-            Group = command.Group,
-            Client = client,
+            AccountGroup = command.AccountGroup,
+            ClientName = clientName,
             Mail = command.Mail
         };
 
@@ -99,8 +99,8 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
         var claims = new Claim[]
         {
             new Claim("type", "ticker"),
-            new Claim("group", command.Group),
-            new Claim("client", client),
+            new Claim("group", command.AccountGroup),
+            new Claim("client", clientName),
             new Claim("mail", command.Mail),
             new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
         };
@@ -112,11 +112,11 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
 
     public async Task<ClaimsIdentity> ConfirmAsync(ContextTickerUserConfirmCommand command)
     {
-        var client = command.Client;
+        var clientName = command.ClientName;
 
-        if (_allowedClientsProvider.Get().All(x => x.UniqueName != client))
+        if (_allowedClientsProvider.Get().All(x => x.UniqueName != clientName))
         {
-            TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in");
+            TransportException.ThrowSecurityViolation($"Client '{clientName}' is not allowed to sign in");
         }
 
         var updateAction = (TickerUser @object) =>
@@ -163,8 +163,8 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
 
         var verificationKey = new TickerUserVerificationKey
         {
-            Group = command.Group,
-            Client = client,
+            AccountGroup = command.AccountGroup,
+            ClientName = clientName,
             Mail = command.Mail
         };
 
@@ -175,8 +175,8 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
         var claims = new Claim[]
         {
             new Claim("type", "ticker"),
-            new Claim("group", command.Group),
-            new Claim("client", client),
+            new Claim("group", command.AccountGroup),
+            new Claim("client", clientName),
             new Claim("mail", command.Mail),
             new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
         };

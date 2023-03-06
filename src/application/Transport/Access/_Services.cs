@@ -8,6 +8,7 @@ public static class _Services
 {
     public static IServiceCollection AddAccessTransport(this IServiceCollection services)
     {
+        services.AddScoped<IAccountGroupRequestHandler, AccountGroupRequestHandler>();
         services.AddScoped<IAccountMemberCommandHandler, AccountMemberCommandHandler>();
         services.AddScoped<IAccountMemberRequestHandler, AccountMemberRequestHandler>();
 

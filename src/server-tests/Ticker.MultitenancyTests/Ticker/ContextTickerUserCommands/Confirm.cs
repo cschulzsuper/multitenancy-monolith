@@ -36,7 +36,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
             SecretToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup2))
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerUser>>()
@@ -47,8 +47,8 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            Client = MockWebApplication.Client,
-            Group = MockWebApplication.Group1,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup1,
             Mail = MockWebApplication.Mail,
             Secret = "default",
             SecretToken = existingTickerUser.SecretToken

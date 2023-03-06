@@ -13,10 +13,10 @@ using System.Text.Json;
 
 internal static class MockWebApplication
 {
-    public const string Client = "multitenancy-tests";
+    public const string ClientName = "multitenancy-tests";
 
-    public const string Group1 = "group-1";
-    public const string Group2 = "group-2";
+    public const string AccountGroup1 = "group-1";
+    public const string AccountGroup2 = "group-2";
     public const string Member = "default";
     public const string Mail = "default@localhost";
 
@@ -47,7 +47,7 @@ internal static class MockWebApplication
         var claims = new Claim[]
         {
             new Claim("badge", "member"),
-            new Claim("client", Client),
+            new Claim("client", ClientName),
             new Claim("group", group),
             new Claim("member", Member)
         };
@@ -64,7 +64,7 @@ internal static class MockWebApplication
         var claims = new Claim[]
         {
             new Claim("badge", "ticker"),
-            new Claim("client", Client),
+            new Claim("client", ClientName),
             new Claim("group", group),
             new Claim("mail", Mail)
         };

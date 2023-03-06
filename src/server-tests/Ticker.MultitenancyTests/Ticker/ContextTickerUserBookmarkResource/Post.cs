@@ -26,7 +26,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/me/bookmarks");
-        request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader(MockWebApplication.Group1);
+        request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader(MockWebApplication.AccountGroup1);
 
         var postTickerBookmark = new
         {
@@ -43,7 +43,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group1))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup1))
         {
             var createdTickerBookmark = scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerBookmark>>()
@@ -53,7 +53,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             Assert.NotNull(createdTickerBookmark);
         }
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup2))
         {
             var createdTickerBookmark = scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerBookmark>>()

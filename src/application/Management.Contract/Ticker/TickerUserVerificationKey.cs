@@ -2,9 +2,9 @@
 
 public sealed class TickerUserVerificationKey
 {
-    public required string Client { get; init; }
+    public required string ClientName { get; init; }
 
-    public required string Group { get; init; }
+    public required string AccountGroup { get; init; }
 
     public required string Mail { get; init; }
 }

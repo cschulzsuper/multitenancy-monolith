@@ -1,7 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
@@ -42,8 +42,8 @@ internal sealed class AccountMemberManager : IAccountMemberManager
         return @object;
     }
 
-    public IAsyncEnumerable<AccountMember> GetAsyncEnumerable()
-        => _repository.GetAsyncEnumerable();
+    public IQueryable<AccountMember> GetQueryable()
+        => _repository.GetQueryable();
 
     public async Task InsertAsync(AccountMember @object)
     {

@@ -2,11 +2,11 @@
 
 public sealed class AccountMemberVerificationKey
 {
-    public required string Client { get; init; }
+    public required string ClientName { get; init; }
 
-    public required string Identity { get; init; }
+    public required string AuthenticationIdentity { get; init; }
 
-    public required string Group { get; init; }
+    public required string AccountGroup { get; init; }
 
-    public required string Member { get; init; }
+    public required string AccountMember { get; init; }
 }

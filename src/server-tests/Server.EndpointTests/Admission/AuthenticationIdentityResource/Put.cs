@@ -144,7 +144,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         var additionalIdentity = new AuthenticationIdentity
         {
-            UniqueName = $"additional-identity-{Guid.NewGuid()}",
+            UniqueName = $"additional-authentication-identity-{Guid.NewGuid()}",
             MailAddress = "additional-info@localhost",
             Secret = "additional-foo-bar"
         };

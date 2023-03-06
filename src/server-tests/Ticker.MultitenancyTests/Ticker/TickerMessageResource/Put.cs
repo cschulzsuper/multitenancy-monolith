@@ -34,7 +34,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Timestamp = 0
         };
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup2))
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerMessage>>()
@@ -42,7 +42,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.AccountGroup1);
 
         var putTickerMessage = new
         {
@@ -61,7 +61,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup2))
         {
             var updatedTickerMessage = scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerMessage>>()

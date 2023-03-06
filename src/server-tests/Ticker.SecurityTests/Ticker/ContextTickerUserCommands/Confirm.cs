@@ -28,8 +28,8 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = mail,
             Secret = secret,
             SecretToken = MockWebApplication.SecretTokens[mail]
@@ -57,8 +57,8 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = mail,
             Secret = secret,
             SecretToken = MockWebApplication.SecretTokens[mail]
@@ -84,8 +84,8 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            Client = "absent",
-            MockWebApplication.Group,
+            ClientName = "absent",
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.PendingMailAddress,
             Secret = MockWebApplication.PendingSecret,
             SecretToken = MockWebApplication.SecretTokens[MockWebApplication.PendingMailAddress]
@@ -111,8 +111,8 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            MockWebApplication.Client,
-            Group = "absent",
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = "absent",
             Mail = MockWebApplication.PendingMailAddress,
             Secret = MockWebApplication.PendingSecret,
             SecretToken = MockWebApplication.SecretTokens[MockWebApplication.PendingMailAddress]
@@ -138,8 +138,8 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = "absent@localhost.com",
             Secret = MockWebApplication.PendingSecret,
             SecretToken = MockWebApplication.SecretTokens[MockWebApplication.PendingMailAddress]
@@ -165,8 +165,8 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.PendingMailAddress,
             Secret = "inavlid",
             SecretToken = MockWebApplication.SecretTokens[MockWebApplication.PendingMailAddress]
@@ -192,8 +192,8 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.PendingMailAddress,
             Secret = MockWebApplication.PendingSecret,
             SecretToken = Guid.NewGuid()

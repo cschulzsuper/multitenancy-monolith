@@ -39,13 +39,13 @@ public class AuthenticationScopeMiddleware
         buffer.Position = 0;
         context.Request.Body = buffer;
 
-        if (@object?.ContainsKey("group") != true)
+        if (@object?.ContainsKey("accountGroup") != true)
         {
             await _next.Invoke(context);
             return;
         }
 
-        var group = @object["group"]!.GetValue<string>();
+        var group = @object["accountGroup"]!.GetValue<string>();
 
         var existingServices = context.RequestServices;
         var existingFeature = context.Features.Get<IServiceProvidersFeature>();

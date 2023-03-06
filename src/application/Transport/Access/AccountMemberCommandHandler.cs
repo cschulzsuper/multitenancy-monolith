@@ -29,22 +29,22 @@ internal sealed class AccountMemberCommandHandler : IAccountMemberCommandHandler
 
     public async Task<ClaimsIdentity> AuthAsync(AccountMemberAuthCommand command)
     {
-        var client = command.Client;
+        var clientName = command.ClientName;
 
-        if (_allowedClientsProvider.Get().All(x => x.UniqueName != client))
+        if (_allowedClientsProvider.Get().All(x => x.UniqueName != clientName))
         {
-            TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in.");
+            TransportException.ThrowSecurityViolation($"Client name '{clientName}' is not allowed to sign in.");
         }
 
-        if (command.Client != _user.GetClaimOrDefault("client"))
+        if (command.ClientName != _user.GetClaimOrDefault("client"))
         {
-            TransportException.ThrowSecurityViolation($"Not allowed to switch to client '{client}'.");
+            TransportException.ThrowSecurityViolation($"Not allowed to switch to client name '{clientName}'.");
         }
 
-        var accountMember = await _accountMemberManager.GetOrDefaultAsync(command.Member);
+        var accountMember = await _accountMemberManager.GetOrDefaultAsync(command.AccountMember);
         if (accountMember == null)
         {
-            TransportException.ThrowSecurityViolation($"Account member '{command.Member}' is not in group '{command.Group}'.");
+            TransportException.ThrowSecurityViolation($"Account member '{command.AccountMember}' is not in group '{command.AccountGroup}'.");
         }
 
         var authenticationIdentity = _user.GetClaim("identity");
@@ -52,17 +52,17 @@ internal sealed class AccountMemberCommandHandler : IAccountMemberCommandHandler
 
         if (!authenticationIdentityFound)
         {
-            TransportException.ThrowSecurityViolation($"Can not sign in as account member '{command.Member}' in account group '{command.Group}'.");
+            TransportException.ThrowSecurityViolation($"Can not sign in as account member '{command.AccountMember}' in account group '{command.AccountGroup}'.");
         }
 
         var verification = Guid.NewGuid().ToByteArray();
 
         var verificationKey = new AccountMemberVerificationKey
         {
-            Client = client,
-            Identity = authenticationIdentity,
-            Group = command.Group,
-            Member = command.Member
+            ClientName = clientName,
+            AuthenticationIdentity = authenticationIdentity,
+            AccountGroup = command.AccountGroup,
+            AccountMember = command.AccountMember
         };
 
         _memberVerificationManager.Set(verificationKey, verification);
@@ -72,10 +72,10 @@ internal sealed class AccountMemberCommandHandler : IAccountMemberCommandHandler
         var claims = new Claim[]
         {
             new Claim("type", "member"),
-            new Claim("client", client),
+            new Claim("client", clientName),
             new Claim("identity", authenticationIdentity),
-            new Claim("group", command.Group),
-            new Claim("member", command.Member),
+            new Claim("group", command.AccountGroup),
+            new Claim("member", command.AccountMember),
             new Claim("verification", verificationnValue, ClaimValueTypes.Base64Binary)
         };
 

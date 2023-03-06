@@ -5,13 +5,15 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Admission.Commands;
 
 public class AuthenticationIdentityAuthCommand
 {
+    [Display(Name = "authentication identity")]
     [UniqueName]
-    public required string Identity { get; init; }
+    public required string AuthenticationIdentity { get; init; }
 
     [Secret]
     public required string Secret { get; init; }
 
+    [Display(Name = "client name")]
     [Required]
     [StringLength(140)]
-    public required string Client { get; init; }
+    public required string ClientName { get; init; }
 }

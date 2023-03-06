@@ -11,7 +11,7 @@ public interface IAuthenticationIdentityManager
 
     Task<AuthenticationIdentity> GetAsync(string authenticationIdentity);
 
-    IQueryable<AuthenticationIdentity> GetAll();
+    IQueryable<AuthenticationIdentity> GetQueryable();
 
     Task<bool> ExistsAsync(string authenticationIdentity, string secret);
 

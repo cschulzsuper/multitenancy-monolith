@@ -51,10 +51,10 @@ public class BadgeValidator
             return false;
         }
 
-        var verificationKey = new IdentityVerificationKey
+        var verificationKey = new AuthenticationIdentityVerificationKey
         {
-            Client = badgeClient.Value,
-            Identity = badgeIdentity.Value,
+            ClientName = badgeClient.Value,
+            AuthenticationIdentity = badgeIdentity.Value,
         };
 
         var badgeVerification = badgeClaims.SingleOrDefault(x => x.Type == "verification");
@@ -98,10 +98,10 @@ public class BadgeValidator
 
         var verificationKey = new AccountMemberVerificationKey
         {
-            Client = badgeClient.Value,
-            Identity = badgeIdentity.Value,
-            Group = badgeGroup.Value,
-            Member = badgeMember.Value,
+            ClientName = badgeClient.Value,
+            AuthenticationIdentity = badgeIdentity.Value,
+            AccountGroup = badgeGroup.Value,
+            AccountMember = badgeMember.Value,
         };
 
         var badgeVerification = badgeClaims.SingleOrDefault(x => x.Type == "verification");

@@ -35,7 +35,7 @@ public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
             SecretToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup2))
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerUser>>()
@@ -43,7 +43,7 @@ public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{existingTickerUser.Snowflake}/reset");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.AccountGroup1);
 
         var client = _factory.CreateClient();
 
@@ -53,7 +53,7 @@ public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup2))
         {
             var resetTickerUser = scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerUser>>()

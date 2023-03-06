@@ -34,7 +34,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
             SecretToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup2))
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerUser>>()
@@ -42,7 +42,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/{existingTickerUser.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.AccountGroup1);
 
         var client = _factory.CreateClient();
 

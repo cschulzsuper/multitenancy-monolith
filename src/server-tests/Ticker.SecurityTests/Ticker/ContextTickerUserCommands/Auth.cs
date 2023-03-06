@@ -29,8 +29,8 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = mail,
             Secret = secret
         };
@@ -56,8 +56,8 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = mail,
             Secret = secret
         };
@@ -82,8 +82,8 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            Client = "absent",
-            MockWebApplication.Group,
+            ClientName = "absent",
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.ConfirmedMailAddress,
             Secret = MockWebApplication.ConfirmedSecret
         };
@@ -94,6 +94,8 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         // Act
         var response = await client.SendAsync(request);
+
+        var x = await response.Content.ReadAsStringAsync();
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -108,8 +110,8 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            MockWebApplication.Client,
-            Group = "absent",
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = "absent",
             Mail = MockWebApplication.ConfirmedMailAddress,
             Secret = MockWebApplication.ConfirmedSecret
         };
@@ -134,8 +136,8 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = "absent@localhost.com",
             Secret = MockWebApplication.ConfirmedSecret
         };
@@ -160,8 +162,8 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.ConfirmedMailAddress,
             Secret = "inavlid"
         };

@@ -30,7 +30,7 @@ internal sealed class AuthenticationIdentityRequestHandler : IAuthenticationIden
 
     public IQueryable<AuthenticationIdentityResponse> GetAll()
     {
-        var objects = _authenticationIdentityManager.GetAll();
+        var objects = _authenticationIdentityManager.GetQueryable();
 
         var response = objects.Select(@object =>
             new AuthenticationIdentityResponse

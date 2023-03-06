@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Events;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;

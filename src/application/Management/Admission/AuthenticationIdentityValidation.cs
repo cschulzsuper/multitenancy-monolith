@@ -1,7 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
 using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
-using System.Security.Principal;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
@@ -34,11 +33,11 @@ internal static class AuthenticationIdentityValidation
         _authenticationIdentityUniqueNameValidator.AddRules(x => x, UniqueNameValidator.CreateRules("authentication identity"));
     }
 
-    internal static void EnsureInsertable(AuthenticationIdentity identity)
-        => _insertValidator.Ensure(identity);
+    internal static void EnsureInsertable(AuthenticationIdentity @object)
+        => _insertValidator.Ensure(@object);
 
-    public static void EnsureUpdatable(AuthenticationIdentity identity)
-        => _updateValidator.Ensure(identity);
+    public static void EnsureUpdatable(AuthenticationIdentity @object)
+        => _updateValidator.Ensure(@object);
 
     internal static void EnsureSnowflake(long authenticationIdentity)
         => _authenticationIdentitySnowflakeValidator.Ensure(authenticationIdentity);

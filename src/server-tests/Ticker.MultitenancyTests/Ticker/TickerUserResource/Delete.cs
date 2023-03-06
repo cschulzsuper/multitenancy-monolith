@@ -35,14 +35,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
             SecretToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group1))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup1))
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerUser>>()
                 .Insert(existingTickerUser);
         }
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup2))
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerUser>>()
@@ -50,7 +50,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/{existingTickerUser.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group2);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.AccountGroup2);
 
         var client = _factory.CreateClient();
 
@@ -60,7 +60,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group1))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup1))
         {
             var updatedTickerUser = scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerUser>>()

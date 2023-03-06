@@ -2,7 +2,7 @@
 
 public interface IAuthenticationIdentityVerificationManager
 {
-    bool Has(IdentityVerificationKey verificationKey, byte[] verification);
+    bool Has(AuthenticationIdentityVerificationKey verificationKey, byte[] verification);
 
-    void Set(IdentityVerificationKey verificationKey, byte[] verification);
+    void Set(AuthenticationIdentityVerificationKey verificationKey, byte[] verification);
 }

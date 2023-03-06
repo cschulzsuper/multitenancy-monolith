@@ -101,10 +101,10 @@ internal static class MockWebApplication
     {
         var verification = Guid.NewGuid().ToByteArray();
 
-        var verificationKey = new IdentityVerificationKey
+        var verificationKey = new AuthenticationIdentityVerificationKey
         {
-            Client = client,
-            Identity = AuthenticationIdentityAdmin
+            ClientName = client,
+            AuthenticationIdentity = AuthenticationIdentityAdmin
         };
 
         using var scope = factory.Services.CreateScope();
@@ -132,10 +132,10 @@ internal static class MockWebApplication
     {
         var verification = Guid.NewGuid().ToByteArray();
 
-        var verificationKey = new IdentityVerificationKey
+        var verificationKey = new AuthenticationIdentityVerificationKey
         {
-            Client = client,
-            Identity = AuthenticationIdentityIdentity
+            ClientName = client,
+            AuthenticationIdentity = AuthenticationIdentityIdentity
         };
 
         using var scope = factory.Services.CreateScope();
@@ -163,10 +163,10 @@ internal static class MockWebApplication
     {
         var verification = Guid.NewGuid().ToByteArray();
 
-        var verificationKey = new IdentityVerificationKey
+        var verificationKey = new AuthenticationIdentityVerificationKey
         {
-            Client = client,
-            Identity = AuthenticationIdentityDemo
+            ClientName = client,
+            AuthenticationIdentity = AuthenticationIdentityDemo
         };
 
         using var scope = factory.Services.CreateScope();
@@ -196,10 +196,10 @@ internal static class MockWebApplication
 
         var verificationKey = new AccountMemberVerificationKey
         {
-            Client = client,
-            Identity = AuthenticationIdentityIdentity,
-            Group = AccountGroup,
-            Member = AccountGroupChief,
+            ClientName = client,
+            AuthenticationIdentity = AuthenticationIdentityIdentity,
+            AccountGroup = AccountGroup,
+            AccountMember = AccountGroupChief,
         };
 
         using var scope = factory.Services.CreateScope();
@@ -231,10 +231,10 @@ internal static class MockWebApplication
 
         var verificationKey = new AccountMemberVerificationKey
         {
-            Client = client,
-            Identity = AuthenticationIdentityDemo,
-            Group = AccountGroup,
-            Member = AccountGroupChief,
+            ClientName = client,
+            AuthenticationIdentity = AuthenticationIdentityDemo,
+            AccountGroup = AccountGroup,
+            AccountMember = AccountGroupChief,
         };
 
         using var scope = factory.Services.CreateScope();
@@ -266,10 +266,10 @@ internal static class MockWebApplication
 
         var verificationKey = new AccountMemberVerificationKey
         {
-            Client = client,
-            Identity = AuthenticationIdentityIdentity,
-            Group = AccountGroup,
-            Member = AccountGroupMember,
+            ClientName = client,
+            AuthenticationIdentity = AuthenticationIdentityIdentity,
+            AccountGroup = AccountGroup,
+            AccountMember = AccountGroupMember,
         };
 
         using var scope = factory.Services.CreateScope();
@@ -301,10 +301,10 @@ internal static class MockWebApplication
 
         var verificationKey = new AccountMemberVerificationKey
         {
-            Client = client,
-            Identity = AuthenticationIdentityDemo,
-            Group = AccountGroup,
-            Member = AccountGroupMember,
+            ClientName = client,
+            AuthenticationIdentity = AuthenticationIdentityDemo,
+            AccountGroup = AccountGroup,
+            AccountMember = AccountGroupMember,
         };
 
         using var scope = factory.Services.CreateScope();

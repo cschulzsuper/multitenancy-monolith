@@ -8,6 +8,7 @@ public static class _Services
 {
     public static IServiceCollection AddAccessManagement(this IServiceCollection services)
     {
+        services.AddScoped<IAccountGroupManager, AccountGroupManager>();
         services.AddScoped<IAccountMemberManager, AccountMemberManager>();
         services.AddScoped<IAccountMemberVerificationManager, AccountMemberVerificationManager>();
 

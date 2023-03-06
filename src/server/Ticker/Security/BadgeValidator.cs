@@ -73,8 +73,8 @@ public class BadgeValidator
 
         var verificationKey = new TickerUserVerificationKey
         {
-            Client = badgeClient.Value,
-            Group = badgeGroup.Value,
+            ClientName = badgeClient.Value,
+            AccountGroup = badgeGroup.Value,
             Mail = badgeMail.Value
         };
 

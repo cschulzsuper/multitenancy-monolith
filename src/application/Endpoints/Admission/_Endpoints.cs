@@ -14,7 +14,7 @@ public static class _Endpoints
             .WithGroupName("admission");
 
         authentication.MapAuthenticationIdentityCommands();
-        authentication.MapIdentityResource();
+        authentication.MapAuthenticationIdentityResource();
 
         return endpoints;
     }

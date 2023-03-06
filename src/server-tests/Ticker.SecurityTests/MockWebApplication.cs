@@ -24,9 +24,9 @@ internal static class MockWebApplication
     public const int MockMember = 1;
     public const int MockTicker = 2;
 
-    public const string Client = "security-tests";
+    public const string ClientName = "security-tests";
 
-    public const string Group = "group";
+    public const string AccountGroup = "group";
     public const string Member = "default";
 
     public const string ConfirmedMailAddress = "confirmed@localhost";
@@ -65,29 +65,29 @@ internal static class MockWebApplication
         {"AllowedClients:1:UniqueName", "security-tests"},
         {"AllowedClients:1:Scopes:1", "endpoints"},
 
-        {$"SeedData:Ticker:TickerUsers:{Group}:0:MailAddress", ConfirmedMailAddress},
-        {$"SeedData:Ticker:TickerUsers:{Group}:0:Secret", ConfirmedSecret},
-        {$"SeedData:Ticker:TickerUsers:{Group}:0:SecretState", TickerUserSecretStates.Confirmed},
-        {$"SeedData:Ticker:TickerUsers:{Group}:0:SecretToken", $"{ConfirmedSecretToken}"},
-        {$"SeedData:Ticker:TickerUsers:{Group}:0:DisplayName", ConfirmedDisplayName},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:0:MailAddress", ConfirmedMailAddress},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:0:Secret", ConfirmedSecret},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:0:SecretState", TickerUserSecretStates.Confirmed},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:0:SecretToken", $"{ConfirmedSecretToken}"},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:0:DisplayName", ConfirmedDisplayName},
 
-        {$"SeedData:Ticker:TickerUsers:{Group}:1:MailAddress", InvalidMailAddress},
-        {$"SeedData:Ticker:TickerUsers:{Group}:1:Secret", InvalidSecret},
-        {$"SeedData:Ticker:TickerUsers:{Group}:1:SecretState", TickerUserSecretStates.Invalid},
-        {$"SeedData:Ticker:TickerUsers:{Group}:1:SecretToken", $"{InvalidSecretToken}"},
-        {$"SeedData:Ticker:TickerUsers:{Group}:1:DisplayName", InvalidDisplayName},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:1:MailAddress", InvalidMailAddress},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:1:Secret", InvalidSecret},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:1:SecretState", TickerUserSecretStates.Invalid},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:1:SecretToken", $"{InvalidSecretToken}"},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:1:DisplayName", InvalidDisplayName},
 
-        {$"SeedData:Ticker:TickerUsers:{Group}:2:MailAddress", ResetMailAddress},
-        {$"SeedData:Ticker:TickerUsers:{Group}:2:Secret", ResetSecret},
-        {$"SeedData:Ticker:TickerUsers:{Group}:2:SecretState", TickerUserSecretStates.Reset},
-        {$"SeedData:Ticker:TickerUsers:{Group}:2:SecretToken", $"{ResetSecretToken}"},
-        {$"SeedData:Ticker:TickerUsers:{Group}:2:DisplayName", ResetDisplayName},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:2:MailAddress", ResetMailAddress},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:2:Secret", ResetSecret},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:2:SecretState", TickerUserSecretStates.Reset},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:2:SecretToken", $"{ResetSecretToken}"},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:2:DisplayName", ResetDisplayName},
 
-        {$"SeedData:Ticker:TickerUsers:{Group}:3:MailAddress", PendingMailAddress},
-        {$"SeedData:Ticker:TickerUsers:{Group}:3:Secret", PendingSecret},
-        {$"SeedData:Ticker:TickerUsers:{Group}:3:SecretState", TickerUserSecretStates.Pending},
-        {$"SeedData:Ticker:TickerUsers:{Group}:3:SecretToken", $"{PendingSecretToken}"},
-        {$"SeedData:Ticker:TickerUsers:{Group}:3:DisplayName", PendingDisplayName},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:3:MailAddress", PendingMailAddress},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:3:Secret", PendingSecret},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:3:SecretState", TickerUserSecretStates.Pending},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:3:SecretToken", $"{PendingSecretToken}"},
+        {$"SeedData:Ticker:TickerUsers:{AccountGroup}:3:DisplayName", PendingDisplayName},
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory, ITestOutputHelper? output = null)
@@ -108,9 +108,9 @@ internal static class MockWebApplication
             }));
 
     public static IServiceScope CreateMultitenancyScope(this WebApplicationFactory<Program> factory)
-        => factory.Services.CreateMultitenancyScope(Group);
+        => factory.Services.CreateMultitenancyScope(AccountGroup);
 
-    public static AuthenticationHeaderValue MockValidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock, string client = Client)
+    public static AuthenticationHeaderValue MockValidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock, string client = ClientName)
         => mock switch
         {
             MockMember => factory.MockValidMemberAuthorizationHeader(client),
@@ -124,7 +124,7 @@ internal static class MockWebApplication
         {
             new Claim("badge", "member"),
             new Claim("client", client),
-            new Claim("group", Group),
+            new Claim("group", AccountGroup),
             new Claim("member", Member)
         };
 
@@ -141,8 +141,8 @@ internal static class MockWebApplication
 
         var verificationKey = new TickerUserVerificationKey
         {
-            Client = client,
-            Group = Group,
+            ClientName = client,
+            AccountGroup = AccountGroup,
             Mail = ConfirmedMailAddress,
         };
 
@@ -156,7 +156,7 @@ internal static class MockWebApplication
         {
             new Claim("badge", "ticker"),
             new Claim("client", client),
-            new Claim("group", Group),
+            new Claim("group", AccountGroup),
             new Claim("mail", ConfirmedMailAddress),
             new Claim("verification", Convert.ToBase64String(verification)),
         };
@@ -181,8 +181,8 @@ internal static class MockWebApplication
         var claims = new Claim[]
         {
             new Claim("badge", "member"),
-            new Claim("client", Client),
-            new Claim("group", Group),
+            new Claim("client", ClientName),
+            new Claim("group", AccountGroup),
             new Claim("member", "invalid")
         };
 
@@ -200,8 +200,8 @@ internal static class MockWebApplication
         var claims = new Claim[]
         {
             new Claim("badge", "ticker"),
-            new Claim("client", Client),
-            new Claim("group", Group),
+            new Claim("client", ClientName),
+            new Claim("group", AccountGroup),
             new Claim("mail", InvalidMailAddress),
             new Claim("verification", Convert.ToBase64String(verification)),
         };

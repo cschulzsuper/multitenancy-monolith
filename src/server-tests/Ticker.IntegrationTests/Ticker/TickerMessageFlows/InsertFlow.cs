@@ -1,11 +1,9 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
-using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Net.Http;
@@ -84,6 +82,7 @@ public class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
         Assert.NotNull(createdTickerUser);
 
         await _eventPublicationInterceptorTask.Task;
+        Assert.True(_eventPublicationInterceptorTask.Task.IsCompletedSuccessfully);
     }
 
     private async Task TickerBookmark_Query_ShouldSucceed()

@@ -39,7 +39,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(MockWebApplication.MockIdentity, MockWebApplication.AccountGroupMember)]
     [InlineData(MockWebApplication.MockDemo, MockWebApplication.AccountGroupChief)]
     [InlineData(MockWebApplication.MockDemo, MockWebApplication.AccountGroupMember)]
-    public async Task Auth_ShouldSucceed_WhenValid(int mock, string member)
+    public async Task Auth_ShouldSucceed_WhenValid(int mock, string accountMember)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members/me/auth");
@@ -47,9 +47,9 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.AccountGroup,
-            Member = member
+            ClientName = MockWebApplication.Client,
+            AccountGroup = MockWebApplication.AccountGroup,
+            AccountMember = accountMember
         };
 
         request.Content = JsonContent.Create(authRequest);
@@ -75,9 +75,9 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.AccountGroup,
-            Member = "absent"
+            ClientName = MockWebApplication.Client,
+            AccountGroup = MockWebApplication.AccountGroup,
+            AccountMember = "absent"
         };
 
         request.Content = JsonContent.Create(authRequest);
@@ -95,7 +95,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     [Theory]
     [InlineData(MockWebApplication.MockAdmin, MockWebApplication.AccountGroupChief)]
     [InlineData(MockWebApplication.MockAdmin, MockWebApplication.AccountGroupMember)]
-    public async Task Auth_ShouldFail_WhenIdentityUnassigned(int mock, string member)
+    public async Task Auth_ShouldFail_WhenIdentityUnassigned(int mock, string accountMember)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members/me/auth");
@@ -103,41 +103,9 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.AccountGroup,
-            Member = member
-        };
-
-        request.Content = JsonContent.Create(authRequest);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-    }
-
-    [Theory]
-    [InlineData(MockWebApplication.MockAdmin, MockWebApplication.AccountGroupChief)]
-    [InlineData(MockWebApplication.MockAdmin, MockWebApplication.AccountGroupMember)]
-    [InlineData(MockWebApplication.MockIdentity, MockWebApplication.AccountGroupChief)]
-    [InlineData(MockWebApplication.MockIdentity, MockWebApplication.AccountGroupMember)]
-    [InlineData(MockWebApplication.MockDemo, MockWebApplication.AccountGroupChief)]
-    [InlineData(MockWebApplication.MockDemo, MockWebApplication.AccountGroupMember)]
-    public async Task Auth_ShouldFail_WhenGroupAbsent(int mock, string member)
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members/me/auth");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
-
-        var authRequest = new
-        {
-            MockWebApplication.Client,
-            Group = "absent",
-            Member = member
+            ClientName = MockWebApplication.Client,
+            AccountGroup = MockWebApplication.AccountGroup,
+            AccountMember = accountMember
         };
 
         request.Content = JsonContent.Create(authRequest);
@@ -159,7 +127,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(MockWebApplication.MockIdentity, MockWebApplication.AccountGroupMember)]
     [InlineData(MockWebApplication.MockDemo, MockWebApplication.AccountGroupChief)]
     [InlineData(MockWebApplication.MockDemo, MockWebApplication.AccountGroupMember)]
-    public async Task Auth_ShouldFail_WhenClientInvalid(int mock, string member)
+    public async Task Auth_ShouldFail_WhenGroupAbsent(int mock, string accountMember)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members/me/auth");
@@ -167,9 +135,41 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            Client = "invalid",
-            MockWebApplication.AccountGroup,
-            Member = member
+            ClientName = MockWebApplication.Client,
+            AccountGroup = "absent",
+            AccountMember = accountMember
+        };
+
+        request.Content = JsonContent.Create(authRequest);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Theory]
+    [InlineData(MockWebApplication.MockAdmin, MockWebApplication.AccountGroupChief)]
+    [InlineData(MockWebApplication.MockAdmin, MockWebApplication.AccountGroupMember)]
+    [InlineData(MockWebApplication.MockIdentity, MockWebApplication.AccountGroupChief)]
+    [InlineData(MockWebApplication.MockIdentity, MockWebApplication.AccountGroupMember)]
+    [InlineData(MockWebApplication.MockDemo, MockWebApplication.AccountGroupChief)]
+    [InlineData(MockWebApplication.MockDemo, MockWebApplication.AccountGroupMember)]
+    public async Task Auth_ShouldFail_WhenClientInvalid(int mock, string accountMember)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members/me/auth");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
+
+        var authRequest = new
+        {
+            ClientName = "invalid",
+            AccountGroup = MockWebApplication.AccountGroup,
+            AccountMember = accountMember
         };
 
         request.Content = JsonContent.Create(authRequest);

@@ -33,7 +33,7 @@ internal sealed class AuthenticationIdentityManager : IAuthenticationIdentityMan
         return @object;
     }
 
-    public IQueryable<AuthenticationIdentity> GetAll()
+    public IQueryable<AuthenticationIdentity> GetQueryable()
         => _repository.GetQueryable();
 
     public async Task<bool> ExistsAsync(string authenticationIdentity, string secret)

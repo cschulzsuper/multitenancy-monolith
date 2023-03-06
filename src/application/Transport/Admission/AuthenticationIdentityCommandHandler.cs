@@ -25,26 +25,26 @@ internal sealed class AuthenticationIdentityCommandHandler : IAuthenticationIden
 
     public async Task<ClaimsIdentity> AuthAsync(AuthenticationIdentityAuthCommand command)
     {
-        var client = command.Client;
+        var clientName = command.ClientName;
 
-        if (_allowedClientsProvider.Get().All(x => x.UniqueName != client))
+        if (_allowedClientsProvider.Get().All(x => x.UniqueName != clientName))
         {
-            TransportException.ThrowSecurityViolation($"Client '{client}' is not allowed to sign in");
+            TransportException.ThrowSecurityViolation($"Client name '{clientName}' is not allowed to sign in");
         }
 
-        var found = await _authenticationIdentityManager.ExistsAsync(command.Identity, command.Secret);
+        var found = await _authenticationIdentityManager.ExistsAsync(command.AuthenticationIdentity, command.Secret);
 
         if (!found)
         {
-            TransportException.ThrowSecurityViolation($"Could not match authentication identity '{command.Identity}' against secret");
+            TransportException.ThrowSecurityViolation($"Could not match authentication identity '{command.AuthenticationIdentity}' against secret");
         }
 
         var verification = Guid.NewGuid().ToByteArray();
 
-        var verificationKey = new IdentityVerificationKey
+        var verificationKey = new AuthenticationIdentityVerificationKey
         {
-            Client = client,
-            Identity = command.Identity
+            ClientName = clientName,
+            AuthenticationIdentity = command.AuthenticationIdentity
         };
 
         _identityVerificationManager.Set(verificationKey, verification);
@@ -54,8 +54,8 @@ internal sealed class AuthenticationIdentityCommandHandler : IAuthenticationIden
         var claims = new Claim[]
         {
             new Claim("type", "identity"),
-            new Claim("client", client),
-            new Claim("identity", command.Identity),
+            new Claim("client", clientName),
+            new Claim("identity", command.AuthenticationIdentity),
             new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
         };
 

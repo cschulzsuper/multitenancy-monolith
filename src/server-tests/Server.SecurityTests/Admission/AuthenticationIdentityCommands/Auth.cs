@@ -22,15 +22,15 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(MockWebApplication.AuthenticationIdentityAdmin, MockWebApplication.AuthenticationIdentityAdminSecret)]
     [InlineData(MockWebApplication.AuthenticationIdentityIdentity, MockWebApplication.AuthenticationIdentityIdentitySecret)]
     [InlineData(MockWebApplication.AuthenticationIdentityDemo, MockWebApplication.AuthenticationIdentityDemoSecret)]
-    public async Task Auth_ShouldSucceed_WhenValid(string identity, string secret)
+    public async Task Auth_ShouldSucceed_WhenValid(string authenticationIdentity, string secret)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-identities/me/auth");
 
         var authRequest = new
         {
-            MockWebApplication.Client,
-            Identity = identity,
+            ClientName = MockWebApplication.Client,
+            AuthenticationIdentity = authenticationIdentity,
             Secret = secret
         };
 
@@ -49,15 +49,15 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(MockWebApplication.AuthenticationIdentityAdmin)]
     [InlineData(MockWebApplication.AuthenticationIdentityIdentity)]
     [InlineData(MockWebApplication.AuthenticationIdentityDemo)]
-    public async Task Auth_ShouldFail_WhenSecretInvalid(string identity)
+    public async Task Auth_ShouldFail_WhenSecretInvalid(string authenticationIdentity)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-identities/me/auth");
 
         var authRequest = new
         {
-            MockWebApplication.Client,
-            Identity = identity,
+            ClientName = MockWebApplication.Client,
+            AuthenticationIdentity = authenticationIdentity,
             Secret = "invalid"
         };
 
@@ -77,15 +77,15 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(MockWebApplication.AuthenticationIdentityAdmin, MockWebApplication.AuthenticationIdentityAdminSecret)]
     [InlineData(MockWebApplication.AuthenticationIdentityIdentity, MockWebApplication.AuthenticationIdentityIdentitySecret)]
     [InlineData(MockWebApplication.AuthenticationIdentityDemo, MockWebApplication.AuthenticationIdentityDemoSecret)]
-    public async Task Auth_ShouldFail_WhenClientInvalid(string identity, string secret)
+    public async Task Auth_ShouldFail_WhenClientInvalid(string authenticationIdentity, string secret)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-identities/me/auth");
 
         var authRequest = new
         {
-            Client = "Invalid",
-            Identity = identity,
+            ClientName = "Invalid",
+            AuthenticationIdentity = authenticationIdentity,
             Secret = secret
         };
 

@@ -14,7 +14,7 @@ internal static class AuthenticationIdentityResource
     private const string CouldNotUpdateAuthenticationIdentity = "Could not update authentication identity";
     private const string CouldNotDeleteAuthenticationIdentity = "Could not delete authentication identity";
 
-    public static IEndpointRouteBuilder MapIdentityResource(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapAuthenticationIdentityResource(this IEndpointRouteBuilder endpoints)
     {
         var resource = endpoints
             .MapGroup("/authentication-identities")

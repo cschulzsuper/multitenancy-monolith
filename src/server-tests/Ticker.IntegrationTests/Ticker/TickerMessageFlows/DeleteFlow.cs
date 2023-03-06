@@ -1,22 +1,18 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
-using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Net.Http;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using System.Text.Json;
-using Microsoft.AspNetCore.Authentication;
 
 namespace Ticker.TickerMessageFlows;
 
@@ -25,7 +21,7 @@ public class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
     private readonly WebApplicationFactory<Program> _factory;
 
     private Action<string>? _eventPublicationInterceptorAssert = null;
-    private TaskCompletionSource _eventPublicationInterceptorTask = new TaskCompletionSource();
+    private TaskCompletionSource _eventPublicationInterceptorTask = new();
 
     public DeleteFlow(WebApplicationFactory<Program> factory)
     {
@@ -86,6 +82,7 @@ public class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
         Assert.NotNull(createdTickerUser);
 
         await _eventPublicationInterceptorTask.Task;
+        Assert.True(_eventPublicationInterceptorTask.Task.IsCompletedSuccessfully);
 
         return createdTickerUser.Snowflake;
     }
@@ -110,6 +107,7 @@ public class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         await _eventPublicationInterceptorTask.Task;
+        Assert.True(_eventPublicationInterceptorTask.Task.IsCompletedSuccessfully);
     }
 
     private async Task TickerBookmark_Query_ShouldSucceed()

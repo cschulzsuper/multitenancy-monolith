@@ -14,9 +14,9 @@ using System.Text.Json;
 
 internal static class MockWebApplication
 {
-    public const string Client = "integration-tests";
+    public const string ClientName = "integration-tests";
 
-    public const string Group = "group";
+    public const string AccountGroup = "group";
     public const string Member = "member";
 
     public const string TickerUserMail = "default@localhost";
@@ -25,7 +25,7 @@ internal static class MockWebApplication
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
-        {"AllowedClients:0:UniqueName", Client},
+        {"AllowedClients:0:UniqueName", ClientName},
         {"AllowedClients:0:Scopes:0", "swagger-json"},
         {"AllowedClients:0:Scopes:1", "endpoints"},
     };
@@ -44,15 +44,15 @@ internal static class MockWebApplication
 
 
     public static IServiceScope CreateMultitenancyScope(this WebApplicationFactory<Program> factory)
-        => factory.Services.CreateMultitenancyScope(Group);
+        => factory.Services.CreateMultitenancyScope(AccountGroup);
 
     public static AuthenticationHeaderValue MockValidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory)
     {
         var claims = new Claim[]
         {
             new Claim("badge", "member"),
-            new Claim("client", Client),
-            new Claim("group", Group),
+            new Claim("client", ClientName),
+            new Claim("group", AccountGroup),
             new Claim("member", Member)
         };
 
@@ -68,8 +68,8 @@ internal static class MockWebApplication
         var claims = new Claim[]
         {
             new Claim("badge", "ticker"),
-            new Claim("client", Client),
-            new Claim("group", Group),
+            new Claim("client", ClientName),
+            new Claim("group", AccountGroup),
             new Claim("mail", TickerUserMail)
         };
 

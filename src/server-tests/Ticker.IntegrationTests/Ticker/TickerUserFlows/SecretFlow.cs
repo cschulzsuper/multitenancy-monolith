@@ -119,6 +119,7 @@ public class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(TickerUserSecretStates.Reset, resetTickerUser.SecretState);
 
         await _eventPublicationInterceptorTask.Task;
+        Assert.True(_eventPublicationInterceptorTask.Task.IsCompletedSuccessfully);
     }
 
     private async Task TickerUser_Auth_ShouldSucceed_WithSecretStatePending()
@@ -133,8 +134,8 @@ public class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
         var authContent = new
         {
-            Client = MockWebApplication.Client,
-            Group = MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.TickerUserMail,
             Secret = MockWebApplication.TickerUserSecret
         };
@@ -161,6 +162,7 @@ public class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         Assert.NotEqual(MockWebApplication.TickerUserSecretToken, updatedTickerUser.SecretToken);
 
         await _eventPublicationInterceptorTask.Task;
+        Assert.True(_eventPublicationInterceptorTask.Task.IsCompletedSuccessfully);
     }
 
     private async Task TickerUser_Auth_ShouldBeForbidden()
@@ -169,8 +171,8 @@ public class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
         var authContent = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.TickerUserMail,
             Secret = MockWebApplication.TickerUserSecret
         };
@@ -204,8 +206,8 @@ public class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/confirm");
         var authContent = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.TickerUserMail,
             Secret = MockWebApplication.TickerUserSecret,
             SecretToken = tickerUserSecretToken
@@ -253,8 +255,8 @@ public class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/confirm");
         var authContent = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.TickerUserMail,
             Secret = MockWebApplication.TickerUserSecret,
             SecretToken = tickerUserSecretToken
@@ -277,8 +279,8 @@ public class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
         var authContent = new
         {
-            MockWebApplication.Client,
-            MockWebApplication.Group,
+            ClientName = MockWebApplication.ClientName,
+            AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.TickerUserMail,
             Secret = MockWebApplication.TickerUserSecret
         };

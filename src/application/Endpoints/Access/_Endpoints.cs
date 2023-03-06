@@ -13,6 +13,7 @@ public static class _Endpoints
             .MapGroup("access")
             .WithGroupName("access");
 
+        authorization.MapAccountGroup();
         authorization.MapAccountMemberResource();
         authorization.MapAccountMemberCommands();
 

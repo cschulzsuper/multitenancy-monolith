@@ -6,12 +6,14 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
 public class ContextTickerUserAuthCommand
 {
 
+    [Display(Name = "client name")]
     [Required]
     [StringLength(140)]
-    public required string Client { get; init; }
+    public required string ClientName { get; init; }
 
+    [Display(Name = "account group")]
     [UniqueName]
-    public required string Group { get; init; }
+    public required string AccountGroup { get; init; }
 
     [MailAddress]
     public required string Mail { get; init; }

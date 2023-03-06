@@ -32,7 +32,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             TickerUser = MockWebApplication.Mail,
         };
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup2))
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerBookmark>>()
@@ -40,7 +40,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/me/bookmarks");
-        request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader(MockWebApplication.Group1);
+        request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader(MockWebApplication.AccountGroup1);
 
         var client = _factory.CreateClient();
 

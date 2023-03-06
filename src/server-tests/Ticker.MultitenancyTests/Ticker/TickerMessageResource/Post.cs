@@ -27,7 +27,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.AccountGroup1);
 
         var postTickerMessage = new
         {
@@ -46,7 +46,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group1))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup1))
         {
             var createdTickerMessage = scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerMessage>>()
@@ -56,7 +56,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             Assert.NotNull(createdTickerMessage);
         }
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup2))
         {
             var createdTickerMessage = scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerMessage>>()

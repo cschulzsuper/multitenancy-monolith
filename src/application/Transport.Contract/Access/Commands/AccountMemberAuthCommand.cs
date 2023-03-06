@@ -5,13 +5,16 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access.Commands;
 
 public class AccountMemberAuthCommand
 {
+    [Display(Name = "account group")]
     [UniqueName]
-    public required string Group { get; init; }
+    public required string AccountGroup { get; init; }
 
+    [Display(Name = "account member")]
     [UniqueName]
-    public required string Member { get; init; }
+    public required string AccountMember { get; init; }
 
+    [Display(Name = "client name")]
     [Required]
     [StringLength(140)]
-    public required string Client { get; init; }
+    public required string ClientName { get; init; }
 }

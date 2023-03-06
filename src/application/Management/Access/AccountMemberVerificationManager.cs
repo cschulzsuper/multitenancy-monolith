@@ -12,8 +12,8 @@ internal sealed class AccountMemberVerificationManager : IAccountMemberVerificat
     }
 
     public bool Has(AccountMemberVerificationKey verificationKey, byte[] verification)
-        => _byteCache.Has($"{verificationKey.Identity}:{verificationKey.Group}:{verificationKey.Member}:{verificationKey.Client}", verification);
+        => _byteCache.Has($"{verificationKey.AuthenticationIdentity}:{verificationKey.AccountGroup}:{verificationKey.AccountMember}:{verificationKey.ClientName}", verification);
 
     public void Set(AccountMemberVerificationKey verificationKey, byte[] verification)
-        => _byteCache.Set($"{verificationKey.Identity}:{verificationKey.Group}:{verificationKey.Member}:{verificationKey.Client}", verification);
+        => _byteCache.Set($"{verificationKey.AuthenticationIdentity}:{verificationKey.AccountGroup}:{verificationKey.AccountMember}:{verificationKey.ClientName}", verification);
 }

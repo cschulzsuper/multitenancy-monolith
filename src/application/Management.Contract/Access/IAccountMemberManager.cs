@@ -1,6 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
@@ -13,7 +13,7 @@ public interface IAccountMemberManager
 
     Task<AccountMember?> GetOrDefaultAsync(string accountMember);
 
-    IAsyncEnumerable<AccountMember> GetAsyncEnumerable();
+    IQueryable<AccountMember> GetQueryable();
 
     Task InsertAsync(AccountMember @object);
 

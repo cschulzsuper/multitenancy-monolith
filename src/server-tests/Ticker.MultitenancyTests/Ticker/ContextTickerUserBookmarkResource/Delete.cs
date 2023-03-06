@@ -31,14 +31,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
             TickerUser = MockWebApplication.Mail,
         };
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group1))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup1))
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerBookmark>>()
                 .Insert(existingTickerBookmark);
         }
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup2))
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerBookmark>>()
@@ -46,7 +46,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/me/bookmarks/{existingTickerBookmark.TickerMessage}");
-        request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader(MockWebApplication.Group2);
+        request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader(MockWebApplication.AccountGroup2);
 
         var client = _factory.CreateClient();
 
@@ -56,7 +56,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group1))
+        using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup1))
         {
             var updatedTickerBookmark = scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerBookmark>>()
