@@ -80,7 +80,7 @@ internal sealed class ObjectTypeManager : IObjectTypeManager
 
     public async Task UpdateAsync(long snowflake, Action<ObjectType> action)
     {
-        AuthenticationIdentityValidation.EnsureSnowflake(snowflake);
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(snowflake);
 
         var validatedAction = (ObjectType objectType) =>
         {

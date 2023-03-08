@@ -39,6 +39,8 @@ public class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task Exceute()
     {
+        // TODO Rare race condition. A `ticker-bookmark-inserted` event should fix this.
+
         await TickerMessage_Create_ShouldSucceed();
         await TickerBookmark_Query_ShouldSucceed();
     }

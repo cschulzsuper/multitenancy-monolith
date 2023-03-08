@@ -19,7 +19,7 @@ internal static class TickerUserValidation
         _insertValidator.AddRules(x => x.Snowflake, ZeroValidator<long>.CreateRules("snowflake"));
         _insertValidator.AddRules(x => x.MailAddress, MailAddressValidator.CreateRules());
         _insertValidator.AddRules(x => x.Secret, SecretValidator.CreateRules());
-        _insertValidator.AddRules(x => x.SecretState, TickerUserSecretStatesValidator.CreateRules("secret state"));
+        _insertValidator.AddRules(x => x.SecretState, TickerUserSecretStateValidator.CreateRules("secret state"));
         _insertValidator.AddRules(x => x.SecretToken, TokenValidator.CreateRules("secret token"));
         _insertValidator.AddRules(x => x.DisplayName, DisplayNameValidator.CreateRules());
 
@@ -27,7 +27,7 @@ internal static class TickerUserValidation
         _updateValidator.AddRules(x => x.Snowflake, SnowflakeValidator.CreateRules());
         _updateValidator.AddRules(x => x.MailAddress, MailAddressValidator.CreateRules());
         _updateValidator.AddRules(x => x.Secret, SecretValidator.CreateRules());
-        _updateValidator.AddRules(x => x.SecretState, TickerUserSecretStatesValidator.CreateRules("secret state"));
+        _updateValidator.AddRules(x => x.SecretState, TickerUserSecretStateValidator.CreateRules("secret state"));
         _updateValidator.AddRules(x => x.SecretToken, TokenValidator.CreateRules("secret token"));
         _updateValidator.AddRules(x => x.DisplayName, DisplayNameValidator.CreateRules());
 

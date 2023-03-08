@@ -2,7 +2,19 @@
 
 Notes on some flows that are implemented.
 
-## `TickerMessage`
+## `Admission.AuthenticationRegistration`
+
+### Registration Flow
+
+1. coming soon
+
+## `Access.AccountRegistration`
+
+### Registration Flow
+
+## `Ticker.TickerMessage`
+
+1. coming soon
 
 ### Insert Flow
 
@@ -26,9 +38,9 @@ Notes on some flows that are implemented.
 1. `TickerMessage` is deleted
     1. `TickertBookmark` is deleted
 
-## `TickerUser`
+## `Ticker.TickerUser`
 
-### Secret Flow
+### Secret Confirm Flow
 
 1. `TickerUser` is created
     1. `SecretState` is set to `invalid`

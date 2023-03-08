@@ -39,7 +39,7 @@ internal sealed class TickerBookmarkManager : ITickerBookmarkManager
 
     public async Task UpdateAsync(long tickerBookmark, Action<TickerBookmark> action)
     {
-        AuthenticationIdentityValidation.EnsureSnowflake(tickerBookmark);
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(tickerBookmark);
 
         var validatedAction = (TickerBookmark @object) =>
         {

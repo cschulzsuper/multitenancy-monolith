@@ -11,4 +11,9 @@
 	  <ProjectReference Include="..\..\shared\Validation\Validation.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Access\ConcreteAnnotations\" />
+	  <Folder Include="Admission\ConcreteAnnotations\" />
+	</ItemGroup>
+
 </Project>

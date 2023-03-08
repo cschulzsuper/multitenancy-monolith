@@ -15,9 +15,31 @@ internal sealed class AuthenticationIdentityManager : IAuthenticationIdentityMan
         _repository = repository;
     }
 
+    public async Task<bool> ExistsAsync(string authenticationIdentity)
+    {
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(authenticationIdentity);
+
+        var exists = await _repository
+            .ExistsAsync(@object => @object.UniqueName == authenticationIdentity);
+
+        return exists;
+    }
+
+    public async Task<bool> ExistsAsync(string authenticationIdentity, string secret)
+    {
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(authenticationIdentity);
+
+        var exists = await _repository
+            .ExistsAsync(@object =>
+                @object.UniqueName == authenticationIdentity &&
+                @object.Secret == secret);
+
+        return exists;
+    }
+
     public async Task<AuthenticationIdentity> GetAsync(long authenticationIdentity)
     {
-        AuthenticationIdentityValidation.EnsureSnowflake(authenticationIdentity);
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(authenticationIdentity);
 
         var @object = await _repository.GetAsync(authenticationIdentity);
 
@@ -26,7 +48,7 @@ internal sealed class AuthenticationIdentityManager : IAuthenticationIdentityMan
 
     public async Task<AuthenticationIdentity> GetAsync(string authenticationIdentity)
     {
-        AuthenticationIdentityValidation.EnsureIdentity(authenticationIdentity);
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(authenticationIdentity);
 
         var @object = await _repository.GetAsync(x => x.UniqueName == authenticationIdentity);
 
@@ -35,18 +57,6 @@ internal sealed class AuthenticationIdentityManager : IAuthenticationIdentityMan
 
     public IQueryable<AuthenticationIdentity> GetQueryable()
         => _repository.GetQueryable();
-
-    public async Task<bool> ExistsAsync(string authenticationIdentity, string secret)
-    {
-        AuthenticationIdentityValidation.EnsureIdentity(authenticationIdentity);
-
-        var exists = await _repository
-            .ExistsAsync(x =>
-                x.UniqueName == authenticationIdentity &&
-                x.Secret == secret);
-
-        return exists;
-    }
 
     public async Task InsertAsync(AuthenticationIdentity @object)
     {
@@ -57,7 +67,7 @@ internal sealed class AuthenticationIdentityManager : IAuthenticationIdentityMan
 
     public async Task UpdateAsync(long authenticationIdentity, Action<AuthenticationIdentity> action)
     {
-        AuthenticationIdentityValidation.EnsureSnowflake(authenticationIdentity);
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(authenticationIdentity);
 
         var validatedAction = (AuthenticationIdentity @object) =>
         {
@@ -71,7 +81,7 @@ internal sealed class AuthenticationIdentityManager : IAuthenticationIdentityMan
 
     public async Task UpdateAsync(string authenticationIdentity, Action<AuthenticationIdentity> action)
     {
-        AuthenticationIdentityValidation.EnsureIdentity(authenticationIdentity);
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(authenticationIdentity);
 
         var validatedAction = (AuthenticationIdentity @object) =>
         {
@@ -85,14 +95,14 @@ internal sealed class AuthenticationIdentityManager : IAuthenticationIdentityMan
 
     public async Task DeleteAsync(long authenticationIdentity)
     {
-        AuthenticationIdentityValidation.EnsureSnowflake(authenticationIdentity);
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(authenticationIdentity);
 
         await _repository.DeleteOrThrowAsync(authenticationIdentity);
     }
 
     public async Task DeleteAsync(string authenticationIdentity)
     {
-        AuthenticationIdentityValidation.EnsureIdentity(authenticationIdentity);
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(authenticationIdentity);
 
         await _repository.DeleteOrThrowAsync(x => x.UniqueName == authenticationIdentity);
     }

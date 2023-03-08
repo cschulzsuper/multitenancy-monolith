@@ -37,6 +37,8 @@ public class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task Exceute()
     {
+        // TODO Rare race condition. A `ticker-bookmark-deleted` event should fix this.
+
         var tickerMessage = await TickerMessage_Create_ShouldSucceed();
 
         await TickerMessage_Delete_ShouldSucceed(tickerMessage);

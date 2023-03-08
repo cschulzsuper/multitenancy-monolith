@@ -46,7 +46,7 @@ internal sealed class BusinessObjectManager : IBusinessObjectManager
 
     public async Task UpdateAsync(long snowflake, Action<BusinessObject> action)
     {
-        AuthenticationIdentityValidation.EnsureSnowflake(snowflake);
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(snowflake);
 
         var validatedAction = (BusinessObject @object) =>
         {

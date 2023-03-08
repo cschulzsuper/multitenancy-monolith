@@ -91,7 +91,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
     [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Post_ShouldBeForbidden_WhenInvalid(int mock)
+    public async Task Put_ShouldBeUnauthorized_WhenInvalid(int mock)
     {
         // Arrange
         var validBusinessObject = "valid-business-object";

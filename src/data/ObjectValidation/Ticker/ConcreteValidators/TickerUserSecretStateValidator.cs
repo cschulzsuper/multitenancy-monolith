@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 
-public sealed class TickerUserSecretStatesValidator
+public sealed class TickerUserSecretStateValidator
 {
     private readonly static Validator<string> _validator;
 
-    static TickerUserSecretStatesValidator()
+    static TickerUserSecretStateValidator()
     {
         _validator = new Validator<string>();
         _validator.AddRules(x => x, CreateRules());
@@ -26,9 +26,9 @@ public sealed class TickerUserSecretStatesValidator
         return rules;
     }
 
-    public static void Ensure(string tickerMessagePriority)
-        => _validator.Ensure(tickerMessagePriority);
+    public static void Ensure(string tickerUserSecretState)
+        => _validator.Ensure(tickerUserSecretState);
 
-    public static ValidationResult? Validate(string tickerMessagePriority)
-        => _validator.Validate(tickerMessagePriority);
+    public static ValidationResult? Validate(string tickerUserSecretState)
+        => _validator.Validate(tickerUserSecretState);
 }

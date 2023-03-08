@@ -15,9 +15,18 @@ internal sealed class AccountGroupManager : IAccountGroupManager
         _repository = repository;
     }
 
+    public Task<bool> ExistsAsync(string accountGroup)
+    {
+        AccountGroupValidation.EnsureAccountGroup(accountGroup);
+
+        var exists = _repository.ExistsAsync(@object => @object.UniqueName == accountGroup);
+
+        return exists;
+    }
+
     public async Task<AccountGroup> GetAsync(long accountGroup)
     {
-        AccountGroupValidation.EnsureSnowflake(accountGroup);
+        AccountGroupValidation.EnsureAccountGroup(accountGroup);
 
         var @object = await _repository.GetAsync(accountGroup);
 
@@ -26,7 +35,7 @@ internal sealed class AccountGroupManager : IAccountGroupManager
 
     public async Task<AccountGroup> GetAsync(string accountGroup)
     {
-        AccountGroupValidation.EnsureIdentity(accountGroup);
+        AccountGroupValidation.EnsureAccountGroup(accountGroup);
 
         var @object = await _repository.GetAsync(x => x.UniqueName == accountGroup);
 
@@ -45,7 +54,7 @@ internal sealed class AccountGroupManager : IAccountGroupManager
 
     public async Task UpdateAsync(long accountGroup, Action<AccountGroup> action)
     {
-        AccountGroupValidation.EnsureSnowflake(accountGroup);
+        AccountGroupValidation.EnsureAccountGroup(accountGroup);
 
         var validatedAction = (AccountGroup @object) =>
         {
@@ -59,7 +68,7 @@ internal sealed class AccountGroupManager : IAccountGroupManager
 
     public async Task UpdateAsync(string accountGroup, Action<AccountGroup> action)
     {
-        AccountGroupValidation.EnsureIdentity(accountGroup);
+        AccountGroupValidation.EnsureAccountGroup(accountGroup);
 
         var validatedAction = (AccountGroup @object) =>
         {
@@ -73,14 +82,14 @@ internal sealed class AccountGroupManager : IAccountGroupManager
 
     public async Task DeleteAsync(long accountGroup)
     {
-        AccountGroupValidation.EnsureSnowflake(accountGroup);
+        AccountGroupValidation.EnsureAccountGroup(accountGroup);
 
         await _repository.DeleteOrThrowAsync(accountGroup);
     }
 
     public async Task DeleteAsync(string accountGroup)
     {
-        AccountGroupValidation.EnsureIdentity(accountGroup);
+        AccountGroupValidation.EnsureAccountGroup(accountGroup);
 
         await _repository.DeleteOrThrowAsync(x => x.UniqueName == accountGroup);
     }

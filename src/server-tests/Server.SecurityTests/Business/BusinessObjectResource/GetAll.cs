@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -70,6 +71,30 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChief)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
+    [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
+    public async Task GetAll_ShouldBeUnauthorized_WhenInvalid(int mock)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/business/business-objects");
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 }

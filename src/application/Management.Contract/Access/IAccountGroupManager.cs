@@ -7,6 +7,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 
 public interface IAccountGroupManager
 {
+    Task<bool> ExistsAsync(string accountGroup);
+
     Task<AccountGroup> GetAsync(long accountGroup);
 
     Task<AccountGroup> GetAsync(string accountGroup);
@@ -22,5 +24,4 @@ public interface IAccountGroupManager
     Task DeleteAsync(long accountGroup);
 
     Task DeleteAsync(string accountGroup);
-
 }

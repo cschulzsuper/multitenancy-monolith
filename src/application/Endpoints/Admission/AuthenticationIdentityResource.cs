@@ -1,4 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission.Requests;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Access;
+using ChristianSchulz.MultitenancyMonolith.Application.Admission.Requests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -24,16 +25,21 @@ internal static class AuthenticationIdentityResource
                 .RequireClaim("scope", "endpoints"));
 
         resource
-            .MapGet(string.Empty, GetAll)
-            .RequireAuthorization(policy => policy
-                .RequireRole("admin"))
-            .WithErrorMessage(CouldNotQueryAuthenticationIdentities);
+            .MapMethods("{authenticationIdentity}", new[] { HttpMethods.Head }, Head)
+            .AllowAnonymous()
+            .WithErrorMessage(CouldNotQueryAuthenticationIdentity);
 
         resource
             .MapGet("{authenticationIdentity}", Get)
             .RequireAuthorization(policy => policy
                 .RequireRole("admin"))
             .WithErrorMessage(CouldNotQueryAuthenticationIdentity);
+
+        resource
+            .MapGet(string.Empty, GetAll)
+            .RequireAuthorization(policy => policy
+                .RequireRole("admin"))
+            .WithErrorMessage(CouldNotQueryAuthenticationIdentities);
 
         resource
             .MapPost(string.Empty, Post)
@@ -55,6 +61,10 @@ internal static class AuthenticationIdentityResource
 
         return endpoints;
     }
+
+    private static Delegate Head =>
+        (IAuthenticationIdentityRequestHandler requestHandler, string authenticationIdentity)
+            => requestHandler.HeadAsync(authenticationIdentity);
 
     private static Delegate GetAll =>
         (IAuthenticationIdentityRequestHandler requestHandler)

@@ -39,6 +39,8 @@ public class UpdateFlow : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task Exceute()
     {
+        // TODO Rare race condition. A `ticker-bookmark-updated` event should fix this.
+
         var tickerMessage = await TickerMessage_Create_ShouldSucceed();
 
         await TickerBookmark_Update_ShouldSucceed(tickerMessage);

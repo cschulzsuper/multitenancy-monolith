@@ -24,16 +24,21 @@ internal static class AccountGroupResource
                 .RequireClaim("scope", "endpoints"));
 
         resource
-            .MapGet(string.Empty, GetAll)
-            .RequireAuthorization(policy => policy
-                .RequireRole("admin"))
-            .WithErrorMessage(CouldNotQueryAccountGroups);
+            .MapMethods("{accountGroup}", new[] { HttpMethods.Head }, Head)
+            .AllowAnonymous()
+            .WithErrorMessage(CouldNotQueryAccountGroup);
 
         resource
             .MapGet("{accountGroup}", Get)
             .RequireAuthorization(policy => policy
                 .RequireRole("admin"))
             .WithErrorMessage(CouldNotQueryAccountGroup);
+
+        resource
+            .MapGet(string.Empty, GetAll)
+            .RequireAuthorization(policy => policy
+                .RequireRole("admin"))
+            .WithErrorMessage(CouldNotQueryAccountGroups);
 
         resource
             .MapPost(string.Empty, Post)
@@ -56,13 +61,17 @@ internal static class AccountGroupResource
         return endpoints;
     }
 
-    private static Delegate GetAll =>
-        (IAccountGroupRequestHandler requestHandler)
-            => requestHandler.GetAll();
+    private static Delegate Head =>
+        (IAccountGroupRequestHandler requestHandler, string accountGroup)
+            => requestHandler.HeadAsync(accountGroup);
 
     private static Delegate Get =>
         (IAccountGroupRequestHandler requestHandler, string accountGroup)
             => requestHandler.GetAsync(accountGroup);
+
+    private static Delegate GetAll =>
+        (IAccountGroupRequestHandler requestHandler)
+            => requestHandler.GetAll();
 
     private static Delegate Post =>
         (IAccountGroupRequestHandler requestHandler, AccountGroupRequest request)

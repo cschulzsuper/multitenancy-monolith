@@ -41,10 +41,10 @@ internal static class AccountMemberValidation
     public static void EnsureUpdatable(AccountMember @object)
         => _updateValidator.Ensure(@object);
 
-    public static void EnsureSnowflake(long accountMember)
+    public static void EnsureAccountMember(long accountMember)
         => _accountMemberSnowflakeValidator.Ensure(accountMember);
 
-    public static void EnsureMember(string accountMember)
+    public static void EnsureAccountMember(string accountMember)
         => _accountMemberUniqueNameValidator.Ensure(accountMember);
 
 }

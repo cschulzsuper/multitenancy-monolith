@@ -46,7 +46,7 @@ internal sealed class DistinctionTypeManager : IDistinctionTypeManager
 
     public async Task UpdateAsync(long snowflake, Action<DistinctionType> action)
     {
-        AuthenticationIdentityValidation.EnsureSnowflake(snowflake);
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(snowflake);
 
         var validatedAction = (DistinctionType distinctionType) =>
         {

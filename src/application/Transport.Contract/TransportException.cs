@@ -13,7 +13,7 @@ public sealed class TransportException : Exception
     {
         var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
 
-        var exception = new TransportException($"Object '{objectType}' with unique name '{1}' not found.");
+        var exception = new TransportException($"Object '{objectType}' with unique name '{uniqueName}' not found.");
 
         exception.Data["error-code"] = "object-not-found";
 

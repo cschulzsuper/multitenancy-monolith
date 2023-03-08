@@ -98,6 +98,7 @@ I said monolith, but with the latests features related to a ticker system, it is
 ## Authentictaion and authorization refactoring
   * /49 Introduction of prefixes for groups, members and identities. The new resources are `account-groups`, `account-members` and `authentication-identities`. Renaming of all related classes. https://github.com/cschulzsuper/multitenancy-monolith/commit/f1d7fd2e269451b1dd20c3cb8a7441e65f15b4a9
   * /50 The missing `account-groups` endpoint is implemented. With tests and some additional renaming that was forgotten in the previous commit. 
+  * /51 `HTTP HEAD` requests check for used `account-groups` and `authentication-identities`. Additionally, registration object definition for  `authentication-identity` and `account-groups`. They will be used in registration flows.
 
 
 # Current

@@ -45,7 +45,7 @@ internal sealed class TickerMessageManager : ITickerMessageManager
 
     public async Task UpdateAsync(long tickerMessage, Action<TickerMessage> action)
     {
-        AuthenticationIdentityValidation.EnsureSnowflake(tickerMessage);
+        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(tickerMessage);
 
         var validatedAction = (TickerMessage @object) =>
         {

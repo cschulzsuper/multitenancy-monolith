@@ -1,6 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Access.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Access.Responses;
 using ChristianSchulz.MultitenancyMonolith.Objects.Access;
+using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +14,16 @@ internal sealed class AccountGroupRequestHandler : IAccountGroupRequestHandler
     public AccountGroupRequestHandler(IAccountGroupManager accountGroupManager)
     {
         _accountGroupManager = accountGroupManager;
+    }
+
+    public async Task HeadAsync(string accountGroup)
+    {
+        var exists = await _accountGroupManager.ExistsAsync(accountGroup);
+
+        if (!exists)
+        {
+            TransportException.ThrowNotFound<AccountGroup>(accountGroup);
+        }
     }
 
     public async Task<AccountGroupResponse> GetAsync(string accountGroup)

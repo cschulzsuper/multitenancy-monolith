@@ -17,7 +17,7 @@ internal sealed class AccountMemberManager : IAccountMemberManager
 
     public async Task<AccountMember> GetAsync(long accountMember)
     {
-        AccountMemberValidation.EnsureSnowflake(accountMember);
+        AccountMemberValidation.EnsureAccountMember(accountMember);
 
         var @object = await _repository.GetAsync(accountMember);
 
@@ -26,7 +26,7 @@ internal sealed class AccountMemberManager : IAccountMemberManager
 
     public async Task<AccountMember> GetAsync(string accountMember)
     {
-        AccountMemberValidation.EnsureMember(accountMember);
+        AccountMemberValidation.EnsureAccountMember(accountMember);
 
         var @object = await _repository.GetAsync(x => x.UniqueName == accountMember);
 
@@ -35,7 +35,7 @@ internal sealed class AccountMemberManager : IAccountMemberManager
 
     public async Task<AccountMember?> GetOrDefaultAsync(string accountMember)
     {
-        AccountMemberValidation.EnsureMember(accountMember);
+        AccountMemberValidation.EnsureAccountMember(accountMember);
 
         var @object = await _repository.GetOrDefaultAsync(x => x.UniqueName == accountMember);
 
@@ -54,7 +54,7 @@ internal sealed class AccountMemberManager : IAccountMemberManager
 
     public async Task UpdateAsync(long accountMember, Action<AccountMember> action)
     {
-        AccountMemberValidation.EnsureSnowflake(accountMember);
+        AccountMemberValidation.EnsureAccountMember(accountMember);
 
         var validatedAction = (AccountMember @object) =>
         {
@@ -68,7 +68,7 @@ internal sealed class AccountMemberManager : IAccountMemberManager
 
     public async Task UpdateAsync(string accountMember, Action<AccountMember> action)
     {
-        AccountMemberValidation.EnsureMember(accountMember);
+        AccountMemberValidation.EnsureAccountMember(accountMember);
 
         var validatedAction = (AccountMember @object) =>
         {
@@ -82,14 +82,14 @@ internal sealed class AccountMemberManager : IAccountMemberManager
 
     public async Task DeleteAsync(long accountMember)
     {
-        AccountMemberValidation.EnsureSnowflake(accountMember);
+        AccountMemberValidation.EnsureAccountMember(accountMember);
 
         await _repository.DeleteOrThrowAsync(accountMember);
     }
 
     public async Task DeleteAsync(string accountMember)
     {
-        AccountMemberValidation.EnsureMember(accountMember);
+        AccountMemberValidation.EnsureAccountMember(accountMember);
 
         await _repository.DeleteOrThrowAsync(x => x.UniqueName == accountMember);
     }

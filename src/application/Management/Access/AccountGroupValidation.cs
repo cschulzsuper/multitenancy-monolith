@@ -35,10 +35,10 @@ internal static class AccountGroupValidation
     public static void EnsureUpdatable(AccountGroup @object)
         => _updateValidator.Ensure(@object);
 
-    internal static void EnsureSnowflake(long accountGroup)
+    internal static void EnsureAccountGroup(long accountGroup)
         => _accountGroupSnowflakeValidator.Ensure(accountGroup);
 
-    internal static void EnsureIdentity(string accountGroup)
+    internal static void EnsureAccountGroup(string accountGroup)
         => _accountGroupUniqueNameValidator.Ensure(accountGroup);
 
 }

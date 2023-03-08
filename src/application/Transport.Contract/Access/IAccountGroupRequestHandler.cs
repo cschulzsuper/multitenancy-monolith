@@ -7,6 +7,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 
 public interface IAccountGroupRequestHandler
 {
+    Task HeadAsync(string accountGroup);
+
     Task<AccountGroupResponse> GetAsync(string accountGroup);
 
     IQueryable<AccountGroupResponse> GetAll();

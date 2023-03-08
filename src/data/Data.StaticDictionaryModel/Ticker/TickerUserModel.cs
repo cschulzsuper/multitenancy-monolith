@@ -21,7 +21,7 @@ public class TickerUserModel : IModel<TickerUser>
         
         if (mailAddressConflict)
         {
-            ModelException.ThrowMailAddressConflict<TickerUser>(entity.MailAddress);
+            ModelException.ThrowPropertyValueConflict<TickerUser>(nameof(entity.MailAddress), entity.MailAddress);
         }
     }
 }

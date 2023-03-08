@@ -7,13 +7,15 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
 public interface IAuthenticationIdentityManager
 {
+    Task<bool> ExistsAsync(string authenticationIdentity);
+    
+    Task<bool> ExistsAsync(string authenticationIdentity, string secret);
+
     Task<AuthenticationIdentity> GetAsync(long authenticationIdentity);
 
     Task<AuthenticationIdentity> GetAsync(string authenticationIdentity);
 
     IQueryable<AuthenticationIdentity> GetQueryable();
-
-    Task<bool> ExistsAsync(string authenticationIdentity, string secret);
 
     Task InsertAsync(AuthenticationIdentity @object);
 
@@ -23,6 +25,5 @@ public interface IAuthenticationIdentityManager
 
     Task DeleteAsync(long authenticationIdentity);
 
-    Task DeleteAsync(string authenticationIdentity);
-
+    Task DeleteAsync(string authenticationIdentity);    
 }

@@ -1,5 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission.Requests;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Access;
+using ChristianSchulz.MultitenancyMonolith.Application.Admission.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission.Responses;
+using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +15,17 @@ internal sealed class AuthenticationIdentityRequestHandler : IAuthenticationIden
     public AuthenticationIdentityRequestHandler(IAuthenticationIdentityManager authenticationIdentityManager)
     {
         _authenticationIdentityManager = authenticationIdentityManager;
+    }
+
+
+    public async Task HeadAsync(string authenticationIdentity)
+    {
+        var exists = await _authenticationIdentityManager.ExistsAsync(authenticationIdentity);
+
+        if (!exists)
+        {
+            TransportException.ThrowNotFound<AuthenticationIdentity>(authenticationIdentity);
+        }
     }
 
     public async Task<AuthenticationIdentityResponse> GetAsync(string authenticationIdentity)

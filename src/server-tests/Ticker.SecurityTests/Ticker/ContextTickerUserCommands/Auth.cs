@@ -95,8 +95,6 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         // Act
         var response = await client.SendAsync(request);
 
-        var x = await response.Content.ReadAsStringAsync();
-
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);

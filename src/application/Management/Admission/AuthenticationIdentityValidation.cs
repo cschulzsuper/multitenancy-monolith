@@ -39,10 +39,10 @@ internal static class AuthenticationIdentityValidation
     public static void EnsureUpdatable(AuthenticationIdentity @object)
         => _updateValidator.Ensure(@object);
 
-    internal static void EnsureSnowflake(long authenticationIdentity)
+    internal static void EnsureAuthenticationIdentity(long authenticationIdentity)
         => _authenticationIdentitySnowflakeValidator.Ensure(authenticationIdentity);
 
-    internal static void EnsureIdentity(string authenticationIdentity)
+    internal static void EnsureAuthenticationIdentity(string authenticationIdentity)
         => _authenticationIdentityUniqueNameValidator.Ensure(authenticationIdentity);
 
 }
