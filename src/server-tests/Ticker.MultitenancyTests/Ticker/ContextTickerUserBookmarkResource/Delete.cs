@@ -45,7 +45,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerBookmark);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/me/bookmarks/{existingTickerBookmark.TickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/_/bookmarks/{existingTickerBookmark.TickerMessage}");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader(MockWebApplication.AccountGroup2);
 
         var client = _factory.CreateClient();

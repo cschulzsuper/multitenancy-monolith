@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Ticker;
 
-public class TickerMessageModel : IModel<TickerMessage>
+public sealed class TickerMessageModel : IModel<TickerMessage>
 {
     public static object SetSnowflake(TickerMessage entity, object snowflake)
         => entity.Snowflake = (long)snowflake;

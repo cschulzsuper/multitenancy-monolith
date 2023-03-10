@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger;
 
-public class Startup
+public sealed class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {

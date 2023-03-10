@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
-internal sealed class AuthenticationIdentityCommandHandler : IAuthenticationIdentityCommandHandler
+internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuthenticationIdentityCommandHandler
 {
     private readonly IAuthenticationIdentityManager _authenticationIdentityManager;
     private readonly IAuthenticationIdentityVerificationManager _identityVerificationManager;
     private readonly IAllowedClientsProvider _allowedClientsProvider;
 
-    public AuthenticationIdentityCommandHandler(
+    public ContextAuthenticationIdentityCommandHandler(
         IAuthenticationIdentityManager authenticationIdentityManager,
         IAuthenticationIdentityVerificationManager identityVerificationManager,
         IAllowedClientsProvider allowedClientsProvider)
@@ -23,18 +23,16 @@ internal sealed class AuthenticationIdentityCommandHandler : IAuthenticationIden
         _allowedClientsProvider = allowedClientsProvider;
     }
 
-    public async Task<ClaimsIdentity> AuthAsync(AuthenticationIdentityAuthCommand command)
+    public async Task<ClaimsIdentity> AuthAsync(ContextAuthenticationIdentityAuthCommand command)
     {
         var clientName = command.ClientName;
-
         if (_allowedClientsProvider.Get().All(x => x.UniqueName != clientName))
         {
             TransportException.ThrowSecurityViolation($"Client name '{clientName}' is not allowed to sign in");
         }
 
-        var found = await _authenticationIdentityManager.ExistsAsync(command.AuthenticationIdentity, command.Secret);
-
-        if (!found)
+        var authenticationIdentityExists = await _authenticationIdentityManager.ExistsAsync(command.AuthenticationIdentity, command.Secret);
+        if (!authenticationIdentityExists)
         {
             TransportException.ThrowSecurityViolation($"Could not match authentication identity '{command.AuthenticationIdentity}' against secret");
         }

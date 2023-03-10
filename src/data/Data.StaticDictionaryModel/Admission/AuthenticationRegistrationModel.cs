@@ -1,11 +1,12 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Access;
+using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Access;
+namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Admission;
 
-public class AuthenticationRegistrationModel : IModel<AuthenticationRegistration>
+public sealed class AuthenticationRegistrationModel : IModel<AuthenticationRegistration>
 {
     public static object SetSnowflake(AuthenticationRegistration @object, object snowflake)
         => @object.Snowflake = (long)snowflake;
@@ -21,6 +22,12 @@ public class AuthenticationRegistrationModel : IModel<AuthenticationRegistration
         if (authenticationIdentityConflict)
         {
             ModelException.ThrowPropertyValueConflict<AccountGroup>(nameof(@object.AuthenticationIdentity), @object.AuthenticationIdentity);
+        }
+
+        var processTokenConflict = data.Any(x => x.ProcessToken == @object.ProcessToken);
+        if (processTokenConflict)
+        {
+            ModelException.ThrowPropertyValueConflict<AccountGroup>(nameof(@object.ProcessToken), @object.ProcessToken);
         }
     }
 }

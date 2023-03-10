@@ -43,7 +43,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerUser);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/confirm");
 
         var confirmRequest = new
         {

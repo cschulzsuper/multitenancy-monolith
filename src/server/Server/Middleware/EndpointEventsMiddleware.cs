@@ -4,7 +4,7 @@ using ChristianSchulz.MultitenancyMonolith.Events;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Middleware;
 
-public class EndpointEventsMiddleware
+public sealed class EndpointEventsMiddleware
 {
     private readonly RequestDelegate _next;
 

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
 
-public class ContextTickerUserConfirmCommand
+public sealed class ContextTickerUserConfirmCommand
 {
     [Display(Name = "client name")]
     [Required]

@@ -1,4 +1,4 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
+﻿namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Access.ConcreteValidators;
 
 public static class AccountRegistrationProcessStates
 {

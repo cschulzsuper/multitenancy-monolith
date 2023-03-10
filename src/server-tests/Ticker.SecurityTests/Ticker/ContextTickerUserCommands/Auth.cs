@@ -25,7 +25,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldSucceed_WhenValid(string mail, string secret)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/auth");
 
         var authRequest = new
         {
@@ -52,7 +52,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldBeForbidden_WhenSecretStateInvalid(string mail, string secret)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/auth");
 
         var authRequest = new
         {
@@ -78,7 +78,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldBeForbidden_WhenClientAbsent()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/auth");
 
         var authRequest = new
         {
@@ -104,7 +104,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldBeForbidden_WhenGroupAbsent()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/auth");
 
         var authRequest = new
         {
@@ -130,7 +130,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldBeForbidden_WhenTickerUserAbsent()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/auth");
 
         var authRequest = new
         {
@@ -156,7 +156,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldBeForbidden_WhenSecretIncorrect()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/auth");
 
         var authRequest = new
         {

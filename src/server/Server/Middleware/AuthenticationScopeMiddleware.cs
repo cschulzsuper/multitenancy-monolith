@@ -9,10 +9,7 @@ using System.Text.Json;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Middleware;
 
-/// <summary>
-/// A middleware for handling CORS.
-/// </summary>
-public class AuthenticationScopeMiddleware
+public sealed class AuthenticationScopeMiddleware
 {
     private readonly RequestDelegate _next;
 

@@ -4,6 +4,6 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Administration;
 
 internal static class ObjectTypeCustomPropertyRequestValidation
 {
-    internal static void EnsureUniqueName(string uniqueName)
+    public static void EnsureUniqueName(string uniqueName)
         => UniqueNameValidator.Ensure(uniqueName);
 }

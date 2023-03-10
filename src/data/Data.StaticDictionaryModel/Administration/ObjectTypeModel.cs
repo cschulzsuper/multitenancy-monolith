@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Administration;
 
-public class ObjectTypeModel : IModel<ObjectType>
+public sealed class ObjectTypeModel : IModel<ObjectType>
 {
     public static object SetSnowflake(ObjectType entity, object snowflake)
         => entity.Snowflake = (long)snowflake;

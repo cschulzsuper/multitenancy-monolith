@@ -1,6 +1,6 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker.Responses;
 
-public class TickerMessageResponse
+public sealed class TickerMessageResponse
 {
     public required long Snowflake { get; set; }
 

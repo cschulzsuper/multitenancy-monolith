@@ -77,7 +77,7 @@ internal sealed class AccountGroupManager : IAccountGroupManager
             AccountGroupValidation.EnsureUpdatable(@object);
         };
 
-        await _repository.UpdateOrThrowAsync(x => x.UniqueName == accountGroup, validatedAction);
+        await _repository.UpdateOrThrowAsync(@object => @object.UniqueName == accountGroup, validatedAction);
     }
 
     public async Task DeleteAsync(long accountGroup)
@@ -91,6 +91,6 @@ internal sealed class AccountGroupManager : IAccountGroupManager
     {
         AccountGroupValidation.EnsureAccountGroup(accountGroup);
 
-        await _repository.DeleteOrThrowAsync(x => x.UniqueName == accountGroup);
+        await _repository.DeleteOrThrowAsync(@object => @object.UniqueName == accountGroup);
     }
 }

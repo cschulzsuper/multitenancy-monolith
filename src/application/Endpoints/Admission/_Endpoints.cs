@@ -15,6 +15,7 @@ public static class _Endpoints
 
         authentication.MapAuthenticationIdentityCommands();
         authentication.MapAuthenticationIdentityResource();
+        authentication.MapAuthenticationRegistrationCommands();
 
         return endpoints;
     }

@@ -33,7 +33,7 @@ public sealed class ModelException : Exception
     }
 
     [DoesNotReturn]
-    public static void ThrowPropertyValueConflict<TEntity>(string propertyName, string propertyValue)
+    public static void ThrowPropertyValueConflict<TEntity>(string propertyName, object propertyValue)
     {
         var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
 
@@ -64,6 +64,17 @@ public sealed class ModelException : Exception
         var exception = new ModelException($"Object '{objectType}' property '{propertyName}' has incorrect type.");
 
         exception.Data["error-code"] = "object-invalid";
+
+        throw exception;
+    }
+
+    internal static void ThrowSnowflakeConflict<TEntity>(long snowflake)
+    {
+        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+
+        var exception = new ModelException($"Snowflake '{snowflake}' of object '{objectType}' causes conflict.");
+
+        exception.Data["error-code"] = "object-conflict";
 
         throw exception;
     }

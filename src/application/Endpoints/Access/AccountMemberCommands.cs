@@ -19,7 +19,7 @@ internal static class AccountMemberCommands
             .WithTags("Account Member Commands");
 
         commands
-            .MapPost("/me/auth", Auth)
+            .MapPost("/_/auth", Auth)
             .RequireAuthorization(policy => policy
                 .RequireClaim("badge", "identity"))
             .WithErrorMessage(CouldNotAuthAccountMember)
@@ -27,7 +27,7 @@ internal static class AccountMemberCommands
             .AddEndpointFilter<BadgeResultEndpointFilter>();
 
         commands
-            .MapPost("/me/verify", Verify)
+            .MapPost("/_/verify", Verify)
             .RequireAuthorization(policy => policy
                 .RequireClaim("badge", "member"))
             .WithErrorMessage(CouldNotVerifyAccountMember);
@@ -36,10 +36,10 @@ internal static class AccountMemberCommands
     }
 
     private static Delegate Auth =>
-        (IAccountMemberCommandHandler commandHandler, AccountMemberAuthCommand command)
+        (IContextAccountMemberCommandHandler commandHandler, ContextAccountMemberAuthCommand command)
             => commandHandler.AuthAsync(command);
 
     private static Delegate Verify =>
-        (IAccountMemberCommandHandler commandHandler)
+        (IContextAccountMemberCommandHandler commandHandler)
             => commandHandler.Verify();
 }

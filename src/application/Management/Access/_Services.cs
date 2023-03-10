@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission;
+using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
@@ -11,6 +12,7 @@ public static class _Services
         services.AddScoped<IAccountGroupManager, AccountGroupManager>();
         services.AddScoped<IAccountMemberManager, AccountMemberManager>();
         services.AddScoped<IAccountMemberVerificationManager, AccountMemberVerificationManager>();
+        services.AddScoped<IAccountRegistrationManager, AccountRegistrationManager>();
 
         return services;
     }

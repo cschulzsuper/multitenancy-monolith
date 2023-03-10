@@ -17,7 +17,7 @@ public static class ContextTickerUserCommands
     public static IEndpointRouteBuilder MapContextTickerUserCommands(this IEndpointRouteBuilder endpoints)
     {
         var commands = endpoints
-            .MapGroup("/ticker-users/me")
+            .MapGroup("/ticker-users/_")
             .WithTags("Context Ticker User Commands");
 
         commands
@@ -29,8 +29,7 @@ public static class ContextTickerUserCommands
         commands
             .MapPost("/confirm", Confirm)
             .WithErrorMessage(CouldNotConfirmTickerUser)
-            .Authenticates()
-            .AddEndpointFilter<BadgeResultEndpointFilter>();
+            .Authenticates();
 
         commands
             .MapPost("/verify", Verify)

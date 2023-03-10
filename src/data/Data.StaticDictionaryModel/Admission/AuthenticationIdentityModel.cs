@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Admission;
 
-public class AuthenticationIdentityModel : IModel<AuthenticationIdentity>
+public sealed class AuthenticationIdentityModel : IModel<AuthenticationIdentity>
 {
     public static object SetSnowflake(AuthenticationIdentity entity, object snowflake)
         => entity.Snowflake = (long)snowflake;

@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
-public interface IAuthenticationIdentityCommandHandler
+public interface IContextAuthenticationIdentityCommandHandler
 {
-    Task<ClaimsIdentity> AuthAsync(AuthenticationIdentityAuthCommand command);
+    Task<ClaimsIdentity> AuthAsync(ContextAuthenticationIdentityAuthCommand command);
 
     void Verify();
 }

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 
-public interface IAccountMemberCommandHandler
+public interface IContextAccountMemberCommandHandler
 {
-    Task<ClaimsIdentity> AuthAsync(AccountMemberAuthCommand command);
+    Task<ClaimsIdentity> AuthAsync(ContextAccountMemberAuthCommand command);
     void Verify();
 }

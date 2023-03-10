@@ -25,7 +25,7 @@ using _Configure = ChristianSchulz.MultitenancyMonolith.Server.Ticker.EventBus._
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 
-public class Startup
+public sealed class Startup
 {
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;

@@ -8,8 +8,9 @@ public static class _Services
 {
     public static IServiceCollection AddAdmissionTransport(this IServiceCollection services)
     {
-        services.AddScoped<IAuthenticationIdentityCommandHandler, AuthenticationIdentityCommandHandler>();
         services.AddScoped<IAuthenticationIdentityRequestHandler, AuthenticationIdentityRequestHandler>();
+        services.AddScoped<IContextAuthenticationIdentityCommandHandler, ContextAuthenticationIdentityCommandHandler>();
+        services.AddScoped<IContextAuthenticationRegistrationCommandHandler, ContextAuthenticationRegistrationCommandHandler>();
 
         return services;
     }

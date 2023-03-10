@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Business;
 
-public class BusinessObjectModel : IModel<BusinessObject>
+public sealed class BusinessObjectModel : IModel<BusinessObject>
 {
     public static object SetSnowflake(BusinessObject entity, object snowflake)
         => entity.Snowflake = (long)snowflake;

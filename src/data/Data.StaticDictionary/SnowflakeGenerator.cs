@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
-public class SnowflakeGenerator
+public sealed class SnowflakeGenerator
 {
     private readonly IdGenerator _idGenerator;
 

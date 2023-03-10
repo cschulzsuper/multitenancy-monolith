@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker.Requests;
 
-public class TickerMessageRequest
+public sealed class TickerMessageRequest
 {
     [Display(Name = "text")]
     [TickerMessageText]

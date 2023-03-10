@@ -39,6 +39,7 @@ public static class _Services
     public static IServiceCollection AddStaticDictionaryAdmissionData(this IServiceCollection services)
     {
         services.AddScoped(CreateRepository<AuthenticationIdentityModel, AuthenticationIdentity>);
+        services.AddScoped(CreateRepository<AuthenticationRegistrationModel, AuthenticationRegistration>);
 
         return services;
     }
@@ -47,6 +48,7 @@ public static class _Services
     {
         services.AddScoped(CreateRepository<AccountGroupModel, AccountGroup>);
         services.AddScoped(CreateRepository<AccountMemberModel, AccountMember>);
+        services.AddScoped(CreateRepository<AccountRegistrationModel, AccountRegistration>);
 
         return services;
     }

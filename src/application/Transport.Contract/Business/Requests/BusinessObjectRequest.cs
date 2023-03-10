@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Business.Requests;
 
-public class BusinessObjectRequest
+public sealed class BusinessObjectRequest
 {
     [UniqueName]
     public required string UniqueName { get; init; }

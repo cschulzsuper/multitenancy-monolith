@@ -19,13 +19,13 @@ internal static class IdentitySignInEndpoints
             .WithTags("Authentication Identity Commands");
 
         commands
-            .MapPost("/me/auth", Auth)
+            .MapPost("/_/auth", Auth)
             .WithErrorMessage(CouldNotSignInAuthenticationIdentity)
             .Authenticates()
             .AddEndpointFilter<BadgeResultEndpointFilter>();
 
         commands
-            .MapPost("/me/verify", Verify)
+            .MapPost("/_/verify", Verify)
             .RequireAuthorization(policy => policy
                 .RequireClaim("badge", "identity"))
             .WithErrorMessage(CouldNotVerifyAuthenticationIdentity);
@@ -34,10 +34,10 @@ internal static class IdentitySignInEndpoints
     }
 
     private static Delegate Auth =>
-        (IAuthenticationIdentityCommandHandler commandHandler, AuthenticationIdentityAuthCommand command)
+        (IContextAuthenticationIdentityCommandHandler commandHandler, ContextAuthenticationIdentityAuthCommand command)
             => commandHandler.AuthAsync(command);
     private static Delegate Verify =>
-        (IAuthenticationIdentityCommandHandler commandHandler)
+        (IContextAuthenticationIdentityCommandHandler commandHandler)
             => commandHandler.Verify();
 
 }

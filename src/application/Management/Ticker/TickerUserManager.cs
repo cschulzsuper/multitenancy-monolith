@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
-public class TickerUserManager : ITickerUserManager
+internal sealed class TickerUserManager : ITickerUserManager
 {
     private readonly IRepository<TickerUser> _repository;
 

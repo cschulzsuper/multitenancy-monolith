@@ -20,7 +20,7 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
     public async Task Verify_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/me/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/_/verify");
 
         var client = _factory.CreateClient();
 
@@ -37,7 +37,7 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
     public async Task Verify_ShouldSucceed_WhenValid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/me/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/_/verify");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -54,7 +54,7 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
     public async Task Verify_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/me/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/_/verify");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -73,7 +73,7 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
     public async Task Verify_ShouldBeUnauthorized_WhenInvalid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/me/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/_/verify");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();

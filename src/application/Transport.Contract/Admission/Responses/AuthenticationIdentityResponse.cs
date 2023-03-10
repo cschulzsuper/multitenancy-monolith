@@ -1,6 +1,6 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Admission.Responses;
 
-public class AuthenticationIdentityResponse
+public sealed class AuthenticationIdentityResponse
 {
     public required string UniqueName { get; init; }
 

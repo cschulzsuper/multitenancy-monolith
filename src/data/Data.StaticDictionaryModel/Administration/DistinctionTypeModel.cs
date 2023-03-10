@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Administration;
 
-public class DistinctionTypeModel : IModel<DistinctionType>
+public sealed class DistinctionTypeModel : IModel<DistinctionType>
 {
     public static object SetSnowflake(DistinctionType entity, object snowflake)
         => entity.Snowflake = (long)snowflake;

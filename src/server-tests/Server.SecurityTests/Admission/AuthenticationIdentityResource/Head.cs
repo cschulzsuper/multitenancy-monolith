@@ -68,7 +68,7 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
     [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Head_ShouldBeUnauthorized_WhenInvalid(int mock)
+    public async Task Head_ShouldFail_WhenInvalid(int mock)
     {
         // Arrange
         var validAuthenticationIdentity = "valid-authentication-identity";

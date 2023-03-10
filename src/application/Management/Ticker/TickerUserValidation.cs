@@ -38,16 +38,16 @@ internal static class TickerUserValidation
         _tickerUserMailAddressValidator.AddRules(x => x, MailAddressValidator.CreateRules("ticker user"));
     }
 
-    internal static void EnsureInsertable(TickerUser ticketUser)
+    public static void EnsureInsertable(TickerUser ticketUser)
         => _insertValidator.Ensure(ticketUser);
 
     public static void EnsureUpdatable(TickerUser ticketUser)
         => _updateValidator.Ensure(ticketUser);
 
-    internal static void EnsureTickerUser(long ticketUser)
+    public static void EnsureTickerUser(long ticketUser)
         => _tickerUserSnowflakeValidator.Ensure(ticketUser);
 
-    internal static void EnsureTickerUser(string ticketUser)
+    public static void EnsureTickerUser(string ticketUser)
         => _tickerUserMailAddressValidator.Ensure(ticketUser);
 
 }

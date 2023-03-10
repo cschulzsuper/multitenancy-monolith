@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
 
-public class ContextTickerUserPostCommand
+public sealed class ContextTickerUserPostCommand
 {
     [Display(Name = "text")]
     [TickerMessageText]

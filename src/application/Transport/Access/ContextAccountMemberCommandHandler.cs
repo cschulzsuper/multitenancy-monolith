@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 
-internal sealed class AccountMemberCommandHandler : IAccountMemberCommandHandler
+internal sealed class ContextAccountMemberCommandHandler : IContextAccountMemberCommandHandler
 {
     private readonly IAccountMemberManager _accountMemberManager;
     private readonly IAccountMemberVerificationManager _memberVerificationManager;
     private readonly IAllowedClientsProvider _allowedClientsProvider;
     private readonly ClaimsPrincipal _user;
 
-    public AccountMemberCommandHandler(
+    public ContextAccountMemberCommandHandler(
         IAccountMemberManager accountMemberManager,
         IAccountMemberVerificationManager accountMemberVerificationManager,
         IAllowedClientsProvider allowedClientsProvider,
@@ -27,7 +27,7 @@ internal sealed class AccountMemberCommandHandler : IAccountMemberCommandHandler
         _user = user;
     }
 
-    public async Task<ClaimsIdentity> AuthAsync(AccountMemberAuthCommand command)
+    public async Task<ClaimsIdentity> AuthAsync(ContextAccountMemberAuthCommand command)
     {
         var clientName = command.ClientName;
 
@@ -48,9 +48,8 @@ internal sealed class AccountMemberCommandHandler : IAccountMemberCommandHandler
         }
 
         var authenticationIdentity = _user.GetClaim("identity");
-        var authenticationIdentityFound = accountMember.AuthenticationIdentities.Any(x => x.UniqueName == authenticationIdentity);
-
-        if (!authenticationIdentityFound)
+        var authenticationIdentityPermitted = accountMember.AuthenticationIdentities.Any(x => x.UniqueName == authenticationIdentity);
+        if (!authenticationIdentityPermitted)
         {
             TransportException.ThrowSecurityViolation($"Can not sign in as account member '{command.AccountMember}' in account group '{command.AccountGroup}'.");
         }

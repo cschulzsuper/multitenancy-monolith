@@ -7,7 +7,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
     DisplayName = "Ticker User",
     Area = "ticker",
     Collection = "ticker-users")]
-public class TickerUser : ICloneable
+public sealed class TickerUser : ICloneable
 {
     public object Clone()
         => MemberwiseClone();

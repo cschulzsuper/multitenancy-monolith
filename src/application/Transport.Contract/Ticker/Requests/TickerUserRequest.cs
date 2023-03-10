@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker.Requests;
 
-public class TickerUserRequest
+public sealed class TickerUserRequest
 {
     [MailAddress]
     public required string MailAddress { get; set; }

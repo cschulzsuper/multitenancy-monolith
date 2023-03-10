@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration.Requests;
 
-public class ObjectTypeCustomPropertyRequest
+public sealed class ObjectTypeCustomPropertyRequest
 {
     [UniqueName]
     public required string UniqueName { get; init; }

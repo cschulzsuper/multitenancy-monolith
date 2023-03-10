@@ -33,8 +33,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postAuthenticationIdentity = new
         {
             UniqueName = $"post-authentication-identity-{Guid.NewGuid()}",
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
+            MailAddress = "info@localhost"
         };
 
         request.Content = JsonContent.Create(postAuthenticationIdentity);
@@ -60,8 +59,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .GetQueryable()
                 .SingleOrDefault(x =>
                     x.UniqueName == postAuthenticationIdentity.UniqueName &&
-                    x.MailAddress == postAuthenticationIdentity.MailAddress &&
-                    x.Secret == postAuthenticationIdentity.Secret);
+                    x.MailAddress == postAuthenticationIdentity.MailAddress);
 
             Assert.NotNull(createdIdentity);
         }
@@ -91,8 +89,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postAuthenticationIdentity = new
         {
             existingAuthenticationIdentity.UniqueName,
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
+            MailAddress = "info@localhost"
         };
 
         request.Content = JsonContent.Create(postAuthenticationIdentity);
@@ -131,8 +128,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postAuthenticationIdentity = new
         {
             UniqueName = (string?)null,
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
+            MailAddress = "info@localhost"
         };
 
         request.Content = JsonContent.Create(postAuthenticationIdentity);
@@ -166,8 +162,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postAuthenticationIdentity = new
         {
             UniqueName = string.Empty,
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
+            MailAddress = "info@localhost"
         };
 
         request.Content = JsonContent.Create(postAuthenticationIdentity);
@@ -201,8 +196,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postAuthenticationIdentity = new
         {
             UniqueName = new string(Enumerable.Repeat('a', 141).ToArray()),
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
+            MailAddress = "info@localhost"
         };
 
         request.Content = JsonContent.Create(postAuthenticationIdentity);
@@ -236,113 +230,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postAuthenticationIdentity = new
         {
             UniqueName = "Invalid",
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
-        };
-
-        request.Content = JsonContent.Create(postAuthenticationIdentity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-
-        using var scope = _factory.Services.CreateScope();
-
-        var createdIdentity = scope.ServiceProvider
-            .GetRequiredService<IRepository<AuthenticationIdentity>>()
-            .GetQueryable()
-            .SingleOrDefault(x => x.UniqueName == postAuthenticationIdentity.UniqueName);
-
-        Assert.Null(createdIdentity);
-    }
-
-    [Fact]
-    public async Task Post_ShouldFail_WhenSecretNull()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
-
-        var postAuthenticationIdentity = new
-        {
-            UniqueName = "post-authentication-identity",
-            MailAddress = "info@localhost",
-            Secret = (string?)null,
-        };
-
-        request.Content = JsonContent.Create(postAuthenticationIdentity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-
-        using var scope = _factory.Services.CreateScope();
-
-        var createdIdentity = scope.ServiceProvider
-            .GetRequiredService<IRepository<AuthenticationIdentity>>()
-            .GetQueryable()
-            .SingleOrDefault(x => x.UniqueName == postAuthenticationIdentity.UniqueName);
-
-        Assert.Null(createdIdentity);
-    }
-
-    [Fact]
-    public async Task Post_ShouldFail_WhenSecretEmpty()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
-
-        var postAuthenticationIdentity = new
-        {
-            UniqueName = "post-authentication-identity",
-            MailAddress = "info@localhost",
-            Secret = string.Empty
-        };
-
-        request.Content = JsonContent.Create(postAuthenticationIdentity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-
-        using var scope = _factory.Services.CreateScope();
-
-        var createdIdentity = scope.ServiceProvider
-            .GetRequiredService<IRepository<AuthenticationIdentity>>()
-            .GetQueryable()
-            .SingleOrDefault(x => x.UniqueName == postAuthenticationIdentity.UniqueName);
-
-        Assert.Null(createdIdentity);
-    }
-
-    [Fact]
-    public async Task Post_ShouldFail_WhenSecretTooLong()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
-
-        var postAuthenticationIdentity = new
-        {
-            UniqueName = "post-authentication-identity",
-            MailAddress = "info@localhost",
-            Secret = new string(Enumerable.Repeat('a', 141).ToArray())
+            MailAddress = "info@localhost"
         };
 
         request.Content = JsonContent.Create(postAuthenticationIdentity);
@@ -376,8 +264,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postAuthenticationIdentity = new
         {
             UniqueName = "post-authentication-identity",
-            MailAddress = (string?)null,
-            Secret = "foo-bar"
+            MailAddress = (string?)null
         };
 
         request.Content = JsonContent.Create(postAuthenticationIdentity);
@@ -411,8 +298,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postAuthenticationIdentity = new
         {
             UniqueName = "post-authentication-identity",
-            MailAddress = string.Empty,
-            Secret = "foo-bar"
+            MailAddress = string.Empty
         };
 
         request.Content = JsonContent.Create(postAuthenticationIdentity);
@@ -446,8 +332,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postAuthenticationIdentity = new
         {
             UniqueName = "post-authentication-identity",
-            MailAddress = $"{new string(Enumerable.Repeat('a', 64).ToArray())}@{new string(Enumerable.Repeat('a', 190).ToArray())}",
-            Secret = "foo-bar"
+            MailAddress = $"{new string(Enumerable.Repeat('a', 64).ToArray())}@{new string(Enumerable.Repeat('a', 190).ToArray())}"
         };
 
         request.Content = JsonContent.Create(postAuthenticationIdentity);
@@ -481,8 +366,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postAuthenticationIdentity = new
         {
             UniqueName = "post-authentication-identity",
-            MailAddress = $"{new string(Enumerable.Repeat('a', 65).ToArray())}@{new string(Enumerable.Repeat('a', 1).ToArray())}",
-            Secret = "foo-bar"
+            MailAddress = $"{new string(Enumerable.Repeat('a', 65).ToArray())}@{new string(Enumerable.Repeat('a', 1).ToArray())}"
         };
 
         request.Content = JsonContent.Create(postAuthenticationIdentity);
@@ -516,8 +400,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         var postAuthenticationIdentity = new
         {
             UniqueName = "post-authentication-identity",
-            MailAddress = "foo-bar",
-            Secret = "foo-bar"
+            MailAddress = "foo-bar"
         };
 
         request.Content = JsonContent.Create(postAuthenticationIdentity);

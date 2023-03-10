@@ -148,8 +148,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAccountGroup = new
         {
             additionalIdentity.UniqueName,
-            MailAddress = "put-info@localhost",
-            Secret = "put-foo-bar"
+            MailAddress = "put-info@localhost"
         };
 
         request.Content = JsonContent.Create(putAccountGroup);

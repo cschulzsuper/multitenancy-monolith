@@ -16,6 +16,7 @@ public static class _Endpoints
         authorization.MapAccountGroup();
         authorization.MapAccountMemberResource();
         authorization.MapAccountMemberCommands();
+        authorization.MapAccountRegistrationCommands();
 
         return endpoints;
     }

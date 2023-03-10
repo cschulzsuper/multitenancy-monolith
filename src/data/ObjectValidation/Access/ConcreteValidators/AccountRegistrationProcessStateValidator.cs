@@ -2,7 +2,7 @@
 using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 using System.ComponentModel.DataAnnotations;
 
-namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
+namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Access.ConcreteValidators;
 
 public sealed class AccountRegistrationProcessStateValidator
 {

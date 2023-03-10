@@ -33,16 +33,16 @@ internal static class AuthenticationIdentityValidation
         _authenticationIdentityUniqueNameValidator.AddRules(x => x, UniqueNameValidator.CreateRules("authentication identity"));
     }
 
-    internal static void EnsureInsertable(AuthenticationIdentity @object)
+    public static void EnsureInsertable(AuthenticationIdentity @object)
         => _insertValidator.Ensure(@object);
 
     public static void EnsureUpdatable(AuthenticationIdentity @object)
         => _updateValidator.Ensure(@object);
 
-    internal static void EnsureAuthenticationIdentity(long authenticationIdentity)
+    public static void EnsureAuthenticationIdentity(long authenticationIdentity)
         => _authenticationIdentitySnowflakeValidator.Ensure(authenticationIdentity);
 
-    internal static void EnsureAuthenticationIdentity(string authenticationIdentity)
+    public static void EnsureAuthenticationIdentity(string authenticationIdentity)
         => _authenticationIdentityUniqueNameValidator.Ensure(authenticationIdentity);
 
 }

@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Ticker.TickerMessageFlows;
 
-public class UpdateFlow : IClassFixture<WebApplicationFactory<Program>>
+public sealed class UpdateFlow : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
@@ -141,7 +141,7 @@ public class UpdateFlow : IClassFixture<WebApplicationFactory<Program>>
     private async Task TickerBookmark_Query_ShouldSucceed()
     {
         // Arrange
-        var resetRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/me/bookmarks");
+        var resetRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/_/bookmarks");
         resetRequest.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();

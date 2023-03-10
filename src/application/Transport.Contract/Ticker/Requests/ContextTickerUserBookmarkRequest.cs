@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker.Requests;
 
-public class ContextTickerUserBookmarkRequest
+public sealed class ContextTickerUserBookmarkRequest
 {
     [Display(Name = "ticker message")]
     [Snowflake]

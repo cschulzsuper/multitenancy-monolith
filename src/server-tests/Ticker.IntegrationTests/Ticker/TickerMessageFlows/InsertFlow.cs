@@ -90,7 +90,7 @@ public class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
     private async Task TickerBookmark_Query_ShouldSucceed()
     {
         // Arrange
-        var resetRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/me/bookmarks");
+        var resetRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/_/bookmarks");
         resetRequest.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();

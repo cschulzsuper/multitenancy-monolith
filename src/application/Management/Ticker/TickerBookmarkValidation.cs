@@ -35,18 +35,18 @@ internal static class TickerBookmarkValidation
         _tickerUserValidator.AddRules(x => x, MailAddressValidator.CreateRules("ticker user"));
     }
 
-    internal static void EnsureInsertable(TickerBookmark @object)
+    public static void EnsureInsertable(TickerBookmark @object)
         => _insertValidator.Ensure(@object);
 
     public static void EnsureUpdatable(TickerBookmark @object)
         => _updateValidator.Ensure(@object);
 
-    internal static void EnsureTickerBookmark(long tickerBookmark)
+    public static void EnsureTickerBookmark(long tickerBookmark)
         => _tickerBookmarkValidator.Ensure(tickerBookmark);
 
-    internal static void EnsureTickerUser(string tickerUser)
+    public static void EnsureTickerUser(string tickerUser)
         => _tickerUserValidator.Ensure(tickerUser);
 
-    internal static void EnsureTickerMessage(long tickerMessage)
+    public static void EnsureTickerMessage(long tickerMessage)
         => _tickerMessageValidator.Ensure(tickerMessage);
 }

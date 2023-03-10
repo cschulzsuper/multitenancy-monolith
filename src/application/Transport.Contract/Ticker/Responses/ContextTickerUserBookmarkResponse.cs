@@ -1,6 +1,6 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker.Responses;
 
-public class ContextTickerUserBookmarkResponse
+public sealed class ContextTickerUserBookmarkResponse
 {
     public required long TickerMessage { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Administration.Responses;
 
-public class ObjectTypeResponse
+public sealed class ObjectTypeResponse
 {
     public required string UniqueName { get; init; }
 

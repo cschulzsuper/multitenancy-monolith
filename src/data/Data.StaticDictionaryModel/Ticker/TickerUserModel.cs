@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Ticker;
 
-public class TickerUserModel : IModel<TickerUser>
+public sealed class TickerUserModel : IModel<TickerUser>
 {
     public static object SetSnowflake(TickerUser entity, object snowflake)
         => entity.Snowflake = (long)snowflake;

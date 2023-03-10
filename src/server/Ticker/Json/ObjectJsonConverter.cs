@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Json;
 
-public class ObjectJsonConverter : JsonConverter<object?>
+public sealed class ObjectJsonConverter : JsonConverter<object?>
 {
     public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         => reader.TokenType switch

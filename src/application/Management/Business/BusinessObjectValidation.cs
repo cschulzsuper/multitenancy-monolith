@@ -26,16 +26,16 @@ internal static class BusinessObjectValidation
 
     }
 
-    internal static void EnsureInsertable(BusinessObject businessObject)
+    public static void EnsureInsertable(BusinessObject businessObject)
         => _insertValidator.Ensure(businessObject);
 
     public static void EnsureUpdatable(BusinessObject businessObject)
         => _updateValidator.Ensure(businessObject);
 
-    internal static void EnsureSnowflake(long snowflake)
+    public static void EnsureSnowflake(long snowflake)
         => SnowflakeValidator.Ensure(snowflake);
 
-    internal static void EnsureBusinessObject(string businessObject)
+    public static void EnsureBusinessObject(string businessObject)
         => _businessObjectValidator.Ensure(businessObject);
 
 }

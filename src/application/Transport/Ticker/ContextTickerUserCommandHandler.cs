@@ -110,13 +110,13 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
         return claimsIdentity;
     }
 
-    public async Task<ClaimsIdentity> ConfirmAsync(ContextTickerUserConfirmCommand command)
+    public async Task ConfirmAsync(ContextTickerUserConfirmCommand command)
     {
         var clientName = command.ClientName;
 
         if (_allowedClientsProvider.Get().All(x => x.UniqueName != clientName))
         {
-            TransportException.ThrowSecurityViolation($"Client '{clientName}' is not allowed to sign in");
+            TransportException.ThrowSecurityViolation($"Client '{clientName}' is not allowed to confirm");
         }
 
         var updateAction = (TickerUser @object) =>
@@ -158,32 +158,6 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
         var defaultAction = () => TransportException.ThrowSecurityViolation($"Ticker user '{command.Mail}' does not exist");
 
         await _tickerUserManager.UpdateAsync(command.Mail, updateAction, defaultAction);
-
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var verificationKey = new TickerUserVerificationKey
-        {
-            AccountGroup = command.AccountGroup,
-            ClientName = clientName,
-            Mail = command.Mail
-        };
-
-        _tickerUserVerificationManager.Set(verificationKey, verification);
-
-        var verificationValue = Convert.ToBase64String(verification);
-
-        var claims = new Claim[]
-        {
-            new Claim("type", "ticker"),
-            new Claim("group", command.AccountGroup),
-            new Claim("client", clientName),
-            new Claim("mail", command.Mail),
-            new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
-        };
-
-        var claimsIdentity = new ClaimsIdentity(claims, "Badge");
-
-        return claimsIdentity;
     }
 
     public async Task PostAsync(ContextTickerUserPostCommand command)

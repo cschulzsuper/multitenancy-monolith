@@ -8,7 +8,7 @@ public interface IContextTickerUserCommandHandler
 {
     Task<ClaimsIdentity> AuthAsync(ContextTickerUserAuthCommand command);
 
-    Task<ClaimsIdentity> ConfirmAsync(ContextTickerUserConfirmCommand command);
+    Task ConfirmAsync(ContextTickerUserConfirmCommand command);
 
     Task PostAsync(ContextTickerUserPostCommand command);
 

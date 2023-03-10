@@ -46,8 +46,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = $"put-authentication-identity-{Guid.NewGuid()}",
-            MailAddress = "put-info@localhost",
-            Secret = "put-foo-bar"
+            MailAddress = "put-info@localhost"
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -68,7 +67,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .SingleOrDefault(x =>
                     x.Snowflake == existingAuthenticationIdentity.Snowflake &&
                     x.UniqueName == putAuthenticationIdentity.UniqueName &&
-                    x.Secret == putAuthenticationIdentity.Secret &&
+                    x.Secret == existingAuthenticationIdentity.Secret &&
                     x.MailAddress == putAuthenticationIdentity.MailAddress);
 
             Assert.NotNull(changedIdentity);
@@ -87,8 +86,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = "put-authentication-identity",
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
+            MailAddress = "info@localhost"
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -115,8 +113,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = "put-authentication-identity",
-            MailAddress = "info@localhost",
-            Secret = "foo-bar"
+            MailAddress = "info@localhost"
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -162,8 +159,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             additionalIdentity.UniqueName,
-            MailAddress = "put-info@localhost",
-            Secret = "put-foo-bar"
+            MailAddress = "put-info@localhost"
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -215,8 +211,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = (string?)null,
-            MailAddress = "put-info@localhost",
-            Secret = "put-foo-bar"
+            MailAddress = "put-info@localhost"
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -255,8 +250,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = string.Empty,
-            MailAddress = "put-info@localhost",
-            Secret = "put-foo-bar"
+            MailAddress = "put-info@localhost"
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -295,8 +289,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = new string(Enumerable.Repeat('a', 141).ToArray()),
-            MailAddress = "put-info@localhost",
-            Secret = "put-foo-bar"
+            MailAddress = "put-info@localhost"
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -335,128 +328,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = "Invalid",
-            MailAddress = "put-info@localhost",
-            Secret = "put-foo-bar"
-        };
-
-        request.Content = JsonContent.Create(putAuthenticationIdentity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-    }
-
-    [Fact]
-    public async Task Put_ShouldFail_WhenSecretNull()
-    {
-        // Arrange
-        var existingAuthenticationIdentity = new AuthenticationIdentity
-        {
-            UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
-            MailAddress = "existing-info@localhost",
-            Secret = "existing-foo-bar"
-        };
-
-        using (var scope = _factory.Services.CreateScope())
-        {
-            scope.ServiceProvider
-                .GetRequiredService<IRepository<AuthenticationIdentity>>()
-                .Insert(existingAuthenticationIdentity);
-        }
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
-
-        var putAuthenticationIdentity = new
-        {
-            UniqueName = "put-authentication-identity",
-            MailAddress = "put-info@localhost",
-            Secret = (string?)null,
-        };
-
-        request.Content = JsonContent.Create(putAuthenticationIdentity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-    }
-
-    [Fact]
-    public async Task Put_ShouldFail_WhenSecretEmpty()
-    {
-        // Arrange
-        var existingAuthenticationIdentity = new AuthenticationIdentity
-        {
-            UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
-            MailAddress = "existing-info@localhost",
-            Secret = "existing-foo-bar"
-        };
-
-        using (var scope = _factory.Services.CreateScope())
-        {
-            scope.ServiceProvider
-                .GetRequiredService<IRepository<AuthenticationIdentity>>()
-                .Insert(existingAuthenticationIdentity);
-        }
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
-
-        var putAuthenticationIdentity = new
-        {
-            UniqueName = "put-authentication-identity",
-            MailAddress = "put-info@localhost",
-            Secret = string.Empty,
-        };
-
-        request.Content = JsonContent.Create(putAuthenticationIdentity);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-    }
-
-    [Fact]
-    public async Task Put_ShouldFail_WhenSecretTooLong()
-    {
-        // Arrange
-        var existingAuthenticationIdentity = new AuthenticationIdentity
-        {
-            UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
-            MailAddress = "existing-info@localhost",
-            Secret = "existing-foo-bar"
-        };
-
-        using (var scope = _factory.Services.CreateScope())
-        {
-            scope.ServiceProvider
-                .GetRequiredService<IRepository<AuthenticationIdentity>>()
-                .Insert(existingAuthenticationIdentity);
-        }
-
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
-
-        var putAuthenticationIdentity = new
-        {
-            UniqueName = "put-authentication-identity",
-            MailAddress = "put-info@localhost",
-            Secret = new string(Enumerable.Repeat('a', 141).ToArray()),
+            MailAddress = "put-info@localhost"
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -495,8 +367,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = "put-authentication-identity",
-            MailAddress = (string?)null,
-            Secret = "put-foo-bar",
+            MailAddress = (string?)null
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -535,8 +406,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = "put-authentication-identity",
-            MailAddress = string.Empty,
-            Secret = "put-foo-bar",
+            MailAddress = string.Empty
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -575,8 +445,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = "put-authentication-identity",
-            MailAddress = $"{new string(Enumerable.Repeat('a', 64).ToArray())}@{new string(Enumerable.Repeat('a', 190).ToArray())}",
-            Secret = "put-foo-bar",
+            MailAddress = $"{new string(Enumerable.Repeat('a', 64).ToArray())}@{new string(Enumerable.Repeat('a', 190).ToArray())}"
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -615,8 +484,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = "put-authentication-identity",
-            MailAddress = $"{new string(Enumerable.Repeat('a', 65).ToArray())}@{new string(Enumerable.Repeat('a', 1).ToArray())}",
-            Secret = "put-foo-bar",
+            MailAddress = $"{new string(Enumerable.Repeat('a', 65).ToArray())}@{new string(Enumerable.Repeat('a', 1).ToArray())}"
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
@@ -655,8 +523,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var putAuthenticationIdentity = new
         {
             UniqueName = "put-authentication-identity",
-            MailAddress = "put-foo-bar",
-            Secret = "put-foo-bar",
+            MailAddress = "put-foo-bar"
         };
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);

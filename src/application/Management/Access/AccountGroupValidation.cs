@@ -29,16 +29,16 @@ internal static class AccountGroupValidation
         _accountGroupUniqueNameValidator.AddRules(x => x, UniqueNameValidator.CreateRules("account group"));
     }
 
-    internal static void EnsureInsertable(AccountGroup @object)
+    public static void EnsureInsertable(AccountGroup @object)
         => _insertValidator.Ensure(@object);
 
     public static void EnsureUpdatable(AccountGroup @object)
         => _updateValidator.Ensure(@object);
 
-    internal static void EnsureAccountGroup(long accountGroup)
+    public static void EnsureAccountGroup(long accountGroup)
         => _accountGroupSnowflakeValidator.Ensure(accountGroup);
 
-    internal static void EnsureAccountGroup(string accountGroup)
+    public static void EnsureAccountGroup(string accountGroup)
         => _accountGroupUniqueNameValidator.Ensure(accountGroup);
 
 }

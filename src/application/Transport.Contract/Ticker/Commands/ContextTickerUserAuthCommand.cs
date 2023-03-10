@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
 
-public class ContextTickerUserAuthCommand
+public sealed class ContextTickerUserAuthCommand
 {
 
     [Display(Name = "client name")]

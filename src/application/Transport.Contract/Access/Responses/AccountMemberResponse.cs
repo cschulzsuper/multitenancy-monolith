@@ -1,6 +1,6 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Application.Access.Responses;
 
-public class AccountMemberResponse
+public sealed class AccountMemberResponse
 {
     public required string UniqueName { get; init; }
 

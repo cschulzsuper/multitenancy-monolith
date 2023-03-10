@@ -1,8 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Access;
-using ChristianSchulz.MultitenancyMonolith.Application.Admission.Requests;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission.Responses;
-using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -61,7 +60,7 @@ internal sealed class AuthenticationIdentityRequestHandler : IAuthenticationIden
         {
             UniqueName = request.UniqueName,
             MailAddress = request.MailAddress,
-            Secret = request.Secret
+            Secret = $"{Guid.NewGuid()}"
         };
 
         await _authenticationIdentityManager.InsertAsync(@object);
@@ -80,7 +79,6 @@ internal sealed class AuthenticationIdentityRequestHandler : IAuthenticationIden
         @object =>
         {
             @object.UniqueName = request.UniqueName;
-            @object.Secret = request.Secret;
             @object.MailAddress = request.MailAddress;
         });
 

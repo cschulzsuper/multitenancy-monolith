@@ -43,7 +43,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerUser);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/me/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/auth");
 
         var authRequest = new
         {

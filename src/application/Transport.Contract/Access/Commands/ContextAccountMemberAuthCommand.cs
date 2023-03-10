@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Access.Commands;
 
-public class AccountMemberAuthCommand
+public sealed class ContextAccountMemberAuthCommand
 {
     [Display(Name = "account group")]
     [UniqueName]

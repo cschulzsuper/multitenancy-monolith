@@ -44,7 +44,7 @@ public class BadgeValidator
         client.BaseAddress = new Uri("https://localhost:7207");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", context.HttpContext.Request.Headers.Authorization);
 
-        var response = await client.PostAsync("/administration/members/me/verify", null);
+        var response = await client.PostAsync("/access/account-members/#/verify", null);
 
         var badgeValid = response.IsSuccessStatusCode;
 

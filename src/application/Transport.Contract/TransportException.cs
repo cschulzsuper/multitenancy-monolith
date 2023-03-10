@@ -21,6 +21,18 @@ public sealed class TransportException : Exception
     }
 
     [DoesNotReturn]
+    public static void ThrowConflict<TEntity>(string uniqueName)
+    {
+        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+
+        var exception = new TransportException($"Object '{objectType}' with unique name '{uniqueName}'' already existst.");
+
+        exception.Data["error-code"] = "object-conflict";
+
+        throw exception;
+    }
+
+    [DoesNotReturn]
     public static void ThrowSecurityViolation(string message)
     {
         var exception = new TransportException(message);

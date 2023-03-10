@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Middleware;
 
-public class AuthenticationScopeMiddleware
+public sealed class AuthenticationScopeMiddleware
 {
     private readonly RequestDelegate _next;
 

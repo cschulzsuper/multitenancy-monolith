@@ -25,7 +25,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldSucceed_WhenValid(string authenticationIdentity, string secret)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-identities/me/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-identities/_/auth");
 
         var authRequest = new
         {
@@ -52,7 +52,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldFail_WhenSecretInvalid(string authenticationIdentity)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-identities/me/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-identities/_/auth");
 
         var authRequest = new
         {
@@ -80,7 +80,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldFail_WhenClientInvalid(string authenticationIdentity, string secret)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-identities/me/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-identities/_/auth");
 
         var authRequest = new
         {

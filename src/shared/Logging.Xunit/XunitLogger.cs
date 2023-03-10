@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 
-public class XUnitLogger : ILogger
+public sealed class XUnitLogger : ILogger
 {
     private static readonly string[] NewLineChars = new[] {Environment.NewLine};
     private readonly string _category;

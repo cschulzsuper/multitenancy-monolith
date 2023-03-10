@@ -30,15 +30,15 @@ internal static class DistinctionTypeValidation
             validator.AddRules(x => x.UniqueName, UniqueNameValidator.CreateRules("custom property unique name")));
     }
 
-    internal static void EnsureInsertable(DistinctionType distinctionType)
+    public static void EnsureInsertable(DistinctionType distinctionType)
         => _insertValidator.Ensure(distinctionType);
 
     public static void EnsureUpdatable(DistinctionType distinctionType)
         => _updateValidator.Ensure(distinctionType);
 
-    internal static void EnsureSnowflake(long snowflake)
+    public static void EnsureSnowflake(long snowflake)
         => SnowflakeValidator.Ensure(snowflake);
 
-    internal static void EnsureUniqueName(string uniqueName)
+    public static void EnsureUniqueName(string uniqueName)
         => UniqueNameValidator.Ensure(uniqueName);
 }

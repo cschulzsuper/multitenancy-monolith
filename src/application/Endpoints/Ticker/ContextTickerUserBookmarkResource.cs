@@ -16,7 +16,7 @@ public static class ContextTickerUserBookmarkResource
     public static IEndpointRouteBuilder MapContextTickerUserBookmarkResource(this IEndpointRouteBuilder endpoints)
     {
         var resource = endpoints
-            .MapGroup("/ticker-users/me/bookmarks")
+            .MapGroup("/ticker-users/_/bookmarks")
             .RequireAuthorization(policy => policy
                 .RequireClaim("badge", "ticker")
                 .RequireClaim("scope", "endpoints"))

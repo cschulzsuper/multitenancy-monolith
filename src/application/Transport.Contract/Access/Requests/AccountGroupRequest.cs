@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Access.Requests;
 
-public class AccountGroupRequest
+public sealed class AccountGroupRequest
 {
     [UniqueName]
     public required string UniqueName { get; init; }

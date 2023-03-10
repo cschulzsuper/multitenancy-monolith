@@ -10,6 +10,7 @@ public static class _Services
     {
         services.AddScoped<IAuthenticationIdentityManager, AuthenticationIdentityManager>();
         services.AddScoped<IAuthenticationIdentityVerificationManager, AuthenticationIdentityVerificationManager>();
+        services.AddScoped<IAuthenticationRegistrationManager, AuthenticationRegistrationManager>();
 
         return services;
     }

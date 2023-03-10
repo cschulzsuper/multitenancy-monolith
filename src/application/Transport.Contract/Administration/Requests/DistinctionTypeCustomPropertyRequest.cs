@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Administration.Requests;
 
-public class DistinctionTypeCustomPropertyRequest
+public sealed class DistinctionTypeCustomPropertyRequest
 {
     [UniqueName]
     public required string UniqueName { get; init; }

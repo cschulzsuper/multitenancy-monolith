@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Access;
 
-public class AccountMemberModel : IModel<AccountMember>
+public sealed class AccountMemberModel : IModel<AccountMember>
 {
     public static object SetSnowflake(AccountMember entity, object snowflake)
         => entity.Snowflake = (long)snowflake;
