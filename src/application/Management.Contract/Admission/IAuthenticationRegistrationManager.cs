@@ -13,7 +13,9 @@ public interface IAuthenticationRegistrationManager
 
     Task InsertAsync(AuthenticationRegistration @object);
 
-    Task UpdateAsync(Guid processToken, Action<AuthenticationRegistration> action);
+    Task UpdateAsync(long authenticationRegistration, Action<AuthenticationRegistration> action);
+
+    Task UpdateAsync(string authenticationIdentity, Action<AuthenticationRegistration> action);
 
     Task DeleteAsync(Guid processToken);
 }

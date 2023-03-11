@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Admission.AuthenticationIdentityCommands;
+namespace Access.ContextAccountMemberCommands;
 
 public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -20,7 +20,7 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
     public async Task Verify_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities/_/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members/_/verify");
 
         var client = _factory.CreateClient();
 
@@ -33,14 +33,15 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(MockWebApplication.MockAdmin)]
-    [InlineData(MockWebApplication.MockIdentity)]
-    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChief)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
+    [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     public async Task Verify_ShouldSucceed_WhenValid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities/_/verify");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members/_/verify");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
 
@@ -52,15 +53,14 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(MockWebApplication.MockChief)]
-    [InlineData(MockWebApplication.MockChiefObserver)]
-    [InlineData(MockWebApplication.MockMember)]
-    [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Verify_ShouldBeUnauthorized_WhenNotIdentity(int mock)
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    public async Task Verify_ShouldBeForbidden_WhenNotMember(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities/_/verify");
-        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members/_/verify");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
 
@@ -68,7 +68,7 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
     [Theory]
@@ -82,7 +82,7 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
     public async Task Verify_ShouldBeUnauthorized_WhenInvalid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities/_/verify");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members/_/verify");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();

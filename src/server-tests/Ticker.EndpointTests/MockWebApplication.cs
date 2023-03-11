@@ -19,7 +19,7 @@ internal static class MockWebApplication
 {
     public const string Client = "endpoint-tests";
 
-    public const string Group = "group";
+    public const string AccountGroup = "group";
     public const string Member = "default";
     public const string Mail = "default@localhost";
 
@@ -48,7 +48,7 @@ internal static class MockWebApplication
 
 
     public static IServiceScope CreateMultitenancyScope(this WebApplicationFactory<Program> factory)
-        => factory.Services.CreateMultitenancyScope(Group);
+        => factory.Services.CreateMultitenancyScope(AccountGroup);
 
     public static AuthenticationHeaderValue MockValidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory)
     {
@@ -56,7 +56,7 @@ internal static class MockWebApplication
         {
             new Claim("badge", "member"),
             new Claim("client", Client),
-            new Claim("group", Group),
+            new Claim("group", AccountGroup),
             new Claim("member", Member)
         };
 
@@ -73,7 +73,7 @@ internal static class MockWebApplication
         {
             new Claim("badge", "ticker"),
             new Claim("client", Client),
-            new Claim("group", Group),
+            new Claim("group", AccountGroup),
             new Claim("mail", Mail)
         };
 

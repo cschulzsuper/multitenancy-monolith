@@ -112,23 +112,16 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
 
     public async Task ConfirmAsync(ContextTickerUserConfirmCommand command)
     {
-        var clientName = command.ClientName;
-
-        if (_allowedClientsProvider.Get().All(x => x.UniqueName != clientName))
-        {
-            TransportException.ThrowSecurityViolation($"Client '{clientName}' is not allowed to confirm");
-        }
-
         var updateAction = (TickerUser @object) =>
         {
             switch (@object.SecretState)
             {
                 case TickerUserSecretStates.Invalid:
-                    TransportException.ThrowSecurityViolation($"Secret state of ticker user '{command.Mail}' is invalid");
+                    TransportException.ThrowProcessViolation($"Secret state of ticker user '{command.Mail}' is invalid");
                     break;
 
                 case TickerUserSecretStates.Reset:
-                    TransportException.ThrowSecurityViolation($"Secret state of ticker user '{command.Mail}' is reset");
+                    TransportException.ThrowProcessViolation($"Secret state of ticker user '{command.Mail}' is reset");
                     break;
 
                 case TickerUserSecretStates.Pending:
@@ -146,11 +139,11 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
                     break;
 
                 case TickerUserSecretStates.Confirmed:
-                    TransportException.ThrowSecurityViolation($"Secret state of ticker user '{command.Mail}' is confirmed");
+                    TransportException.ThrowProcessViolation($"Secret state of ticker user '{command.Mail}' is confirmed");
                     break;
 
                 default:
-                    TransportException.ThrowSecurityViolation($"Secret state of ticker user '{command.Mail}' has unexpected value");
+                    TransportException.ThrowProcessViolation($"Secret state of ticker user '{command.Mail}' has unexpected value");
                     break;
             }
         };

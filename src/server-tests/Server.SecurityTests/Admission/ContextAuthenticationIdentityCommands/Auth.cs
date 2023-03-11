@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Admission.AuthenticationIdentityCommands;
+namespace Admission.ContextAuthenticationIdentityCommands;
 
 public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 {

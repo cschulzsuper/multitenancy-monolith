@@ -15,7 +15,7 @@ internal static class MockWebApplication
 {
     public const string Client = "endpoint-tests";
 
-    public const string Identity = "admin";
+    public const string AuthenticationIdentity = "admin";
     public const string MailAddress = "default@localhost";
     public const string Secret = "default";
 
@@ -54,7 +54,7 @@ internal static class MockWebApplication
         {
             new Claim("badge", "identity"),
             new Claim("client", Client),
-            new Claim("identity", Identity)
+            new Claim("identity", AuthenticationIdentity)
         };
 
         var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
@@ -71,7 +71,7 @@ internal static class MockWebApplication
         {
             new Claim("badge", "member"),
             new Claim("client", Client),
-            new Claim("identity", Identity),
+            new Claim("identity", AuthenticationIdentity),
             new Claim("group", Group),
             new Claim("member", Member)
         };

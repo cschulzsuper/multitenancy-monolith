@@ -28,7 +28,6 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            ClientName = MockWebApplication.ClientName,
             AccountGroup = MockWebApplication.AccountGroup,
             Mail = mail,
             Secret = secret,
@@ -46,63 +45,6 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
-    [Theory]
-    [InlineData(MockWebApplication.ConfirmedMailAddress, MockWebApplication.ConfirmedSecret)]
-    [InlineData(MockWebApplication.InvalidMailAddress, MockWebApplication.InvalidSecret)]
-    [InlineData(MockWebApplication.ResetMailAddress, MockWebApplication.ResetSecret)]
-    public async Task Confirm_ShouldBeForbidden_WhenSecretStateInvalid(string mail, string secret)
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/confirm");
-
-        var confirmRequest = new
-        {
-            ClientName = MockWebApplication.ClientName,
-            AccountGroup = MockWebApplication.AccountGroup,
-            Mail = mail,
-            Secret = secret,
-            SecretToken = MockWebApplication.SecretTokens[mail]
-        };
-
-        request.Content = JsonContent.Create(confirmRequest);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-    }
-
-    [Fact]
-    public async Task Confirm_ShouldBeForbidden_WhenClientAbsent()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/confirm");
-
-        var confirmRequest = new
-        {
-            ClientName = "absent",
-            AccountGroup = MockWebApplication.AccountGroup,
-            Mail = MockWebApplication.PendingMailAddress,
-            Secret = MockWebApplication.PendingSecret,
-            SecretToken = MockWebApplication.SecretTokens[MockWebApplication.PendingMailAddress]
-        };
-
-        request.Content = JsonContent.Create(confirmRequest);
-
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-    }
-
     [Fact]
     public async Task Confirm_ShouldBeForbidden_WhenGroupAbsent()
     {
@@ -111,7 +53,6 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            ClientName = MockWebApplication.ClientName,
             AccountGroup = "absent",
             Mail = MockWebApplication.PendingMailAddress,
             Secret = MockWebApplication.PendingSecret,
@@ -138,7 +79,6 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            ClientName = MockWebApplication.ClientName,
             AccountGroup = MockWebApplication.AccountGroup,
             Mail = "absent@localhost.com",
             Secret = MockWebApplication.PendingSecret,
@@ -165,7 +105,6 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            ClientName = MockWebApplication.ClientName,
             AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.PendingMailAddress,
             Secret = "inavlid",
@@ -192,7 +131,6 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         var confirmRequest = new
         {
-            ClientName = MockWebApplication.ClientName,
             AccountGroup = MockWebApplication.AccountGroup,
             Mail = MockWebApplication.PendingMailAddress,
             Secret = MockWebApplication.PendingSecret,

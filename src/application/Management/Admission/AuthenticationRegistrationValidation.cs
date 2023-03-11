@@ -12,6 +12,8 @@ internal static class AuthenticationRegistrationValidation
     private readonly static Validator<AuthenticationRegistration> _updateValidator;
 
     private readonly static Validator<Guid> _authenticationRegistrationProcessTokenValidator;
+    private readonly static Validator<long> _authenticationRegistrationSnowflakeValidator;
+    private readonly static Validator<string> _authenticationRegistrationAuthenticationIdentityValidator;
 
     static AuthenticationRegistrationValidation()
     {
@@ -32,6 +34,13 @@ internal static class AuthenticationRegistrationValidation
 
         _authenticationRegistrationProcessTokenValidator = new Validator<Guid>();
         _authenticationRegistrationProcessTokenValidator.AddRules(x => x, TokenValidator.CreateRules("process token"));
+
+        _authenticationRegistrationSnowflakeValidator = new Validator<long>();
+        _authenticationRegistrationSnowflakeValidator.AddRules(x => x, SnowflakeValidator.CreateRules("authentication registration"));
+
+        _authenticationRegistrationAuthenticationIdentityValidator = new Validator<string>();
+        _authenticationRegistrationAuthenticationIdentityValidator.AddRules(x => x, UniqueNameValidator.CreateRules("authentication identity"));
+
     }
 
     public static void EnsureInsertable(AuthenticationRegistration @object)
@@ -42,5 +51,11 @@ internal static class AuthenticationRegistrationValidation
 
     public static void EnsureProcessToken(Guid processToken)
         => _authenticationRegistrationProcessTokenValidator.Ensure(processToken);
+
+    public static void EnsureAuthenticationRegistration(long authenticationRegistration)
+        => _authenticationRegistrationSnowflakeValidator.Ensure(authenticationRegistration);
+
+    public static void EnsureAuthenticationIdentity(string authenticationIdentity)
+    => _authenticationRegistrationAuthenticationIdentityValidator.Ensure(authenticationIdentity);
 
 }

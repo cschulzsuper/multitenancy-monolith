@@ -7,19 +7,19 @@ using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 
-internal static class AccountMemberCommands
+internal static class ContextAccountMemberCommands
 {
     private const string CouldNotAuthAccountMember = "Could not auth account member";
     private const string CouldNotVerifyAccountMember = "Could not verify account member";
 
-    public static IEndpointRouteBuilder MapAccountMemberCommands(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapContextAccountMemberCommands(this IEndpointRouteBuilder endpoints)
     {
         var commands = endpoints
-            .MapGroup("/account-members")
-            .WithTags("Account Member Commands");
+            .MapGroup("/account-members/_")
+            .WithTags("Context Account Member Commands");
 
         commands
-            .MapPost("/_/auth", Auth)
+            .MapPost("/auth", Auth)
             .RequireAuthorization(policy => policy
                 .RequireClaim("badge", "identity"))
             .WithErrorMessage(CouldNotAuthAccountMember)
@@ -27,7 +27,7 @@ internal static class AccountMemberCommands
             .AddEndpointFilter<BadgeResultEndpointFilter>();
 
         commands
-            .MapPost("/_/verify", Verify)
+            .MapPost("/verify", Verify)
             .RequireAuthorization(policy => policy
                 .RequireClaim("badge", "member"))
             .WithErrorMessage(CouldNotVerifyAccountMember);

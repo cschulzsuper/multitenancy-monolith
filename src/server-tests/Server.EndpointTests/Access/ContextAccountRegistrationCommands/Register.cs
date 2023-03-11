@@ -1,8 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Access;
-using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Access.ConcreteValidators;
-using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Admission.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +12,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Access.AccountRegistrationCommands;
+namespace Access.ContextAccountRegistrationCommands;
 
 public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -49,20 +47,18 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateScope())
-        {
-            var createdRegistration = scope.ServiceProvider
-                .GetRequiredService<IRepository<AccountRegistration>>()
-                .GetQueryable()
-                .SingleOrDefault(x =>
-                    x.AccountGroup == registerAccountRegistration.AccountGroup &&
-                    x.AccountMember == registerAccountRegistration.AccountMember &&
-                    x.AuthenticationIdentity == MockWebApplication.Identity &&
-                    x.ProcessState == AccountRegistrationProcessStates.New &&
-                    x.MailAddress == registerAccountRegistration.MailAddress);
+        using var scope = _factory.Services.CreateScope();
+        var createdRegistration = scope.ServiceProvider
+            .GetRequiredService<IRepository<AccountRegistration>>()
+            .GetQueryable()
+            .SingleOrDefault(x =>
+                x.AccountGroup == registerAccountRegistration.AccountGroup &&
+                x.AccountMember == registerAccountRegistration.AccountMember &&
+                x.AuthenticationIdentity == MockWebApplication.AuthenticationIdentity &&
+                x.ProcessState == AccountRegistrationProcessStates.New &&
+                x.MailAddress == registerAccountRegistration.MailAddress);
 
-            Assert.NotNull(createdRegistration);
-        }
+        Assert.NotNull(createdRegistration);
     }
 
     [Fact]

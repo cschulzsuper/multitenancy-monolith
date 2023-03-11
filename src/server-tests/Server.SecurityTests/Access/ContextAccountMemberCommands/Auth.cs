@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Access.AccountMemberCommands;
+namespace Access.ContextAccountMemberCommands;
 
 public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -48,7 +48,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         var authRequest = new
         {
             ClientName = MockWebApplication.Client,
-            AccountGroup = MockWebApplication.AccountGroup,
+            MockWebApplication.AccountGroup,
             AccountMember = accountMember
         };
 
@@ -76,7 +76,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         var authRequest = new
         {
             ClientName = MockWebApplication.Client,
-            AccountGroup = MockWebApplication.AccountGroup,
+            MockWebApplication.AccountGroup,
             AccountMember = "absent"
         };
 
@@ -104,7 +104,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         var authRequest = new
         {
             ClientName = MockWebApplication.Client,
-            AccountGroup = MockWebApplication.AccountGroup,
+            MockWebApplication.AccountGroup,
             AccountMember = accountMember
         };
 
@@ -168,7 +168,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         var authRequest = new
         {
             ClientName = "invalid",
-            AccountGroup = MockWebApplication.AccountGroup,
+            MockWebApplication.AccountGroup,
             AccountMember = accountMember
         };
 

@@ -14,7 +14,7 @@ internal static class AccountGroupResource
     private const string CouldNotUpdateAccountGroup = "Could not update account group";
     private const string CouldNotDeleteAccountGroup = "Could not delete account group";
 
-    public static IEndpointRouteBuilder MapAccountGroup(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapAccountGroupResource(this IEndpointRouteBuilder endpoints)
     {
         var resource = endpoints
             .MapGroup("/account-groups")

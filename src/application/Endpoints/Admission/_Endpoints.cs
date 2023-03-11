@@ -13,9 +13,11 @@ public static class _Endpoints
             .MapGroup("admission")
             .WithGroupName("admission");
 
-        authentication.MapAuthenticationIdentityCommands();
         authentication.MapAuthenticationIdentityResource();
         authentication.MapAuthenticationRegistrationCommands();
+
+        authentication.MapContextAuthenticationIdentityCommands();
+        authentication.MapContextAuthenticationRegistrationCommands();
 
         return endpoints;
     }

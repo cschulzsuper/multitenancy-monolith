@@ -12,6 +12,8 @@ internal static class AccountRegistrationValidation
     private readonly static Validator<AccountRegistration> _updateValidator;
 
     private readonly static Validator<Guid> _accountRegistrationProcessTokenValidator;
+    private readonly static Validator<long> _accountRegistrationSnowflakeValidator;
+    private readonly static Validator<string> _accountRegistrationAccountGroupValidator;
 
     static AccountRegistrationValidation()
     {
@@ -35,6 +37,12 @@ internal static class AccountRegistrationValidation
 
         _accountRegistrationProcessTokenValidator = new Validator<Guid>();
         _accountRegistrationProcessTokenValidator.AddRules(x => x, TokenValidator.CreateRules("process token"));
+
+        _accountRegistrationSnowflakeValidator = new Validator<long>();
+        _accountRegistrationSnowflakeValidator.AddRules(x => x, SnowflakeValidator.CreateRules("account registration"));
+
+        _accountRegistrationAccountGroupValidator = new Validator<string>();
+        _accountRegistrationAccountGroupValidator.AddRules(x => x, UniqueNameValidator.CreateRules("account group"));
     }
 
     public static void EnsureInsertable(AccountRegistration @object)
@@ -45,5 +53,11 @@ internal static class AccountRegistrationValidation
 
     public static void EnsureProcessToken(Guid processToken)
         => _accountRegistrationProcessTokenValidator.Ensure(processToken);
+
+    public static void EnsureAccountRegistration(long accountRegistration)
+        => _accountRegistrationSnowflakeValidator.Ensure(accountRegistration);
+
+    public static void EnsureAccountGroup(string accountGroup)
+        => _accountRegistrationAccountGroupValidator.Ensure(accountGroup);
 
 }

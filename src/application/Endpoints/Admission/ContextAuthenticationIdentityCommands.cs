@@ -7,27 +7,28 @@ using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
-internal static class IdentitySignInEndpoints
+internal static class ContextAuthenticationIdentityCommands
 {
     private const string CouldNotSignInAuthenticationIdentity = "Could not sign in authentication identity";
     private const string CouldNotVerifyAuthenticationIdentity = "Could not verify authentication identity";
 
-    public static IEndpointRouteBuilder MapAuthenticationIdentityCommands(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapContextAuthenticationIdentityCommands(this IEndpointRouteBuilder endpoints)
     {
         var commands = endpoints
-            .MapGroup("/authentication-identities")
-            .WithTags("Authentication Identity Commands");
+            .MapGroup("/authentication-identities/_")
+            .WithTags("Context Authentication Identity Commands");
 
         commands
-            .MapPost("/_/auth", Auth)
+            .MapPost("/auth", Auth)
             .WithErrorMessage(CouldNotSignInAuthenticationIdentity)
             .Authenticates()
             .AddEndpointFilter<BadgeResultEndpointFilter>();
 
         commands
-            .MapPost("/_/verify", Verify)
+            .MapPost("/verify", Verify)
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "identity"))
+                .RequireClaim("badge", "identity")
+                .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotVerifyAuthenticationIdentity);
 
         return endpoints;

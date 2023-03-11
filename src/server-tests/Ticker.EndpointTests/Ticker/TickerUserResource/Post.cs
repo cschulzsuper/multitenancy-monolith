@@ -171,6 +171,59 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
+    public async Task Post_ShouldFail_WhenMailAddressExists()
+    {
+        // Arrange
+        var existingTickerUser = new TickerUser
+        {
+            DisplayName = "Exiting Test User",
+            MailAddress = $"{Guid.NewGuid()}@localhost",
+            Secret = $"{Guid.NewGuid()}",
+            SecretState = TickerUserSecretStates.Confirmed,
+            SecretToken = Guid.NewGuid()
+        };
+
+        using (var scope = _factory.CreateMultitenancyScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<TickerUser>>()
+                .Insert(existingTickerUser);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users");
+        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+
+        var postTickerUser = new
+        {
+            DisplayName = "Post Test User",
+            MailAddress = existingTickerUser.MailAddress,
+        };
+
+        request.Content = JsonContent.Create(postTickerUser);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+
+        using (var scope = _factory.CreateMultitenancyScope())
+        {
+
+            var createdTickerUser = scope.ServiceProvider
+                .GetRequiredService<IRepository<TickerUser>>()
+                .GetQueryable()
+                .SingleOrDefault(x =>
+                    x.DisplayName == postTickerUser.DisplayName);
+
+            Assert.Null(createdTickerUser);
+        }
+    }
+
+    [Fact]
     public async Task Post_ShouldFail_WhenMailAddressNull()
     {
         // Arrange

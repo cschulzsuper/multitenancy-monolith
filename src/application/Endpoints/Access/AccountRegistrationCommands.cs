@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Access.Commands;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
@@ -8,24 +7,27 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 
 internal static class AccountRegistrationCommands
 {
-    private const string CouldNotRegisterAccountRegistration = "Could not register account registration";
+    private const string CouldNotApproveAccountRegistration = "Could not approve account registration";
 
     public static IEndpointRouteBuilder MapAccountRegistrationCommands(this IEndpointRouteBuilder endpoints)
     {
         var commands = endpoints
             .MapGroup("/account-registrations")
-            .WithTags("Account Registration Commands");
+            .WithTags("Account Registration Commands")
+            .RequireAuthorization(policy => policy
+                .RequireClaim("badge", "identity")
+                .RequireClaim("scope", "endpoints"));
 
         commands
-            .MapPost("/_/register", Register)
+            .MapPost("{accountRegistration}/approve", Approve)
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "identity", "member"))
-            .WithErrorMessage(CouldNotRegisterAccountRegistration);
+                .RequireRole("admin"))
+            .WithErrorMessage(CouldNotApproveAccountRegistration);
 
         return endpoints;
     }
 
-    private static Delegate Register =>
-        (IContextAccountRegistrationCommandHandler commandHandler, ContextAccountRegistrationRegisterCommand command)
-            => commandHandler.RegisterAsync(command);
+    private static Delegate Approve =>
+        (IAccountRegistrationCommandHandler commandHandler, long accountRegistration)
+            => commandHandler.ApproveAsync(accountRegistration);
 }

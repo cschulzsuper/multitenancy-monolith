@@ -35,9 +35,9 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access
         }
 
 
-        public async Task UpdateAsync(Guid processToken, Action<AccountRegistration> action)
+        public async Task UpdateAsync(long accountRegistration, Action<AccountRegistration> action)
         {
-            AccountRegistrationValidation.EnsureProcessToken(processToken);
+            AccountRegistrationValidation.EnsureAccountRegistration(accountRegistration);
 
             var validatedAction = (AccountRegistration @object) =>
             {
@@ -46,7 +46,21 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access
                 AccountRegistrationValidation.EnsureUpdatable(@object);
             };
 
-            await _repository.UpdateOrThrowAsync(@object => @object.ProcessToken == processToken, validatedAction);
+            await _repository.UpdateOrThrowAsync(accountRegistration, validatedAction);
+        }
+
+        public async Task UpdateAsync(string accountGroup, Action<AccountRegistration> action)
+        {
+            AccountRegistrationValidation.EnsureAccountGroup(accountGroup);
+
+            var validatedAction = (AccountRegistration @object) =>
+            {
+                action.Invoke(@object);
+
+                AccountRegistrationValidation.EnsureUpdatable(@object);
+            };
+
+            await _repository.UpdateOrThrowAsync(@object => @object.AccountGroup == accountGroup, validatedAction);
         }
 
         public async Task DeleteAsync(Guid processToken)

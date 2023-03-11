@@ -9,11 +9,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Admission.AuthenticationRegistrationCommands;
+namespace Admission.ContextAuthenticationRegistrationCommands;
 
 public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -54,7 +53,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
                 .GetQueryable()
                 .SingleOrDefault(x =>
                     x.AuthenticationIdentity == registerAuthenticationRegistration.AuthenticationIdentity &&
-                    x.ProcessState == AuthenticationRegistrationProcessStates.New && 
+                    x.ProcessState == AuthenticationRegistrationProcessStates.New &&
                     x.MailAddress == registerAuthenticationRegistration.MailAddress);
 
             Assert.NotNull(createdRegistration);
@@ -85,7 +84,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         var registerAuthenticationRegistration = new
         {
-            AuthenticationIdentity = existingAuthenticationRegistration.AuthenticationIdentity,
+            existingAuthenticationRegistration.AuthenticationIdentity,
             MailAddress = "info@localhost",
             Secret = "secret"
         };

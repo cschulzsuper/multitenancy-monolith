@@ -1,28 +1,26 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Server;
+using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Access.AccountRegistrationCommands;
+namespace Admission.ContextAuthenticationIdentityCommands;
 
-public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
-    public Register(WebApplicationFactory<Program> factory)
+    public Verify(WebApplicationFactory<Program> factory)
     {
         _factory = factory.Mock();
     }
 
     [Fact]
-    public async Task Register_ShouldBeUnauthorized_WhenNotAuthenticated()
+    public async Task Verify_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/register");
-        request.Content = JsonContent.Create(new object());
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities/_/verify");
 
         var client = _factory.CreateClient();
 
@@ -38,16 +36,11 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(MockWebApplication.MockAdmin)]
     [InlineData(MockWebApplication.MockIdentity)]
     [InlineData(MockWebApplication.MockDemo)]
-    [InlineData(MockWebApplication.MockChief)]
-    [InlineData(MockWebApplication.MockChiefObserver)]
-    [InlineData(MockWebApplication.MockMember)]
-    [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Register_ShouldFail_WhenAuthorized(int mock)
+    public async Task Verify_ShouldSucceed_WhenValid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities/_/verify");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
-        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
@@ -55,8 +48,27 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData(MockWebApplication.MockChief)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
+    [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
+    public async Task Verify_ShouldBeUnauthorized_WhenNotIdentity(int mock)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities/_/verify");
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Theory]
@@ -67,12 +79,11 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
     [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Register_ShouldBeUnauthorized_WhenInvalid(int mock)
+    public async Task Verify_ShouldBeUnauthorized_WhenInvalid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities/_/verify");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
-        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
@@ -81,6 +92,5 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 }

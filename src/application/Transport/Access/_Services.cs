@@ -10,6 +10,7 @@ public static class _Services
     {
         services.AddScoped<IAccountGroupRequestHandler, AccountGroupRequestHandler>();
         services.AddScoped<IAccountMemberRequestHandler, AccountMemberRequestHandler>();
+        services.AddScoped<IAccountRegistrationCommandHandler, AccountRegistrationCommandHandler>();
         services.AddScoped<IContextAccountMemberCommandHandler, ContextAccountMemberCommandHandler>();
         services.AddScoped<IContextAccountRegistrationCommandHandler, ContextAccountRegistrationCommandHandler>();
 

@@ -8,20 +8,22 @@ using Xunit;
 
 namespace Admission.AuthenticationRegistrationCommands;
 
-public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
-    public Register(WebApplicationFactory<Program> factory)
+    public Approve(WebApplicationFactory<Program> factory)
     {
         _factory = factory.Mock();
     }
 
     [Fact]
-    public async Task Register_ShouldFail_WhenNotAuthenticated()
+    public async Task Approve_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/register");
+        var validAuthenticationRegistration = 1;
+
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/{validAuthenticationRegistration}/approve");
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
@@ -30,24 +32,19 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 
     [Theory]
     [InlineData(MockWebApplication.MockAdmin)]
-    [InlineData(MockWebApplication.MockIdentity)]
-    [InlineData(MockWebApplication.MockDemo)]
-    [InlineData(MockWebApplication.MockChief)]
-    [InlineData(MockWebApplication.MockChiefObserver)]
-    [InlineData(MockWebApplication.MockMember)]
-    [InlineData(MockWebApplication.MockMemberObserver)]
     public async Task Register_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
-        request.Content = JsonContent.Create(new object());
+        var validAuthenticationRegistration = 1;
+
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/{validAuthenticationRegistration}/approve");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
 
@@ -55,24 +52,24 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.NotEqual(0, response.Content.Headers.ContentLength);
     }
 
     [Theory]
-    [InlineData(MockWebApplication.MockAdmin)]
     [InlineData(MockWebApplication.MockIdentity)]
     [InlineData(MockWebApplication.MockDemo)]
     [InlineData(MockWebApplication.MockChief)]
     [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
     [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Register_ShouldFail_WhenInvalid(int mock)
+    public async Task Register_ShouldBeUnauthorized_WhenInvalid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/register");
+        var validAuthenticationRegistration = 1;
+
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/{validAuthenticationRegistration}/approve");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
-        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
@@ -80,7 +77,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 }

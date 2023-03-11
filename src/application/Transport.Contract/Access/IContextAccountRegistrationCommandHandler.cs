@@ -5,5 +5,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 
 public interface IContextAccountRegistrationCommandHandler
 {
+    Task ConfirmAsync(ContextAccountRegistrationConfirmCommand command);
+
     Task RegisterAsync(ContextAccountRegistrationRegisterCommand command);
 }

@@ -13,7 +13,9 @@ public interface IAccountRegistrationManager
 
     Task InsertAsync(AccountRegistration @object);
 
-    Task UpdateAsync(Guid processToken, Action<AccountRegistration> action);
+    Task UpdateAsync(long accountRegistration, Action<AccountRegistration> action);
+
+    Task UpdateAsync(string accountGroup, Action<AccountRegistration> action);
 
     Task DeleteAsync(Guid processToken);
 }

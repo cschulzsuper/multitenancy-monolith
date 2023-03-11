@@ -35,9 +35,9 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Admission
         }
 
 
-        public async Task UpdateAsync(Guid processToken, Action<AuthenticationRegistration> action)
+        public async Task UpdateAsync(long authenticationRegistration, Action<AuthenticationRegistration> action)
         {
-            AuthenticationRegistrationValidation.EnsureProcessToken(processToken);
+            AuthenticationRegistrationValidation.EnsureAuthenticationRegistration(authenticationRegistration);
 
             var validatedAction = (AuthenticationRegistration @object) =>
             {
@@ -46,7 +46,21 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Admission
                 AuthenticationRegistrationValidation.EnsureUpdatable(@object);
             };
 
-            await _repository.UpdateOrThrowAsync(@object => @object.ProcessToken == processToken, validatedAction);
+            await _repository.UpdateOrThrowAsync(authenticationRegistration, validatedAction);
+        }
+
+        public async Task UpdateAsync(string authenticationIdentity, Action<AuthenticationRegistration> action)
+        {
+            AuthenticationRegistrationValidation.EnsureAuthenticationIdentity(authenticationIdentity);
+
+            var validatedAction = (AuthenticationRegistration @object) =>
+            {
+                action.Invoke(@object);
+
+                AuthenticationRegistrationValidation.EnsureUpdatable(@object);
+            };
+
+            await _repository.UpdateOrThrowAsync(@object => @object.AuthenticationIdentity == authenticationIdentity, validatedAction);
         }
 
         public async Task DeleteAsync(Guid processToken)

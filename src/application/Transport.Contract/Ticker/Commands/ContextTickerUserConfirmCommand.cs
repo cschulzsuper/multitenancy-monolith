@@ -6,11 +6,6 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
 
 public sealed class ContextTickerUserConfirmCommand
 {
-    [Display(Name = "client name")]
-    [Required]
-    [StringLength(140)]
-    public required string ClientName { get; init; }
-
     [Display(Name = "account group")]
     [UniqueName]
     public required string AccountGroup { get; init; }

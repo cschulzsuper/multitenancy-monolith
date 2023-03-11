@@ -42,4 +42,12 @@ public sealed class TransportException : Exception
         throw exception;
     }
 
+    public static void ThrowProcessViolation(string message)
+    {
+        var exception = new TransportException(message);
+
+        exception.Data["error-code"] = "object-invalid";
+
+        throw exception;
+    }
 }

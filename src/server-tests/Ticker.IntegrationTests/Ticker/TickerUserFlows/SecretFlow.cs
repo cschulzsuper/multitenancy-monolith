@@ -43,8 +43,8 @@ public sealed class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         await TickerUser_Auth_ShouldSucceed_WithSecretStatePending();
         await TickerUser_Auth_ShouldBeForbidden();
 
-        await TickerUser_Confirm_ShouldSucceedd_WithSecretStateConfirmed();
-        await TickerUser_Confirm_ShouldBeForbidden();
+        await TickerUser_Confirm_ShouldSucceed_WithSecretStateConfirmed();
+        await TickerUser_Confirm_ShouldFail();
 
         await TickerUser_Auth_ShouldSucceed_WithSecretStateConfirmed();
         await TickerUser_Auth_ShouldSucceed_WithSecretStateConfirmed();
@@ -188,7 +188,7 @@ public sealed class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.Forbidden, authResponse.StatusCode);
     }
 
-    private async Task TickerUser_Confirm_ShouldSucceedd_WithSecretStateConfirmed()
+    private async Task TickerUser_Confirm_ShouldSucceed_WithSecretStateConfirmed()
     {
         // Arrange
         Guid tickerUserSecretToken;
@@ -237,7 +237,7 @@ public sealed class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         }
     }
 
-    private async Task TickerUser_Confirm_ShouldBeForbidden()
+    private async Task TickerUser_Confirm_ShouldFail()
     {
         // Arrange
         Guid tickerUserSecretToken;
@@ -270,7 +270,7 @@ public sealed class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         var authResponse = await client.SendAsync(authRequest);
 
         // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, authResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, authResponse.StatusCode);
     }
 
     private async Task TickerUser_Auth_ShouldSucceed_WithSecretStateConfirmed()
