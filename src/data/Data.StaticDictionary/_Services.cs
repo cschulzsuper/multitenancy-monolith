@@ -1,13 +1,13 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Access;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Administration;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Admission;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Business;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Extension;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Objects.Access;
-using ChristianSchulz.MultitenancyMonolith.Objects.Administration;
 using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using ChristianSchulz.MultitenancyMonolith.Objects.Business;
+using ChristianSchulz.MultitenancyMonolith.Objects.Extension;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using Microsoft.Extensions.DependencyInjection;
 using System;

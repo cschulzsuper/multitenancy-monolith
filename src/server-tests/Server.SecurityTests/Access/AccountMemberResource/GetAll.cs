@@ -33,6 +33,25 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockChief)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
+    public async Task Post_ShouldSucceed_WhenAuthorized(int mock)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-members");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotEqual(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
     [InlineData(MockWebApplication.MockAdmin)]
     [InlineData(MockWebApplication.MockIdentity)]
     [InlineData(MockWebApplication.MockDemo)]

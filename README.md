@@ -100,11 +100,8 @@ I said monolith, but with the latests features related to a ticker system, it is
   * /50 The missing `account-groups` endpoint is implemented. With tests and some additional renaming that was forgotten in the previous commit. https://github.com/cschulzsuper/multitenancy-monolith/commit/e94cb99731e3eb28e73450deaa23d49d933ab876
   * /51 `HTTP HEAD` requests check for used `account-groups` and `authentication-identities`. Additionally, registration object definition for  `authentication-identities` and `account-groups`. They will be used in registration flows. https://github.com/cschulzsuper/multitenancy-monolith/commit/65aa4a787c9889f8cb8ef1891150ebb52ef5e415
   * /52 Registration endpoints for `authentication-identities` and `account-groups`. Not much more this time, apart from smaller code improvements. Seal classes whenever you can! https://github.com/cschulzsuper/multitenancy-monolith/commit/773663d77fe7745830561e5f84357244b2e0cdf6
-  * /52 Registration flow components continues! This time confirmation and approval.
-  
-# Current
-
-* Authentictaion/Authorization: Missing endpoints and refactoring
+  * /53 Registration flow components continues! This time confirmation and approval. https://github.com/cschulzsuper/multitenancy-monolith/commit/c6953dc7d51785499bce0ae68e70aca6afef2df1
+  * /54 Implemented resource endpoints to manage `account-registration` and `authentication-registration`. Also renamed the `administration` domain to `extension`. 
 
 # Backlog
 

@@ -7,9 +7,9 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
 public interface IAuthenticationRegistrationManager
 {
-    Task<AuthenticationRegistration> GetAsync(Guid processToken);
+    Task<AuthenticationRegistration> GetAsync(long authenticationRegistration);
 
-    IQueryable<AuthenticationRegistration> GetAll();
+    IQueryable<AuthenticationRegistration> GetQueryable();
 
     Task InsertAsync(AuthenticationRegistration @object);
 
@@ -17,5 +17,5 @@ public interface IAuthenticationRegistrationManager
 
     Task UpdateAsync(string authenticationIdentity, Action<AuthenticationRegistration> action);
 
-    Task DeleteAsync(Guid processToken);
+    Task DeleteAsync(long authenticationRegistration);
 }

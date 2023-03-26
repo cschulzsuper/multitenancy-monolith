@@ -15,16 +15,16 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access
             _repository = repository;
         }
 
-        public async Task<AccountRegistration> GetAsync(Guid processToken)
+        public async Task<AccountRegistration> GetAsync(long accountRegistration)
         {
-            AccountRegistrationValidation.EnsureProcessToken(processToken);
+            AccountRegistrationValidation.EnsureAccountRegistration(accountRegistration);
 
-            var @object = await _repository.GetAsync(@object => @object.ProcessToken == processToken);
+            var @object = await _repository.GetAsync(accountRegistration);
 
             return @object;
         }
 
-        public IQueryable<AccountRegistration> GetAll()
+        public IQueryable<AccountRegistration> GetQueryable()
             => _repository.GetQueryable();
 
         public async Task InsertAsync(AccountRegistration @object)
@@ -63,11 +63,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access
             await _repository.UpdateOrThrowAsync(@object => @object.AccountGroup == accountGroup, validatedAction);
         }
 
-        public async Task DeleteAsync(Guid processToken)
+        public async Task DeleteAsync(long accountRegistration)
         {
-            AccountRegistrationValidation.EnsureProcessToken(processToken);
+            AccountRegistrationValidation.EnsureAccountRegistration(accountRegistration);
 
-            await _repository.DeleteOrThrowAsync(@object => @object.ProcessToken == processToken);
+            await _repository.DeleteOrThrowAsync(accountRegistration);
         }
     }
 }

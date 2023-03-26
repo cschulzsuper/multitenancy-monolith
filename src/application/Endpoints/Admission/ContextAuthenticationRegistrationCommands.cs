@@ -1,6 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Access.Commands;
-using ChristianSchulz.MultitenancyMonolith.Application.Access;
-using ChristianSchulz.MultitenancyMonolith.Application.Admission.Commands;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission.Commands;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

@@ -1,5 +1,4 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
-using ChristianSchulz.MultitenancyMonolith.Application.Administration;
 using ChristianSchulz.MultitenancyMonolith.Application.Business;
 using ChristianSchulz.MultitenancyMonolith.Caching;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
@@ -25,6 +24,7 @@ using ChristianSchulz.MultitenancyMonolith.Server.EventBus;
 using Microsoft.Extensions.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Application.Access;
+using ChristianSchulz.MultitenancyMonolith.Application.Extension;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 

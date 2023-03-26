@@ -51,9 +51,6 @@ internal static class AccountRegistrationValidation
     public static void EnsureUpdatable(AccountRegistration @object)
         => _updateValidator.Ensure(@object);
 
-    public static void EnsureProcessToken(Guid processToken)
-        => _accountRegistrationProcessTokenValidator.Ensure(processToken);
-
     public static void EnsureAccountRegistration(long accountRegistration)
         => _accountRegistrationSnowflakeValidator.Ensure(accountRegistration);
 

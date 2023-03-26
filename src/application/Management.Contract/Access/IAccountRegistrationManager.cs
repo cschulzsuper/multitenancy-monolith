@@ -7,9 +7,9 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 
 public interface IAccountRegistrationManager
 {
-    Task<AccountRegistration> GetAsync(Guid processToken);
+    Task<AccountRegistration> GetAsync(long accountRegistration);
 
-    IQueryable<AccountRegistration> GetAll();
+    IQueryable<AccountRegistration> GetQueryable();
 
     Task InsertAsync(AccountRegistration @object);
 
@@ -17,5 +17,5 @@ public interface IAccountRegistrationManager
 
     Task UpdateAsync(string accountGroup, Action<AccountRegistration> action);
 
-    Task DeleteAsync(Guid processToken);
+    Task DeleteAsync(long accountRegistration);
 }

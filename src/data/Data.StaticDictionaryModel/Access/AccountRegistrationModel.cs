@@ -22,11 +22,5 @@ public sealed class AccountRegistrationModel : IModel<AccountRegistration>
         {
             ModelException.ThrowPropertyValueConflict<AccountGroup>(nameof(@object.AccountGroup), @object.AccountGroup);
         }
-
-        var processTokenConflict = data.Any(x => x.ProcessToken == @object.ProcessToken);
-        if (processTokenConflict)
-        {
-            ModelException.ThrowPropertyValueConflict<AccountGroup>(nameof(@object.ProcessToken), @object.ProcessToken);
-        }
     }
 }

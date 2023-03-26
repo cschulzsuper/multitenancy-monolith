@@ -24,13 +24,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var validAccountMember = "valid-account-member";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{validAccountMember}");
-
-        var putAccountMember = new
-        {
-            UniqueName = "put-account-member"
-        };
-
-        request.Content = JsonContent.Create(putAccountMember);
+        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
@@ -39,6 +33,27 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData(MockWebApplication.MockChief)]
+    public async Task Put_ShouldFail_WhenAuthorized(int mock)
+    {
+        // Arrange
+        var validAccountMember = "valid-account-member";
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{validAccountMember}");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
+        request.Content = JsonContent.Create(new object());
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 
     [Theory]
@@ -55,13 +70,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{validAccountMember}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
-
-        var putAccountMember = new
-        {
-            UniqueName = "put-account-member"
-        };
-
-        request.Content = JsonContent.Create(putAccountMember);
+        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 

@@ -10,6 +10,7 @@ public static class _Services
     {
         services.AddScoped<IAuthenticationIdentityRequestHandler, AuthenticationIdentityRequestHandler>();
         services.AddScoped<IAuthenticationRegistrationCommandHandler, AuthenticationRegistrationCommandHandler>();
+        services.AddScoped<IAuthenticationRegistrationRequestHandler, AuthenticationRegistrationRequestHandler>();
         services.AddScoped<IContextAuthenticationIdentityCommandHandler, ContextAuthenticationIdentityCommandHandler>();
         services.AddScoped<IContextAuthenticationRegistrationCommandHandler, ContextAuthenticationRegistrationCommandHandler>();
 

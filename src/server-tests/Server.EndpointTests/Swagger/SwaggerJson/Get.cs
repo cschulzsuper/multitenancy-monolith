@@ -19,7 +19,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData("v1")]
-    [InlineData("v1-administration")]
+    [InlineData("v1-extension")]
     [InlineData("v1-access")]
     [InlineData("v1-admission")]
     [InlineData("v1-business")]

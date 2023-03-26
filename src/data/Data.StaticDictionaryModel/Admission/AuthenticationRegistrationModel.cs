@@ -23,11 +23,5 @@ public sealed class AuthenticationRegistrationModel : IModel<AuthenticationRegis
         {
             ModelException.ThrowPropertyValueConflict<AccountGroup>(nameof(@object.AuthenticationIdentity), @object.AuthenticationIdentity);
         }
-
-        var processTokenConflict = data.Any(x => x.ProcessToken == @object.ProcessToken);
-        if (processTokenConflict)
-        {
-            ModelException.ThrowPropertyValueConflict<AccountGroup>(nameof(@object.ProcessToken), @object.ProcessToken);
-        }
     }
 }

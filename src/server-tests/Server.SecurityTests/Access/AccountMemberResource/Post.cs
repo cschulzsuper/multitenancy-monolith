@@ -22,13 +22,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
-
-        var postAccountMember = new
-        {
-            UniqueName = "post-account-member"
-        };
-
-        request.Content = JsonContent.Create(postAccountMember);
+        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
@@ -37,6 +31,25 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [InlineData(MockWebApplication.MockChief)]
+    public async Task Post_ShouldFail_WhenAuthorized(int mock)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
+        request.Content = JsonContent.Create(new object());
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 
@@ -52,13 +65,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
-
-        var postAccountMember = new
-        {
-            UniqueName = "post-account-member"
-        };
-
-        request.Content = JsonContent.Create(postAccountMember);
+        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
