@@ -1,8 +1,9 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission;
-using ChristianSchulz.MultitenancyMonolith.Data;
+﻿using ChristianSchulz.MultitenancyMonolith.Data;
+using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -12,10 +13,14 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 internal sealed class TickerBookmarkManager : ITickerBookmarkManager
 {
     private readonly IRepository<TickerBookmark> _repository;
+    private readonly IEventStorage _eventStorage;
 
-    public TickerBookmarkManager(IRepository<TickerBookmark> repository)
+    public TickerBookmarkManager(
+        IRepository<TickerBookmark> repository, 
+        IEventStorage eventStorage)
     {
         _repository = repository;
+        _eventStorage = eventStorage;
     }
 
     public async Task<TickerBookmark> GetAsync(long tickerBookmark)
@@ -35,37 +40,23 @@ internal sealed class TickerBookmarkManager : ITickerBookmarkManager
         TickerBookmarkValidation.EnsureInsertable(@object);
 
         await _repository.InsertAsync(@object);
+
+        _eventStorage.Add("ticker-bookmark-inserted", @object.Snowflake);
     }
 
     public async Task UpdateAsync(long tickerBookmark, Action<TickerBookmark> action)
     {
-        AuthenticationIdentityValidation.EnsureAuthenticationIdentity(tickerBookmark);
+        TickerBookmarkValidation.EnsureTickerBookmark(tickerBookmark);
 
         var validatedAction = (TickerBookmark @object) =>
         {
             action.Invoke(@object);
-
             TickerBookmarkValidation.EnsureUpdatable(@object);
         };
 
         await _repository.UpdateOrThrowAsync(tickerBookmark, validatedAction);
-    }
 
-    public async Task DeleteAsync(long tickerBookmark)
-    {
-        TickerBookmarkValidation.EnsureTickerBookmark(tickerBookmark);
-
-        await _repository.DeleteOrThrowAsync(tickerBookmark);
-    }
-
-    public async Task DeleteAsync(string tickerUser, long tickerMessage)
-    {
-        TickerBookmarkValidation.EnsureTickerUser(tickerUser);
-        TickerBookmarkValidation.EnsureTickerMessage(tickerMessage);
-
-        await _repository.DeleteOrThrowAsync(@object =>
-            @object.TickerUser == tickerUser &&
-            @object.TickerMessage == tickerMessage);
+        _eventStorage.Add("ticker-bookmark-updated", tickerBookmark);
     }
 
     public async Task UpdateManyAsync(Expression<Func<TickerBookmark, bool>> predicate, Action<TickerBookmark> action)
@@ -73,13 +64,53 @@ internal sealed class TickerBookmarkManager : ITickerBookmarkManager
         var validatedAction = (TickerBookmark @object) =>
         {
             action.Invoke(@object);
-
             TickerBookmarkValidation.EnsureUpdatable(@object);
         };
 
-        await _repository.UpdateAsync(predicate, validatedAction);
+        var snowflakes = await _repository.UpdateAsync(predicate, validatedAction);
+
+        var tickerBookmarks = snowflakes.Select(snowflake => snowflake as long?
+            ?? throw new UnreachableException($"Expected snowflake to be of type '{nameof(Int64)}' but found '{snowflake.GetType()}'"));
+
+        foreach (var tickerBookmark in tickerBookmarks)
+        {
+            _eventStorage.Add("ticker-bookmark-updated", tickerBookmark);
+        }
+    }
+
+    public async Task DeleteAsync(long tickerBookmark)
+    {
+        TickerBookmarkValidation.EnsureTickerBookmark(tickerBookmark);
+        await _repository.DeleteOrThrowAsync(tickerBookmark);
+
+        _eventStorage.Add("ticker-bookmark-deleted", tickerBookmark);
+    }
+
+    public async Task DeleteAsync(string tickerUser, long tickerMessage)
+    {
+        TickerBookmarkValidation.EnsureTickerUser(tickerUser);
+        TickerBookmarkValidation.EnsureTickerMessage(tickerMessage);
+
+        var snowflake = await _repository.DeleteOrThrowAsync(@object =>
+            @object.TickerUser == tickerUser &&
+            @object.TickerMessage == tickerMessage);
+
+        var tickerBookmark = snowflake as long?
+            ?? throw new UnreachableException($"Expected snowflake to be of type '{nameof(Int64)}' but found '{snowflake.GetType()}'");
+
+        _eventStorage.Add("ticker-bookmark-deleted", tickerBookmark);
     }
 
     public async Task DeleteManyAsync(Expression<Func<TickerBookmark, bool>> predicate)
-        => await _repository.DeleteAsync(predicate);
+    {
+        var snowflakes = await _repository.DeleteAsync(predicate);
+
+        var tickerBookmarks = snowflakes.Select(snowflake => snowflake as long?
+            ?? throw new UnreachableException($"Expected snowflake to be of type '{nameof(Int64)}' but found '{snowflake.GetType()}'"));
+
+        foreach (var tickerBookmark in tickerBookmarks)
+        {
+            _eventStorage.Add("ticker-bookmark-deleted", tickerBookmark);
+        }
+    }
 }

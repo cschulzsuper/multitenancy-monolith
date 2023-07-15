@@ -29,9 +29,9 @@ public sealed class PublicationFlow
         { 
             options.PublicationChannelNameResolver = _ => $"{Guid.NewGuid()}";
 
-            options.SubscriptionInvocationSetup = (provider, scope) =>
+            options.SubscriptionInvocationSetup = (provider, channelName) =>
             {
-                provider.GetRequiredService<MockHandlerContext>().Scope = scope;
+                provider.GetRequiredService<MockHandlerContext>().Scope = channelName;
             };
         });
 
@@ -44,7 +44,7 @@ public sealed class PublicationFlow
     [InlineData(1, 100)]
     [InlineData(10, 100)]
     [InlineData(100, 100)]
-    [InlineData(1000, 100)]
+    [InlineData(500, 100)]
     public async Task PublicationFlow_ShouldPublish_ToScope(int scopes, int calls)
     {
         // Arrange

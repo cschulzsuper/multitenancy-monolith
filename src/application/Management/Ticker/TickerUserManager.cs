@@ -49,7 +49,7 @@ internal sealed class TickerUserManager : ITickerUserManager
         await _repository.UpdateOrThrowAsync(tickerUser, validatedAction);
     }
 
-    public async Task UpdateAsync(string tickerUser, Action<TickerUser> action, Action @default)
+    public async Task UpdateAsync(string tickerUser, Action<TickerUser> action, Action fallback)
     {
         TickerUserValidation.EnsureTickerUser(tickerUser);
 
@@ -60,7 +60,7 @@ internal sealed class TickerUserManager : ITickerUserManager
             TickerUserValidation.EnsureUpdatable(@object);
         };
 
-        await _repository.UpdateOrThrowAsync(@object => @object.MailAddress == tickerUser, validatedAction, @default);
+        await _repository.UpdateOrThrowAsync(@object => @object.MailAddress == tickerUser, validatedAction, fallback);
     }
 
     public async Task DeleteAsync(long tickerUser)

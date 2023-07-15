@@ -20,7 +20,7 @@ internal sealed class MockHandler
 
     public Task ExecuteAsync(long snowflake)
     {
-        _logger.LogInformation("MockHandler for snowflake '{snowflake}' executed in scope '{group}'", snowflake, _mockHandlerContext.Scope);
+        _logger.LogInformation("MockHandler for snowflake '{snowflake}' executed in scope '{scope}'", snowflake, _mockHandlerContext.Scope);
 
         _mockHandlerStatistics.CallsPerScope.AddOrUpdate(_mockHandlerContext.Scope, _ => 1, (_, value) => value + 1);
 

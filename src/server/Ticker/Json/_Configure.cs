@@ -7,7 +7,7 @@ internal static class _Configure
 {
     public static IServiceCollection ConfigureJsonOptions(this IServiceCollection services)
     {
-        services.Configure<JsonOptions>(options => { options.SerializerOptions.Converters.Add(new ObjectJsonConverter()); });
+        services.Configure<JsonOptions>(options => { options.SerializerOptions.TypeInfoResolver = new CustomPropertiesResolver(); });
 
         return services;
     }

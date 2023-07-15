@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Xunit;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using System.Text.Json;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 
 namespace Ticker.TickerMessageFlows;
 
@@ -20,25 +21,14 @@ public sealed class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
-    private Action<string>? _eventPublicationInterceptorAssert = null;
-    private TaskCompletionSource _eventPublicationInterceptorTask = new();
-
     public DeleteFlow(WebApplicationFactory<Program> factory)
     {
         _factory = factory.Mock();
-        _factory.Services.GetRequiredService<EventsOptions>()
-            .PublicationInterceptor = (scope, @event, snowflake) =>
-            {
-                _eventPublicationInterceptorAssert?.Invoke(@event);
-                _eventPublicationInterceptorTask.SetResult();
-            };
     }
 
     [Fact]
-    public async Task Exceute()
+    public async Task Execute()
     {
-        // TODO Rare race condition. A `ticker-bookmark-deleted` event should fix this.
-
         var tickerMessage = await TickerMessage_Create_ShouldSucceed();
 
         await TickerMessage_Delete_ShouldSucceed(tickerMessage);
@@ -48,11 +38,16 @@ public sealed class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
     private async Task<long> TickerMessage_Create_ShouldSucceed()
     {
         // Arrange
-        _eventPublicationInterceptorAssert = @event => Assert.Equal("ticker-message-inserted", @event);
-        _eventPublicationInterceptorTask = new TaskCompletionSource();
+        var tickerMessageInsertedTask = new TaskCompletionSource();
+        var tickerMessageInsertedTaskCancellationTokenSource = new CancellationTokenSource(5000);
+        tickerMessageInsertedTaskCancellationTokenSource.Token.Register(() => { if (!tickerMessageInsertedTask.Task.IsCompleted) tickerMessageInsertedTask.SetCanceled(); });
 
-        var cancellationTokenSource = new CancellationTokenSource(2000);
-        cancellationTokenSource.Token.Register(_eventPublicationInterceptorTask.SetCanceled);
+        _factory.Services.GetRequiredService<EventsOptions>()
+            .PublicationInterceptor = (scope, @event, snowflake) =>
+            {
+                Assert.Equal("ticker-message-inserted", @event);
+                tickerMessageInsertedTask.SetResult();
+            };
 
         var createRequest = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
         createRequest.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
@@ -83,19 +78,40 @@ public sealed class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
 
         Assert.NotNull(createdTickerUser);
 
-        await _eventPublicationInterceptorTask.Task;
-        Assert.True(_eventPublicationInterceptorTask.Task.IsCompletedSuccessfully);
+        await tickerMessageInsertedTask.Task;
+        Assert.True(tickerMessageInsertedTask.Task.IsCompletedSuccessfully);
 
         return createdTickerUser.Snowflake;
     }
     private async Task TickerMessage_Delete_ShouldSucceed(long tickerMessage)
     {
         // Arrange
-        _eventPublicationInterceptorAssert = @event => Assert.Equal("ticker-message-deleted", @event);
-        _eventPublicationInterceptorTask = new TaskCompletionSource();
+        var tickerMessageDeletedTask = new TaskCompletionSource();
+        var tickerMessageDeletedTaskCancellationTokenSource = new CancellationTokenSource(5000);
+        tickerMessageDeletedTaskCancellationTokenSource.Token.Register(() => { 
+            if (!tickerMessageDeletedTask.Task.IsCompleted) tickerMessageDeletedTask.SetCanceled(); });
 
-        var cancellationTokenSource = new CancellationTokenSource(2000);
-        cancellationTokenSource.Token.Register(_eventPublicationInterceptorTask.SetCanceled);
+        var tickerBookmarkDeletedTask = new TaskCompletionSource();
+        var tickerBookmarkDeletedTaskCancellationTokenSource = new CancellationTokenSource(5000);
+        tickerBookmarkDeletedTaskCancellationTokenSource.Token.Register(() => { 
+            if (!tickerBookmarkDeletedTask.Task.IsCompleted) tickerBookmarkDeletedTask.SetCanceled(); });
+
+        _factory.Services.GetRequiredService<EventsOptions>()
+            .PublicationInterceptor = (scope, @event, snowflake) =>
+            {
+                switch(@event)
+                {
+                    case "ticker-message-deleted":
+                        tickerMessageDeletedTask.SetResult();
+                        break;
+                    case "ticker-bookmark-deleted":
+                        tickerBookmarkDeletedTask.SetResult();
+                        break;
+                    default:
+                        Assert.Fail();
+                        break;
+                }             
+            };
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-messages/{tickerMessage}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
@@ -108,8 +124,11 @@ public sealed class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        await _eventPublicationInterceptorTask.Task;
-        Assert.True(_eventPublicationInterceptorTask.Task.IsCompletedSuccessfully);
+        await tickerMessageDeletedTask.Task;
+        Assert.True(tickerMessageDeletedTask.Task.IsCompletedSuccessfully);
+
+        await tickerBookmarkDeletedTask.Task;
+        Assert.True(tickerBookmarkDeletedTask.Task.IsCompletedSuccessfully);
     }
 
     private async Task TickerBookmark_Query_ShouldSucceed()
@@ -130,5 +149,4 @@ public sealed class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
         Assert.NotNull(content);
         Assert.Empty(content.RootElement.EnumerateArray());
     }
-
 }

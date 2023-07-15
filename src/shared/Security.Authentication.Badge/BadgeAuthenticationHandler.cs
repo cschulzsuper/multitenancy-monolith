@@ -13,8 +13,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Ba
 
 public sealed class BadgeAuthenticationHandler : AuthenticationHandler<BadgeAuthenticationOptions>
 {
-    public BadgeAuthenticationHandler(IOptionsMonitor<BadgeAuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
-        : base(options, logger, encoder, clock)
+    public BadgeAuthenticationHandler(IOptionsMonitor<BadgeAuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder)
+        : base(options, logger, encoder)
     { }
 
     protected async override Task<AuthenticateResult> HandleAuthenticateAsync()

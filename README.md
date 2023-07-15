@@ -101,7 +101,10 @@ I said monolith, but with the latests features related to a ticker system, it is
   * /51 `HTTP HEAD` requests check for used `account-groups` and `authentication-identities`. Additionally, registration object definition for  `authentication-identities` and `account-groups`. They will be used in registration flows. https://github.com/cschulzsuper/multitenancy-monolith/commit/65aa4a787c9889f8cb8ef1891150ebb52ef5e415
   * /52 Registration endpoints for `authentication-identities` and `account-groups`. Not much more this time, apart from smaller code improvements. Seal classes whenever you can! https://github.com/cschulzsuper/multitenancy-monolith/commit/773663d77fe7745830561e5f84357244b2e0cdf6
   * /53 Registration flow components continues! This time confirmation and approval. https://github.com/cschulzsuper/multitenancy-monolith/commit/c6953dc7d51785499bce0ae68e70aca6afef2df1
-  * /54 Implemented resource endpoints to manage `account-registration` and `authentication-registration`. Also renamed the `administration` domain to `extension`. 
+  * /54 Implemented resource endpoints to manage `account-registration` and `authentication-registration`. Also renamed the `administration` domain to `extension`. https://github.com/cschulzsuper/multitenancy-monolith/commit/645dc09ae8da8ea64ac6ac1a25239e397eb52d84
+
+## Back in action
+  * /55 Fixes to produce a testable state. Refactored `Repository` to be able to trigger `ticker-bookmark` events. Evaluation of `ticker-bookmark` events in `ticker` integration tests. Changed and fixed JSON serialization of `IDictionary<string, object>` when serialized in asynchronous context. 
 
 # Backlog
 

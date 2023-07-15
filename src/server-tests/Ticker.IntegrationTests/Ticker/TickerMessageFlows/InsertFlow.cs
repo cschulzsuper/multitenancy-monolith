@@ -22,25 +22,14 @@ public class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
-    private Action<string>? _eventPublicationInterceptorAssert = null;
-    private TaskCompletionSource _eventPublicationInterceptorTask = new TaskCompletionSource();
-
     public InsertFlow(WebApplicationFactory<Program> factory)
     {
         _factory = factory.Mock();
-        _factory.Services.GetRequiredService<EventsOptions>()
-            .PublicationInterceptor = (scope, @event, snowflake) =>
-            {
-                _eventPublicationInterceptorAssert?.Invoke(@event);
-                _eventPublicationInterceptorTask.SetResult();
-            };
     }
 
     [Fact]
-    public async Task Exceute()
+    public async Task Execute()
     {
-        // TODO Rare race condition. A `ticker-bookmark-inserted` event should fix this.
-
         await TickerMessage_Create_ShouldSucceed();
         await TickerBookmark_Query_ShouldSucceed();
     }
@@ -48,11 +37,34 @@ public class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
     private async Task TickerMessage_Create_ShouldSucceed()
     {
         // Arrange
-        _eventPublicationInterceptorAssert = @event => Assert.Equal("ticker-message-inserted", @event);
-        _eventPublicationInterceptorTask = new TaskCompletionSource();
+        var tickerMessageInsertedTask = new TaskCompletionSource();
+        var tickerMessageInsertedTaskCancellationTokenSource = new CancellationTokenSource(5000);
+        tickerMessageInsertedTaskCancellationTokenSource.Token.Register(() => {
+            if (!tickerMessageInsertedTask.Task.IsCompleted) tickerMessageInsertedTask.SetCanceled();
+        });
 
-        var cancellationTokenSource = new CancellationTokenSource(2000);
-        cancellationTokenSource.Token.Register(_eventPublicationInterceptorTask.SetCanceled);
+        var tickerBookmarkInsertedTask = new TaskCompletionSource();
+        var tickerBookmarkInsertedTaskCancellationTokenSource = new CancellationTokenSource(5000);
+        tickerBookmarkInsertedTaskCancellationTokenSource.Token.Register(() => {
+            if (!tickerBookmarkInsertedTask.Task.IsCompleted) tickerBookmarkInsertedTask.SetCanceled();
+        });
+
+        _factory.Services.GetRequiredService<EventsOptions>()
+            .PublicationInterceptor = (scope, @event, snowflake) =>
+            {
+                switch (@event)
+                {
+                    case "ticker-message-inserted":
+                        tickerMessageInsertedTask.SetResult();
+                        break;
+                    case "ticker-bookmark-inserted":
+                        tickerBookmarkInsertedTask.SetResult();
+                        break;
+                    default:
+                        Assert.Fail();
+                        break;
+                }
+            };
 
         var createRequest = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
         createRequest.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
@@ -83,20 +95,34 @@ public class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
 
         Assert.NotNull(createdTickerUser);
 
-        await _eventPublicationInterceptorTask.Task;
-        Assert.True(_eventPublicationInterceptorTask.Task.IsCompletedSuccessfully);
+        await tickerMessageInsertedTask.Task;
+        Assert.True(tickerMessageInsertedTask.Task.IsCompletedSuccessfully);
+
+        await tickerBookmarkInsertedTask.Task;
+        Assert.True(tickerBookmarkInsertedTask.Task.IsCompletedSuccessfully);
     }
 
     private async Task TickerBookmark_Query_ShouldSucceed()
     {
         // Arrange
-        var resetRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/_/bookmarks");
-        resetRequest.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
+        var tickerBookmarkInsertedTask = new TaskCompletionSource();
+        var tickerBookmarkInsertedTaskCancellationTokenSource = new CancellationTokenSource(5000);
+        tickerBookmarkInsertedTaskCancellationTokenSource.Token.Register(() => { if (!tickerBookmarkInsertedTask.Task.IsCompleted) tickerBookmarkInsertedTask.SetCanceled(); });
+
+        _factory.Services.GetRequiredService<EventsOptions>()
+            .PublicationInterceptor = (scope, @event, snowflake) =>
+            {
+                Assert.Equal("ticker-bookmark-inserted", @event);
+                tickerBookmarkInsertedTask.SetResult();
+            };
+
+        var queryRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/_/bookmarks");
+        queryRequest.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();
 
         // Act
-        var response = await client.SendAsync(resetRequest);
+        var response = await client.SendAsync(queryRequest);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -106,5 +132,4 @@ public class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
         Assert.Collection(content.RootElement.EnumerateArray().OrderBy(x => x.GetString("tickerMessage")),
             x => Assert.True(x.GetProperty("updated").GetBoolean()));
     }
-
 }

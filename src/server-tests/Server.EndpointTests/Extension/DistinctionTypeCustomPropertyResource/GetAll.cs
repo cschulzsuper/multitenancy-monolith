@@ -84,7 +84,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Get_ShouldFail_WhenInvalidDistinctionType()
+    public async Task GetAll_ShouldFail_WhenInvalidDistinctionType()
     {
         // Arrange
         var invalidDistinctionType = "Invalid-distinction-type";

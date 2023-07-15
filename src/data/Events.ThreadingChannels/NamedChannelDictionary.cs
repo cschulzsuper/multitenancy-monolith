@@ -12,14 +12,14 @@ internal sealed class NamedChannelDictionary<T>
 {
     private readonly ConcurrentDictionary<string, NamedChannel<T>> _channels;
 
-    private readonly Queue<NamedChannel<T>> _newChannels;
+    private readonly ConcurrentQueue<NamedChannel<T>> _newChannels;
 
     private TaskCompletionSource _waitNew;
 
     public NamedChannelDictionary()
     {
         _channels = new ConcurrentDictionary<string, NamedChannel<T>>();
-        _newChannels = new Queue<NamedChannel<T>>();
+        _newChannels = new ConcurrentQueue<NamedChannel<T>>();
         _waitNew = new TaskCompletionSource();
     }
 
@@ -27,19 +27,19 @@ internal sealed class NamedChannelDictionary<T>
     {
         try
         {
-            var dequeued = _newChannels.TryDequeue(out var channel);
-            if (dequeued)
-            {
-                return channel!;
+            while (true) { 
+                var dequeued = _newChannels.TryDequeue(out var channel);
+                if (dequeued)
+                {
+                    return channel!;
+                }
+
+                using var localCancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+                localCancellationToken.Token.Register(_waitNew.SetCanceled);
+
+                await _waitNew.Task;
             }
-
-            using var localCancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-
-            localCancellationToken.Token.Register(_waitNew.SetCanceled);
-
-            await _waitNew.Task;
-
-            return _newChannels.Dequeue();
         }
         finally
         {
@@ -49,13 +49,15 @@ internal sealed class NamedChannelDictionary<T>
 
     public async Task CompleteAllAsync(int timeout)
     {
-        foreach (var channel in _channels)
+        var copy = _channels.ToDictionary();
+
+        foreach (var channel in copy)
         {
             channel.Value.ChannelWriter.Complete();
         }
 
         await Task.WhenAll(
-            _channels.Select(async namedChannel =>
+            copy.Select(async namedChannel =>
             {
                 await namedChannel.Value.ChannelReader.Completion
                     .WaitAsync(TimeSpan.FromMilliseconds(timeout))

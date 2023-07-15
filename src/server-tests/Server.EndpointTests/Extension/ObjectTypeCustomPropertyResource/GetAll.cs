@@ -94,7 +94,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Get_ShouldFail_WhenInvalidObjectType()
+    public async Task GetAll_ShouldFail_WhenInvalidObjectType()
     {
         // Arrange
         var invalidObjectType = "Invalid-object-type";

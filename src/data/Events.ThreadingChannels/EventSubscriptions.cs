@@ -21,20 +21,29 @@ internal sealed class EventSubscriptions : IEventSubscriptions
         where THandler : class
     {
         _subscriptions.Add(eventName,
-            (services,snowflake) => ActionAsync(services, snowflake, subscription));
+            async (services, snowflake) =>
+            {
+                await ActionAsync(services, snowflake, subscription);
+
+                // TODO Extract event flush into custom event subscription middleware
+
+                await services
+                   .GetRequiredService<IEventStorage>()
+                   .FlushAsync();
+            });
     }
 
     public async Task InvokeAsync(string @event, IServiceProvider services, long snowflake)
     {
         var found = _subscriptions.TryGetValue(@event, out var subscription);
-        
-        if(!found)
+
+        if (!found)
         {
             _logger.LogInformation("Event '{event}' subscription for '{snowflake}' not found", @event, snowflake);
             return;
         }
 
-        _logger.LogInformation("Event '{event}' subscription for '{snowflake}' has been invoked", @event, snowflake);
+        _logger.LogInformation("Event '{event}' subscription for '{snowflake}' is being invoked", @event, snowflake);
 
         await subscription!(services, snowflake);
     }

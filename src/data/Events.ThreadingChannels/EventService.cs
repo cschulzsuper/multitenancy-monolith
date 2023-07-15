@@ -10,14 +10,14 @@ namespace ChristianSchulz.MultitenancyMonolith.Events;
 
 internal sealed class EventService : BackgroundService
 {
-    private readonly ILogger<IEventSubscriptions> _logger;
+    private readonly ILogger<EventService> _logger;
     private readonly NamedChannelDictionary<EventValue> _channels;
     private readonly TaskCollection _channelListeners;
     private readonly IServiceProvider _services;
     private readonly EventSubscriptions _subscriptions;
 
     public EventService(
-        ILogger<IEventSubscriptions> logger,
+        ILogger<EventService> logger,
         NamedChannelDictionary<EventValue> channels,
         TaskCollection channelListeners,
         IEventSubscriptions subscriptions,

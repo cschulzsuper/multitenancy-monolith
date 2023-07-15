@@ -1,6 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Business.Requests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System;
 
@@ -26,7 +27,8 @@ public static class BusinessObjectResource
         resource
             .MapGet(string.Empty, GetAll)
             .RequireAuthorization(policy => policy
-                .RequireRole("member", "member-observer"));
+                .RequireRole("member", "member-observer"))
+            .WithErrorMessage(CouldNotQueryBusinessObjects);
 
         resource
             .MapGet("{businessObject}", Get)

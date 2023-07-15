@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -257,32 +258,33 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         return 0;
     }
 
-    public int Update(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action)
+    public ICollection<object> Update(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action)
     {
         var entities = GetQueryable()
             .Where(predicate)
             .ToArray();
 
-        var rowsAffected = entities
-            .Sum(entity =>
+        var snowflakes = entities
+            .Select(entity => _context.SnowflakeProvider(entity))
+            .Where(snowflake =>
             {
-                var snowflake = _context.SnowflakeProvider(entity);
-                return Update(snowflake, action);
-            });
+                return Update(snowflake, action) == 1;
+            })
+            .ToImmutableArray();
 
-        return rowsAffected;
+        return snowflakes;
     }
 
     public Task<int> UpdateAsync(object snowflake, Action<TEntity> action)
     {
-        var rowsAffected = Update(snowflake, action);
-        return Task.FromResult(rowsAffected);
+        var affectedRows = Update(snowflake, action);
+        return Task.FromResult(affectedRows);
     }
 
-    public Task<int> UpdateAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action)
+    public Task<ICollection<object>> UpdateAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action)
     {
-        var rowsAffected = Update(predicate, action);
-        return Task.FromResult(rowsAffected);
+        var affectedRows = Update(predicate, action);
+        return Task.FromResult(affectedRows);
     }
 
     public int Delete(object snowflake)
@@ -291,31 +293,32 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         return removed ? 1 : 0;
     }
 
-    public int Delete(Expression<Func<TEntity, bool>> predicate)
+    public ICollection<object> Delete(Expression<Func<TEntity, bool>> predicate)
     {
         var entities = GetQueryable()
             .Where(predicate)
             .ToArray();
 
-        var rowsAffected = entities
-            .Sum(entity =>
+        var snowflakes = entities
+            .Select(entity => _context.SnowflakeProvider(entity))
+            .Where(snowflake =>
             {
-                var snowflake = _context.SnowflakeProvider(entity);
-                return Delete(snowflake);
-            });
+                return Delete(snowflake) == 1;
+            })
+            .ToImmutableArray();
 
-        return rowsAffected;
+        return snowflakes;
     }
 
     public Task<int> DeleteAsync(object snowflake)
     {
-        var rowsAffected = Delete(snowflake);
-        return Task.FromResult(rowsAffected);
+        var affectedRows = Delete(snowflake);
+        return Task.FromResult(affectedRows);
     }
 
-    public Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+    public Task<ICollection<object>> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
     {
-        var rowsAffected = Delete(predicate);
-        return Task.FromResult(rowsAffected);
+        var affectedRows = Delete(predicate);
+        return Task.FromResult(affectedRows);
     }
 }

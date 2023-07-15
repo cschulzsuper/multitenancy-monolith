@@ -53,17 +53,17 @@ public interface IRepository<TEntity>
 
     int Update(object snowflake, Action<TEntity> action);
 
-    int Update(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action);
+    ICollection<object> Update(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action);
 
     Task<int> UpdateAsync(object snowflake, Action<TEntity> action);
 
-    Task<int> UpdateAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action);
+    Task<ICollection<object>> UpdateAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action);
 
     int Delete(object snowflake);
 
-    int Delete(Expression<Func<TEntity, bool>> predicate);
+    ICollection<object> Delete(Expression<Func<TEntity, bool>> predicate);
 
     Task<int> DeleteAsync(object snowflake);
 
-    Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<ICollection<object>> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
 }
