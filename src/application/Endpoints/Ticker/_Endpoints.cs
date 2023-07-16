@@ -12,7 +12,8 @@ public static class _Endpoints
         var business = endpoints
             .MapGroup("ticker")
             .WithGroupName("ticker");
-        
+
+        business.MapContextTickerUserBookmarkCommands();
         business.MapContextTickerUserBookmarkResource();
         business.MapContextTickerUserCommands();
         business.MapTickerMessageResource();

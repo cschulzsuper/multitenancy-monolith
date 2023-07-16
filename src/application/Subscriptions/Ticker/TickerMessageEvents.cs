@@ -6,7 +6,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 public static class TickerMessageEvents
 {
-    public static IEventSubscriptions MapTickerMessageEvents(this IEventSubscriptions subscriptions)
+    public static IEventSubscriptions MapTickerMessageSubscriptions(this IEventSubscriptions subscriptions)
     {
         subscriptions.Map("ticker-message-inserted", Inserted);
         subscriptions.Map("ticker-message-updated", Updated);

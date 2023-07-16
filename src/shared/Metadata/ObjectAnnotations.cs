@@ -10,11 +10,11 @@ public static class ObjectAnnotations
     {
         var entityType = typeof(TEntity);
 
-        var objectTypeDefintion = entityType.GetCustomAttribute<ObjectAnnotationAttribute>();
+        var objectTypeDefinition = entityType.GetCustomAttribute<ObjectAnnotationAttribute>();
 
-        if (objectTypeDefintion != null)
+        if (objectTypeDefinition != null)
         {
-            return objectTypeDefintion.UniqueName
+            return objectTypeDefinition.UniqueName
                 .Replace('-', ' ');
         }
         else

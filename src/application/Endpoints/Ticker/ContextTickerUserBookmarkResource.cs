@@ -9,9 +9,9 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 public static class ContextTickerUserBookmarkResource
 {
-    private const string CouldNotQueryTickerUsers = "Could not query ticker users";
-    private const string CouldNotCreateTickerUser = "Could not create ticker user";
-    private const string CouldNotDeleteTickerUser = "Could not delete ticker user";
+    private const string CouldNotQueryTickerBookmarks = "Could not query ticker bookmarks";
+    private const string CouldNotCreateTickerBookmark = "Could not create ticker bookmark";
+    private const string CouldNotDeleteTickerBookmark = "Could not delete ticker bookmark";
 
     public static IEndpointRouteBuilder MapContextTickerUserBookmarkResource(this IEndpointRouteBuilder endpoints)
     {
@@ -26,19 +26,19 @@ public static class ContextTickerUserBookmarkResource
             .MapGet(string.Empty, GetAll)
             .RequireAuthorization(policy => policy
                 .RequireRole("ticker"))
-            .WithErrorMessage(CouldNotQueryTickerUsers);
+            .WithErrorMessage(CouldNotQueryTickerBookmarks);
 
         resource
             .MapPost(string.Empty, Post)
             .RequireAuthorization(policy => policy
                 .RequireRole("ticker"))
-            .WithErrorMessage(CouldNotCreateTickerUser);
+            .WithErrorMessage(CouldNotCreateTickerBookmark);
 
         resource
             .MapDelete("{tickerMessage}", Delete)
             .RequireAuthorization(policy => policy
                 .RequireRole("ticker"))
-            .WithErrorMessage(CouldNotDeleteTickerUser);
+            .WithErrorMessage(CouldNotDeleteTickerBookmark);
 
         return endpoints;
     }

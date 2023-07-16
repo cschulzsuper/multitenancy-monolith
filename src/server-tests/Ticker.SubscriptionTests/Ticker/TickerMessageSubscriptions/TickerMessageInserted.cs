@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using Xunit.Abstractions;
 
-namespace Ticker.TickerMessageEvents;
+namespace Ticker.TickerMessageSubscriptions;
 
 public sealed class TickerMessageInserted : IClassFixture<WebApplicationFactory<Program>>
 {

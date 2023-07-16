@@ -73,7 +73,7 @@ public sealed class Startup
     {
         app.ApplicationServices
             .GetRequiredService<IEventSubscriptions>()
-            .MapTickerEvents();
+            .MapTickerSubscriptions();
 
         if (!_environment.IsProduction())
         {

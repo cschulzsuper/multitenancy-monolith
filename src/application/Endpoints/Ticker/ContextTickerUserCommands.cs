@@ -34,13 +34,15 @@ public static class ContextTickerUserCommands
         commands
             .MapPost("/verify", Verify)
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "ticker"))
+                .RequireClaim("badge", "ticker")
+                .RequireRole("ticker"))
             .WithErrorMessage(CouldNotVerifyTickerUser);
 
         commands
             .MapPost("/post", Post)
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "ticker"))
+                .RequireClaim("badge", "ticker")
+                .RequireRole("ticker"))
             .WithErrorMessage(CouldNotPostTickerUser);
 
         return endpoints;

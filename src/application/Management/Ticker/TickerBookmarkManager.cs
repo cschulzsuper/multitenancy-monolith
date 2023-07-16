@@ -59,6 +59,27 @@ internal sealed class TickerBookmarkManager : ITickerBookmarkManager
         _eventStorage.Add("ticker-bookmark-updated", tickerBookmark);
     }
 
+    public async Task UpdateAsync(string tickerUser, long tickerMessage, Action<TickerBookmark> action)
+    {
+        TickerBookmarkValidation.EnsureTickerUser(tickerUser);
+        TickerBookmarkValidation.EnsureTickerMessage(tickerMessage);
+
+        var validatedAction = (TickerBookmark @object) =>
+        {
+            action.Invoke(@object);
+            TickerBookmarkValidation.EnsureUpdatable(@object);
+        };
+
+        var snowflake = await _repository.UpdateOrThrowAsync(@object =>
+            @object.TickerUser == tickerUser &&
+            @object.TickerMessage == tickerMessage, validatedAction);
+
+        var tickerBookmark = snowflake as long?
+            ?? throw new UnreachableException($"Expected snowflake to be of type '{nameof(Int64)}' but found '{snowflake.GetType()}'");
+
+        _eventStorage.Add("ticker-bookmark-updated", tickerBookmark);
+    }
+
     public async Task UpdateManyAsync(Expression<Func<TickerBookmark, bool>> predicate, Action<TickerBookmark> action)
     {
         var validatedAction = (TickerBookmark @object) =>

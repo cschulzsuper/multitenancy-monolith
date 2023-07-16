@@ -7,7 +7,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
 internal static class AuthenticationRegistrationCommands
 {
-    private const string CouldNotApproveAuthenticationRegistration = "Could not approve authentication registration";
+    private const string CouldNotApproveAuthenticationRegistration = "Could not execute authentication registration approve";
 
     public static IEndpointRouteBuilder MapAuthenticationRegistrationCommands(this IEndpointRouteBuilder endpoints)
     {

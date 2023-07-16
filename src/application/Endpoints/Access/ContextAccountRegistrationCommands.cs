@@ -9,8 +9,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 internal static class ContextAccountRegistrationCommands
 {
 
-    private const string CouldNotConfirmAccountRegistration = "Could not confirm account registration";
-    private const string CouldNotRegisterAccountRegistration = "Could not register account registration";
+    private const string CouldNotConfirmAccountRegistration = "Could not execute account registration confirm";
+    private const string CouldNotRegisterAccountRegistration = "Could not execute account registration register";
 
     public static IEndpointRouteBuilder MapContextAccountRegistrationCommands(this IEndpointRouteBuilder endpoints)
     {

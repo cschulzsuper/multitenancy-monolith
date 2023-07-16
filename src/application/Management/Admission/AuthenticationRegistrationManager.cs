@@ -4,70 +4,69 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application.Admission
+namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
+
+internal sealed class AuthenticationRegistrationManager : IAuthenticationRegistrationManager
 {
-    internal sealed class AuthenticationRegistrationManager : IAuthenticationRegistrationManager
+    private readonly IRepository<AuthenticationRegistration> _repository;
+
+    public AuthenticationRegistrationManager(IRepository<AuthenticationRegistration> repository)
     {
-        private readonly IRepository<AuthenticationRegistration> _repository;
+        _repository = repository;
+    }
 
-        public AuthenticationRegistrationManager(IRepository<AuthenticationRegistration> repository)
+    public async Task<AuthenticationRegistration> GetAsync(long authenticationRegistration)
+    {
+        AuthenticationRegistrationValidation.EnsureAuthenticationRegistration(authenticationRegistration);
+
+        var @object = await _repository.GetAsync(authenticationRegistration);
+
+        return @object;
+    }
+
+    public IQueryable<AuthenticationRegistration> GetQueryable()
+        => _repository.GetQueryable();
+
+    public async Task InsertAsync(AuthenticationRegistration @object)
+    {
+        AuthenticationRegistrationValidation.EnsureInsertable(@object);
+
+        await _repository.InsertAsync(@object);
+    }
+
+
+    public async Task UpdateAsync(long authenticationRegistration, Action<AuthenticationRegistration> action)
+    {
+        AuthenticationRegistrationValidation.EnsureAuthenticationRegistration(authenticationRegistration);
+
+        var validatedAction = (AuthenticationRegistration @object) =>
         {
-            _repository = repository;
-        }
+            action.Invoke(@object);
 
-        public async Task<AuthenticationRegistration> GetAsync(long authenticationRegistration)
+            AuthenticationRegistrationValidation.EnsureUpdatable(@object);
+        };
+
+        await _repository.UpdateOrThrowAsync(authenticationRegistration, validatedAction);
+    }
+
+    public async Task UpdateAsync(string authenticationIdentity, Action<AuthenticationRegistration> action)
+    {
+        AuthenticationRegistrationValidation.EnsureAuthenticationIdentity(authenticationIdentity);
+
+        var validatedAction = (AuthenticationRegistration @object) =>
         {
-            AuthenticationRegistrationValidation.EnsureAuthenticationRegistration(authenticationRegistration);
+            action.Invoke(@object);
 
-            var @object = await _repository.GetAsync(authenticationRegistration);
+            AuthenticationRegistrationValidation.EnsureUpdatable(@object);
+        };
 
-            return @object;
-        }
+        await _repository.UpdateOrThrowAsync(@object => @object.AuthenticationIdentity == authenticationIdentity, validatedAction);
+    }
 
-        public IQueryable<AuthenticationRegistration> GetQueryable()
-            => _repository.GetQueryable();
+    public async Task DeleteAsync(long authenticationRegistration)
+    {
+        AuthenticationRegistrationValidation.EnsureAuthenticationRegistration(authenticationRegistration);
 
-        public async Task InsertAsync(AuthenticationRegistration @object)
-        {
-            AuthenticationRegistrationValidation.EnsureInsertable(@object);
-
-            await _repository.InsertAsync(@object);
-        }
-
-
-        public async Task UpdateAsync(long authenticationRegistration, Action<AuthenticationRegistration> action)
-        {
-            AuthenticationRegistrationValidation.EnsureAuthenticationRegistration(authenticationRegistration);
-
-            var validatedAction = (AuthenticationRegistration @object) =>
-            {
-                action.Invoke(@object);
-
-                AuthenticationRegistrationValidation.EnsureUpdatable(@object);
-            };
-
-            await _repository.UpdateOrThrowAsync(authenticationRegistration, validatedAction);
-        }
-
-        public async Task UpdateAsync(string authenticationIdentity, Action<AuthenticationRegistration> action)
-        {
-            AuthenticationRegistrationValidation.EnsureAuthenticationIdentity(authenticationIdentity);
-
-            var validatedAction = (AuthenticationRegistration @object) =>
-            {
-                action.Invoke(@object);
-
-                AuthenticationRegistrationValidation.EnsureUpdatable(@object);
-            };
-
-            await _repository.UpdateOrThrowAsync(@object => @object.AuthenticationIdentity == authenticationIdentity, validatedAction);
-        }
-
-        public async Task DeleteAsync(long authenticationRegistration)
-        {
-            AuthenticationRegistrationValidation.EnsureAuthenticationRegistration(authenticationRegistration);
-
-            await _repository.DeleteOrThrowAsync(authenticationRegistration);
-        }
+        await _repository.DeleteOrThrowAsync(authenticationRegistration);
     }
 }

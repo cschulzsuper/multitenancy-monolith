@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using Xunit;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using System.Text.Json;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 
 namespace Ticker.TickerMessageFlows;
 

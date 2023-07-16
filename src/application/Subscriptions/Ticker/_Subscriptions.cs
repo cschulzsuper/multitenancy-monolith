@@ -4,11 +4,11 @@ using System.Diagnostics.CodeAnalysis;
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 [SuppressMessage("Style", "IDE1006:Naming Styles")]
-public static class _Events
+public static class _Subscriptions
 {
-    public static IEventSubscriptions MapTickerEvents(this IEventSubscriptions subscriptions)
+    public static IEventSubscriptions MapTickerSubscriptions(this IEventSubscriptions subscriptions)
     {
-        subscriptions.MapTickerMessageEvents();
+        subscriptions.MapTickerMessageSubscriptions();
 
         return subscriptions;
     }

@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using Xunit.Abstractions;
 
-namespace Ticker.TickerMessageEvents;
+namespace Ticker.TickerMessageSubscriptions;
 
 public sealed class TickerMessageDeleted : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -29,7 +29,7 @@ public sealed class TickerMessageDeleted : IClassFixture<WebApplicationFactory<P
         // Arrange
 
         await using var scope = _factory.CreateAsyncMultitenancyScope();
-        
+
         var existingTickerBookmark1 = new TickerBookmark
         {
             TickerMessage = 1,

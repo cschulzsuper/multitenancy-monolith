@@ -8,8 +8,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
 internal static class ContextAuthenticationRegistrationCommands
 {
-    private const string CouldNotConfirmAuthenticationRegistration = "Could not confirm authentication registration";
-    private const string CouldNotRegisterAuthenticationRegistration = "Could not register authentication registration";
+    private const string CouldNotConfirmAuthenticationRegistration = "Could not execute authentication registration confirm";
+    private const string CouldNotRegisterAuthenticationRegistration = "Could not execute authentication registration register";
 
     public static IEndpointRouteBuilder MapContextAuthenticationRegistrationCommands(this IEndpointRouteBuilder endpoints)
     {

@@ -104,7 +104,8 @@ I said monolith, but with the latests features related to a ticker system, it is
   * /54 Implemented resource endpoints to manage `account-registration` and `authentication-registration`. Also renamed the `administration` domain to `extension`. https://github.com/cschulzsuper/multitenancy-monolith/commit/645dc09ae8da8ea64ac6ac1a25239e397eb52d84
 
 ## Back in action
-  * /55 Fixes to produce a testable state. Refactored `Repository` to be able to trigger `ticker-bookmark` events. Evaluation of `ticker-bookmark` events in `ticker` integration tests. Changed and fixed JSON serialization of `IDictionary<string, object>` when serialized in asynchronous context. 
+  * /55 Fixes to produce a testable state. Refactored `Repository` to be able to trigger `ticker-bookmark` events. Evaluation of `ticker-bookmark` events in `ticker` integration tests. Changed and fixed JSON serialization of `IDictionary<string, object>` when serialized in asynchronous context. https://github.com/cschulzsuper/multitenancy-monolith/commit/6baa877e7ae3f30a28919dbbd7b047f85d4a9439
+  * /56 Added `confirm` endpoint, logic and related tests to unmark `ticker-bookmark`. Changed event handler project name from `Events` to `Subscriptions`.
 
 # Backlog
 

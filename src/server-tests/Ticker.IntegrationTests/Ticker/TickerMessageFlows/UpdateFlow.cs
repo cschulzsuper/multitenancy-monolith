@@ -88,15 +88,16 @@ public sealed class UpdateFlow : IClassFixture<WebApplicationFactory<Program>>
 
     private async Task TickerBookmark_Update_ShouldSucceed(long tickerMessage)
     {
-        // TODO Replace with API call once available
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/bookmarks/{tickerMessage}/confirm");
+        request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
-        using var scope = _factory.CreateMultitenancyScope();
+        var client = _factory.CreateClient();
 
-        await scope.ServiceProvider
-            .GetRequiredService<IRepository<TickerBookmark>>()
-            .UpdateOrThrowAsync(
-                x => x.TickerMessage == tickerMessage, 
-                x => x.Updated = false);
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     private async Task TickerMessage_Update_ShouldSucceed(long tickerMessage)

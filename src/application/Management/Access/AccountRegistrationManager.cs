@@ -4,70 +4,69 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application.Access
+namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
+
+internal sealed class AccountRegistrationManager : IAccountRegistrationManager
 {
-    internal sealed class AccountRegistrationManager : IAccountRegistrationManager
+    private readonly IRepository<AccountRegistration> _repository;
+
+    public AccountRegistrationManager(IRepository<AccountRegistration> repository)
     {
-        private readonly IRepository<AccountRegistration> _repository;
+        _repository = repository;
+    }
 
-        public AccountRegistrationManager(IRepository<AccountRegistration> repository)
+    public async Task<AccountRegistration> GetAsync(long accountRegistration)
+    {
+        AccountRegistrationValidation.EnsureAccountRegistration(accountRegistration);
+
+        var @object = await _repository.GetAsync(accountRegistration);
+
+        return @object;
+    }
+
+    public IQueryable<AccountRegistration> GetQueryable()
+        => _repository.GetQueryable();
+
+    public async Task InsertAsync(AccountRegistration @object)
+    {
+        AccountRegistrationValidation.EnsureInsertable(@object);
+
+        await _repository.InsertAsync(@object);
+    }
+
+
+    public async Task UpdateAsync(long accountRegistration, Action<AccountRegistration> action)
+    {
+        AccountRegistrationValidation.EnsureAccountRegistration(accountRegistration);
+
+        var validatedAction = (AccountRegistration @object) =>
         {
-            _repository = repository;
-        }
+            action.Invoke(@object);
 
-        public async Task<AccountRegistration> GetAsync(long accountRegistration)
+            AccountRegistrationValidation.EnsureUpdatable(@object);
+        };
+
+        await _repository.UpdateOrThrowAsync(accountRegistration, validatedAction);
+    }
+
+    public async Task UpdateAsync(string accountGroup, Action<AccountRegistration> action)
+    {
+        AccountRegistrationValidation.EnsureAccountGroup(accountGroup);
+
+        var validatedAction = (AccountRegistration @object) =>
         {
-            AccountRegistrationValidation.EnsureAccountRegistration(accountRegistration);
+            action.Invoke(@object);
 
-            var @object = await _repository.GetAsync(accountRegistration);
+            AccountRegistrationValidation.EnsureUpdatable(@object);
+        };
 
-            return @object;
-        }
+        await _repository.UpdateOrThrowAsync(@object => @object.AccountGroup == accountGroup, validatedAction);
+    }
 
-        public IQueryable<AccountRegistration> GetQueryable()
-            => _repository.GetQueryable();
+    public async Task DeleteAsync(long accountRegistration)
+    {
+        AccountRegistrationValidation.EnsureAccountRegistration(accountRegistration);
 
-        public async Task InsertAsync(AccountRegistration @object)
-        {
-            AccountRegistrationValidation.EnsureInsertable(@object);
-
-            await _repository.InsertAsync(@object);
-        }
-
-
-        public async Task UpdateAsync(long accountRegistration, Action<AccountRegistration> action)
-        {
-            AccountRegistrationValidation.EnsureAccountRegistration(accountRegistration);
-
-            var validatedAction = (AccountRegistration @object) =>
-            {
-                action.Invoke(@object);
-
-                AccountRegistrationValidation.EnsureUpdatable(@object);
-            };
-
-            await _repository.UpdateOrThrowAsync(accountRegistration, validatedAction);
-        }
-
-        public async Task UpdateAsync(string accountGroup, Action<AccountRegistration> action)
-        {
-            AccountRegistrationValidation.EnsureAccountGroup(accountGroup);
-
-            var validatedAction = (AccountRegistration @object) =>
-            {
-                action.Invoke(@object);
-
-                AccountRegistrationValidation.EnsureUpdatable(@object);
-            };
-
-            await _repository.UpdateOrThrowAsync(@object => @object.AccountGroup == accountGroup, validatedAction);
-        }
-
-        public async Task DeleteAsync(long accountRegistration)
-        {
-            AccountRegistrationValidation.EnsureAccountRegistration(accountRegistration);
-
-            await _repository.DeleteOrThrowAsync(accountRegistration);
-        }
+        await _repository.DeleteOrThrowAsync(accountRegistration);
     }
 }

@@ -9,19 +9,19 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Ticker.ContextTickerUserBookmarkResource;
+namespace Ticker.ContextTickerUserBookmarkCommands;
 
-public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
-    public Delete(WebApplicationFactory<Program> factory)
+    public Confirm(WebApplicationFactory<Program> factory)
     {
         _factory = factory.Mock();
     }
 
     [Fact]
-    public async Task Delete_ShouldRespectMultitenancy_WhenSuccessful()
+    public async Task Confirm_ShouldRespectMultitenancy_WhenSuccessful()
     {
         // Arrange
         var existingTickerBookmark = new TickerBookmark
@@ -45,7 +45,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerBookmark);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/_/bookmarks/{existingTickerBookmark.TickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/bookmarks/{existingTickerBookmark.TickerMessage}/confirm");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader(MockWebApplication.AccountGroup2);
 
         var client = _factory.CreateClient();
@@ -58,12 +58,12 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
         using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.AccountGroup1))
         {
-            var deletedTickerBookmark = scope.ServiceProvider
+            var updatedTickerBookmark = scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerBookmark>>()
                 .GetQueryable()
-                .SingleOrDefault();
+                .Single();
 
-            Assert.NotNull(deletedTickerBookmark);
+            Assert.True(updatedTickerBookmark.Updated);
         }
     }
 }

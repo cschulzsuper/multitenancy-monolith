@@ -17,6 +17,8 @@ public interface ITickerBookmarkManager
 
     Task UpdateAsync(long tickerBookmark, Action<TickerBookmark> action);
 
+    Task UpdateAsync(string tickerUser, long tickerMessage, Action<TickerBookmark> action);
+
     Task UpdateManyAsync(Expression<Func<TickerBookmark, bool>> predicate, Action<TickerBookmark> action);
 
     Task DeleteAsync(long tickerBookmark);

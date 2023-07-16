@@ -7,7 +7,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 public static class TickerUserCommands
 {
-    private const string CouldNotResetTickerUser = "Could not reset ticker user";
+    private const string CouldNotResetTickerUser = "Could not execute ticker user reset";
 
     public static IEndpointRouteBuilder MapTickerUserCommands(this IEndpointRouteBuilder endpoints)
     {

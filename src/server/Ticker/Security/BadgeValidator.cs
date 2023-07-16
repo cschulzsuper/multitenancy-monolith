@@ -41,6 +41,8 @@ public class BadgeValidator
     {
         var client = new HttpClient();
 
+        // TODO Hard-coded url must be moved to configuration
+
         client.BaseAddress = new Uri("https://localhost:7207");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", context.HttpContext.Request.Headers.Authorization);
 

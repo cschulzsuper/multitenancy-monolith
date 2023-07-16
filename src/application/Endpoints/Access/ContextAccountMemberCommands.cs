@@ -9,8 +9,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 
 internal static class ContextAccountMemberCommands
 {
-    private const string CouldNotAuthAccountMember = "Could not auth account member";
-    private const string CouldNotVerifyAccountMember = "Could not verify account member";
+    private const string CouldNotAuthAccountMember = "Could not execute account member auth";
+    private const string CouldNotVerifyAccountMember = "Could not execute account member verify";
 
     public static IEndpointRouteBuilder MapContextAccountMemberCommands(this IEndpointRouteBuilder endpoints)
     {

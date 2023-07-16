@@ -9,8 +9,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
 internal static class ContextAuthenticationIdentityCommands
 {
-    private const string CouldNotSignInAuthenticationIdentity = "Could not sign in authentication identity";
-    private const string CouldNotVerifyAuthenticationIdentity = "Could not verify authentication identity";
+    private const string CouldNotSignInAuthenticationIdentity = "Could not execute authentication identity sign in";
+    private const string CouldNotVerifyAuthenticationIdentity = "Could not execute authentication identity verify";
 
     public static IEndpointRouteBuilder MapContextAuthenticationIdentityCommands(this IEndpointRouteBuilder endpoints)
     {
