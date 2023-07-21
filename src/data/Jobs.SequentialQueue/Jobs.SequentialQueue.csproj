@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Jobs</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Cronos" Version="0.7.1" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-preview.6.23329.7" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0-preview.6.23329.7" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0-preview.6.23329.7" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Jobs.Contract\Jobs.Contract.csproj" />
+	</ItemGroup>
+
+</Project>

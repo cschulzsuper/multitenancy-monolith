@@ -3,7 +3,7 @@
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-public class ObjectAnnotationAttribute : Attribute
+public sealed class ObjectAnnotationAttribute : Attribute
 {
     private string? _displayName;
 

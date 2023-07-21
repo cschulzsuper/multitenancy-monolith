@@ -14,7 +14,9 @@ using System.Security.Claims;
 using System.Text.Json;
 using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 using Xunit.Abstractions;
+using Xunit;
 
+[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 internal static class MockWebApplication
 {
     public const string Client = "endpoint-tests";

@@ -21,16 +21,7 @@ internal sealed class EventSubscriptions : IEventSubscriptions
         where THandler : class
     {
         _subscriptions.Add(eventName,
-            async (services, snowflake) =>
-            {
-                await ActionAsync(services, snowflake, subscription);
-
-                // TODO Extract event flush into custom event subscription middleware
-
-                await services
-                   .GetRequiredService<IEventStorage>()
-                   .FlushAsync();
-            });
+            (services, snowflake) => ActionAsync(services, snowflake, subscription));
     }
 
     public async Task InvokeAsync(string @event, IServiceProvider services, long snowflake)
@@ -48,7 +39,7 @@ internal sealed class EventSubscriptions : IEventSubscriptions
         await subscription!(services, snowflake);
     }
 
-    private async Task ActionAsync<THandler>(IServiceProvider services, long snowflake, Func<THandler, long, Task> subscription)
+    private static async Task ActionAsync<THandler>(IServiceProvider services, long snowflake, Func<THandler, long, Task> subscription)
         where THandler : class
     {
         var handler = services.GetRequiredService<THandler>();

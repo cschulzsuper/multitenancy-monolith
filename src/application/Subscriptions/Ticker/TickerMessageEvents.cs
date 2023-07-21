@@ -16,14 +16,14 @@ public static class TickerMessageEvents
     }
 
     private static Func<ITickerMessageBookmarker, long, Task> Inserted =>
-        (eventHandler, tickerMessage)
-            => eventHandler.BookmarkAsync(tickerMessage);
+        (bookmarker, tickerMessage)
+            => bookmarker.BookmarkAsync(tickerMessage);
 
     private static Func<ITickerMessageBookmarker, long, Task> Updated =>
-        (eventHandler, tickerMessage)
-            => eventHandler.RefreshAsync(tickerMessage);
+        (bookmarker, tickerMessage)
+            => bookmarker.RefreshAsync(tickerMessage);
 
     private static Func<ITickerMessageBookmarker, long, Task> Deleted =>
-        (eventHandler, tickerMessage)
-            => eventHandler.PurgeAsync(tickerMessage);
+        (bookmarker, tickerMessage)
+            => bookmarker.PurgeAsync(tickerMessage);
 }

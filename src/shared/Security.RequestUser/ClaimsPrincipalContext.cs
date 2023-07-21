@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 
-public class ClaimsPrincipalContext
+public sealed class ClaimsPrincipalContext
 {
     public ClaimsPrincipalContext()
     {

@@ -21,7 +21,9 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Events;
-using _Configure = ChristianSchulz.MultitenancyMonolith.Server.Ticker.EventBus._Configure;
+using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Events;
+using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Jobs;
+using ChristianSchulz.MultitenancyMonolith.Jobs;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 
@@ -59,7 +61,8 @@ public sealed class Startup
         services.AddRequestUser();
         services.AddCaching();
         services.AddConfiguration();
-        services.AddEvents(options => _Configure.Configure(options));
+        services.AddEvents(options => options.Configure());
+        services.AddJobs(options => options.Configure());
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryTickerData();
@@ -74,6 +77,10 @@ public sealed class Startup
         app.ApplicationServices
             .GetRequiredService<IEventSubscriptions>()
             .MapTickerSubscriptions();
+
+        app.ApplicationServices
+            .GetRequiredService<IJobScheduler>()
+            .MapHeartbeat();
 
         if (!_environment.IsProduction())
         {

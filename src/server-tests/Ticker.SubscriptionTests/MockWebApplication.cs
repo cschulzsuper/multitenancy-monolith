@@ -9,7 +9,9 @@ using System.Collections.Generic;
 using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 using Xunit.Abstractions;
 using ChristianSchulz.MultitenancyMonolith.Events;
+using Xunit;
 
+[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 internal static class MockWebApplication
 {
     public const string Client = "event-tests";
@@ -26,7 +28,7 @@ internal static class MockWebApplication
             {
                 provider.Configure<EventsOptions>(options =>
                 {
-                    options.PublicationChannelNameResolver = _ => Group;
+                    options.ChannelNameResolver = _ => Group;
                 });
             })
             .ConfigureLogging(loggingBuilder =>

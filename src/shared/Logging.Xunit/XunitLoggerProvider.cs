@@ -4,7 +4,7 @@ using Xunit.Abstractions;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 
-public class XunitLoggerProvider : ILoggerProvider
+public sealed class XunitLoggerProvider : ILoggerProvider
 {
     private readonly ITestOutputHelper _output;
     private readonly LogLevel _minLevel;

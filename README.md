@@ -105,7 +105,10 @@ I said monolith, but with the latests features related to a ticker system, it is
 
 ## Back in action
   * /55 Fixes to produce a testable state. Refactored `Repository` to be able to trigger `ticker-bookmark` events. Evaluation of `ticker-bookmark` events in `ticker` integration tests. Changed and fixed JSON serialization of `IDictionary<string, object>` when serialized in asynchronous context. https://github.com/cschulzsuper/multitenancy-monolith/commit/6baa877e7ae3f30a28919dbbd7b047f85d4a9439
-  * /56 Added `confirm` endpoint, logic and related tests to unmark `ticker-bookmark`. Changed event handler project name from `Events` to `Subscriptions`.
+  * /56 Added `confirm` endpoint, logic and related tests to unmark `ticker-bookmark`. Changed event handler project name from `Events` to `Subscriptions`. https://github.com/cschulzsuper/multitenancy-monolith/commit/7bafe4651a8e8ff8eff73fa8c8e140d1b61278ce
+
+## Background Jobs
+  * /57 First draft of a very simple background job component, that exeutes jobs sequentially in a `HostedService`. For now, only simple logging heartbeat is implemented. 
 
 # Backlog
 

@@ -14,6 +14,7 @@ internal sealed class EventService : BackgroundService
     private readonly NamedChannelDictionary<EventValue> _channels;
     private readonly TaskCollection _channelListeners;
     private readonly IServiceProvider _services;
+    private readonly EventsOptions _options;
     private readonly EventSubscriptions _subscriptions;
 
     public EventService(
@@ -21,12 +22,14 @@ internal sealed class EventService : BackgroundService
         NamedChannelDictionary<EventValue> channels,
         TaskCollection channelListeners,
         IEventSubscriptions subscriptions,
-        IServiceProvider services)
+        IServiceProvider services,
+        EventsOptions options)
     {
         _logger = logger;
         _channels = channels;
         _channelListeners = channelListeners;
         _services = services;
+        _options = options;
 
         _subscriptions = subscriptions as EventSubscriptions ??
                          throw new UnreachableException($"Parameter {subscriptions} (IEventSubscriptions) must be of type EventSubscriptions");
@@ -84,17 +87,17 @@ internal sealed class EventService : BackgroundService
                 {
                     await using var scope = _services.CreateAsyncScope();
 
-                    var options = scope.ServiceProvider.GetRequiredService<EventsOptions>();
-
-                    options.SubscriptionInvocationSetup(scope.ServiceProvider, channel.Name);
+                    await _options.BeforeSubscriptionInvocation(scope.ServiceProvider, channel.Name);
 
                     await _subscriptions.InvokeAsync(@event!.Event, scope.ServiceProvider, @event.Snowflake);
-
                     _logger.LogInformation("Event '{event}' subscription for '{snowflake}' has been invoked", @event.Event, @event.Snowflake);
 
                     _ = await channel.ChannelReader
                         .ReadAsync(cancellationToken)
                         .ConfigureAwait(false);
+
+                    await _options.AfterSubscriptionInvocation(scope.ServiceProvider, channel.Name);
+
                 }
                 catch (Exception exception) when (exception is not OperationCanceledException)
                 {

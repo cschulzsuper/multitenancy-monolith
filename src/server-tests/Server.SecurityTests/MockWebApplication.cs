@@ -13,7 +13,9 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
+using Xunit;
 
+[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 internal static class MockWebApplication
 {
     public const int MockAdmin = 1;

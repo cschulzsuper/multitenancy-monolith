@@ -14,7 +14,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\application\Schedule\Schedule.csproj" />
 	  <ProjectReference Include="..\..\configuration\Configuration\Configuration.csproj" />
+	  <ProjectReference Include="..\..\data\Jobs.SequentialQueue\Jobs.SequentialQueue.csproj" />
 	</ItemGroup>
 	
 </Project>

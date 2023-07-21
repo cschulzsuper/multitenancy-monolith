@@ -20,15 +20,17 @@ using ChristianSchulz.MultitenancyMonolith.Server.Middleware;
 using ChristianSchulz.MultitenancyMonolith.Server.Json;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Events;
-using ChristianSchulz.MultitenancyMonolith.Server.EventBus;
 using Microsoft.Extensions.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Application.Access;
 using ChristianSchulz.MultitenancyMonolith.Application.Extension;
+using ChristianSchulz.MultitenancyMonolith.Jobs;
+using ChristianSchulz.MultitenancyMonolith.Server.Events;
+using ChristianSchulz.MultitenancyMonolith.Server.Jobs;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
-public class Startup
+public sealed class Startup
 {
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;
@@ -62,6 +64,7 @@ public class Startup
         services.AddCaching();
         services.AddConfiguration();
         services.AddEvents(options => options.Configure());
+        services.AddJobs(options => options.Configure());
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryAdministrationData();
@@ -84,6 +87,11 @@ public class Startup
 
     public void Configure(IApplicationBuilder app)
     {
+        app.ApplicationServices
+            .GetRequiredService<IJobScheduler>()
+            .MapHeartbeat();
+
+
         if (!_environment.IsProduction())
         {
             app.ApplicationServices.ConfigureAuthenticationIdentities();

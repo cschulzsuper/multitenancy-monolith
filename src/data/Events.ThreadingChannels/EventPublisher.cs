@@ -13,7 +13,7 @@ internal sealed class EventPublisher : IEventPublisher
         EventsOptions options,
         IServiceProvider services)
     {
-        var channelName = options.PublicationChannelNameResolver(services);
+        var channelName = options.ChannelNameResolver(services);
 
         _channel = channels.GetOrCreate(channelName);
         _options = options;

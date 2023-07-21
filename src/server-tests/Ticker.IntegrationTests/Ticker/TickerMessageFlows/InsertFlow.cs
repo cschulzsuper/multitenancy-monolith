@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Ticker.TickerMessageFlows;
 
-public class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
+public sealed class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 

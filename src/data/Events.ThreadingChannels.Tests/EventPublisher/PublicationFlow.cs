@@ -27,11 +27,13 @@ public sealed class PublicationFlow
 
         services.AddEvents(options => 
         { 
-            options.PublicationChannelNameResolver = _ => $"{Guid.NewGuid()}";
+            options.ChannelNameResolver = _ => $"{Guid.NewGuid()}";
 
-            options.SubscriptionInvocationSetup = (provider, channelName) =>
+            options.BeforeSubscriptionInvocation = (provider, channelName) =>
             {
                 provider.GetRequiredService<MockHandlerContext>().Scope = channelName;
+
+                return Task.CompletedTask;
             };
         });
 
