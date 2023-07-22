@@ -45,9 +45,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type",
             CustomProperties = new List<DistinctionTypeCustomProperty>
-            {
-                existingDistinctionTypeCustomProperty1, existingDistinctionTypeCustomProperty2
-            }
+        {
+            existingDistinctionTypeCustomProperty1, existingDistinctionTypeCustomProperty2
+        }
         };
 
         using (var scope = _factory.CreateMultitenancyScope())

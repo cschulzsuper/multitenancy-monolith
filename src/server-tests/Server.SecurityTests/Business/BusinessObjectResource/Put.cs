@@ -70,7 +70,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var validBusinessObject = "valid-business-object";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/business/business-objects/{validBusinessObject}");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);;
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();

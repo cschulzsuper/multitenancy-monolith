@@ -9,7 +9,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 
 public sealed class XUnitLogger : ILogger
 {
-    private static readonly string[] NewLineChars = new[] {Environment.NewLine};
+    private static readonly string[] NewLineChars = new[] { Environment.NewLine };
     private readonly string _category;
     private readonly LogLevel _minLogLevel;
     private readonly ITestOutputHelper _output;

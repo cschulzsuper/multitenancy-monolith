@@ -5,7 +5,7 @@ public sealed class StringLength : IValidationRule<string>
     private readonly int _length;
 
     private readonly string _validationMessage;
-    
+
     public StringLength(string field, int length)
     {
         _length = length;

@@ -15,7 +15,7 @@ internal static class AccountRegistrationCommands
             .MapGroup("/account-registrations")
             .WithTags("Account Registration Commands")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "identity")
+                .RequireClaim("type", "identity")
                 .RequireClaim("scope", "endpoints"));
 
         commands

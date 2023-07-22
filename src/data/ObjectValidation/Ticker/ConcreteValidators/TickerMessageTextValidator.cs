@@ -18,9 +18,9 @@ public sealed class TickerMessageTextValidator
     {
         var rules = new IValidationRule<string>[]
         {
-            new NotNull(field),
-            new NotEmpty(field),
-            new StringLength(field, 4000),
+        new NotNull(field),
+        new NotEmpty(field),
+        new StringLength(field, 4000),
         };
 
         return rules;

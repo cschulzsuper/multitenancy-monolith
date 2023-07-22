@@ -20,7 +20,7 @@ internal static class AccountRegistrationResource
             .MapGroup("/account-registrations")
             .WithTags("Account Registration API")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "identity")
+                .RequireClaim("type", "identity")
                 .RequireClaim("scope", "endpoints"));
 
         resource

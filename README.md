@@ -108,7 +108,8 @@ I said monolith, but with the latests features related to a ticker system, it is
   * /56 Added `confirm` endpoint, logic and related tests to unmark `ticker-bookmark`. Changed event handler project name from `Events` to `Subscriptions`. https://github.com/cschulzsuper/multitenancy-monolith/commit/7bafe4651a8e8ff8eff73fa8c8e140d1b61278ce
 
 ## Background Jobs
-  * /57 First draft of a very simple background job component, that exeutes jobs sequentially in a `HostedService`. For now, only simple logging heartbeat is implemented. 
+  * /57 First draft of a very simple background job component, that exeutes jobs sequentially in a `HostedService`. For now, only simple logging heartbeat is implemented. https://github.com/cschulzsuper/multitenancy-monolith/commit/0c127587c5b1227f5dde1930f8618bb9d4c54fe7
+  * /58 An HTTP PUT endpoint allows to change the schedule of a background job. Additionally, a changes were necessary to fix the swagger client and the authentication.
 
 # Backlog
 

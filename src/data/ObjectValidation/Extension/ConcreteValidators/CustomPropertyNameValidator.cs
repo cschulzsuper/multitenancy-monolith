@@ -18,10 +18,10 @@ public sealed class CustomPropertyNameValidator
     {
         var rules = new IValidationRule<string>[]
         {
-            new NotNull(field),
-            new NotEmpty(field),
-            new CamelCase(field),
-            new StringLength(field, 140),
+        new NotNull(field),
+        new NotEmpty(field),
+        new CamelCase(field),
+        new StringLength(field, 140),
         };
 
         return rules;

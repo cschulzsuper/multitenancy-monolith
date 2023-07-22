@@ -12,5 +12,5 @@ public sealed class AccountRegistrationResponse
 
     public required string MailAddress { get; set; }
 
-    public required string ProcessState { get; set;}
+    public required string ProcessState { get; set; }
 }

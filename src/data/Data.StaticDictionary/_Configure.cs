@@ -36,7 +36,7 @@ public static class _Configure
             .Distinct();
 
         var @objects = accountGroups
-            .Select(group => new AccountGroup {UniqueName = group})
+            .Select(group => new AccountGroup { UniqueName = group })
             .ToArray();
 
         using var scope = services.CreateScope();

@@ -245,7 +245,7 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
                 _ => throw new Exception(),
                 (_, _) =>
                 {
-                    var updated = (TEntity) entity!.Clone();
+                    var updated = (TEntity)entity!.Clone();
                     action(updated);
                     EnsureUpdatable(snowflake, updated);
 

@@ -38,9 +38,9 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             ObjectType = "business-object",
             DisplayName = "Existing Distinction Type",
             CustomProperties = new List<DistinctionTypeCustomProperty>
-            {
-                existingDistinctionTypeCustomProperty
-            }
+        {
+            existingDistinctionTypeCustomProperty
+        }
         };
 
         using (var scope = _factory.CreateMultitenancyScope(MockWebApplication.Group2))

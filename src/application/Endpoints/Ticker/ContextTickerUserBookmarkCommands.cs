@@ -14,7 +14,7 @@ public static class ContextTickerUserBookmarkCommands
         var commands = endpoints
             .MapGroup("/ticker-users/_/bookmarks")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "ticker")
+                .RequireClaim("type", "ticker")
                 .RequireClaim("scope", "endpoints"))
             .WithTags("Context Ticker User Bookmark Commands");
 

@@ -7,7 +7,7 @@ public sealed class Allowed : IValidationRule<string>
     private readonly object[] _allowedValues;
 
     private readonly string _validationMessage;
-    
+
     public Allowed(string field, params object[] allowedValues)
     {
         _allowedValues = allowedValues;

@@ -40,9 +40,9 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "business-object",
             CustomProperties = new List<ObjectTypeCustomProperty>
-            {
-                existingObjectTypeCustomProperty
-            }
+        {
+            existingObjectTypeCustomProperty
+        }
         };
 
         using (var scope = _factory.CreateMultitenancyScope())

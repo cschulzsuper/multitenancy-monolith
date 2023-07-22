@@ -18,7 +18,7 @@ internal static class ContextAccountRegistrationCommands
             .MapGroup("/account-registrations/_")
             .WithTags("Context Account Registration Commands")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "identity", "member"));
+                .RequireClaim("type", "identity", "member"));
 
         commands
             .MapPost("/confirm", Confirm)

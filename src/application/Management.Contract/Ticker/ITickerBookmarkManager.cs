@@ -24,6 +24,6 @@ public interface ITickerBookmarkManager
     Task DeleteAsync(long tickerBookmark);
 
     Task DeleteAsync(string tickerUser, long tickerMessage);
-    
+
     Task DeleteManyAsync(Expression<Func<TickerBookmark, bool>> predicate);
 }

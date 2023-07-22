@@ -17,7 +17,7 @@ public sealed class TokenValidator
     {
         var rules = new IValidationRule<Guid>[]
         {
-            new NotDefault<Guid>(field),
+        new NotDefault<Guid>(field),
         };
 
         return rules;

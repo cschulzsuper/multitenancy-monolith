@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Business;
 
-[ObjectAnnotation("business-object", 
+[ObjectAnnotation("business-object",
     DisplayName = "Business Object",
     Area = "business",
     Collection = "business-objects")]

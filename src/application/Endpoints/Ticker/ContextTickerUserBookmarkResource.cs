@@ -18,7 +18,7 @@ public static class ContextTickerUserBookmarkResource
         var resource = endpoints
             .MapGroup("/ticker-users/_/bookmarks")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "ticker")
+                .RequireClaim("type", "ticker")
                 .RequireClaim("scope", "endpoints"))
             .WithTags("Context Ticker User Bookmark API");
 

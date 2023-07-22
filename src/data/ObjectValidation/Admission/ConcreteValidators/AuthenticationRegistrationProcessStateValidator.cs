@@ -18,9 +18,9 @@ public sealed class AuthenticationRegistrationProcessStateValidator
     {
         var rules = new IValidationRule<string>[]
         {
-            new NotNull(field),
-            new NotEmpty(field),
-            new Allowed(field, AuthenticationRegistrationProcessStates.All),
+        new NotNull(field),
+        new NotEmpty(field),
+        new Allowed(field, AuthenticationRegistrationProcessStates.All),
         };
 
         return rules;

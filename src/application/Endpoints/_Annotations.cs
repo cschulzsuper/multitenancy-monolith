@@ -7,7 +7,7 @@ public sealed class ErrorMessageAttribute : Attribute
 {
     public string ErrorMessage { get; }
 
-    public ErrorMessageAttribute(string errorMessage) 
+    public ErrorMessageAttribute(string errorMessage)
     {
         ErrorMessage = errorMessage;
     }

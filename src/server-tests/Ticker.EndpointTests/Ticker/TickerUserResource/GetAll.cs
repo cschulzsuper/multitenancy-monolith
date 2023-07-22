@@ -68,13 +68,15 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadFromJsonAsync<JsonDocument>();
         Assert.NotNull(content);
         Assert.Collection(content.RootElement.EnumerateArray().OrderBy(x => x.GetString("displayName")),
-            x => {
+            x =>
+            {
                 Assert.Equal(existingTickerUser1.Snowflake, x.GetProperty("snowflake").GetInt64());
                 Assert.Equal(existingTickerUser1.DisplayName, x.GetString("displayName"));
                 Assert.Equal(existingTickerUser1.MailAddress, x.GetString("mailAddress"));
                 Assert.Equal(existingTickerUser1.SecretState, x.GetString("secretState"));
             },
-            x => {
+            x =>
+            {
                 Assert.Equal(existingTickerUser2.Snowflake, x.GetProperty("snowflake").GetInt64());
                 Assert.Equal(existingTickerUser2.DisplayName, x.GetString("displayName"));
                 Assert.Equal(existingTickerUser2.MailAddress, x.GetString("mailAddress"));

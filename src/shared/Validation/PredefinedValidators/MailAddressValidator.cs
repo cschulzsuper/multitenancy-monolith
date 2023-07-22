@@ -17,10 +17,10 @@ public sealed class MailAddressValidator
     {
         var rules = new IValidationRule<string>[]
         {
-            new NotNull(field),
-            new NotEmpty(field),
-            new LowerCase(field),
-            new MailAddress(field)
+        new NotNull(field),
+        new NotEmpty(field),
+        new LowerCase(field),
+        new MailAddress(field)
         };
 
         return rules;

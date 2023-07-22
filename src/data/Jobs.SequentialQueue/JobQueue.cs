@@ -48,18 +48,18 @@ internal sealed class JobQueue : IJobQueue
 
         _jobInfo[uniqueName] = newInfo;
 
-        Schedule(jobInfo, DateTime.UtcNow);
+        Schedule(newInfo, DateTime.UtcNow);
     }
 
-    public JobCallback Dequeue()
+    public Job Dequeue()
     {
         var empty = _jobs.Count == 0;
         if (empty)
         {
-            var noJobsCallback = new JobCallback
+            var noJobsCallback = new Job
             {
                 UniqueName = "no-jobs",
-                Job = _ => Task.CompletedTask,
+                Callback = _ => Task.CompletedTask,
                 Timestamp = DateTime.UtcNow.AddMinutes(1)
             };
 
@@ -72,31 +72,39 @@ internal sealed class JobQueue : IJobQueue
 
         if (!_jobInfo.ContainsValue(job.Value))
         {
-            var obsoleteJobCallback = new JobCallback
+            var obsoleteJobCallback = new Job
             {
                 UniqueName = "obsolete-job",
-                Job = _ => Task.CompletedTask,
+                Callback = _ => Task.CompletedTask,
                 Timestamp = DateTime.UtcNow
             };
 
             return obsoleteJobCallback;
         }
 
-        Schedule(job.Value, DateTime.UtcNow);
+        Schedule(job.Value, job.Key);
 
-        var jobCallback = new JobCallback
+        var jobCallback = new Job
         {
             UniqueName = job.Value.UniqueName,
-            Job = job.Value.Job,
+            Callback = job.Value.Job,
             Timestamp = job.Key
         };
 
         return jobCallback;
     }
 
-    private void Schedule(JobInfo jobInfo, DateTime @base)
+    private void Schedule(JobInfo jobInfo, DateTime last)
     {
+        var now = DateTime.UtcNow;
+        var @base = last > now ? last : now;
+
         var schedule = jobInfo.Schedule.Next(@base);
+
+        while(_jobs.ContainsKey(schedule))
+        {
+            schedule = schedule.AddTicks(1);
+        }
 
         _jobs.Add(schedule, jobInfo);
     }

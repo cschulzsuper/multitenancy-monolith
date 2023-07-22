@@ -4,8 +4,8 @@ public static class TickerMessagePriorities
 {
     public static readonly string[] All = new[]
     {
-        Low, Default, High, Catastrophe
-    };
+    Low, Default, High, Catastrophe
+};
 
     public const string Low = "low";
     public const string Default = "default";

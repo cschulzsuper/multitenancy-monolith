@@ -25,8 +25,8 @@ public sealed class PublicationFlow
         services.AddScoped<MockHandlerContext>();
         services.AddSingleton<MockHandlerStatistics>();
 
-        services.AddEvents(options => 
-        { 
+        services.AddEvents(options =>
+        {
             options.ChannelNameResolver = _ => $"{Guid.NewGuid()}";
 
             options.BeforeSubscriptionInvocation = (provider, channelName) =>

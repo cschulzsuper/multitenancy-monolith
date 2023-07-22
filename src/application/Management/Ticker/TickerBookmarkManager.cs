@@ -16,7 +16,7 @@ internal sealed class TickerBookmarkManager : ITickerBookmarkManager
     private readonly IEventStorage _eventStorage;
 
     public TickerBookmarkManager(
-        IRepository<TickerBookmark> repository, 
+        IRepository<TickerBookmark> repository,
         IEventStorage eventStorage)
     {
         _repository = repository;

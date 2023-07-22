@@ -48,7 +48,7 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("badge", "member"),
+            new Claim("type", "member"),
             new Claim("client", ClientName),
             new Claim("group", group),
             new Claim("member", Member)
@@ -65,7 +65,7 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("badge", "ticker"),
+            new Claim("type", "ticker"),
             new Claim("client", ClientName),
             new Claim("group", group),
             new Claim("mail", Mail)

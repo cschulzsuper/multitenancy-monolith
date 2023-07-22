@@ -27,7 +27,7 @@ internal static class ContextAuthenticationIdentityCommands
         commands
             .MapPost("/verify", Verify)
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "identity")
+                .RequireClaim("type", "identity")
                 .RequireClaim("scope", "endpoints"))
             .WithErrorMessage(CouldNotVerifyAuthenticationIdentity);
 

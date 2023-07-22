@@ -20,7 +20,7 @@ internal static class DistinctionTypeCustomPropertyResource
             .MapGroup("/distinction-types/{distinctionType}/custom-properties")
             .WithTags("Distinction Type Custom Property API")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "member")
+                .RequireClaim("type", "member")
                 .RequireClaim("scope", "endpoints"));
 
         resource

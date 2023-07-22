@@ -89,9 +89,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "business-object",
             CustomProperties = new List<ObjectTypeCustomProperty>
-            {
-                existingObjectTypeCustomProperty1, existingObjectTypeCustomProperty2
-            }
+        {
+            existingObjectTypeCustomProperty1, existingObjectTypeCustomProperty2
+        }
         };
 
         var existingBusinessObject1 = new BusinessObject

@@ -15,7 +15,7 @@ public static class TickerUserCommands
             .MapGroup("/ticker-users")
             .WithTags("Ticker User Commands")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "member")
+                .RequireClaim("type", "member")
                 .RequireClaim("scope", "endpoints"));
 
         resource

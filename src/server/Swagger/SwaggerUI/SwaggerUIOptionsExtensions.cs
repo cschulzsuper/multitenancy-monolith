@@ -42,7 +42,7 @@ public static class SwaggerUIOptionsExtensions
 
     public static SwaggerUIOptions ConfigureSwaggerEndpoints(this SwaggerUIOptions options, ICollection<SwaggerDocs> swaggerDocs)
     {
-        foreach(var swaggerDoc in swaggerDocs)
+        foreach (var swaggerDoc in swaggerDocs)
         {
             var hostUri = new Uri(swaggerDoc.Host);
             var fullUri = new Uri(hostUri, swaggerDoc.Path);

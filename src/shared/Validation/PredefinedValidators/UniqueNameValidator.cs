@@ -17,10 +17,10 @@ public sealed class UniqueNameValidator
     {
         var rules = new IValidationRule<string>[]
         {
-            new NotNull(field),
-            new NotEmpty(field),
-            new KebabCase(field),
-            new StringLength(field, 140),
+        new NotNull(field),
+        new NotEmpty(field),
+        new KebabCase(field),
+        new StringLength(field, 140),
         };
 
         return rules;

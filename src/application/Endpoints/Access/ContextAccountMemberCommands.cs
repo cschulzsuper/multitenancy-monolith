@@ -21,7 +21,7 @@ internal static class ContextAccountMemberCommands
         commands
             .MapPost("/auth", Auth)
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "identity"))
+                .RequireClaim("type", "identity"))
             .WithErrorMessage(CouldNotAuthAccountMember)
             .Authenticates()
             .AddEndpointFilter<BadgeResultEndpointFilter>();
@@ -29,7 +29,7 @@ internal static class ContextAccountMemberCommands
         commands
             .MapPost("/verify", Verify)
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "member"))
+                .RequireClaim("type", "member"))
             .WithErrorMessage(CouldNotVerifyAccountMember);
 
         return endpoints;

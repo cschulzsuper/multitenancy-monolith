@@ -64,7 +64,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);;
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();

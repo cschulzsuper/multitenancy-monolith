@@ -88,7 +88,7 @@ public static class RepositoryExtensions
     }
 
     public static ICollection<object> UpdateOrThrow<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows, Action<TEntity> action)
-        => UpdateOrThrow(repository,query, expectedRows, action, null!);
+        => UpdateOrThrow(repository, query, expectedRows, action, null!);
 
     public static ICollection<object> UpdateOrThrow<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> query, int expectedRows, Action<TEntity> action, Action @default)
     {
@@ -249,7 +249,7 @@ public static class RepositoryExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void EnsureExpectedRowsAffected<TEntity>(int affectedRows, int expectedRows)
     {
-        if (affectedRows == 0 &&  expectedRows == 1)
+        if (affectedRows == 0 && expectedRows == 1)
         {
             RepositoryException.ThrowObjectNotFound<TEntity>();
         }

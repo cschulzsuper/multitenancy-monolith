@@ -20,7 +20,7 @@ internal static class DistinctionTypeResource
             .MapGroup("/distinction-types")
             .WithTags("Distinction Type API")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "member")
+                .RequireClaim("type", "member")
                 .RequireClaim("scope", "endpoints"));
 
         resource

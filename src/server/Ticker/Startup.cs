@@ -24,6 +24,8 @@ using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Events;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Jobs;
 using ChristianSchulz.MultitenancyMonolith.Jobs;
+using ChristianSchulz.MultitenancyMonolith.Application.Schedule;
+using Microsoft.Net.Http.Headers;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 
@@ -70,6 +72,8 @@ public sealed class Startup
         services.AddTickerManagement();
         services.AddTickerTransport();
         services.AddTickerOrchestration();
+
+        services.AddScheduleTransport();
     }
 
     public void Configure(IApplicationBuilder app)
@@ -98,7 +102,12 @@ public sealed class Startup
 
         app.UseRouting();
 
-        app.UseCors(config => config.WithOrigins("https://localhost:7272"));
+        // TODO Hard-coded url must be moved to configuration
+
+        app.UseCors(config => config
+            .WithOrigins("https://localhost:7272")
+            .WithHeaders(HeaderNames.Accept, HeaderNames.ContentType, HeaderNames.Authorization)
+            .WithMethods(HttpMethods.Get, HttpMethods.Head, HttpMethods.Post, HttpMethods.Put, HttpMethods.Delete));
 
         app.UseAuthenticationScope();
         app.UseAuthentication();
@@ -121,6 +130,7 @@ public sealed class Startup
             var apiEndpoints = endpoints.MapGroup("api");
 
             apiEndpoints.MapTickerEndpoints();
+            apiEndpoints.MapScheduleEndpoints();
         });
     }
 
@@ -176,6 +186,6 @@ public sealed class Startup
             };
         }
 
-        await context.Response.WriteAsJsonAsync(problem, (JsonSerializerOptions?) null, "application/problem+json");
+        await context.Response.WriteAsJsonAsync(problem, (JsonSerializerOptions?)null, "application/problem+json");
     }
 }

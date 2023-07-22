@@ -18,7 +18,7 @@ public sealed class ZeroValidator<T>
     {
         var rules = new IValidationRule<T>[]
         {
-            new Zero<T>(field),
+        new Zero<T>(field),
         };
 
         return rules;

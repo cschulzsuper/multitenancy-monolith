@@ -18,7 +18,7 @@ internal sealed class ByteCache : IByteCache
         var cacheKey = $"{_prefix}.{key}";
         var cacheValue = _distributedCache.Get(cacheKey);
 
-        if(cacheValue == null)
+        if (cacheValue == null)
         {
             CachingException.ThrowCacheKeyNotFound(cacheKey);
         }

@@ -24,7 +24,7 @@ public sealed class ObjectAnnotationAttribute : Attribute
 
         init
         {
-            _displayName=value;
+            _displayName = value;
         }
     }
 
@@ -33,7 +33,7 @@ public sealed class ObjectAnnotationAttribute : Attribute
         get => _area ?? throw new MemberAccessException("No value for 'Area' is set.");
         init
         {
-            _area=value;
+            _area = value;
         }
     }
 
@@ -42,7 +42,7 @@ public sealed class ObjectAnnotationAttribute : Attribute
         get => _collection ?? throw new MemberAccessException("No value for 'Collection' is set.");
         init
         {
-            _collection=value;
+            _collection = value;
         }
     }
 }

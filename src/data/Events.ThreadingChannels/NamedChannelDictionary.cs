@@ -26,7 +26,8 @@ internal sealed class NamedChannelDictionary<T>
     {
         try
         {
-            while (true) { 
+            while (true)
+            {
                 var dequeued = _newChannels.TryDequeue(out var channel);
                 if (dequeued)
                 {

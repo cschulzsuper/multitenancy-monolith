@@ -18,9 +18,9 @@ public sealed class TickerUserSecretStateValidator
     {
         var rules = new IValidationRule<string>[]
         {
-            new NotNull(field),
-            new NotEmpty(field),
-            new Allowed(field, TickerUserSecretStates.All),
+        new NotNull(field),
+        new NotEmpty(field),
+        new Allowed(field, TickerUserSecretStates.All),
         };
 
         return rules;

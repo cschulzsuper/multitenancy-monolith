@@ -4,8 +4,8 @@ public static class AccountRegistrationProcessStates
 {
     public static readonly string[] All = new[]
     {
-        New, Confirmed, Approved, Completed
-    };
+    New, Confirmed, Approved, Completed
+};
 
     public const string New = "new";
     public const string Confirmed = "confirmed";

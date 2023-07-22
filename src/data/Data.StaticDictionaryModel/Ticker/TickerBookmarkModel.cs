@@ -17,8 +17,8 @@ public sealed class TickerBookmarkModel : IModel<TickerBookmark>
 
     public static void Ensure(IServiceProvider services, IEnumerable<TickerBookmark> data, TickerBookmark entity)
     {
-        var conflict = data.Any(x => 
-            string.Equals(x.TickerUser, entity.TickerUser, StringComparison.InvariantCultureIgnoreCase) && 
+        var conflict = data.Any(x =>
+            string.Equals(x.TickerUser, entity.TickerUser, StringComparison.InvariantCultureIgnoreCase) &&
             x.TickerMessage == entity.TickerMessage);
 
         if (conflict)

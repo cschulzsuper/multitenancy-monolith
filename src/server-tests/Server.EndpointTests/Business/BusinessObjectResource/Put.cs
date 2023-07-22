@@ -140,9 +140,9 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "business-object",
             CustomProperties = new List<ObjectTypeCustomProperty>
-            {
-                existingObjectTypeCustomProperty
-            }
+        {
+            existingObjectTypeCustomProperty
+        }
         };
 
         var existingBusinessObject = new BusinessObject

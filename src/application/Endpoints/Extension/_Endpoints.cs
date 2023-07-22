@@ -7,7 +7,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Extension;
 [SuppressMessage("Style", "IDE1006:Naming Styles")]
 public static class _Endpoints
 {
-    public static IEndpointRouteBuilder MapAdministrationEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapExtensionEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var extension = endpoints
             .MapGroup("extension")

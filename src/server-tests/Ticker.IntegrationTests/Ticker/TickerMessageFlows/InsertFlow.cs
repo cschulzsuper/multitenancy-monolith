@@ -39,13 +39,15 @@ public sealed class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var tickerMessageInsertedTask = new TaskCompletionSource();
         var tickerMessageInsertedTaskCancellationTokenSource = new CancellationTokenSource(5000);
-        tickerMessageInsertedTaskCancellationTokenSource.Token.Register(() => {
+        tickerMessageInsertedTaskCancellationTokenSource.Token.Register(() =>
+        {
             if (!tickerMessageInsertedTask.Task.IsCompleted) tickerMessageInsertedTask.SetCanceled();
         });
 
         var tickerBookmarkInsertedTask = new TaskCompletionSource();
         var tickerBookmarkInsertedTaskCancellationTokenSource = new CancellationTokenSource(5000);
-        tickerBookmarkInsertedTaskCancellationTokenSource.Token.Register(() => {
+        tickerBookmarkInsertedTaskCancellationTokenSource.Token.Register(() =>
+        {
             if (!tickerBookmarkInsertedTask.Task.IsCompleted) tickerBookmarkInsertedTask.SetCanceled();
         });
 

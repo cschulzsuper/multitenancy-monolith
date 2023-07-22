@@ -117,7 +117,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "identity"),
+            new Claim("type", "identity"),
             new Claim("client", client),
             new Claim("identity", AuthenticationIdentityAdmin),
             new Claim("verification", Convert.ToBase64String(verification)),
@@ -148,7 +148,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "identity"),
+            new Claim("type", "identity"),
             new Claim("client", client),
             new Claim("identity", AuthenticationIdentityIdentity),
             new Claim("verification", Convert.ToBase64String(verification)),
@@ -179,7 +179,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "identity"),
+            new Claim("type", "identity"),
             new Claim("client", client),
             new Claim("identity", AuthenticationIdentityDemo),
             new Claim("verification", Convert.ToBase64String(verification)),
@@ -212,7 +212,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "member"),
+            new Claim("type", "member"),
             new Claim("client", client),
             new Claim("identity", AuthenticationIdentityIdentity),
             new Claim("group", AccountGroup),
@@ -247,7 +247,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "member"),
+            new Claim("type", "member"),
             new Claim("client", client),
             new Claim("identity", AuthenticationIdentityDemo),
             new Claim("group", AccountGroup),
@@ -282,7 +282,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "member"),
+            new Claim("type", "member"),
             new Claim("client", client),
             new Claim("identity", AuthenticationIdentityIdentity),
             new Claim("group", AccountGroup),
@@ -317,7 +317,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "member"),
+            new Claim("type", "member"),
             new Claim("client", client),
             new Claim("identity", AuthenticationIdentityDemo),
             new Claim("group", AccountGroup),
@@ -351,7 +351,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "identity"),
+            new Claim("type", "identity"),
             new Claim("client", Client),
             new Claim("identity", AuthenticationIdentityAdmin),
             new Claim("verification", Convert.ToBase64String(verification)),
@@ -370,7 +370,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "identity"),
+            new Claim("type", "identity"),
             new Claim("client", Client),
             new Claim("identity", AuthenticationIdentityIdentity),
             new Claim("verification", Convert.ToBase64String(verification)),
@@ -389,7 +389,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "identity"),
+            new Claim("type", "identity"),
             new Claim("client", Client),
             new Claim("identity", AuthenticationIdentityDemo),
             new Claim("verification", Convert.ToBase64String(verification)),
@@ -408,7 +408,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "member"),
+            new Claim("type", "member"),
             new Claim("client", Client),
             new Claim("identity", AuthenticationIdentityIdentity),
             new Claim("group", AccountGroup),
@@ -429,7 +429,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "member"),
+            new Claim("type", "member"),
             new Claim("client", Client),
             new Claim("identity", AuthenticationIdentityDemo),
             new Claim("group", AccountGroup),
@@ -450,7 +450,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "member"),
+            new Claim("type", "member"),
             new Claim("client", Client),
             new Claim("identity", AuthenticationIdentityIdentity),
             new Claim("group", AccountGroup),
@@ -471,7 +471,7 @@ internal static class MockWebApplication
 
         var claims = new Claim[]
         {
-            new Claim("badge", "member"),
+            new Claim("type", "member"),
             new Claim("client", Client),
             new Claim("identity", AuthenticationIdentityDemo),
             new Claim("group", AccountGroup),

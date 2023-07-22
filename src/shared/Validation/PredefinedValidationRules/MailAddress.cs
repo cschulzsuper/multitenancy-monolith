@@ -14,7 +14,7 @@ public sealed partial class MailAddress : IValidationRule<string>
     public bool Check(string value)
     {
         var valid = System.Net.Mail.MailAddress.TryCreate(value, out _);
-        if (!valid) 
+        if (!valid)
         {
             return false;
         }

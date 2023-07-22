@@ -18,9 +18,9 @@ public sealed class ObjectTypeValidator
     {
         var rules = new IValidationRule<string>[]
         {
-            new NotNull(field),
-            new NotEmpty(field),
-            new Allowed(field, "business-object"),
+        new NotNull(field),
+        new NotEmpty(field),
+        new Allowed(field, "business-object"),
         };
 
         return rules;

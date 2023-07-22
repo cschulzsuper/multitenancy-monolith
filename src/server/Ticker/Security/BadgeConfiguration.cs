@@ -50,21 +50,21 @@ internal static class BadgeConfiguration
 
     private static void MapRoleClaimForChief(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim(ClaimTypes.Role, claims =>
-            claims.Any(x => x.Type == "badge" && x.Value == "member") &&
+            claims.Any(x => x.Type == "type" && x.Value == "member") &&
             claims.Any(x => x.Type == "member" && x.Value.StartsWith("chief-"))
 
             ? "chief" : null);
 
     private static void MapRoleClaimForMember(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim(ClaimTypes.Role, claims =>
-            claims.Any(x => x.Type == "badge" && x.Value == "member") &&
+            claims.Any(x => x.Type == "type" && x.Value == "member") &&
             claims.Any(x => x.Type == "member" && !string.IsNullOrWhiteSpace(x.Value))
 
             ? "member" : null);
 
     private static void MapRoleClaimForTicker(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim(ClaimTypes.Role, claims =>
-            claims.Any(x => x.Type == "badge" && x.Value == "ticker") &&
+            claims.Any(x => x.Type == "type" && x.Value == "ticker") &&
             claims.Any(x => x.Type == "mail" && !string.IsNullOrWhiteSpace(x.Value))
 
             ? "ticker" : null);

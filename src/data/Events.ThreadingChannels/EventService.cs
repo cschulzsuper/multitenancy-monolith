@@ -42,7 +42,7 @@ internal sealed class EventService : BackgroundService
             try
             {
                 await Task.Yield();
-                
+
                 var channel = await _channels
                     .WaitNewAsync(stoppingToken);
 

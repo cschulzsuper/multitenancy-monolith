@@ -22,7 +22,7 @@ internal static class BadgeConfiguration
         options.ClaimActions.MapRoleClaimForMember();
         options.ClaimActions.MapRoleClaimForMemberObserver();
 
-        foreach(var allowedClient in allowedClients)
+        foreach (var allowedClient in allowedClients)
         {
             foreach (var scope in allowedClient.Scopes)
             {
@@ -58,14 +58,14 @@ internal static class BadgeConfiguration
             ? "identity" : null);
 
     private static void MapRoleClaimForDemo(this ICollection<ClaimAction> claimActions)
-        => claimActions.MapCustomClaim(ClaimTypes.Role, claims => 
+        => claimActions.MapCustomClaim(ClaimTypes.Role, claims =>
             claims.Any(x => x.Type == "identity" && x.Value == "demo")
 
             ? "default" : null);
 
     private static void MapRoleClaimForChief(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim(ClaimTypes.Role, claims =>
-            claims.Any(x => x.Type == "badge" && x.Value == "member") &&
+            claims.Any(x => x.Type == "type" && x.Value == "member") &&
             claims.Any(x => x.Type == "identity" && x.Value != "demo") &&
             claims.Any(x => x.Type == "member" && x.Value.StartsWith("chief-"))
 
@@ -73,7 +73,7 @@ internal static class BadgeConfiguration
 
     private static void MapRoleClaimForChiefObserver(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim(ClaimTypes.Role, claims =>
-            claims.Any(x => x.Type == "badge" && x.Value == "member") &&
+            claims.Any(x => x.Type == "type" && x.Value == "member") &&
             claims.Any(x => x.Type == "identity" && x.Value == "demo") &&
             claims.Any(x => x.Type == "member" && x.Value.StartsWith("chief-"))
 
@@ -81,7 +81,7 @@ internal static class BadgeConfiguration
 
     private static void MapRoleClaimForMember(this ICollection<ClaimAction> claimActions)
         => claimActions.MapCustomClaim(ClaimTypes.Role, claims =>
-            claims.Any(x => x.Type == "badge" && x.Value == "member") &&
+            claims.Any(x => x.Type == "type" && x.Value == "member") &&
             claims.Any(x => x.Type == "identity" && x.Value != "demo") &&
             claims.Any(x => x.Type == "member" && !string.IsNullOrWhiteSpace(x.Value))
 
@@ -89,7 +89,7 @@ internal static class BadgeConfiguration
 
     private static void MapRoleClaimForMemberObserver(this ICollection<ClaimAction> claimActions)
     => claimActions.MapCustomClaim(ClaimTypes.Role, claims =>
-        claims.Any(x => x.Type == "badge" && x.Value == "member") &&
+        claims.Any(x => x.Type == "type" && x.Value == "member") &&
         claims.Any(x => x.Type == "identity" && x.Value == "demo") &&
         claims.Any(x => x.Type == "member" && !string.IsNullOrWhiteSpace(x.Value))
 

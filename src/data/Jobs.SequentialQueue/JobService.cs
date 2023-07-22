@@ -13,7 +13,7 @@ internal sealed class JobService : BackgroundService
     private readonly JobsOptions _options;
 
     public JobService(
-        IJobQueue queue, 
+        IJobQueue queue,
         IServiceProvider services,
         JobsOptions options)
     {
@@ -40,13 +40,13 @@ internal sealed class JobService : BackgroundService
         }
     }
 
-    private async Task InvokeAsync(JobCallback job)
+    private async Task InvokeAsync(Job job)
     {
         await using var scope = _services.CreateAsyncScope();
 
         await _options.BeforeJobInvocation(scope.ServiceProvider, job.UniqueName);
 
-        await job.Job.Invoke(scope.ServiceProvider);
+        await job.Callback.Invoke(scope.ServiceProvider);
 
         await _options.AfterJobInvocation(scope.ServiceProvider, job.UniqueName);
     }

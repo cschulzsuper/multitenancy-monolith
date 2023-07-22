@@ -11,8 +11,8 @@ internal sealed class AccountRegistrationCommandHandler : IAccountRegistrationCo
     private readonly IEventStorage _eventStorage;
 
     public AccountRegistrationCommandHandler(
-        IAccountRegistrationManager accountRegistrationManager, 
-        IEventStorage eventStorage) 
+        IAccountRegistrationManager accountRegistrationManager,
+        IEventStorage eventStorage)
     {
         _accountRegistrationManager = accountRegistrationManager;
         _eventStorage = eventStorage;

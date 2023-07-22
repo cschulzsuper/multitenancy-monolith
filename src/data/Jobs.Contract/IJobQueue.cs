@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Jobs;
@@ -10,5 +11,5 @@ public interface IJobQueue
 
     void Requeue(string uniqueName, IJobSchedule schedule);
 
-    JobCallback Dequeue();
+    Job Dequeue();
 }

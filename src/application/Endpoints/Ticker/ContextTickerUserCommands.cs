@@ -21,7 +21,7 @@ public static class ContextTickerUserCommands
             .WithTags("Context Ticker User Commands");
 
         commands
-            .MapPost("/auth",Auth)
+            .MapPost("/auth", Auth)
             .WithErrorMessage(CouldNotAuthTickerUser)
             .Authenticates()
             .AddEndpointFilter<BadgeResultEndpointFilter>();
@@ -34,14 +34,14 @@ public static class ContextTickerUserCommands
         commands
             .MapPost("/verify", Verify)
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "ticker")
+                .RequireClaim("type", "ticker")
                 .RequireRole("ticker"))
             .WithErrorMessage(CouldNotVerifyTickerUser);
 
         commands
             .MapPost("/post", Post)
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "ticker")
+                .RequireClaim("type", "ticker")
                 .RequireRole("ticker"))
             .WithErrorMessage(CouldNotPostTickerUser);
 

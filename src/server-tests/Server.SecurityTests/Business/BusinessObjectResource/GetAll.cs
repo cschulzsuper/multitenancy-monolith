@@ -61,7 +61,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/business/business-objects");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);;
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();
 

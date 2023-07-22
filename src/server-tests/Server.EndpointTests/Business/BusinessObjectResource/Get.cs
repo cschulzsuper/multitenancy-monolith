@@ -80,9 +80,9 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         {
             UniqueName = "business-object",
             CustomProperties = new List<ObjectTypeCustomProperty>
-            {
-                existingObjectTypeCustomProperty
-            }
+        {
+            existingObjectTypeCustomProperty
+        }
         };
 
         var existingBusinessObject = new BusinessObject

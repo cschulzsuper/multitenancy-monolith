@@ -87,18 +87,22 @@ public sealed class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var tickerMessageDeletedTask = new TaskCompletionSource();
         var tickerMessageDeletedTaskCancellationTokenSource = new CancellationTokenSource(5000);
-        tickerMessageDeletedTaskCancellationTokenSource.Token.Register(() => { 
-            if (!tickerMessageDeletedTask.Task.IsCompleted) tickerMessageDeletedTask.SetCanceled(); });
+        tickerMessageDeletedTaskCancellationTokenSource.Token.Register(() =>
+        {
+            if (!tickerMessageDeletedTask.Task.IsCompleted) tickerMessageDeletedTask.SetCanceled();
+        });
 
         var tickerBookmarkDeletedTask = new TaskCompletionSource();
         var tickerBookmarkDeletedTaskCancellationTokenSource = new CancellationTokenSource(5000);
-        tickerBookmarkDeletedTaskCancellationTokenSource.Token.Register(() => { 
-            if (!tickerBookmarkDeletedTask.Task.IsCompleted) tickerBookmarkDeletedTask.SetCanceled(); });
+        tickerBookmarkDeletedTaskCancellationTokenSource.Token.Register(() =>
+        {
+            if (!tickerBookmarkDeletedTask.Task.IsCompleted) tickerBookmarkDeletedTask.SetCanceled();
+        });
 
         _factory.Services.GetRequiredService<EventsOptions>()
             .PublicationInterceptor = (scope, @event, snowflake) =>
             {
-                switch(@event)
+                switch (@event)
                 {
                     case "ticker-message-deleted":
                         tickerMessageDeletedTask.SetResult();
@@ -109,7 +113,7 @@ public sealed class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
                     default:
                         Assert.Fail();
                         break;
-                }             
+                }
             };
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-messages/{tickerMessage}");

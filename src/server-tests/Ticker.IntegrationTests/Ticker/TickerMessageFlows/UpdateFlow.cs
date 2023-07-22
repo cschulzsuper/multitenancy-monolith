@@ -105,13 +105,15 @@ public sealed class UpdateFlow : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var tickerMessageUpdatedTask = new TaskCompletionSource();
         var tickerMessageUpdatedTaskCancellationTokenSource = new CancellationTokenSource(5000);
-        tickerMessageUpdatedTaskCancellationTokenSource.Token.Register(() => {
+        tickerMessageUpdatedTaskCancellationTokenSource.Token.Register(() =>
+        {
             if (!tickerMessageUpdatedTask.Task.IsCompleted) tickerMessageUpdatedTask.SetCanceled();
         });
 
         var tickerBookmarkUpdatedTask = new TaskCompletionSource();
         var tickerBookmarkUpdatedTaskCancellationTokenSource = new CancellationTokenSource(5000);
-        tickerBookmarkUpdatedTaskCancellationTokenSource.Token.Register(() => {
+        tickerBookmarkUpdatedTaskCancellationTokenSource.Token.Register(() =>
+        {
             if (!tickerBookmarkUpdatedTask.Task.IsCompleted) tickerBookmarkUpdatedTask.SetCanceled();
         });
 

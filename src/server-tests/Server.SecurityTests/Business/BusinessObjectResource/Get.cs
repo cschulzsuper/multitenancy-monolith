@@ -67,7 +67,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var validBusinessObject = "valid-business-object";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{validBusinessObject}");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);;
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();
 

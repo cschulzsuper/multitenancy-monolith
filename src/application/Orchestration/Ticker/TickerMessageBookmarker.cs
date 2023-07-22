@@ -32,7 +32,7 @@ internal sealed class TickerMessageBookmarker : ITickerMessageBookmarker
 
     public async Task RefreshAsync(long tickerMessage)
         => await _tickerBookmarkManager.UpdateManyAsync(
-            @object => @object.TickerMessage == tickerMessage, 
+            @object => @object.TickerMessage == tickerMessage,
             @object => @object.Updated = true);
 
     public async Task PurgeAsync(long tickerMessage)

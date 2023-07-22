@@ -21,7 +21,7 @@ public static class TickerMessageResource
             .MapGroup("/ticker-messages")
             .WithTags("Ticker Message API")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "member")
+                .RequireClaim("type", "member")
                 .RequireClaim("scope", "endpoints"));
 
         resource
@@ -58,9 +58,9 @@ public static class TickerMessageResource
     }
 
     private static Delegate GetAll =>
-        (ITickerMessageRequestHandler requestHandler, 
-            [FromQuery(Name = "q")] string? query, 
-            [FromQuery(Name = "s")] int? skip, 
+        (ITickerMessageRequestHandler requestHandler,
+            [FromQuery(Name = "q")] string? query,
+            [FromQuery(Name = "s")] int? skip,
             [FromQuery(Name = "t")] int? take)
 
             => requestHandler.GetAll(query, skip, take);

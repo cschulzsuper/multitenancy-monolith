@@ -23,21 +23,21 @@ internal sealed class AuthorizationOperationFilter : IOperationFilter
         var authorizations = new List<string>();
 
         operation.Security = new List<OpenApiSecurityRequirement>
+{
+    new OpenApiSecurityRequirement
     {
-        new OpenApiSecurityRequirement
         {
+            new OpenApiSecurityScheme
             {
-                new OpenApiSecurityScheme
+                Reference = new OpenApiReference
                 {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                },
-                authorizations
-            }
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            authorizations
         }
-    };
+    }
+};
     }
 }

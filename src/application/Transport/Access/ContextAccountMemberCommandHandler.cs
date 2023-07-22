@@ -66,7 +66,7 @@ internal sealed class ContextAccountMemberCommandHandler : IContextAccountMember
 
         _memberVerificationManager.Set(verificationKey, verification);
 
-        var verificationnValue = Convert.ToBase64String(verification);
+        var verificationValue = Convert.ToBase64String(verification);
 
         var claims = new Claim[]
         {
@@ -75,7 +75,7 @@ internal sealed class ContextAccountMemberCommandHandler : IContextAccountMember
             new Claim("identity", authenticationIdentity),
             new Claim("group", command.AccountGroup),
             new Claim("member", command.AccountMember),
-            new Claim("verification", verificationnValue, ClaimValueTypes.Base64Binary)
+            new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, "Badge");

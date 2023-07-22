@@ -18,7 +18,7 @@ public class BadgeValidator
             context.Principal?.Claims.ToArray() ??
             Array.Empty<Claim>();
 
-        var badgeType = badgeClaims.SingleOrDefault(x => x.Type == "badge");
+        var badgeType = badgeClaims.SingleOrDefault(x => x.Type == "type");
         if (badgeType == null)
         {
             return false;

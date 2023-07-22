@@ -16,7 +16,7 @@ internal static class ObjectTypeResource
             .MapGroup("/object-types")
             .WithTags("Object Type API")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "member")
+                .RequireClaim("type", "member")
                 .RequireClaim("scope", "endpoints"));
 
         resource

@@ -64,7 +64,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             var createdMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
                 .GetQueryable()
-                .SingleOrDefault(x => 
+                .SingleOrDefault(x =>
                     x.AuthenticationIdentity == postAccountRegistration.AuthenticationIdentity &&
                     x.AccountGroup == postAccountRegistration.AccountGroup &&
                     x.AccountMember == postAccountRegistration.AccountMember &&

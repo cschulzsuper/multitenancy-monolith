@@ -18,9 +18,9 @@ public sealed class CustomPropertyTypeValidator
     {
         var rules = new IValidationRule<string>[]
         {
-            new NotNull(field),
-            new NotEmpty(field),
-            new Allowed(field, "string"),
+        new NotNull(field),
+        new NotEmpty(field),
+        new Allowed(field, "string"),
         };
 
         return rules;

@@ -8,13 +8,13 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Ba
 
 internal sealed class ClaimsJsonConverter : JsonConverter<Claim[]>
 {
-    private static readonly JsonEncodedText Badge = JsonEncodedText.Encode("badge");
-    private static readonly JsonEncodedText Client = JsonEncodedText.Encode("client");
-    private static readonly JsonEncodedText Identity = JsonEncodedText.Encode("identity");
-    private static readonly JsonEncodedText Group = JsonEncodedText.Encode("group");
-    private static readonly JsonEncodedText Member = JsonEncodedText.Encode("member");
-    private static readonly JsonEncodedText Mail = JsonEncodedText.Encode("mail");
-    private static readonly JsonEncodedText Verification = JsonEncodedText.Encode("verification");
+    private static readonly JsonEncodedText _type = JsonEncodedText.Encode("type");
+    private static readonly JsonEncodedText _client = JsonEncodedText.Encode("client");
+    private static readonly JsonEncodedText _identity = JsonEncodedText.Encode("identity");
+    private static readonly JsonEncodedText _group = JsonEncodedText.Encode("group");
+    private static readonly JsonEncodedText _member = JsonEncodedText.Encode("member");
+    private static readonly JsonEncodedText _mail = JsonEncodedText.Encode("mail");
+    private static readonly JsonEncodedText _verification = JsonEncodedText.Encode("verification");
 
     public override Claim[] Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
@@ -56,43 +56,43 @@ internal sealed class ClaimsJsonConverter : JsonConverter<Claim[]>
         JsonSerializerOptions _)
     {
 
-        if (reader.TryReadStringProperty(Badge, out var stringValue))
+        if (reader.TryReadStringProperty(_type, out var stringValue))
         {
-            value.Add(new Claim("badge", stringValue, ClaimValueTypes.Base64Binary));
+            value.Add(new Claim("type", stringValue, ClaimValueTypes.Base64Binary));
             return;
         }
 
-        if (reader.TryReadStringProperty(Client, out stringValue))
+        if (reader.TryReadStringProperty(_client, out stringValue))
         {
             value.Add(new Claim("client", stringValue));
             return;
         }
 
-        if (reader.TryReadStringProperty(Identity, out stringValue))
+        if (reader.TryReadStringProperty(_identity, out stringValue))
         {
             value.Add(new Claim("identity", stringValue));
             return;
         }
 
-        if (reader.TryReadStringProperty(Group, out stringValue))
+        if (reader.TryReadStringProperty(_group, out stringValue))
         {
             value.Add(new Claim("group", stringValue));
             return;
         }
 
-        if (reader.TryReadStringProperty(Member, out stringValue))
+        if (reader.TryReadStringProperty(_member, out stringValue))
         {
             value.Add(new Claim("member", stringValue));
             return;
         }
 
-        if (reader.TryReadStringProperty(Mail, out stringValue))
+        if (reader.TryReadStringProperty(_mail, out stringValue))
         {
             value.Add(new Claim("mail", stringValue, ClaimValueTypes.Base64Binary));
             return;
         }
 
-        if (reader.TryReadStringProperty(Verification, out stringValue))
+        if (reader.TryReadStringProperty(_verification, out stringValue))
         {
             value.Add(new Claim("verification", stringValue, ClaimValueTypes.Base64Binary));
             return;
@@ -123,13 +123,13 @@ internal sealed class ClaimsJsonConverter : JsonConverter<Claim[]>
     private static JsonEncodedText? GetPropertyNameOrDefault(string claimType)
         => claimType switch
         {
-            "badge" => Badge,
-            "client" => Client,
-            "identity" => Identity,
-            "group" => Group,
-            "member" => Member,
-            "mail" => Mail,
-            "verification" => Verification,
+            "type" => _type,
+            "client" => _client,
+            "identity" => _identity,
+            "group" => _group,
+            "member" => _member,
+            "mail" => _mail,
+            "verification" => _verification,
             _ => null
         };
 }

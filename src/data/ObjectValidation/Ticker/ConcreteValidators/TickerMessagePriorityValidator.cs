@@ -18,9 +18,9 @@ public sealed class TickerMessagePriorityValidator
     {
         var rules = new IValidationRule<string>[]
         {
-            new NotNull(field),
-            new NotEmpty(field),
-            new Allowed(field, TickerMessagePriorities.All),
+        new NotNull(field),
+        new NotEmpty(field),
+        new Allowed(field, TickerMessagePriorities.All),
         };
 
         return rules;

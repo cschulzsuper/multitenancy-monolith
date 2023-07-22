@@ -20,7 +20,7 @@ internal static class AccountGroupResource
             .MapGroup("/account-groups")
             .WithTags("Account Group API")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "identity")
+                .RequireClaim("type", "identity")
                 .RequireClaim("scope", "endpoints"));
 
         resource

@@ -21,7 +21,7 @@ public static class TickerUserResource
             .MapGroup("/ticker-users")
             .WithTags("Ticker User API")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "member")
+                .RequireClaim("type", "member")
                 .RequireClaim("scope", "endpoints"));
 
         resource
@@ -58,9 +58,9 @@ public static class TickerUserResource
     }
 
     private static Delegate GetAll =>
-        (ITickerUserRequestHandler requestHandler, 
-            [FromQuery(Name = "q")] string? query, 
-            [FromQuery(Name = "s")] int? skip, 
+        (ITickerUserRequestHandler requestHandler,
+            [FromQuery(Name = "q")] string? query,
+            [FromQuery(Name = "s")] int? skip,
             [FromQuery(Name = "t")] int? take)
 
             => requestHandler.GetAll(query, skip, take);

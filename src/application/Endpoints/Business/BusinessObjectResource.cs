@@ -20,7 +20,7 @@ public static class BusinessObjectResource
             .MapGroup("/business-objects")
             .WithTags("Business Object API")
             .RequireAuthorization(policy => policy
-                .RequireClaim("badge", "member")
+                .RequireClaim("type", "member")
                 .RequireClaim("scope", "endpoints"));
 
         resource
