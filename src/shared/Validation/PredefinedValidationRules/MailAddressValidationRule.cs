@@ -1,10 +1,10 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 
-public sealed partial class MailAddress : IValidationRule<string>
+public sealed partial class MailAddressValidationRule : IValidationRule<string>
 {
     private readonly string _validationMessage;
 
-    public MailAddress(string field)
+    internal MailAddressValidationRule(string field)
     {
         _validationMessage = string.Format(ValidationErrors.ValueNotMailAddress, field);
     }

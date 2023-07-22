@@ -2,11 +2,11 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 
-public sealed partial class KebabCase : IValidationRule<string>
+public sealed partial class KebabCaseValidationRule : IValidationRule<string>
 {
     private readonly string _validationMessage;
 
-    public KebabCase(string field)
+    internal KebabCaseValidationRule(string field)
     {
         _validationMessage = string.Format(ValidationErrors.ValueNotKebabCased, field);
     }

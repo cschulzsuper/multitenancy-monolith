@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Jobs;
@@ -20,7 +21,14 @@ internal sealed class JobScheduler : IJobScheduler
     {
         var schedule = _scheduleResolver(uniqueName);
 
-        _queue.Enqueue(uniqueName, schedule, job);
+        async Task JobAsync(JobContext context)
+        {
+            var handler = context.Services.GetRequiredService<THandler>();
+
+            await job(handler);
+        }
+
+        _queue.Enqueue(uniqueName, schedule, JobAsync);
 
         return this;
     }
@@ -31,4 +39,5 @@ internal sealed class JobScheduler : IJobScheduler
 
         return this;
     }
+
 }

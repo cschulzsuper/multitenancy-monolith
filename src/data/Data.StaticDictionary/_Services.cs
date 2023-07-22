@@ -3,11 +3,13 @@ using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Access;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Admission;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Business;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Extension;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Schedule;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using ChristianSchulz.MultitenancyMonolith.Objects.Extension;
+using ChristianSchulz.MultitenancyMonolith.Objects.Schedule;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -60,6 +62,13 @@ public static class _Services
         return services;
     }
 
+    public static IServiceCollection AddStaticDictionaryScheduleData(this IServiceCollection services)
+    {
+        services.AddScoped(CreateRepository<JobModel, Job>);
+
+        return services;
+    }
+
     public static IServiceCollection AddStaticDictionaryTickerData(this IServiceCollection services)
     {
         services.AddScoped(CreateRepository<TickerBookmarkModel, TickerBookmark>);
@@ -69,6 +78,7 @@ public static class _Services
         return services;
     }
 
+    [SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance")]
     private static IRepository<TEntity> CreateRepository<TModel, TEntity>(IServiceProvider services)
         where TModel : IModel<TEntity>
         where TEntity : class, ICloneable

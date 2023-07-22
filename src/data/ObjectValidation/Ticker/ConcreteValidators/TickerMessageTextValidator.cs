@@ -1,5 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
-using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
@@ -18,9 +17,9 @@ public sealed class TickerMessageTextValidator
     {
         var rules = new IValidationRule<string>[]
         {
-        new NotNull(field),
-        new NotEmpty(field),
-        new StringLength(field, 4000),
+        ValidationRules.NotNull(field),
+        ValidationRules.NotEmpty(field),
+        ValidationRules.StringLength(field, 4000),
         };
 
         return rules;

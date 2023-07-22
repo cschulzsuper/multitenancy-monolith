@@ -40,7 +40,7 @@ internal sealed class JobService : BackgroundService
         }
     }
 
-    private async Task InvokeAsync(Job job)
+    private async Task InvokeAsync(JobInvocation job)
     {
         await using var scope = _services.CreateAsyncScope();
 

@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
 
@@ -18,7 +17,7 @@ public sealed class ZeroValidator<T>
     {
         var rules = new IValidationRule<T>[]
         {
-        new Zero<T>(field),
+            ValidationRules.Zero<T>(field),
         };
 
         return rules;

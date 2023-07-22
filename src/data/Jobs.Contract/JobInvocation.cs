@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Jobs;
 
-public sealed class Job
+public sealed class JobInvocation
 {
     public required string UniqueName { get; init; }
 

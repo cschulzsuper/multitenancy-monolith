@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
-using System;
+﻿using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
 
@@ -17,7 +16,7 @@ public sealed class TokenValidator
     {
         var rules = new IValidationRule<Guid>[]
         {
-        new NotDefault<Guid>(field),
+            ValidationRules.NotDefault<Guid>(field),
         };
 
         return rules;

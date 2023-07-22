@@ -1,6 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
-
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
+﻿namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
 
 public sealed class SnowflakeValidator
 {
@@ -16,8 +14,8 @@ public sealed class SnowflakeValidator
     {
         var rules = new IValidationRule<long>[]
         {
-        new NotZero<long>(field),
-        new NotNegative<long>(field)
+            ValidationRules.NotZero<long>(field),
+            ValidationRules.NotNegative<long>(field)
         };
 
         return rules;

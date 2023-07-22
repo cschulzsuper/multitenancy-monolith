@@ -2,12 +2,12 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 
-public sealed class NotZero<T> : IValidationRule<T>
+public sealed class NotZeroValidationRule<T> : IValidationRule<T>
     where T : INumber<T>
 {
     private readonly string _validationMessage;
 
-    public NotZero(string field)
+    internal NotZeroValidationRule(string field)
     {
         _validationMessage = string.Format(ValidationErrors.ValueIsZero, field);
     }

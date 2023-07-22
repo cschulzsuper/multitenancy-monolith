@@ -73,6 +73,7 @@ public sealed class Startup
         services.AddStaticDictionaryAdmissionData();
         services.AddStaticDictionaryAccessData();
         services.AddStaticDictionaryBusinessData();
+        services.AddStaticDictionaryScheduleData();
 
         services.AddAdministrationManagement();
         services.AddAdministrationTransport();
@@ -86,7 +87,9 @@ public sealed class Startup
         services.AddBusinessManagement();
         services.AddBusinessTransport();
 
+        services.AddScheduleManagement();
         services.AddScheduleTransport();
+
     }
 
     public void Configure(IApplicationBuilder app)

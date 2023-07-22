@@ -2,11 +2,11 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 
-public sealed class LowerCase : IValidationRule<string>
+public sealed class LowerCaseValidationRule : IValidationRule<string>
 {
     private readonly string _validationMessage;
 
-    public LowerCase(string field)
+    internal LowerCaseValidationRule(string field)
     {
         _validationMessage = string.Format(ValidationErrors.ValueIsEmpty, field);
     }

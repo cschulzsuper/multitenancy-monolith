@@ -1,5 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
-using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Extension.ConcreteValidators;
@@ -18,9 +17,9 @@ public sealed class CustomPropertyTypeValidator
     {
         var rules = new IValidationRule<string>[]
         {
-        new NotNull(field),
-        new NotEmpty(field),
-        new Allowed(field, "string"),
+        ValidationRules.NotNull(field),
+        ValidationRules.NotEmpty(field),
+        ValidationRules.AllowedValues(field, "string"),
         };
 
         return rules;

@@ -1,5 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
-using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
@@ -18,9 +17,9 @@ public sealed class TickerMessagePriorityValidator
     {
         var rules = new IValidationRule<string>[]
         {
-        new NotNull(field),
-        new NotEmpty(field),
-        new Allowed(field, TickerMessagePriorities.All),
+        ValidationRules.NotNull(field),
+        ValidationRules.NotEmpty(field),
+        ValidationRules.AllowedValues(field, TickerMessagePriorities.All),
         };
 
         return rules;

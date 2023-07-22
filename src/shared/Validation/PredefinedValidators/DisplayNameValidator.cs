@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
 
@@ -17,9 +16,9 @@ public sealed class DisplayNameValidator
     {
         var rules = new IValidationRule<string>[]
         {
-        new NotNull(field),
-        new NotEmpty(field),
-        new StringLength(field, 140),
+            ValidationRules.NotNull(field),
+            ValidationRules.NotEmpty(field),
+            ValidationRules.StringLength(field, 140),
         };
 
         return rules;

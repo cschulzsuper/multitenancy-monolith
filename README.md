@@ -109,7 +109,8 @@ I said monolith, but with the latests features related to a ticker system, it is
 
 ## Background Jobs
   * /57 First draft of a very simple background job component, that exeutes jobs sequentially in a `HostedService`. For now, only simple logging heartbeat is implemented. https://github.com/cschulzsuper/multitenancy-monolith/commit/0c127587c5b1227f5dde1930f8618bb9d4c54fe7
-  * /58 An HTTP PUT endpoint allows to change the schedule of a background job. Additionally, a changes were necessary to fix the swagger client and the authentication.
+  * /58 An HTTP PUT endpoint allows to change the schedule of a background job. Additionally, a changes were necessary to fix the swagger client and the authentication.https://github.com/cschulzsuper/multitenancy-monolith/commit/b065dfffa7235f78bbb8c37e7c3e72996672096d
+  * /59 Entity and management to store the job schedule in the data layer. Additionally, changes in the validation. 
 
 # Backlog
 

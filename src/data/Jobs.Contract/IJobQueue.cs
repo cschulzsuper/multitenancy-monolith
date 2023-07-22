@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Jobs;
 
 public interface IJobQueue
 {
-    void Enqueue<THandler>(string uniqueName, IJobSchedule schedule, Func<THandler, Task> job)
-        where THandler : class;
+    void Enqueue(string uniqueName, IJobSchedule schedule, Func<JobContext, Task> job);
+
+    void Requeue(string uniqueName);
 
     void Requeue(string uniqueName, IJobSchedule schedule);
 
-    Job Dequeue();
+    JobInvocation Dequeue();
 }

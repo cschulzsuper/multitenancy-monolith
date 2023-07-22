@@ -2,12 +2,12 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 
-public sealed class NotNegative<T> : IValidationRule<T>
+public sealed class NotNegativeValidationRule<T> : IValidationRule<T>
     where T : INumber<T>
 {
     private readonly string _validationMessage;
 
-    public NotNegative(string field)
+    internal NotNegativeValidationRule(string field)
     {
         _validationMessage = string.Format(ValidationErrors.ValueIsNegative, field);
     }

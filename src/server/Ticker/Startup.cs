@@ -67,13 +67,15 @@ public sealed class Startup
         services.AddJobs(options => options.Configure());
 
         services.AddStaticDictionary();
+        services.AddStaticDictionaryScheduleData();
         services.AddStaticDictionaryTickerData();
+
+        services.AddScheduleManagement();
+        services.AddScheduleTransport();
 
         services.AddTickerManagement();
         services.AddTickerTransport();
         services.AddTickerOrchestration();
-
-        services.AddScheduleTransport();
     }
 
     public void Configure(IApplicationBuilder app)

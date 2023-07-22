@@ -1,16 +1,16 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 
-public sealed class NotEmpty : IValidationRule<string>
+public sealed class NotNullValidationRule : IValidationRule<string>
 {
     private readonly string _validationMessage;
 
-    public NotEmpty(string field)
+    internal NotNullValidationRule(string field)
     {
-        _validationMessage = string.Format(ValidationErrors.ValueIsEmpty, field);
+        _validationMessage = string.Format(ValidationErrors.ValueIsNull, field);
     }
 
     public string ValidationMessage => _validationMessage;
 
     public bool Check(string value)
-        => value != string.Empty;
+        => value != null;
 }

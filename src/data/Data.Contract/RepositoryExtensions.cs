@@ -97,7 +97,7 @@ public static class RepositoryExtensions
         repository.Execute(repository =>
         {
             var affectedSnowflakes = repository.Update(query, action);
-            var affectedRows = affectedSnowflakes.Count();
+            var affectedRows = affectedSnowflakes.Count;
             EnsureRowAffected<TEntity>(affectedRows, @default);
             EnsureExpectedRowsAffected<TEntity>(affectedRows, expectedRows);
 
@@ -146,7 +146,7 @@ public static class RepositoryExtensions
         await repository.ExecuteAsync(async repository =>
         {
             var affectedSnowflakes = await repository.UpdateAsync(query, action);
-            var affectedRows = affectedSnowflakes.Count();
+            var affectedRows = affectedSnowflakes.Count;
             EnsureRowAffected<TEntity>(affectedRows, fallback);
             EnsureExpectedRowsAffected<TEntity>(affectedRows, expectedRows);
 
@@ -181,7 +181,7 @@ public static class RepositoryExtensions
         repository.Execute(repository =>
         {
             var affectedSnowflakes = repository.Delete(query);
-            var affectedRows = affectedSnowflakes.Count();
+            var affectedRows = affectedSnowflakes.Count;
             EnsureExpectedRowsAffected<TEntity>(affectedRows, expectedRows);
 
             snowflakes = affectedSnowflakes;
@@ -214,7 +214,7 @@ public static class RepositoryExtensions
         await repository.ExecuteAsync(async repository =>
         {
             var affectedSnowflakes = await repository.DeleteAsync(query);
-            var affectedRows = affectedSnowflakes.Count();
+            var affectedRows = affectedSnowflakes.Count;
             EnsureExpectedRowsAffected<TEntity>(affectedRows, expectedRows);
 
             snowflakes = affectedSnowflakes;

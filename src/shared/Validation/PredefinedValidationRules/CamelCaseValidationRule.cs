@@ -2,11 +2,11 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 
-public sealed partial class CamelCase : IValidationRule<string>
+public sealed partial class CamelCaseValidationRule : IValidationRule<string>
 {
     private readonly string _validationMessage;
 
-    public CamelCase(string field)
+    internal CamelCaseValidationRule(string field)
     {
         _validationMessage = string.Format(ValidationErrors.ValueNotCamelCased, field);
     }

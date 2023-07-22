@@ -2,12 +2,12 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 
-public sealed class NotDefault<T> : IValidationRule<T>
+public sealed class NotDefaultValidationRule<T> : IValidationRule<T>
     where T : struct, IEquatable<T>
 {
     private readonly string _validationMessage;
 
-    public NotDefault(string field)
+    internal NotDefaultValidationRule(string field)
     {
         _validationMessage = string.Format(ValidationErrors.ValueIsDefault, field);
     }
