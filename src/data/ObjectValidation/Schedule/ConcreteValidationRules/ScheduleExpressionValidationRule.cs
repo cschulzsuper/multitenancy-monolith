@@ -1,4 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
+﻿using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Schedule.ConcreteValidators;
+using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
 using System;
 namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Schedule.ConcreteValidationRules
 {
@@ -28,7 +29,7 @@ namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Schedule.Concret
 
             var result = expressionType switch
             {
-                "cron-expression" => _cronExpression.Check(expression),
+                ScheduleExpressionTypes.CronExpression => _cronExpression.Check(expression),
 
                 _ => false
             };

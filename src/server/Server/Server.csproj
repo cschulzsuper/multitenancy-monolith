@@ -6,7 +6,6 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Server</RootNamespace>
-		<UserSecretsId>9e629cc8-a069-4b1f-bd72-a6848e12a575</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -17,7 +16,9 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\application\Endpoints\Endpoints.csproj" />
 		<ProjectReference Include="..\..\application\Management\Management.csproj" />
+		<ProjectReference Include="..\..\application\Orchestration\Orchestration.csproj" />
 		<ProjectReference Include="..\..\application\Schedule\Schedule.csproj" />
+		<ProjectReference Include="..\..\application\Subscriptions\Subscriptions.csproj" />
 		<ProjectReference Include="..\..\application\Transport\Transport.csproj" />
 		<ProjectReference Include="..\..\configuration\Configuration\Configuration.csproj" />
 		<ProjectReference Include="..\..\data\Caching\Caching.csproj" />

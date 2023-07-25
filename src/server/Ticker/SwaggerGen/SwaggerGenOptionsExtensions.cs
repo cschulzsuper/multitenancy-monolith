@@ -31,13 +31,19 @@ internal static class SwaggerGenOptionsExtensions
     {
         options.SwaggerDoc("v1", new()
         {
-            Title = "Multitenancy Monolith V1 (ticker/api)",
+            Title = "Ticker V1",
             Version = "v1"
+        });
+
+        options.SwaggerDoc("v1-schedule", new()
+        {
+            Title = "Ticker V1 (schedule)",
+            Version = "v1-schedule"
         });
 
         options.SwaggerDoc("v1-ticker", new()
         {
-            Title = "Multitenancy Monolith V1 (ticker/api/ticker)",
+            Title = "Ticker V1 (ticker)",
             Version = "v1-ticker"
         });
 

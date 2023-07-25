@@ -28,6 +28,7 @@ public class BadgeValidator
 
         var badgeValid = badgeType.Value switch
         {
+            "identity" => await ValidateIdentityAsync(context),
             "member" => await ValidateMemberAsync(context),
             "ticker" => ValidateTicker(context, badgeClaims),
 
@@ -46,7 +47,23 @@ public class BadgeValidator
         client.BaseAddress = new Uri("https://localhost:7207");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", context.HttpContext.Request.Headers.Authorization);
 
-        var response = await client.PostAsync("/access/account-members/#/verify", null);
+        var response = await client.PostAsync("/api/access/account-members/_/verify", null);
+
+        var badgeValid = response.IsSuccessStatusCode;
+
+        return badgeValid;
+    }
+
+    protected virtual async Task<bool> ValidateIdentityAsync(BadgeValidatePrincipalContext context)
+    {
+        var client = new HttpClient();
+
+        // TODO Hard-coded url must be moved to configuration
+
+        client.BaseAddress = new Uri("https://localhost:7207");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", context.HttpContext.Request.Headers.Authorization);
+
+        var response = await client.PostAsync("/api/admission/authentication-identities/_/verify", null);
 
         var badgeValid = response.IsSuccessStatusCode;
 

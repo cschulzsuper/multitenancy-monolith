@@ -11,7 +11,7 @@ public sealed class JobExpressionAttribute : ValidationAttribute
     {
         if (value is not string jobExpression) { return false; }
 
-        _validationResult = JobTypeValidator.Validate(jobExpression);
+        _validationResult = ScheduleExpressionTypeValidator.Validate(jobExpression);
 
         return _validationResult == ValidationResult.Success;
     }

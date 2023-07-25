@@ -6,7 +6,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Extension;
 [SuppressMessage("Style", "IDE1006:Naming Styles")]
 public static class _Services
 {
-    public static IServiceCollection AddAdministrationManagement(this IServiceCollection services)
+    public static IServiceCollection AddExtensionManagement(this IServiceCollection services)
     {
         services.AddSingleton<IObjectTypeDefinitionProvider, ObjectTypeDefinitionProvider>();
 

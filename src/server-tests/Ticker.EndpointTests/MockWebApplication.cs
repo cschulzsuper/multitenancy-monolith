@@ -21,8 +21,9 @@ internal static class MockWebApplication
 {
     public const string Client = "endpoint-tests";
 
+    public const string AuthenticationIdentity = "admin";
     public const string AccountGroup = "group";
-    public const string Member = "default";
+    public const string AccountMember = "default";
     public const string Mail = "default@localhost";
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
@@ -59,7 +60,24 @@ internal static class MockWebApplication
             new Claim("type", "member"),
             new Claim("client", Client),
             new Claim("group", AccountGroup),
-            new Claim("member", Member)
+            new Claim("member", AccountMember)
+        };
+
+        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+
+        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
+
+        return new AuthenticationHeaderValue("Bearer", bearer);
+    }
+
+    public static AuthenticationHeaderValue MockValidIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory)
+    {
+        var claims = new Claim[]
+        {
+            new Claim("type", "identity"),
+            new Claim("client", Client),
+            new Claim("identity", AuthenticationIdentity),
+            new Claim("member", AccountMember)
         };
 
         var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);

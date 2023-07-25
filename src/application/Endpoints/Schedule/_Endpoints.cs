@@ -13,7 +13,7 @@ public static class _Endpoints
             .MapGroup("schedule")
             .WithGroupName("schedule");
 
-        extension.MapScheduleJobResource();
+        extension.MapPlannedJobResource();
 
         return extension;
     }

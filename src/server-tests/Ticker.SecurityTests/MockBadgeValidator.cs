@@ -21,7 +21,28 @@ internal sealed class MockBadgeValidator : BadgeValidator
             return Task.FromResult(false);
         }
 
-        if (badgeMember.Value != MockWebApplication.Member)
+        if (badgeMember.Value != MockWebApplication.AccountGroupMember)
+        {
+            return Task.FromResult(false);
+        }
+
+        return Task.FromResult(true);
+    }
+
+    protected override Task<bool> ValidateIdentityAsync(BadgeValidatePrincipalContext context)
+    {
+        var badgeClaims =
+            context.Principal?.Claims as ICollection<Claim> ??
+            context.Principal?.Claims.ToArray() ??
+            Array.Empty<Claim>();
+
+        var badgeIdentity = badgeClaims.SingleOrDefault(x => x.Type == "identity");
+        if (badgeIdentity == null)
+        {
+            return Task.FromResult(false);
+        }
+
+        if (badgeIdentity.Value != MockWebApplication.AuthenticationIdentityIdentity)
         {
             return Task.FromResult(false);
         }

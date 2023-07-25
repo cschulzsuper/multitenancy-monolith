@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using Cronos;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules
 {
@@ -14,6 +14,15 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValid
         public string ValidationMessage => _validationMessage;
 
         public bool Check(string value)
-            => !value.Any(x => char.IsLetter(x) && char.IsUpper(x));
+        {
+            try
+            {
+                _ = CronExpression.Parse(value);
+                return true;
+            } catch
+            {
+                return false;
+            }
+        }
     }
 }

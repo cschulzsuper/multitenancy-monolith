@@ -41,9 +41,9 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
-        var objectTypeBusinessObject = "business-object";
+        var validObjectType = "valid-object-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/object-types/{objectTypeBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/object-types/{validObjectType}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();

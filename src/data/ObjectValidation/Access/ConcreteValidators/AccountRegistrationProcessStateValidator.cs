@@ -17,9 +17,9 @@ public sealed class AccountRegistrationProcessStateValidator
     {
         var rules = new IValidationRule<string>[]
         {
-        ValidationRules.NotNull(field),
-        ValidationRules.NotEmpty(field),
-        ValidationRules.AllowedValues(field, AccountRegistrationProcessStates.All),
+            ValidationRules.NotNull(field),
+            ValidationRules.NotEmpty(field),
+            ValidationRules.AllowedValues(field, AccountRegistrationProcessStates.All),
         };
 
         return rules;

@@ -9,10 +9,10 @@ namespace ChristianSchulz.MultitenancyMonolith.Application;
 [SuppressMessage("Style", "IDE1006:Naming Styles")]
 public static class _Subscriptions
 {
-    public static IJobScheduler MapHeartbeat(this IJobScheduler scheduler)
+    public static IPlannedJobScheduler MapHeartbeat(this IPlannedJobScheduler scheduler)
     {
         scheduler
-            .Map("heartbeat", Heartbeat);
+            .Schedule("heartbeat", Heartbeat);
 
         return scheduler;
     }

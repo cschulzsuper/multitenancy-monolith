@@ -64,7 +64,7 @@ public sealed class Startup
         services.AddCaching();
         services.AddConfiguration();
         services.AddEvents(options => options.Configure());
-        services.AddJobs(options => options.Configure());
+        services.AddPlannedJobs(options => options.Configure());
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryScheduleData();
@@ -72,6 +72,7 @@ public sealed class Startup
 
         services.AddScheduleManagement();
         services.AddScheduleTransport();
+        services.AddScheduleOrchestration();
 
         services.AddTickerManagement();
         services.AddTickerTransport();
@@ -82,10 +83,10 @@ public sealed class Startup
     {
         app.ApplicationServices
             .GetRequiredService<IEventSubscriptions>()
+            .MapScheduleSubscriptions()
             .MapTickerSubscriptions();
 
-        app.ApplicationServices
-            .GetRequiredService<IJobScheduler>()
+        app.ConfigureJobScheduler()
             .MapHeartbeat();
 
         if (!_environment.IsProduction())
@@ -96,11 +97,6 @@ public sealed class Startup
         app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
 
         app.UseHttpsRedirection();
-
-        if (!_environment.IsProduction())
-        {
-            app.UseSwaggerUI();
-        }
 
         app.UseRouting();
 

@@ -8,15 +8,15 @@ namespace ChristianSchulz.MultitenancyMonolith.Jobs;
 [SuppressMessage("Style", "IDE1006:Naming Styles")]
 public static class _Services
 {
-    public static IServiceCollection AddJobs(this IServiceCollection services, Action<JobsOptions> setup)
+    public static IServiceCollection AddPlannedJobs(this IServiceCollection services, Action<PlannedJobsOptions> setup)
     {
         services.Configure(setup);
-        services.AddSingleton<JobsOptions>(provider => provider.GetRequiredService<IOptions<JobsOptions>>().Value);
+        services.AddSingleton<PlannedJobsOptions>(provider => provider.GetRequiredService<IOptions<PlannedJobsOptions>>().Value);
 
-        services.AddSingleton<IJobQueue, JobQueue>();
-        services.AddSingleton<IJobScheduler, JobScheduler>();
+        services.AddSingleton<IPlannedJobQueue, PlannedJobQueue>();
+        services.AddSingleton<IPlannedJobScheduler, PlannedJobScheduler>();
 
-        services.AddHostedService<JobService>();
+        services.AddHostedService<PlannedJobService>();
 
         return services;
     }

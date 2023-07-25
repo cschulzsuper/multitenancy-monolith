@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ChristianSchulz.MultitenancyMonolith.Events;
 
-internal sealed class EventStorage : IEventStorage, IAsyncDisposable
+internal sealed class EventStorage : IEventStorage, IDisposable, IAsyncDisposable
 {
     private readonly ILogger<IEventStorage> _logger;
     private readonly IEventPublisher _publisher;
@@ -30,6 +30,26 @@ internal sealed class EventStorage : IEventStorage, IAsyncDisposable
         _flush = Task.CompletedTask;
     }
 
+    public void Dispose()
+    {
+        _flushLock.Wait();
+        _flush.Wait();
+
+        _flushLock.Release();
+
+        GC.SuppressFinalize(this);
+    }
+    
+    public async ValueTask DisposeAsync()
+    {
+        await _flushLock.WaitAsync();
+        await _flush;
+
+        _flushLock.Release();
+
+        GC.SuppressFinalize(this);
+    }
+
     public void Add(string @event, long snowflake)
     {
         if (_flushLock.CurrentCount == 0)
@@ -43,16 +63,6 @@ internal sealed class EventStorage : IEventStorage, IAsyncDisposable
         }
 
         _events.Add((@event, snowflake));
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await _flushLock.WaitAsync();
-        await _flush;
-
-        _flushLock.Release();
-
-        GC.SuppressFinalize(this);
     }
 
     public async Task FlushAsync()
@@ -79,4 +89,6 @@ internal sealed class EventStorage : IEventStorage, IAsyncDisposable
             }
         });
     }
+
+
 }

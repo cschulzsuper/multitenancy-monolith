@@ -4,14 +4,14 @@ using System.Diagnostics;
 
 namespace ChristianSchulz.MultitenancyMonolith.Jobs;
 
-internal sealed class DefaultSchedule : IJobSchedule
+internal sealed class DefaultSchedule : IPlannedJobSchedule
 {
 
-    public static readonly IJobSchedule Instance = new DefaultSchedule();
+    public static readonly IPlannedJobSchedule Instance = new DefaultSchedule();
 
-    private const string _twoMinuteInterval = "*/2 * * * *";
+    private const string _fifeMinuteInterval = "*/5 * * * *";
 
-    private static readonly CronExpression _schedule = CronExpression.Parse(_twoMinuteInterval);
+    private static readonly CronExpression _schedule = CronExpression.Parse(_fifeMinuteInterval);
 
     public DateTime Next(DateTime @base)
     {
@@ -24,6 +24,6 @@ internal sealed class DefaultSchedule : IJobSchedule
             return nextOccurrence.Value;
         }
 
-        throw new UnreachableException($"Unable to calculate next occurrence of 2 minute interval '{_twoMinuteInterval}' after '{@base:O}'.");
+        throw new UnreachableException($"Unable to calculate next occurrence of 5 minute interval '{_fifeMinuteInterval}' after '{@base:O}'.");
     }
 }

@@ -64,7 +64,7 @@ public static class _Services
 
     public static IServiceCollection AddStaticDictionaryScheduleData(this IServiceCollection services)
     {
-        services.AddScoped(CreateRepository<JobModel, Job>);
+        services.AddScoped(CreateRepository<PlannedJobModel, PlannedJob>);
 
         return services;
     }

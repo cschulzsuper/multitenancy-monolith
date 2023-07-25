@@ -19,17 +19,23 @@ using System.Text.Json;
 using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 using Xunit.Abstractions;
 using Xunit;
+using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 internal static class MockWebApplication
 {
-    public const int MockMember = 1;
-    public const int MockTicker = 2;
+    public const int MockIdentity = 1;
+    public const int MockMember = 6;
+    public const int MockTicker = 8;
 
     public const string ClientName = "security-tests";
 
+    public const string AuthenticationIdentityIdentity = "identity";
+    public const string AuthenticationIdentityIdentityMailAddress = "identity@localhost";
+    public const string AuthenticationIdentityIdentitySecret = "secret";
+
     public const string AccountGroup = "group";
-    public const string Member = "default";
+    public const string AccountGroupMember = "default";
 
     public const string ConfirmedMailAddress = "confirmed@localhost";
     public const string ConfirmedSecret = "confirmed";
@@ -115,10 +121,27 @@ internal static class MockWebApplication
     public static AuthenticationHeaderValue MockValidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock, string client = ClientName)
         => mock switch
         {
+            MockIdentity => factory.MockValidIdentityAuthorizationHeader(client),
             MockMember => factory.MockValidMemberAuthorizationHeader(client),
             MockTicker => factory.MockValidTickerAuthorizationHeader(client),
             _ => throw new UnreachableException("Mock not found!")
         };
+
+    private static AuthenticationHeaderValue MockValidIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
+    {
+        var claims = new Claim[]
+        {
+            new Claim("type", "identity"),
+            new Claim("client", client),
+            new Claim("identity", AuthenticationIdentityIdentity)
+        };
+
+        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+
+        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
+
+        return new AuthenticationHeaderValue("Bearer", bearer);
+    }
 
     private static AuthenticationHeaderValue MockValidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
     {
@@ -127,7 +150,7 @@ internal static class MockWebApplication
             new Claim("type", "member"),
             new Claim("client", client),
             new Claim("group", AccountGroup),
-            new Claim("member", Member)
+            new Claim("member", AccountGroupMember)
         };
 
         var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
@@ -173,10 +196,27 @@ internal static class MockWebApplication
     public static AuthenticationHeaderValue MockInvalidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock)
         => mock switch
         {
+            MockIdentity => factory.MockInvalidAuthenticationIdentityAuthorizationHeader(),
             MockMember => factory.MockInvalidMemberAuthorizationHeader(),
             MockTicker => factory.MockInvalidTickerAuthorizationHeader(),
             _ => throw new UnreachableException("Mock not found!")
         };
+
+    private static AuthenticationHeaderValue MockInvalidAuthenticationIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory)
+    {
+        var claims = new Claim[]
+        {
+            new Claim("type", "identity"),
+            new Claim("client", ClientName),
+            new Claim("identity", AuthenticationIdentityIdentity)
+        };
+
+        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+
+        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
+
+        return new AuthenticationHeaderValue("Bearer", bearer);
+    }
 
     private static AuthenticationHeaderValue MockInvalidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory)
     {

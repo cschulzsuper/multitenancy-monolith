@@ -66,7 +66,7 @@ public sealed class Startup
         services.AddCaching();
         services.AddConfiguration();
         services.AddEvents(options => options.Configure());
-        services.AddJobs(options => options.Configure());
+        services.AddPlannedJobs(options => options.Configure());
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryAdministrationData();
@@ -75,7 +75,7 @@ public sealed class Startup
         services.AddStaticDictionaryBusinessData();
         services.AddStaticDictionaryScheduleData();
 
-        services.AddAdministrationManagement();
+        services.AddExtensionManagement();
         services.AddAdministrationTransport();
 
         services.AddAdmissionManagement();
@@ -89,15 +89,17 @@ public sealed class Startup
 
         services.AddScheduleManagement();
         services.AddScheduleTransport();
-
+        services.AddScheduleOrchestration();
     }
 
     public void Configure(IApplicationBuilder app)
     {
         app.ApplicationServices
-            .GetRequiredService<IJobScheduler>()
-            .MapHeartbeat();
+            .GetRequiredService<IEventSubscriptions>()
+            .MapScheduleSubscriptions();
 
+        app.ConfigureJobScheduler()
+            .MapHeartbeat();
 
         if (!_environment.IsProduction())
         {

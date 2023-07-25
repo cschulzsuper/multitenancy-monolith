@@ -8,7 +8,7 @@ public static class _Services
 {
     public static IServiceCollection AddScheduleTransport(this IServiceCollection services)
     {
-        services.AddScoped<IJobRequestHandler, JobRequestHandler>();
+        services.AddScoped<IPlannedJobRequestHandler, PlannedJobRequestHandler>();
 
         return services;
     }

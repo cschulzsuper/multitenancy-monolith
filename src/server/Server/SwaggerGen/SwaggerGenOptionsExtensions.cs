@@ -31,32 +31,38 @@ internal static class SwaggerGenOptionsExtensions
     {
         options.SwaggerDoc("v1", new()
         {
-            Title = "Multitenancy Monolith V1 (server/api)",
+            Title = "Multitenancy Monolith V1",
             Version = "v1"
-        });
-
-        options.SwaggerDoc("v1-extension", new()
-        {
-            Title = "Multitenancy Monolith V1 (server/api/extension)",
-            Version = "v1-extension"
-        });
-
-        options.SwaggerDoc("v1-admission", new()
-        {
-            Title = "Multitenancy Monolith V1 (server/api/admission)",
-            Version = "v1-admission"
         });
 
         options.SwaggerDoc("v1-access", new()
         {
-            Title = "Multitenancy Monolith V1 (server/api/access)",
+            Title = "Multitenancy Monolith V1 (access)",
             Version = "v1-access"
+        });
+
+        options.SwaggerDoc("v1-admission", new()
+        {
+            Title = "Multitenancy Monolith V1 (admission)",
+            Version = "v1-admission"
         });
 
         options.SwaggerDoc("v1-business", new()
         {
-            Title = "Multitenancy Monolith V1 (server/api/business)",
+            Title = "Multitenancy Monolith V1 (business)",
             Version = "v1-business"
+        });
+
+        options.SwaggerDoc("v1-extension", new()
+        {
+            Title = "Multitenancy Monolith V1 (extension)",
+            Version = "v1-extension"
+        });
+
+        options.SwaggerDoc("v1-schedule", new()
+        {
+            Title = "Multitenancy Monolith V1 (schedule)",
+            Version = "v1-schedule"
         });
 
         options.DocInclusionPredicate((docName, apiDesc) =>
