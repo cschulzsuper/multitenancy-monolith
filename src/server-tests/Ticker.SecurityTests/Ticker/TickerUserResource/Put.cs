@@ -38,6 +38,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockChief)]
     public async Task Put_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
@@ -58,6 +59,11 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     [InlineData(MockWebApplication.MockTicker)]
     public async Task Put_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
@@ -79,9 +85,14 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     [InlineData(MockWebApplication.MockTicker)]
-    public async Task Put_ShouldBeForbidden_WhenInvalid(int mock)
+    public async Task Put_ShouldBeUnauthorized_WhenInvalid(int mock)
     {
         // Arrange
         var validTickerUser = 1;

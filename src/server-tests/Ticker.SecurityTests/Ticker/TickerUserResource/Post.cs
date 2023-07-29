@@ -36,6 +36,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockChief)]
     public async Task Post_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
@@ -54,6 +55,11 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     [InlineData(MockWebApplication.MockTicker)]
     public async Task Post_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
@@ -73,7 +79,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     [InlineData(MockWebApplication.MockTicker)]
     public async Task Post_ShouldBeUnauthorized_WhenInvalid(int mock)
     {

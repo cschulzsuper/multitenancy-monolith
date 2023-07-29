@@ -37,6 +37,9 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
+    [InlineData(MockWebApplication.MockChief)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
     public async Task GetAll_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
@@ -56,6 +59,9 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
     [InlineData(MockWebApplication.MockTicker)]
     public async Task Get_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
@@ -72,6 +78,32 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
+    [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
+    [InlineData(MockWebApplication.MockTicker)]
+    public async Task GetAll_ShouldBeUnauthorized_WhenInvalid(int mock)
+    {
+        // Arrange
+        var validTickerUser = 1;
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/{validTickerUser}");
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 }

@@ -26,6 +26,7 @@ using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Jobs;
 using ChristianSchulz.MultitenancyMonolith.Jobs;
 using ChristianSchulz.MultitenancyMonolith.Application.Schedule;
 using Microsoft.Net.Http.Headers;
+using ChristianSchulz.MultitenancyMonolith.Server.Security;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 
@@ -46,7 +47,7 @@ public sealed class Startup
     {
         services.ConfigureJsonOptions();
 
-        services.AddAuthentication().AddBadge(options => options.Configure(new AllowedClientsProvider(_configuration).Get()));
+        services.AddAuthentication().AddBadge(options => options.Configure());
         services.AddAuthorization();
 
         services.AddCors();
@@ -60,7 +61,7 @@ public sealed class Startup
             options.ConfigureAuthorization();
         });
 
-        services.AddRequestUser();
+        services.AddRequestUser(options => options.Configure(new AllowedClientsProvider(_configuration).Get()));
         services.AddCaching();
         services.AddConfiguration();
         services.AddEvents(options => options.Configure());

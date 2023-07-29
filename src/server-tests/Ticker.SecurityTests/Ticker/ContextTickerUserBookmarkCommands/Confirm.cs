@@ -57,7 +57,12 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     public async Task Confirm_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
@@ -77,7 +82,12 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     [InlineData(MockWebApplication.MockTicker)]
     public async Task Confirm_ShouldBeUnauthorized_WhenInvalid(int mock)
     {

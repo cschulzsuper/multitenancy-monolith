@@ -21,7 +21,8 @@ internal sealed class MockBadgeValidator : BadgeValidator
             return Task.FromResult(false);
         }
 
-        if (badgeMember.Value != MockWebApplication.AccountGroupMember)
+        if (badgeMember.Value != MockWebApplication.AccountGroupMember &&
+            badgeMember.Value != MockWebApplication.AccountGroupChief)
         {
             return Task.FromResult(false);
         }
@@ -42,7 +43,9 @@ internal sealed class MockBadgeValidator : BadgeValidator
             return Task.FromResult(false);
         }
 
-        if (badgeIdentity.Value != MockWebApplication.AuthenticationIdentityIdentity)
+        if (badgeIdentity.Value != MockWebApplication.AuthenticationIdentityAdmin &&
+            badgeIdentity.Value != MockWebApplication.AuthenticationIdentityIdentity &&
+            badgeIdentity.Value != MockWebApplication.AuthenticationIdentityDemo)
         {
             return Task.FromResult(false);
         }

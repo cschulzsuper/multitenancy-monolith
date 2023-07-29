@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
@@ -7,9 +8,15 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 [SuppressMessage("Style", "IDE1006:Naming Styles")]
 public static class _Services
 {
-    public static IServiceCollection AddRequestUser(this IServiceCollection services)
-        => services
-            .AddScoped<ClaimsPrincipalContext>()
-            .AddTransient(provider => provider.GetRequiredService<ClaimsPrincipalContext>().User)
-            .AddScoped<IClaimsTransformation, ClaimsPrincipalTransformation>();
+    public static IServiceCollection AddRequestUser(this IServiceCollection services, Action<RequestUserOptions> setup)
+    {
+        services.Configure(setup);
+
+        services.AddScoped<RequestUserContext>();
+        services.AddScoped<IClaimsTransformation, RequestUserTransformation>();
+
+        services.AddTransient(provider => provider.GetRequiredService<RequestUserContext>().User);
+
+        return services;
+    }
 }

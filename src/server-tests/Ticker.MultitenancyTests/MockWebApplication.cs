@@ -19,6 +19,7 @@ internal static class MockWebApplication
 
     public const string AccountGroup1 = "group-1";
     public const string AccountGroup2 = "group-2";
+    public const string Identity = "default";
     public const string Member = "default";
     public const string Mail = "default@localhost";
 
@@ -50,6 +51,7 @@ internal static class MockWebApplication
         {
             new Claim("type", "member"),
             new Claim("client", ClientName),
+            new Claim("identity", Identity),
             new Claim("group", group),
             new Claim("member", Member)
         };

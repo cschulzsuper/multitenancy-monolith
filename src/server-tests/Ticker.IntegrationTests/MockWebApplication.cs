@@ -18,8 +18,9 @@ internal static class MockWebApplication
 {
     public const string ClientName = "integration-tests";
 
+    public const string AuthenticationIdentity = "default";
     public const string AccountGroup = "group";
-    public const string Member = "member";
+    public const string AccountMember = "member";
 
     public const string TickerUserMail = "default@localhost";
     public const string TickerUserSecret = "default";
@@ -54,8 +55,9 @@ internal static class MockWebApplication
         {
             new Claim("type", "member"),
             new Claim("client", ClientName),
+            new Claim("identity", AuthenticationIdentity),
             new Claim("group", AccountGroup),
-            new Claim("member", Member)
+            new Claim("member", AccountMember)
         };
 
         var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);

@@ -111,7 +111,10 @@ I said monolith, but with the latests features related to a ticker system, it is
   * /57 First draft of a very simple background job component, that exeutes jobs sequentially in a `HostedService`. For now, only simple logging heartbeat is implemented. https://github.com/cschulzsuper/multitenancy-monolith/commit/0c127587c5b1227f5dde1930f8618bb9d4c54fe7
   * /58 An HTTP PUT endpoint allows to change the schedule of a background job. Additionally, a changes were necessary to fix the swagger client and the authentication.https://github.com/cschulzsuper/multitenancy-monolith/commit/b065dfffa7235f78bbb8c37e7c3e72996672096d
   * /59 Entity and management to store the job schedule in the data layer. Additionally, changes in the validation. https://github.com/cschulzsuper/multitenancy-monolith/commit/08a50726bd84ae8ca0cc31474d4331ac326b7be6
-  * /60 Renamed `job` ot `planned-job`, implemented endpoints and tests related to nackground jobs. 
+  * /60 Renamed `job` to `planned-job`, implemented endpoints and tests related to nackground jobs. https://github.com/cschulzsuper/multitenancy-monolith/commit/868e25cc147011d1db746d8d1310b5f01c9e583f
+
+## Bearer Token
+  * /61 Migration to the new bearer token authentication of .NET 8 started, but this first step is only a build-up. I moved the `Claim` mapping from my custom authentication to the `ClaimsTransformation`. 
 
 # Backlog
 

@@ -37,6 +37,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockChief)]
     public async Task Delete_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
@@ -56,6 +57,11 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     [InlineData(MockWebApplication.MockTicker)]
     public async Task Delete_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
@@ -76,7 +82,12 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     [InlineData(MockWebApplication.MockTicker)]
     public async Task Delete_ShouldBeUnauthorized_WhenInvalid(int mock)
     {

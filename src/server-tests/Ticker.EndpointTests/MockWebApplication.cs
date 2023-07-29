@@ -59,6 +59,7 @@ internal static class MockWebApplication
         {
             new Claim("type", "member"),
             new Claim("client", Client),
+            new Claim("identity", AuthenticationIdentity),
             new Claim("group", AccountGroup),
             new Claim("member", AccountMember)
         };
@@ -76,8 +77,7 @@ internal static class MockWebApplication
         {
             new Claim("type", "identity"),
             new Claim("client", Client),
-            new Claim("identity", AuthenticationIdentity),
-            new Claim("member", AccountMember)
+            new Claim("identity", AuthenticationIdentity)
         };
 
         var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);

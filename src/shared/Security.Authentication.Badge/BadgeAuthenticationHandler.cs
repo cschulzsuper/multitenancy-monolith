@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ public sealed class BadgeAuthenticationHandler : AuthenticationHandler<BadgeAuth
 
         var badgeIdentity = new ClaimsIdentity(badgeClaims, "Badge");
 
-        var ticket = CreateTicket(badgeClaims, badgeIdentity);
+        var ticket = new AuthenticationTicket(new ClaimsPrincipal(badgeIdentity), Scheme.Name);
 
         var context = new BadgeValidatePrincipalContext(Context, Scheme, Options, ticket);
 
@@ -63,20 +64,6 @@ public sealed class BadgeAuthenticationHandler : AuthenticationHandler<BadgeAuth
              ?? null;
 
         return badgeClaims;
-    }
-
-    private AuthenticationTicket CreateTicket(Claim[] badgeClaims, ClaimsIdentity identity)
-    {
-        var convertedClaims = new List<Claim>(badgeClaims);
-
-        foreach (var action in Options.ClaimActions)
-        {
-            action.Run(convertedClaims, identity, ClaimsIssuer);
-        }
-
-        var principal = new ClaimsPrincipal(identity);
-
-        return new AuthenticationTicket(principal, Scheme.Name);
     }
 
     private string? GetBadgeFromHeaders()

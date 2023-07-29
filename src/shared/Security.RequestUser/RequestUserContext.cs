@@ -2,9 +2,9 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 
-public sealed class ClaimsPrincipalContext
+public sealed class RequestUserContext
 {
-    public ClaimsPrincipalContext()
+    public RequestUserContext()
     {
         User = new ClaimsPrincipal();
     }

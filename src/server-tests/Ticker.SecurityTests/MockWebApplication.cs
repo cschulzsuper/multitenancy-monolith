@@ -24,18 +24,24 @@ using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 internal static class MockWebApplication
 {
-    public const int MockIdentity = 1;
+    public const int MockAdmin = 1;
+    public const int MockIdentity = 2;
+    public const int MockDemo = 3;
+    public const int MockChief = 4;
+    public const int MockChiefObserver = 5;
     public const int MockMember = 6;
+    public const int MockMemberObserver = 7;
     public const int MockTicker = 8;
 
     public const string ClientName = "security-tests";
 
+    public const string AuthenticationIdentityAdmin = "admin";
     public const string AuthenticationIdentityIdentity = "identity";
-    public const string AuthenticationIdentityIdentityMailAddress = "identity@localhost";
-    public const string AuthenticationIdentityIdentitySecret = "secret";
+    public const string AuthenticationIdentityDemo = "demo";
 
     public const string AccountGroup = "group";
-    public const string AccountGroupMember = "default";
+    public const string AccountGroupChief = "chief-member";
+    public const string AccountGroupMember = "member";
 
     public const string ConfirmedMailAddress = "confirmed@localhost";
     public const string ConfirmedSecret = "confirmed";
@@ -121,11 +127,32 @@ internal static class MockWebApplication
     public static AuthenticationHeaderValue MockValidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock, string client = ClientName)
         => mock switch
         {
+            MockAdmin => factory.MockValidAdminAuthorizationHeader(client),
             MockIdentity => factory.MockValidIdentityAuthorizationHeader(client),
+            MockDemo => factory.MockValidDemoAuthorizationHeader(client),
+            MockChief => factory.MockValidChiefAuthorizationHeader(client),
+            MockChiefObserver => factory.MockValidChiefObserverAuthorizationHeader(client),
             MockMember => factory.MockValidMemberAuthorizationHeader(client),
+            MockMemberObserver => factory.MockValidMemberObserverAuthorizationHeader(client),
             MockTicker => factory.MockValidTickerAuthorizationHeader(client),
             _ => throw new UnreachableException("Mock not found!")
         };
+
+    private static AuthenticationHeaderValue MockValidAdminAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
+    {
+        var claims = new Claim[]
+        {
+            new Claim("type", "identity"),
+            new Claim("client", client),
+            new Claim("identity", AuthenticationIdentityAdmin)
+        };
+
+        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+
+        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
+
+        return new AuthenticationHeaderValue("Bearer", bearer);
+    }
 
     private static AuthenticationHeaderValue MockValidIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
     {
@@ -143,12 +170,83 @@ internal static class MockWebApplication
         return new AuthenticationHeaderValue("Bearer", bearer);
     }
 
+    private static AuthenticationHeaderValue MockValidDemoAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
+    {
+        var claims = new Claim[]
+        {
+            new Claim("type", "identity"),
+            new Claim("client", client),
+            new Claim("identity", AuthenticationIdentityDemo)
+        };
+
+        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+
+        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
+
+        return new AuthenticationHeaderValue("Bearer", bearer);
+    }
+
+    private static AuthenticationHeaderValue MockValidChiefAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
+    {
+        var claims = new Claim[]
+        {
+            new Claim("type", "member"),
+            new Claim("client", client),
+            new Claim("identity", AuthenticationIdentityIdentity),
+            new Claim("group", AccountGroup),
+            new Claim("member", AccountGroupChief)
+        };
+
+        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+
+        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
+
+        return new AuthenticationHeaderValue("Bearer", bearer);
+    }
+
+    private static AuthenticationHeaderValue MockValidChiefObserverAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
+    {
+        var claims = new Claim[]
+        {
+            new Claim("type", "member"),
+            new Claim("client", client),
+            new Claim("identity", AuthenticationIdentityDemo),
+            new Claim("group", AccountGroup),
+            new Claim("member", AccountGroupChief)
+        };
+
+        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+
+        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
+
+        return new AuthenticationHeaderValue("Bearer", bearer);
+    }
+
     private static AuthenticationHeaderValue MockValidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
     {
         var claims = new Claim[]
         {
             new Claim("type", "member"),
             new Claim("client", client),
+            new Claim("identity", AuthenticationIdentityIdentity),
+            new Claim("group", AccountGroup),
+            new Claim("member", AccountGroupMember)
+        };
+
+        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+
+        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
+
+        return new AuthenticationHeaderValue("Bearer", bearer);
+    }
+
+    private static AuthenticationHeaderValue MockValidMemberObserverAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
+    {
+        var claims = new Claim[]
+        {
+            new Claim("type", "member"),
+            new Claim("client", client),
+            new Claim("identity", AuthenticationIdentityDemo),
             new Claim("group", AccountGroup),
             new Claim("member", AccountGroupMember)
         };
@@ -196,19 +294,24 @@ internal static class MockWebApplication
     public static AuthenticationHeaderValue MockInvalidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock)
         => mock switch
         {
-            MockIdentity => factory.MockInvalidAuthenticationIdentityAuthorizationHeader(),
+            MockAdmin => factory.MockInvalidIdentityAuthorizationHeader(),
+            MockIdentity => factory.MockInvalidIdentityAuthorizationHeader(),
+            MockDemo => factory.MockInvalidIdentityAuthorizationHeader(),
+            MockChief => factory.MockInvalidMemberAuthorizationHeader(),
+            MockChiefObserver => factory.MockInvalidMemberAuthorizationHeader(),
             MockMember => factory.MockInvalidMemberAuthorizationHeader(),
+            MockMemberObserver => factory.MockInvalidMemberAuthorizationHeader(),
             MockTicker => factory.MockInvalidTickerAuthorizationHeader(),
             _ => throw new UnreachableException("Mock not found!")
         };
 
-    private static AuthenticationHeaderValue MockInvalidAuthenticationIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory)
+    private static AuthenticationHeaderValue MockInvalidIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory)
     {
         var claims = new Claim[]
         {
             new Claim("type", "identity"),
             new Claim("client", ClientName),
-            new Claim("identity", AuthenticationIdentityIdentity)
+            new Claim("identity", "invalid")
         };
 
         var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);

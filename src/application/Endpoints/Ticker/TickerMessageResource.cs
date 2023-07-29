@@ -27,13 +27,13 @@ public static class TickerMessageResource
         resource
             .MapGet(string.Empty, GetAll)
             .RequireAuthorization(policy => policy
-                .RequireRole("member"))
+                .RequireRole("member", "member-observer"))
             .WithErrorMessage(CouldNotQueryTickerMessages);
 
         resource
             .MapGet("{tickerMessage}", Get)
             .RequireAuthorization(policy => policy
-                .RequireRole("member"))
+                .RequireRole("member", "member-observer"))
             .WithErrorMessage(CouldNotQueryTickerMessage);
 
         resource

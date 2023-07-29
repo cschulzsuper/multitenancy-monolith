@@ -36,6 +36,7 @@ public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockChief)]
     public async Task Reset_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
@@ -55,6 +56,11 @@ public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     [InlineData(MockWebApplication.MockTicker)]
     public async Task Reset_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
@@ -75,9 +81,14 @@ public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     [InlineData(MockWebApplication.MockTicker)]
-    public async Task Reset_ShouldBeForbidden_WhenInvalid(int mock)
+    public async Task Reset_ShouldBeUnauthorized_WhenInvalid(int mock)
     {
         // Arrange
         var validTickerUser = 1;

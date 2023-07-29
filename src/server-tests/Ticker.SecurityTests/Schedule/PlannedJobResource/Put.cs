@@ -24,13 +24,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var validPlannedJob = "valid-planned-job";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/schedule/planned-jobs/{validPlannedJob}");
-
-        var putPlannedJob = new
-        {
-            Expression = "*/1 * * * *"
-        };
-
-        request.Content = JsonContent.Create(putPlannedJob);
+        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
@@ -43,8 +37,33 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    public async Task Put_ShouldFail_WhenAuthorized(int mock)
+    {
+        // Arrange
+        var validPlannedJob = "valid-planned-job";
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/schedule/planned-jobs/{validPlannedJob}");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
+        request.Content = JsonContent.Create(new object());
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
     [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChief)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
     [InlineData(MockWebApplication.MockTicker)]
     public async Task Put_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
@@ -53,13 +72,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/schedule/planned-jobs/{validPlannedJob}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
-
-        var putPlannedJob = new
-        {
-            Expression = "*/1 * * * *"
-        };
-
-        request.Content = JsonContent.Create(putPlannedJob);
+        request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
 
@@ -68,6 +81,33 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal(0, response.Content.Headers.ContentLength);
+    }
+
+    [Theory]
+    [InlineData(MockWebApplication.MockAdmin)]
+    [InlineData(MockWebApplication.MockIdentity)]
+    [InlineData(MockWebApplication.MockDemo)]
+    [InlineData(MockWebApplication.MockChiefObserver)]
+    [InlineData(MockWebApplication.MockMember)]
+    [InlineData(MockWebApplication.MockMemberObserver)]
+    [InlineData(MockWebApplication.MockTicker)]
+    public async Task Post_ShouldBeForbidden_WhenInvalid(int mock)
+    {
+        // Arrange
+        var validPlannedJob = "valid-planned-job";
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/schedule/planned-jobs/{validPlannedJob}");
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+        request.Content = JsonContent.Create(new object());
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 }
