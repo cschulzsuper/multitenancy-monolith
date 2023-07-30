@@ -1,5 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Serialization;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -23,8 +23,7 @@ public static class ContextTickerUserCommands
         commands
             .MapPost("/auth", Auth)
             .WithErrorMessage(CouldNotAuthTickerUser)
-            .Authenticates()
-            .AddEndpointFilter<BadgeResultEndpointFilter>();
+            .Authenticates();
 
         commands
             .MapPost("/confirm", Confirm)
@@ -49,8 +48,8 @@ public static class ContextTickerUserCommands
     }
 
     private static Delegate Auth =>
-        (IContextTickerUserCommandHandler commandHandler, ContextTickerUserAuthCommand command)
-            => commandHandler.AuthAsync(command);
+        async  (IContextTickerUserCommandHandler commandHandler, ContextTickerUserAuthCommand command)
+            => Results.SignIn(await commandHandler.AuthAsync(command), authenticationScheme: BearerTokenDefaults.AuthenticationScheme);
 
     private static Delegate Confirm =>
         (IContextTickerUserCommandHandler commandHandler, ContextTickerUserConfirmCommand command)

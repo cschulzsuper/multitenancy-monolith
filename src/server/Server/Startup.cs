@@ -2,7 +2,6 @@ using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Application.Business;
 using ChristianSchulz.MultitenancyMonolith.Caching;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -49,7 +48,8 @@ public sealed class Startup
     {
         services.ConfigureJsonOptions();
 
-        services.AddAuthentication().AddBadge(options => options.Configure());
+        //services.AddDataProtection();
+        services.AddAuthentication().AddBearerToken(options => options.Configure());
         services.AddAuthorization();
 
         services.AddCors();

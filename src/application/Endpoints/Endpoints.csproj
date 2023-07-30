@@ -17,7 +17,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\shared\Security.Authentication.Badge\Security.Authentication.Badge.csproj" />
 		<ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
 	</ItemGroup>
 

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Events;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
@@ -36,7 +37,7 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
         _eventStorage = eventStorage;
     }
 
-    public async Task<ClaimsIdentity> AuthAsync(ContextTickerUserAuthCommand command)
+    public async Task<ClaimsPrincipal> AuthAsync(ContextTickerUserAuthCommand command)
     {
         var clientName = command.ClientName;
 
@@ -105,9 +106,10 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
             new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
         };
 
-        var claimsIdentity = new ClaimsIdentity(claims, "Badge");
+        var claimsIdentity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-        return claimsIdentity;
+        return claimsPrincipal;
     }
 
     public async Task ConfirmAsync(ContextTickerUserConfirmCommand command)

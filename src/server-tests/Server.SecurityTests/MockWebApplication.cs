@@ -1,12 +1,14 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Access;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Server;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Serialization;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -86,6 +88,25 @@ internal static class MockWebApplication
                 config.AddInMemoryCollection(_configuration!);
             }));
 
+    private static string ProtectClaims(this WebApplicationFactory<Program> factory, Claim[] claims)
+    {
+        var options = factory.Services.GetRequiredService<IOptionsMonitor<BearerTokenOptions>>().Get(BearerTokenDefaults.AuthenticationScheme);
+
+        var claimsIdentity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+        var authenticationProperties = new AuthenticationProperties
+        {
+            ExpiresUtc = DateTime.UtcNow + options.BearerTokenExpiration
+        };
+
+        var authenticationTicket = new AuthenticationTicket(claimsPrincipal, authenticationProperties, $"{BearerTokenDefaults.AuthenticationScheme}:AccessToken");
+
+        var token = options.BearerTokenProtector.Protect(authenticationTicket);
+
+        return token;
+    }
+
     public static AuthenticationHeaderValue MockValidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock, string client = Client)
         => mock switch
         {
@@ -123,11 +144,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockValidIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
@@ -154,11 +173,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockValidDemoAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
@@ -185,11 +202,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockValidChiefAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
@@ -220,11 +235,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockValidChiefObserverAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
@@ -255,11 +268,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockValidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
@@ -290,11 +301,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockValidMemberObserverAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
@@ -325,11 +334,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     public static AuthenticationHeaderValue MockInvalidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock)
@@ -357,11 +364,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockInvalidAuthenticationIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory)
@@ -376,11 +381,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockInvalidDemoAuthorizationHeader(this WebApplicationFactory<Program> factory)
@@ -395,11 +398,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockInvalidChiefAuthorizationHeader(this WebApplicationFactory<Program> factory)
@@ -416,11 +417,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockInvalidChiefObserverAuthorizationHeader(this WebApplicationFactory<Program> factory)
@@ -437,11 +436,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockInvalidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory)
@@ -458,11 +455,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static AuthenticationHeaderValue MockInvalidMemberObserverAuthorizationHeader(this WebApplicationFactory<Program> factory)
@@ -479,11 +474,9 @@ internal static class MockWebApplication
             new Claim("verification", Convert.ToBase64String(verification)),
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
 }

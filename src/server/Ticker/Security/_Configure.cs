@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Cryptography.Xml;
-using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Security;
 
@@ -15,122 +12,32 @@ internal static class _Configure
 {
     public static RequestUserOptions Configure(this RequestUserOptions options, ICollection<AllowedClient> allowedClients)
     {
-        options.Transform = user => TransformAsync(user, allowedClients);
+        options.Transform = user => RequestUserConfiguration.TransformAsync(user, allowedClients);
 
         return options;
     }
 
-    private static Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal, ICollection<AllowedClient> allowedClients)
+    public static BearerTokenOptions Configure(this BearerTokenOptions options)
     {
-        var claims = new List<Claim>(principal.Claims);
-
-        TransformAdminRoleClaim(claims);
-        TransformChiefRoleClaim(claims);
-        TransformChiefObserverRoleClaim(claims);
-        TransformMemberRoleClaim(claims);
-        TransformMemberObserverRoleClaim(claims);
-        TransformTickerRoleClaim(claims);
-
-        TransformScopeClaims(claims, allowedClients);
-
-        var user = new ClaimsPrincipal(
-            new ClaimsIdentity(claims, principal.Identity!.AuthenticationType));
-
-        return Task.FromResult(user);
-    }
-
-    private static void TransformAdminRoleClaim(List<Claim> claims)
-    {
-        var isAdmin = claims.Any(x => x.Type == "identity" && x.Value == "admin");
-
-        if (isAdmin)
+        //options.BearerTokenProtector = new BearerTokenProtector();
+        
+        options.Events.OnMessageReceived = async context =>
         {
-            claims.Add(new Claim(ClaimTypes.Role, "admin", ClaimValueTypes.String));
-        }
-    }
+            context.Token =
+                BearerTokenSource.GetTokenFromHeaders(context.HttpContext) ??
+                BearerTokenSource.GetTokenFromCookies(context.HttpContext) ??
+                BearerTokenSource.GetTokenFromQuery(context.HttpContext);
 
-    private static void TransformChiefRoleClaim(List<Claim> claims)
-    {
-
-        var isChief =
-            claims.Any(x => x.Type == "type" && x.Value == "member") &&
-            claims.Any(x => x.Type == "identity" && x.Value != "demo") &&
-            claims.Any(x => x.Type == "member" && x.Value.StartsWith("chief-"));
-
-        if (isChief)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, "chief", ClaimValueTypes.String));
-        }
-    }
-
-    private static void TransformChiefObserverRoleClaim(List<Claim> claims)
-    {
-
-        var isChiefObserver =
-            claims.Any(x => x.Type == "type" && x.Value == "member") &&
-            claims.Any(x => x.Type == "identity" && x.Value == "demo") &&
-            claims.Any(x => x.Type == "member" && x.Value.StartsWith("chief-"));
-
-        if (isChiefObserver)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, "chief-observer", ClaimValueTypes.String));
-        }
-    }
-
-    private static void TransformMemberRoleClaim(List<Claim> claims)
-    {
-
-
-        var isMember =
-            claims.Any(x => x.Type == "type" && x.Value == "member") &&
-            claims.Any(x => x.Type == "identity" && x.Value != "demo") &&
-            claims.Any(x => x.Type == "member" && !string.IsNullOrWhiteSpace(x.Value));
-
-        if (isMember)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, "member", ClaimValueTypes.String));
-        }
-    }
-
-    private static void TransformMemberObserverRoleClaim(List<Claim> claims)
-    {
-        var isMemberObserver =
-            claims.Any(x => x.Type == "type" && x.Value == "member") &&
-            claims.Any(x => x.Type == "identity" && x.Value == "demo") &&
-            claims.Any(x => x.Type == "member" && !string.IsNullOrWhiteSpace(x.Value));
-
-        if (isMemberObserver)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, "member-observer", ClaimValueTypes.String));
-        }
-    }
-
-    private static void TransformTickerRoleClaim(List<Claim> claims)
-    {
-        var isTicker =
-            claims.Any(x => x.Type == "type" && x.Value == "ticker") &&
-            claims.Any(x => x.Type == "mail" && !string.IsNullOrWhiteSpace(x.Value));
-
-        if (isTicker)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, "ticker", ClaimValueTypes.String));
-        }
-    }
-
-    private static void TransformScopeClaims(List<Claim> claims, ICollection<AllowedClient> allowedClients)
-    {
-        foreach (var allowedClient in allowedClients)
-        {
-            foreach (var scope in allowedClient.Scopes)
+            var ticket = context.Options.BearerTokenProtector.Unprotect(context.Token);
+            if (ticket == null)
             {
-                var isScopeFromAllowedClient =
-                    claims.Any(x => x.Type == "client" && x.Value == allowedClient.UniqueName);
-
-                if (isScopeFromAllowedClient)
-                {
-                    claims.Add(new Claim("scope", scope, ClaimValueTypes.String));
-                }
+                context.Fail("Unprotected token failed");
+                return;
             }
-        }
+
+            await new BearerTokenValidator().ValidateAsync(context, ticket);
+        };
+
+        return options;
     }
 }

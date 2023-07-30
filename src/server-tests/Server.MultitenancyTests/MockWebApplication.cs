@@ -1,15 +1,16 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Server;
-using ChristianSchulz.MultitenancyMonolith.Server.Security;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Serialization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using System.Text.Json;
+using System.Threading.Tasks;
 using Xunit;
 
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
@@ -32,9 +33,12 @@ internal static class MockWebApplication
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory)
         => factory.WithWebHostBuilder(app => app
-            .ConfigureServices(services => 
+            .ConfigureServices(services =>
             {
-                services.AddSingleton<BadgeValidator, MockBadgeValidator>();
+                services.Configure<BearerTokenOptions>(BearerTokenDefaults.AuthenticationScheme, options =>
+                {
+                    options.Events.OnMessageReceived = context => Task.CompletedTask;
+                });
             })
             .ConfigureAppConfiguration((_, config) =>
             {
@@ -45,6 +49,25 @@ internal static class MockWebApplication
 
     public static IServiceScope CreateMultitenancyScope(this WebApplicationFactory<Program> factory, string group)
         => factory.Services.CreateMultitenancyScope(group);
+
+    private static string ProtectClaims(this WebApplicationFactory<Program> factory, Claim[] claims)
+    {
+        var options = factory.Services.GetRequiredService<IOptionsMonitor<BearerTokenOptions>>().Get(BearerTokenDefaults.AuthenticationScheme);
+
+        var claimsIdentity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+        var authenticationProperties = new AuthenticationProperties
+        {
+            ExpiresUtc = DateTime.UtcNow + options.BearerTokenExpiration
+        };
+
+        var authenticationTicket = new AuthenticationTicket(claimsPrincipal, authenticationProperties, $"{BearerTokenDefaults.AuthenticationScheme}:AccessToken");
+
+        var token = options.BearerTokenProtector.Protect(authenticationTicket);
+
+        return token;
+    }
 
     public static AuthenticationHeaderValue MockValidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory, string group)
     {
@@ -57,11 +80,9 @@ internal static class MockWebApplication
             new Claim("member", Member)
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
     }
 
     public static AuthenticationHeaderValue MockValidIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory)
@@ -73,11 +94,9 @@ internal static class MockWebApplication
             new Claim("identity", Identity)
         };
 
-        var claimsSerialized = JsonSerializer.SerializeToUtf8Bytes(claims, ClaimsJsonSerializerOptions.Options);
+        var token = factory.ProtectClaims(claims);
 
-        var bearer = WebEncoders.Base64UrlEncode(claimsSerialized);
-
-        return new AuthenticationHeaderValue("Bearer", bearer);
+        return new AuthenticationHeaderValue("Bearer", token);
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission.Commands;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -23,7 +24,7 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
         _allowedClientsProvider = allowedClientsProvider;
     }
 
-    public async Task<ClaimsIdentity> AuthAsync(ContextAuthenticationIdentityAuthCommand command)
+    public async Task<ClaimsPrincipal> AuthAsync(ContextAuthenticationIdentityAuthCommand command)
     {
         var clientName = command.ClientName;
         if (_allowedClientsProvider.Get().All(x => x.UniqueName != clientName))
@@ -57,9 +58,10 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
             new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
         };
 
-        var claimsIdentity = new ClaimsIdentity(claims, "Badge");
+        var claimsIdentity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-        return claimsIdentity;
+        return claimsPrincipal;
     }
 
     public void Verify() { }

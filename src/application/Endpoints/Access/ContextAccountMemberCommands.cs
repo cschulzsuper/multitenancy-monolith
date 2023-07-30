@@ -1,5 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Access.Commands;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Serialization;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -23,8 +23,7 @@ internal static class ContextAccountMemberCommands
             .RequireAuthorization(policy => policy
                 .RequireClaim("type", "identity"))
             .WithErrorMessage(CouldNotAuthAccountMember)
-            .Authenticates()
-            .AddEndpointFilter<BadgeResultEndpointFilter>();
+            .Authenticates();
 
         commands
             .MapPost("/verify", Verify)
@@ -36,8 +35,8 @@ internal static class ContextAccountMemberCommands
     }
 
     private static Delegate Auth =>
-        (IContextAccountMemberCommandHandler commandHandler, ContextAccountMemberAuthCommand command)
-            => commandHandler.AuthAsync(command);
+        async (IContextAccountMemberCommandHandler commandHandler, ContextAccountMemberAuthCommand command)
+            => Results.SignIn(await commandHandler.AuthAsync(command), authenticationScheme: BearerTokenDefaults.AuthenticationScheme);
 
     private static Delegate Verify =>
         (IContextAccountMemberCommandHandler commandHandler)

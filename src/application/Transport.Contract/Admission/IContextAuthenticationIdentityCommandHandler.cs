@@ -6,7 +6,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
 public interface IContextAuthenticationIdentityCommandHandler
 {
-    Task<ClaimsIdentity> AuthAsync(ContextAuthenticationIdentityAuthCommand command);
+    Task<ClaimsPrincipal> AuthAsync(ContextAuthenticationIdentityAuthCommand command);
 
     void Verify();
 }

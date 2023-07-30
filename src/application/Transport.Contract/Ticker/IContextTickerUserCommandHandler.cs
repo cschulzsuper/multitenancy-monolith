@@ -6,7 +6,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 public interface IContextTickerUserCommandHandler
 {
-    Task<ClaimsIdentity> AuthAsync(ContextTickerUserAuthCommand command);
+    Task<ClaimsPrincipal> AuthAsync(ContextTickerUserAuthCommand command);
 
     Task ConfirmAsync(ContextTickerUserConfirmCommand command);
 

@@ -1,5 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission.Commands;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Authentication.Badge.Serialization;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -21,8 +21,7 @@ internal static class ContextAuthenticationIdentityCommands
         commands
             .MapPost("/auth", Auth)
             .WithErrorMessage(CouldNotSignInAuthenticationIdentity)
-            .Authenticates()
-            .AddEndpointFilter<BadgeResultEndpointFilter>();
+            .Authenticates();
 
         commands
             .MapPost("/verify", Verify)
@@ -35,8 +34,8 @@ internal static class ContextAuthenticationIdentityCommands
     }
 
     private static Delegate Auth =>
-        (IContextAuthenticationIdentityCommandHandler commandHandler, ContextAuthenticationIdentityAuthCommand command)
-            => commandHandler.AuthAsync(command);
+        async (IContextAuthenticationIdentityCommandHandler commandHandler, ContextAuthenticationIdentityAuthCommand command)
+            => Results.SignIn(await commandHandler.AuthAsync(command), authenticationScheme: BearerTokenDefaults.AuthenticationScheme);
     private static Delegate Verify =>
         (IContextAuthenticationIdentityCommandHandler commandHandler)
             => commandHandler.Verify();
