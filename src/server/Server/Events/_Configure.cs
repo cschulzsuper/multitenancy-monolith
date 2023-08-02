@@ -1,9 +1,9 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Events;
+﻿using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Events;
 

@@ -1,13 +1,13 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 using Events.ThreadingChannels.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 

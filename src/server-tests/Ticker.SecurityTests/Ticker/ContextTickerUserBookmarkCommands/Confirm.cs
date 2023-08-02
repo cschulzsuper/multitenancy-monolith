@@ -1,9 +1,9 @@
-﻿using System.Net;
+﻿using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
+using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace Ticker.ContextTickerUserBookmarkCommands;

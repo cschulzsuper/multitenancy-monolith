@@ -1,10 +1,17 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
+using ChristianSchulz.MultitenancyMonolith.Application.Schedule;
 using ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Caching;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
+using ChristianSchulz.MultitenancyMonolith.Events;
+using ChristianSchulz.MultitenancyMonolith.Jobs;
+using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Events;
+using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Jobs;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Json;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Middleware;
+using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 using Microsoft.AspNetCore.Builder;
@@ -15,16 +22,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Events;
-using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Events;
-using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Jobs;
-using ChristianSchulz.MultitenancyMonolith.Jobs;
-using ChristianSchulz.MultitenancyMonolith.Application.Schedule;
-using Microsoft.Net.Http.Headers;
-using ChristianSchulz.MultitenancyMonolith.Server.Security;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 
@@ -33,19 +36,30 @@ public sealed class Startup
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;
 
+    private readonly ICollection<AllowedClient> _allowedClients;
+    private readonly string[] _allowedClientHosts;
+
+    private readonly AuthenticationServer _authenticationServer;
+    private readonly string _authenticationServerHost;
+
     public Startup(
         IWebHostEnvironment environment,
         IConfiguration configuration)
     {
         _environment = environment;
         _configuration = configuration;
+
+        _allowedClients = new AllowedClientsProvider(_configuration).Get();
+        _allowedClientHosts = _allowedClients.SelectMany(x => x.Hosts).ToArray();
+
+        _authenticationServer = new AuthenticationServerProvider(_configuration).Get();
+        _authenticationServerHost = _authenticationServer.Host;
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
         services.ConfigureJsonOptions();
 
-        //services.AddDataProtection();
         services.AddAuthentication().AddBearerToken(options => options.Configure());
         services.AddAuthorization();
 
@@ -60,7 +74,9 @@ public sealed class Startup
             options.ConfigureAuthorization();
         });
 
-        services.AddRequestUser(options => options.Configure(new AllowedClientsProvider(_configuration).Get()));
+        services.AddHttpClient("server", c => { c.BaseAddress = new Uri(_authenticationServerHost); });
+
+        services.AddRequestUser(options => options.Configure(_allowedClients));
         services.AddCaching();
         services.AddConfiguration();
         services.AddEvents(options => options.Configure());
@@ -100,10 +116,8 @@ public sealed class Startup
 
         app.UseRouting();
 
-        // TODO Hard-coded url must be moved to configuration
-
         app.UseCors(config => config
-            .WithOrigins("https://localhost:7272")
+            .WithOrigins(_allowedClientHosts)
             .WithHeaders(HeaderNames.Accept, HeaderNames.ContentType, HeaderNames.Authorization)
             .WithMethods(HttpMethods.Get, HttpMethods.Head, HttpMethods.Post, HttpMethods.Put, HttpMethods.Delete));
 

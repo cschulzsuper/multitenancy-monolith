@@ -1,6 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
-using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using System;
 using System.Collections.Generic;
 using System.Linq;

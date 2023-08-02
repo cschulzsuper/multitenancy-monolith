@@ -1,12 +1,12 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker;
-using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication;
-using System.Net.Http.Headers;
-using System.Net.Http;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security
 {
@@ -47,13 +47,10 @@ namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security
                 return;
             }
 
-            // TODO Use IHttpClientFactory
+            using var client = context.HttpContext.RequestServices
+                .GetRequiredService<IHttpClientFactory>()
+                .CreateClient("server");
 
-            var client = new HttpClient();
-
-            // TODO Hard-coded url must be moved to configuration
-
-            client.BaseAddress = new Uri("https://localhost:7207");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(BearerTokenDefaults.AuthenticationScheme, context.Request.Headers.Authorization);
 
             var response = await client.PostAsync("/api/admission/authentication-identities/_/verify", null);
@@ -76,13 +73,10 @@ namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security
                 return;
             }
 
-            // TODO Use IHttpClientFactory
+            using var client = context.HttpContext.RequestServices
+                .GetRequiredService<IHttpClientFactory>()
+                .CreateClient("server");
 
-            var client = new HttpClient();
-
-            // TODO Hard-coded url must be moved to configuration
-
-            client.BaseAddress = new Uri("https://localhost:7207");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(BearerTokenDefaults.AuthenticationScheme, context.Request.Headers.Authorization);
 
             var response = await client.PostAsync("/api/access/account-members/_/verify", null);

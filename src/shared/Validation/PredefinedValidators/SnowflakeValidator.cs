@@ -2,7 +2,7 @@
 
 public sealed class SnowflakeValidator
 {
-    private readonly static Validator<long> _validator;
+    private static readonly Validator<long> _validator;
 
     static SnowflakeValidator()
     {

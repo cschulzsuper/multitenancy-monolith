@@ -1,13 +1,13 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data;
+using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
+using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using Microsoft.AspNetCore.Mvc.Testing;
-using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
-using Microsoft.Extensions.DependencyInjection;
-using ChristianSchulz.MultitenancyMonolith.Events;
 using Xunit.Abstractions;
 
 namespace Ticker.TickerMessageSubscriptions;

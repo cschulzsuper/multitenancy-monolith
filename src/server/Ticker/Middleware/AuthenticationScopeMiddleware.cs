@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Application;
+﻿using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using System.IO;
-using System.Text.Json.Nodes;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Middleware;
 

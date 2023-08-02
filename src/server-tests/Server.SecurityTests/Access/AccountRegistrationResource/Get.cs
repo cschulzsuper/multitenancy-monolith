@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using ChristianSchulz.MultitenancyMonolith.Server;
+using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
-using Xunit;
-using System.Threading.Tasks;
 using System.Net.Http;
-using ChristianSchulz.MultitenancyMonolith.Server;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Access.AccountRegistrationResource;
 

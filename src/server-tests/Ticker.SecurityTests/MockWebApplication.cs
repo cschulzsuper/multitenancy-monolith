@@ -1,24 +1,24 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker;
-using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
+using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
+using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
+using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
-using Xunit.Abstractions;
 using Xunit;
-using Microsoft.AspNetCore.Authentication.BearerToken;
-using ChristianSchulz.MultitenancyMonolith.Server.Security;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Options;
+using Xunit.Abstractions;
 
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 internal static class MockWebApplication
@@ -45,22 +45,22 @@ internal static class MockWebApplication
     public const string ConfirmedMailAddress = "confirmed@localhost";
     public const string ConfirmedSecret = "confirmed";
     public const string ConfirmedDisplayName = "Confirmed";
-    public readonly static Guid ConfirmedSecretToken = Guid.NewGuid();
+    public static readonly Guid ConfirmedSecretToken = Guid.NewGuid();
 
     public const string InvalidMailAddress = "invalid@localhost";
     public const string InvalidSecret = "invalid";
     public const string InvalidDisplayName = "Invalid";
-    public readonly static Guid InvalidSecretToken = Guid.NewGuid();
+    public static readonly Guid InvalidSecretToken = Guid.NewGuid();
 
     public const string PendingMailAddress = "pending@localhost";
     public const string PendingSecret = "pending";
     public const string PendingDisplayName = "Pending";
-    public readonly static Guid PendingSecretToken = Guid.NewGuid();
+    public static readonly Guid PendingSecretToken = Guid.NewGuid();
 
     public const string ResetMailAddress = "reset@localhost";
     public const string ResetSecret = "reset";
     public const string ResetDisplayName = "Reset";
-    public readonly static Guid ResetSecretToken = Guid.NewGuid();
+    public static readonly Guid ResetSecretToken = Guid.NewGuid();
 
     public static readonly IDictionary<string, Guid> SecretTokens = new Dictionary<string, Guid>
     {
@@ -73,9 +73,11 @@ internal static class MockWebApplication
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
         {"AllowedClients:0:UniqueName", "swagger"},
+        {"AllowedClients:0:Hosts:0", "https://localhost"},
         {"AllowedClients:0:Scopes:0", "swagger-json"},
         {"AllowedClients:0:Scopes:1", "endpoints"},
         {"AllowedClients:1:UniqueName", "security-tests"},
+        {"AllowedClients:1:Hosts:0", "https://localhost"},
         {"AllowedClients:1:Scopes:1", "endpoints"},
 
         {$"SeedData:Ticker:TickerUsers:{AccountGroup}:0:MailAddress", ConfirmedMailAddress},
@@ -110,22 +112,7 @@ internal static class MockWebApplication
             {
                 services.Configure<BearerTokenOptions>(BearerTokenDefaults.AuthenticationScheme, options =>
                 {
-                    options.Events.OnMessageReceived = async context =>
-                    {
-                        context.Token =
-                            BearerTokenSource.GetTokenFromHeaders(context.HttpContext) ??
-                            BearerTokenSource.GetTokenFromCookies(context.HttpContext) ??
-                            BearerTokenSource.GetTokenFromQuery(context.HttpContext);
-
-                        var ticket = context.Options.BearerTokenProtector.Unprotect(context.Token);
-                        if (ticket == null)
-                        {
-                            context.Fail("Unprotected token failed");
-                            return;
-                        }
-
-                        await new MockBearerTokenValidator().ValidateAsync(context, ticket);
-                    };
+                    options.Events.OnMessageReceived = BearerTokenMessageHandler.Handle<MockBearerTokenValidator>;
                 });
             })
             .ConfigureLogging(loggingBuilder =>

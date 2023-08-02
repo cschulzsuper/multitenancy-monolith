@@ -1,6 +1,6 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Objects.Business;
-using ChristianSchulz.MultitenancyMonolith.Application.Business.Requests;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Business.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Business.Responses;
+using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

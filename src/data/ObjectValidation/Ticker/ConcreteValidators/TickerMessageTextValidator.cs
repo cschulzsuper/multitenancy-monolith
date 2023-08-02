@@ -5,7 +5,7 @@ namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteV
 
 public sealed class TickerMessageTextValidator
 {
-    private readonly static Validator<string> _validator;
+    private static readonly Validator<string> _validator;
 
     static TickerMessageTextValidator()
     {

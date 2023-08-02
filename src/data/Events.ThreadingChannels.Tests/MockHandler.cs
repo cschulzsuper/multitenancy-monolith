@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Events.ThreadingChannels.Tests;
+﻿using Events.ThreadingChannels.Tests;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 internal sealed class MockHandler
 {

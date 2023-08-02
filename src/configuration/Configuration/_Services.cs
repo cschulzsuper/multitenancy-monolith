@@ -8,6 +8,7 @@ public static class _Services
 {
     public static IServiceCollection AddConfiguration(this IServiceCollection services)
     {
+        services.AddSingleton<IAuthenticationServerProvider, AuthenticationServerProvider>();
         services.AddSingleton<IAllowedClientsProvider, AllowedClientsProvider>();
         services.AddSingleton<ISeedDataProvider, SeedDataProvider>();
         services.AddSingleton<ISwaggerDocsProvider, SwaggerDocsProvider>();

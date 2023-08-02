@@ -6,7 +6,7 @@ namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Extension.Concre
 
 public sealed class CustomPropertyTypeAttribute : ValidationAttribute
 {
-    private readonly static Validator<string> _validator;
+    private static readonly Validator<string> _validator;
 
     static CustomPropertyTypeAttribute()
     {

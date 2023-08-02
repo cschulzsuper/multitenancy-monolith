@@ -95,6 +95,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jobs.Contract", "data\Jobs.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jobs.SequentialQueue", "data\Jobs.SequentialQueue\Jobs.SequentialQueue.csproj", "{11DE8C21-991E-4CFB-B8EC-F65B99BF5BF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.SubscriptionTests", "server-tests\Server.SubscriptionTests\Server.SubscriptionTests.csproj", "{23A52B6C-FA92-4870-B5DF-6CDF07C618F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -261,6 +263,10 @@ Global
 		{11DE8C21-991E-4CFB-B8EC-F65B99BF5BF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11DE8C21-991E-4CFB-B8EC-F65B99BF5BF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11DE8C21-991E-4CFB-B8EC-F65B99BF5BF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23A52B6C-FA92-4870-B5DF-6CDF07C618F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23A52B6C-FA92-4870-B5DF-6CDF07C618F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23A52B6C-FA92-4870-B5DF-6CDF07C618F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23A52B6C-FA92-4870-B5DF-6CDF07C618F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -306,6 +312,7 @@ Global
 		{175FF026-1147-4344-9869-21F1E57F0B58} = {25356525-8AFD-4B87-9D27-D1CA1D1A6A17}
 		{6CA1169D-AE3B-479B-B021-7969942D750F} = {E9436848-A5FC-41BE-B345-609E35C38C00}
 		{11DE8C21-991E-4CFB-B8EC-F65B99BF5BF7} = {E9436848-A5FC-41BE-B345-609E35C38C00}
+		{23A52B6C-FA92-4870-B5DF-6CDF07C618F5} = {F61E75CF-8C8A-4B31-A5D2-FF7B08451006}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}

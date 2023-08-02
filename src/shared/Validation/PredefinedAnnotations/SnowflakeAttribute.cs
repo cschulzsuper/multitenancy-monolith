@@ -5,7 +5,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedAnnot
 
 public sealed class SnowflakeAttribute : ValidationAttribute
 {
-    private readonly static Validator<long> _validator;
+    private static readonly Validator<long> _validator;
 
     static SnowflakeAttribute()
     {

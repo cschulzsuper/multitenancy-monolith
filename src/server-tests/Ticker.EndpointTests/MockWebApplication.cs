@@ -1,22 +1,21 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
+using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
-using Xunit.Abstractions;
-using Xunit;
-using Microsoft.AspNetCore.Authentication.BearerToken;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.TestHost;
-using System;
+using Xunit;
+using Xunit.Abstractions;
 
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 internal static class MockWebApplication
@@ -31,6 +30,7 @@ internal static class MockWebApplication
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
         {"AllowedClients:0:UniqueName", "endpoint-tests"},
+        {"AllowedClients:0:Hosts:0", "https://localhost"},
         {"AllowedClients:0:Scopes:0", "swagger-json"},
         {"AllowedClients:0:Scopes:1", "endpoints"},
     };

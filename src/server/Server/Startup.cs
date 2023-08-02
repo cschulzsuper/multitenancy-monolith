@@ -1,6 +1,20 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
+using ChristianSchulz.MultitenancyMonolith.Application.Access;
+using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Application.Business;
+using ChristianSchulz.MultitenancyMonolith.Application.Extension;
+using ChristianSchulz.MultitenancyMonolith.Application.Schedule;
 using ChristianSchulz.MultitenancyMonolith.Caching;
+using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
+using ChristianSchulz.MultitenancyMonolith.Events;
+using ChristianSchulz.MultitenancyMonolith.Jobs;
+using ChristianSchulz.MultitenancyMonolith.Server.Events;
+using ChristianSchulz.MultitenancyMonolith.Server.Jobs;
+using ChristianSchulz.MultitenancyMonolith.Server.Json;
+using ChristianSchulz.MultitenancyMonolith.Server.Middleware;
+using ChristianSchulz.MultitenancyMonolith.Server.Security;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 using Microsoft.AspNetCore.Builder;
@@ -8,26 +22,15 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
-using ChristianSchulz.MultitenancyMonolith.Server.Security;
-using ChristianSchulz.MultitenancyMonolith.Server.Middleware;
-using ChristianSchulz.MultitenancyMonolith.Server.Json;
-using ChristianSchulz.MultitenancyMonolith.Configuration;
-using ChristianSchulz.MultitenancyMonolith.Events;
-using Microsoft.Extensions.Configuration;
-using ChristianSchulz.MultitenancyMonolith.Application.Admission;
-using ChristianSchulz.MultitenancyMonolith.Application.Access;
-using ChristianSchulz.MultitenancyMonolith.Application.Extension;
-using ChristianSchulz.MultitenancyMonolith.Jobs;
-using ChristianSchulz.MultitenancyMonolith.Server.Events;
-using ChristianSchulz.MultitenancyMonolith.Server.Jobs;
-using ChristianSchulz.MultitenancyMonolith.Application.Schedule;
-using Microsoft.Net.Http.Headers;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
@@ -36,19 +39,24 @@ public sealed class Startup
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;
 
+    private readonly ICollection<AllowedClient> _allowedClients;
+    private readonly string[] _allowedClientHosts;
+
     public Startup(
         IWebHostEnvironment environment,
         IConfiguration configuration)
     {
         _environment = environment;
         _configuration = configuration;
+
+        _allowedClients = new AllowedClientsProvider(_configuration).Get();
+        _allowedClientHosts = _allowedClients.SelectMany(x => x.Hosts).ToArray();
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
         services.ConfigureJsonOptions();
 
-        //services.AddDataProtection();
         services.AddAuthentication().AddBearerToken(options => options.Configure());
         services.AddAuthorization();
 
@@ -62,7 +70,7 @@ public sealed class Startup
             options.ConfigureAuthorization();
         });
 
-        services.AddRequestUser(options => options.Configure(new AllowedClientsProvider(_configuration).Get()));
+        services.AddRequestUser(options => options.Configure(_allowedClients));
         services.AddCaching();
         services.AddConfiguration();
         services.AddEvents(options => options.Configure());
@@ -114,10 +122,8 @@ public sealed class Startup
 
         app.UseRouting();
 
-        // TODO Hard-coded url must be moved to configuration
-
         app.UseCors(config => config
-            .WithOrigins("https://localhost:7272")
+            .WithOrigins(_allowedClientHosts)
             .WithHeaders(HeaderNames.Accept, HeaderNames.ContentType, HeaderNames.Authorization)
             .WithMethods(HttpMethods.Get, HttpMethods.Head, HttpMethods.Post, HttpMethods.Put, HttpMethods.Delete));
 

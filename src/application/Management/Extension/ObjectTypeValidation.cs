@@ -7,10 +7,10 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Extension;
 
 internal static class ObjectTypeValidation
 {
-    private readonly static Validator<ObjectType> _insertValidator;
-    private readonly static Validator<ObjectType> _updateValidator;
+    private static readonly Validator<ObjectType> _insertValidator;
+    private static readonly Validator<ObjectType> _updateValidator;
 
-    private readonly static Validator<string> _uniqueNameValidator;
+    private static readonly Validator<string> _uniqueNameValidator;
 
     static ObjectTypeValidation()
     {

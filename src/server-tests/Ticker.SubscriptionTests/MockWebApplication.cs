@@ -1,15 +1,15 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
+using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
+using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
-using Xunit.Abstractions;
-using ChristianSchulz.MultitenancyMonolith.Events;
 using Xunit;
+using Xunit.Abstractions;
 
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 internal static class MockWebApplication

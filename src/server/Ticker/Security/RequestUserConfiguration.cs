@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Security;
+namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
 
 public static class RequestUserConfiguration
 {

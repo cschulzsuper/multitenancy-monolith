@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Authentication.BearerToken;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Access;
+using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
-using ChristianSchulz.MultitenancyMonolith.Application.Access;
-using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security
+namespace ChristianSchulz.MultitenancyMonolith.Server.Security
 {
     public class BearerTokenValidator
     {
+
+
         public virtual void Validate(MessageReceivedContext context, AuthenticationTicket ticket)
         {
             var typeClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "type");
@@ -76,7 +78,6 @@ namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security
             context.Principal = ticket.Principal;
             context.Success();
         }
-
         protected virtual void ValidateMember(MessageReceivedContext context, AuthenticationTicket ticket)
         {
             var clientClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "client");

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using ChristianSchulz.MultitenancyMonolith.Objects.Schedule;
+using System;
 using System.Collections.Generic;
-using ChristianSchulz.MultitenancyMonolith.Objects.Schedule;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Schedule;
 

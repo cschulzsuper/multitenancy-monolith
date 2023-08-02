@@ -24,11 +24,12 @@ internal static class MockWebApplication
 
     public const string TickerUserMail = "default@localhost";
     public const string TickerUserSecret = "default";
-    public readonly static Guid TickerUserSecretToken = Guid.NewGuid();
+    public static readonly Guid TickerUserSecretToken = Guid.NewGuid();
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
         {"AllowedClients:0:UniqueName", ClientName},
+        {"AllowedClients:0:Hosts:0", "https://localhost"},
         {"AllowedClients:0:Scopes:0", "swagger-json"},
         {"AllowedClients:0:Scopes:1", "endpoints"},
     };

@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using System;
-using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Responses;
-using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Requests;
-using System.Linq;
+using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 

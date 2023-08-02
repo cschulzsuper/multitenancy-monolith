@@ -6,7 +6,7 @@ namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteA
 
 public sealed class TickerMessagePriorityAttribute : ValidationAttribute
 {
-    private readonly static Validator<string> _validator;
+    private static readonly Validator<string> _validator;
 
     static TickerMessagePriorityAttribute()
     {

@@ -4,7 +4,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValid
 
 public sealed class MailAddressValidator
 {
-    private readonly static Validator<string> _validator;
+    private static readonly Validator<string> _validator;
 
     static MailAddressValidator()
     {

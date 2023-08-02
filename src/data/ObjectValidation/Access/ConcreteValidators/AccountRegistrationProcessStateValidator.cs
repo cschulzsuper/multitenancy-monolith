@@ -5,7 +5,7 @@ namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Access.ConcreteV
 
 public sealed class AccountRegistrationProcessStateValidator
 {
-    private readonly static Validator<string> _validator;
+    private static readonly Validator<string> _validator;
 
     static AccountRegistrationProcessStateValidator()
     {

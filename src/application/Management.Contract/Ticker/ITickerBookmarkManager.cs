@@ -1,9 +1,9 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
-using System.Linq;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 

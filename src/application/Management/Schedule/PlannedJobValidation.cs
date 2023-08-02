@@ -8,11 +8,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Schedule;
 
 internal static class PlannedJobValidation
 {
-    private readonly static Validator<PlannedJob> _insertValidator;
-    private readonly static Validator<PlannedJob> _updateValidator;
+    private static readonly Validator<PlannedJob> _insertValidator;
+    private static readonly Validator<PlannedJob> _updateValidator;
 
-    private readonly static Validator<string> _plannedJobUniqueNameValidator;
-    private readonly static Validator<long> _plannedJobSnowflakeValidator;
+    private static readonly Validator<string> _plannedJobUniqueNameValidator;
+    private static readonly Validator<long> _plannedJobSnowflakeValidator;
 
     static PlannedJobValidation()
     {

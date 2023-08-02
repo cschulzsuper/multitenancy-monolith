@@ -7,8 +7,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Extension;
 
 internal static class DistinctionTypeValidation
 {
-    private readonly static Validator<DistinctionType> _insertValidator;
-    private readonly static Validator<DistinctionType> _updateValidator;
+    private static readonly Validator<DistinctionType> _insertValidator;
+    private static readonly Validator<DistinctionType> _updateValidator;
 
     static DistinctionTypeValidation()
     {

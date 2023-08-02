@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Responses;
-using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Requests;
+using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 

@@ -8,12 +8,12 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 
 internal static class AccountRegistrationValidation
 {
-    private readonly static Validator<AccountRegistration> _insertValidator;
-    private readonly static Validator<AccountRegistration> _updateValidator;
+    private static readonly Validator<AccountRegistration> _insertValidator;
+    private static readonly Validator<AccountRegistration> _updateValidator;
 
-    private readonly static Validator<Guid> _accountRegistrationProcessTokenValidator;
-    private readonly static Validator<long> _accountRegistrationSnowflakeValidator;
-    private readonly static Validator<string> _accountRegistrationAccountGroupValidator;
+    private static readonly Validator<Guid> _accountRegistrationProcessTokenValidator;
+    private static readonly Validator<long> _accountRegistrationSnowflakeValidator;
+    private static readonly Validator<string> _accountRegistrationAccountGroupValidator;
 
     static AccountRegistrationValidation()
     {

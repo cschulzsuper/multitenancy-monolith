@@ -6,10 +6,10 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Business;
 
 internal static class BusinessObjectValidation
 {
-    private readonly static Validator<BusinessObject> _insertValidator;
-    private readonly static Validator<BusinessObject> _updateValidator;
+    private static readonly Validator<BusinessObject> _insertValidator;
+    private static readonly Validator<BusinessObject> _updateValidator;
 
-    private readonly static Validator<string> _businessObjectValidator;
+    private static readonly Validator<string> _businessObjectValidator;
 
     static BusinessObjectValidation()
     {

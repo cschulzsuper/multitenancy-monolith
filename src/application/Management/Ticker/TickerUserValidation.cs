@@ -7,11 +7,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 internal static class TickerUserValidation
 {
-    private readonly static Validator<TickerUser> _insertValidator;
-    private readonly static Validator<TickerUser> _updateValidator;
+    private static readonly Validator<TickerUser> _insertValidator;
+    private static readonly Validator<TickerUser> _updateValidator;
 
-    private readonly static Validator<long> _tickerUserSnowflakeValidator;
-    private readonly static Validator<string> _tickerUserMailAddressValidator;
+    private static readonly Validator<long> _tickerUserSnowflakeValidator;
+    private static readonly Validator<string> _tickerUserMailAddressValidator;
 
     static TickerUserValidation()
     {

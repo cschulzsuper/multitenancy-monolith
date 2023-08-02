@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
+using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
-using System.Net.Http.Json;
-using Xunit;
-using System.Threading.Tasks;
 using System.Net.Http;
-using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Schedule.PlannedJobResource;
 

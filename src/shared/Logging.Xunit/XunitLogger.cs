@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Logging;

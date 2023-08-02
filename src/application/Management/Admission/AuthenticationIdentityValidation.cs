@@ -6,11 +6,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
 internal static class AuthenticationIdentityValidation
 {
-    private readonly static Validator<AuthenticationIdentity> _insertValidator;
-    private readonly static Validator<AuthenticationIdentity> _updateValidator;
+    private static readonly Validator<AuthenticationIdentity> _insertValidator;
+    private static readonly Validator<AuthenticationIdentity> _updateValidator;
 
-    private readonly static Validator<long> _authenticationIdentitySnowflakeValidator;
-    private readonly static Validator<string> _authenticationIdentityUniqueNameValidator;
+    private static readonly Validator<long> _authenticationIdentitySnowflakeValidator;
+    private static readonly Validator<string> _authenticationIdentityUniqueNameValidator;
 
     static AuthenticationIdentityValidation()
     {

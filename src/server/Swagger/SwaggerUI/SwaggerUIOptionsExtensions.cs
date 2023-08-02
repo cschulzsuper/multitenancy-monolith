@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
+﻿using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using Microsoft.AspNetCore.Builder;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
+using System.Collections.Generic;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
 

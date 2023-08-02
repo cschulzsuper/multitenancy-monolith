@@ -4,7 +4,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValid
 
 public sealed class TokenValidator
 {
-    private readonly static Validator<Guid> _validator;
+    private static readonly Validator<Guid> _validator;
 
     static TokenValidator()
     {

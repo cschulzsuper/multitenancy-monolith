@@ -1,14 +1,14 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Events;
-using Microsoft.AspNetCore.Authentication.BearerToken;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 

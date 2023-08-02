@@ -1,18 +1,18 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
+using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
-using System.Net.Http.Json;
-using System.Net.Http;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
-using System.Text.Json;
 
 namespace Ticker.TickerMessageFlows;
 

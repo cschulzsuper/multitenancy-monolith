@@ -1,11 +1,11 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Data;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission;
+using ChristianSchulz.MultitenancyMonolith.Data;
+using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Events;
-using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 

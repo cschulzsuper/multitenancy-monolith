@@ -5,7 +5,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedAnnot
 
 public sealed class SecretAttribute : ValidationAttribute
 {
-    private readonly static Validator<string> _validator;
+    private static readonly Validator<string> _validator;
 
     static SecretAttribute()
     {

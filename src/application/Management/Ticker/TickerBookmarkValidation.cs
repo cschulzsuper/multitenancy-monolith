@@ -6,12 +6,12 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 internal static class TickerBookmarkValidation
 {
-    private readonly static Validator<TickerBookmark> _insertValidator;
-    private readonly static Validator<TickerBookmark> _updateValidator;
+    private static readonly Validator<TickerBookmark> _insertValidator;
+    private static readonly Validator<TickerBookmark> _updateValidator;
 
-    private readonly static Validator<long> _tickerBookmarkValidator;
-    private readonly static Validator<long> _tickerMessageValidator;
-    private readonly static Validator<string> _tickerUserValidator;
+    private static readonly Validator<long> _tickerBookmarkValidator;
+    private static readonly Validator<long> _tickerMessageValidator;
+    private static readonly Validator<string> _tickerUserValidator;
 
     static TickerBookmarkValidation()
     {

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ChristianSchulz.MultitenancyMonolith.Events;
+using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Events;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Events;
 

@@ -1,5 +1,5 @@
-﻿using System.Security.Claims;
-using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 

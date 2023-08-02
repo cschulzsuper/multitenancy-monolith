@@ -1,7 +1,7 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Events;
 

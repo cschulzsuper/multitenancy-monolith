@@ -7,8 +7,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
 internal static class TickerMessageValidation
 {
-    private readonly static Validator<TickerMessage> _insertValidator;
-    private readonly static Validator<TickerMessage> _updateValidator;
+    private static readonly Validator<TickerMessage> _insertValidator;
+    private static readonly Validator<TickerMessage> _updateValidator;
 
     static TickerMessageValidation()
     {

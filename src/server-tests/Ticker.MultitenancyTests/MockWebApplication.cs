@@ -3,6 +3,7 @@ using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -27,12 +28,13 @@ internal static class MockWebApplication
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
         {"AllowedClients:0:UniqueName", "multitenancy-tests"},
+        {"AllowedClients:0:Hosts:0", "https://localhost"},
         {"AllowedClients:0:Scopes:1", "endpoints"}
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory)
         => factory.WithWebHostBuilder(app => app
-            .ConfigureServices(services =>
+            .ConfigureTestServices(services =>
             {
                 services.Configure<BearerTokenOptions>(BearerTokenDefaults.AuthenticationScheme, options =>
                 {

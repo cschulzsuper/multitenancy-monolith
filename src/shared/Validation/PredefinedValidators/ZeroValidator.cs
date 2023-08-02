@@ -5,7 +5,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValid
 public sealed class ZeroValidator<T>
     where T : INumber<T>
 {
-    private readonly static Validator<T> _validator;
+    private static readonly Validator<T> _validator;
 
     static ZeroValidator()
     {

@@ -6,7 +6,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedAnnot
 
 public sealed class TokenAttribute : ValidationAttribute
 {
-    private readonly static Validator<Guid> _validator;
+    private static readonly Validator<Guid> _validator;
 
     static TokenAttribute()
     {
