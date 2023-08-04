@@ -115,7 +115,11 @@ I said monolith, but with the latests features related to a ticker system, it is
 
 ## Bearer Token Refactoring
   * /61 Migration to the new [bearer token authentication](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.dependencyinjection.bearertokenextensions.addbearertoken?view=aspnetcore-8.0) of .NET 8 started, but this first step is only a build-up. I moved the `Claim` mapping from my custom authentication to the `ClaimsTransformation`. https://github.com/cschulzsuper/multitenancy-monolith/commit/81ad5b6b2338187ed977b929307b83bc8a06c8c0
-  * /62 First draft with the refactored authentication. I was able to remove most of the code from the custom authentication I used before. I will probably iterate over it once more, but the first implementation seems to work.  
+  * /62 First draft with the refactored authentication. I was able to remove most of the code from the custom authentication I used before. I will probably iterate over it once more, but the first implementation seems to work. https://github.com/cschulzsuper/multitenancy-monolith/commit/bac94486fae1acbad3b22279997d23ba355c7627
+  * /63 Some cleanup after the refactoring. I also removed all hard-coded URLs and fixed usings and namespaces. https://github.com/cschulzsuper/multitenancy-monolith/commit/803d86298bafa58bd6c02e416bcae6eafe6935f8
+
+## Containerization
+  * /64 Kick-off for the `docker-compose` support. I added a `Dockerfile` to the `Swagger` client and optimized a little bit of code in it. 
 
 # Backlog
 

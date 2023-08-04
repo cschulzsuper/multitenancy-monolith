@@ -1,8 +1,12 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using Microsoft.AspNetCore.Builder;
+using NUglify;
+using NUglify.JavaScript;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Web;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
 
@@ -10,10 +14,10 @@ public static class SwaggerUIOptionsExtensions
 {
     private const string AccessTokenRequestInterceptorJavaScript =
         """
-            (req) => 
+            function n(req)
             {
                 var swaggerJsonRequest = req.url.endsWith('swagger.json');
-                if (!swaggerJsonRequest) 
+                if (!swaggerJsonRequest)
                 {
                     return req;
                 }
@@ -21,7 +25,7 @@ public static class SwaggerUIOptionsExtensions
                 var queryString = new URLSearchParams(window.location.search);
                 var accessToken = queryString.get('access_token');
             
-                if(accessToken != null) 
+                if(accessToken != null)
                 {
                     req.headers['Authorization'] = accessToken; 
                 }
@@ -32,10 +36,16 @@ public static class SwaggerUIOptionsExtensions
 
     public static SwaggerUIOptions UseAccessTokenRequestInterceptor(this SwaggerUIOptions options)
     {
-        var accessTokenRequestInterceptorJavaScript = AccessTokenRequestInterceptorJavaScript
-            .Replace(Environment.NewLine, string.Empty);
+        var minifiedRequestInterceptor = Uglify.Js(AccessTokenRequestInterceptorJavaScript);
 
-        options.UseRequestInterceptor(accessTokenRequestInterceptorJavaScript);
+        if(minifiedRequestInterceptor.HasErrors)
+        {
+            throw new UnreachableException("Unable to minify access token request interceptor");
+        }
+
+        var encodedRequestInterceptor = HttpUtility.JavaScriptStringEncode(minifiedRequestInterceptor.Code);
+
+        options.UseRequestInterceptor(encodedRequestInterceptor);
 
         return options;
     }
