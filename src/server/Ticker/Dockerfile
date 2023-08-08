@@ -3,21 +3,21 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview AS base
 USER app
 WORKDIR /app
-EXPOSE 5108
-EXPOSE 7272
+EXPOSE 5051
+EXPOSE 7206
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
 WORKDIR /src
 COPY ["*", "*"]
-RUN dotnet restore "server/Swagger/Swagger.csproj"
+RUN dotnet restore "server/Ticker/Ticker.csproj"
 COPY . .
-WORKDIR "/src/server/Swagger"
-RUN dotnet build "Swagger.csproj" -c Release -o /app/build
+WORKDIR "/src/server/Ticker"
+RUN dotnet build "Ticker.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Swagger.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Ticker.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Swagger.dll"]
+ENTRYPOINT ["dotnet", "Ticker.dll"]

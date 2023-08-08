@@ -11,7 +11,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0-preview.6.23329.11" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.0-preview-23364-03" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0-preview-23371-04" />
 		<PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.6" />
 		<PackageReference Include="xunit" Version="2.5.1-pre.12" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.1-pre.4">

@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 
-internal sealed class SeedDataProvider : ISeedDataProvider
+public sealed class SeedDataProvider : ISeedDataProvider
 {
     private readonly IConfiguration _configuration;
 

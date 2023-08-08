@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace ChristianSchulz.MultitenancyMonolith.Jobs
+namespace ChristianSchulz.MultitenancyMonolith.Jobs;
+
+public sealed class PlannedJobContext
 {
-    public sealed class PlannedJobContext
-    {
-        public required IServiceProvider Services { get; init; }
-    }
+    public required IServiceProvider Services { get; init; }
 }

@@ -1,7 +1,8 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 
-public class AuthenticationServer
+public sealed class WebService
 {
-    // TODO User WebService.Host
+    public required string UniqueName { get; init; }
+
     public required string Host { get; init; }
 }

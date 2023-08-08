@@ -1,52 +1,51 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Schedule.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
 using System;
-namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Schedule.ConcreteValidationRules
+namespace ChristianSchulz.MultitenancyMonolith.ObjectValidation.Schedule.ConcreteValidationRules;
+
+public sealed class ScheduleExpressionValidationRule<T> : IValidationRule<T>
 {
-    public sealed class ScheduleExpressionValidationRule<T> : IValidationRule<T>
+    private readonly Func<T, string> _expressionTypeSelector;
+    private readonly Func<T, string> _expressionSelector;
+
+    private readonly IValidationRule<string> _cronExpression;
+
+    public ScheduleExpressionValidationRule(string field, Func<T, string> expressionTypeSelector, Func<T, string> expressionSelector)
     {
-        private readonly Func<T, string> _expressionTypeSelector;
-        private readonly Func<T, string> _expressionSelector;
+        ValidationMessage = string.Format(ValidationErrors.ValueNotValidatable, field);
 
-        private readonly IValidationRule<string> _cronExpression;
+        _expressionTypeSelector = expressionTypeSelector;
+        _expressionSelector = expressionSelector;
 
-        public ScheduleExpressionValidationRule(string field, Func<T, string> expressionTypeSelector, Func<T, string> expressionSelector)
+        _cronExpression = ValidationRules.CronExpression(field);
+    }
+
+    public string ValidationMessage { get; private set; }
+
+    public bool Check(T value)
+    {
+        var expressionType = _expressionTypeSelector(value);
+        var expression = _expressionSelector(value);
+
+        var result = expressionType switch
         {
-            ValidationMessage = string.Format(ValidationErrors.ValueNotValidatable, field);
+            ScheduleExpressionTypes.CronExpression => _cronExpression.Check(expression),
 
-            _expressionTypeSelector = expressionTypeSelector;
-            _expressionSelector = expressionSelector;
+            _ => false
+        };
 
-            _cronExpression = ValidationRules.CronExpression(field);
+        return result;
+    }
+
+    public bool CheckCronExpression(string expression)
+    {
+        var result = _cronExpression.Check(expression);
+
+        if (result == false)
+        {
+            ValidationMessage = _cronExpression.ValidationMessage;
         }
 
-        public string ValidationMessage { get; private set; }
-
-        public bool Check(T value)
-        {
-            var expressionType = _expressionTypeSelector(value);
-            var expression = _expressionSelector(value);
-
-            var result = expressionType switch
-            {
-                ScheduleExpressionTypes.CronExpression => _cronExpression.Check(expression),
-
-                _ => false
-            };
-
-            return result;
-        }
-
-        public bool CheckCronExpression(string expression)
-        {
-            var result = _cronExpression.Check(expression);
-
-            if (result == false)
-            {
-                ValidationMessage = _cronExpression.ValidationMessage;
-            }
-
-            return result;
-        }
+        return result;
     }
 }

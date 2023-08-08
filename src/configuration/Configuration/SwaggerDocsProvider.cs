@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 
-internal sealed class SwaggerDocsProvider : ISwaggerDocsProvider
+public sealed class SwaggerDocsProvider : ISwaggerDocsProvider
 {
     private readonly IConfiguration _configuration;
 
@@ -12,6 +12,6 @@ internal sealed class SwaggerDocsProvider : ISwaggerDocsProvider
         _configuration = configuration;
     }
 
-    public ICollection<SwaggerDocs> Get()
-        => _configuration.GetSection(nameof(SwaggerDocs)).Get<SwaggerDocs[]>() ?? Array.Empty<SwaggerDocs>();
+    public ICollection<SwaggerDoc> Get()
+        => _configuration.GetSection("SwaggerDocs").Get<SwaggerDoc[]>() ?? Array.Empty<SwaggerDoc>();
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -6,10 +6,16 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Server.Ticker</RootNamespace>
+		<UserSecretsId>15ef622f-b3b5-440d-b63c-d81062a98a29</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+		<DockerfileTag>multitenancy-monolith-ticker</DockerfileTag>
+		<DockerfileRunArguments>--name multitenancy-monolith-ticker</DockerfileRunArguments>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0-preview.6.23329.11" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.4" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 
@@ -25,6 +31,7 @@
 		<ProjectReference Include="..\..\data\Data.StaticDictionary\Data.StaticDictionary.csproj" />
 		<ProjectReference Include="..\..\data\Events.ThreadingChannels\Events.ThreadingChannels.csproj" />
 		<ProjectReference Include="..\..\data\Jobs.SequentialQueue\Jobs.SequentialQueue.csproj" />
+		<ProjectReference Include="..\..\data\Web\Web.csproj" />
 	</ItemGroup>
 	
 </Project>

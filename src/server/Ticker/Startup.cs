@@ -14,6 +14,7 @@ using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Middleware;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
+using ChristianSchulz.MultitenancyMonolith.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -39,8 +40,7 @@ public sealed class Startup
     private readonly ICollection<AllowedClient> _allowedClients;
     private readonly string[] _allowedClientHosts;
 
-    private readonly AuthenticationServer _authenticationServer;
-    private readonly string _authenticationServerHost;
+    private readonly string[] _webServices;
 
     public Startup(
         IWebHostEnvironment environment,
@@ -49,11 +49,10 @@ public sealed class Startup
         _environment = environment;
         _configuration = configuration;
 
+        _webServices = new WebServicesProvider(configuration).GetUniqueNames();
+
         _allowedClients = new AllowedClientsProvider(_configuration).Get();
         _allowedClientHosts = _allowedClients.SelectMany(x => x.Hosts).ToArray();
-
-        _authenticationServer = new AuthenticationServerProvider(_configuration).Get();
-        _authenticationServerHost = _authenticationServer.Host;
     }
 
     public void ConfigureServices(IServiceCollection services)
@@ -74,7 +73,7 @@ public sealed class Startup
             options.ConfigureAuthorization();
         });
 
-        services.AddHttpClient("server", c => { c.BaseAddress = new Uri(_authenticationServerHost); });
+        services.AddWebServices(_webServices);
 
         services.AddRequestUser(options => options.Configure(_allowedClients));
         services.AddCaching();

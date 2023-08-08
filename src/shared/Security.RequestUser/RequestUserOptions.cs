@@ -2,10 +2,9 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
+
+public class RequestUserOptions
 {
-    public class RequestUserOptions
-    {
-        public Func<ClaimsPrincipal, Task<ClaimsPrincipal>>? Transform { get; set; }
-    }
+    public Func<ClaimsPrincipal, Task<ClaimsPrincipal>>? Transform { get; set; }
 }

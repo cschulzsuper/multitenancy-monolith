@@ -12,89 +12,88 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Schedule.PlannedJobResource
+namespace Schedule.PlannedJobResource;
+
+public class Get : IClassFixture<WebApplicationFactory<Program>>
 {
-    public class Get : IClassFixture<WebApplicationFactory<Program>>
+    private readonly WebApplicationFactory<Program> _factory;
+
+    public Get(WebApplicationFactory<Program> factory)
     {
-        private readonly WebApplicationFactory<Program> _factory;
+        _factory = factory.Mock();
+    }
 
-        public Get(WebApplicationFactory<Program> factory)
+    [Fact]
+    public async Task Get_ShouldSucceed_WhenExists()
+    {
+        // Arrange
+        var existingPlannedJob = new PlannedJob
         {
-            _factory = factory.Mock();
+            UniqueName = "mock-job-1",
+            Expression = "*/1 * * * *",
+            ExpressionType = ScheduleExpressionTypes.CronExpression
+        };
+
+        using (var scope = _factory.CreateMultitenancyScope())
+        {
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<PlannedJob>>()
+                .Insert(existingPlannedJob);
         }
 
-        [Fact]
-        public async Task Get_ShouldSucceed_WhenExists()
-        {
-            // Arrange
-            var existingPlannedJob = new PlannedJob
-            {
-                UniqueName = "mock-job-1",
-                Expression = "*/1 * * * *",
-                ExpressionType = ScheduleExpressionTypes.CronExpression
-            };
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
-            using (var scope = _factory.CreateMultitenancyScope())
-            {
-                scope.ServiceProvider
-                    .GetRequiredService<IRepository<PlannedJob>>()
-                    .Insert(existingPlannedJob);
-            }
+        var client = _factory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
-            request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        // Act
+        var response = await client.SendAsync(request);
 
-            var client = _factory.CreateClient();
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            // Act
-            var response = await client.SendAsync(request);
+        var content = await response.Content.ReadFromJsonAsync<JsonObject>();
+        Assert.NotNull(content);
+        Assert.Collection(content.OrderBy(x => x.Key),
+            x => Assert.Equal(("expression", existingPlannedJob.Expression), (x.Key, (string?)x.Value)),
+            x => Assert.Equal(("uniqueName", existingPlannedJob.UniqueName), (x.Key, (string?)x.Value)));
+    }
 
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    [Fact]
+    public async Task Get_ShouldFail_WhenAbsent()
+    {
+        // Arrange
+        var absentPlannedJob = "absent-planned-job";
 
-            var content = await response.Content.ReadFromJsonAsync<JsonObject>();
-            Assert.NotNull(content);
-            Assert.Collection(content.OrderBy(x => x.Key),
-                x => Assert.Equal(("expression", existingPlannedJob.Expression), (x.Key, (string?)x.Value)),
-                x => Assert.Equal(("uniqueName", existingPlannedJob.UniqueName), (x.Key, (string?)x.Value)));
-        }
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/schedule/planned-jobs/{absentPlannedJob}");
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
-        [Fact]
-        public async Task Get_ShouldFail_WhenAbsent()
-        {
-            // Arrange
-            var absentPlannedJob = "absent-planned-job";
+        var client = _factory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/schedule/planned-jobs/{absentPlannedJob}");
-            request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        // Act
+        var response = await client.SendAsync(request);
 
-            var client = _factory.CreateClient();
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
 
-            // Act
-            var response = await client.SendAsync(request);
+    [Fact]
+    public async Task Get_ShouldFail_WhenInvalid()
+    {
+        // Arrange
+        var invalidPlannedJob = "Invalid";
 
-            // Assert
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-        }
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/schedule/planned-jobs/{invalidPlannedJob}");
+        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
-        [Fact]
-        public async Task Get_ShouldFail_WhenInvalid()
-        {
-            // Arrange
-            var invalidPlannedJob = "Invalid";
+        var client = _factory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/schedule/planned-jobs/{invalidPlannedJob}");
-            request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        // Act
+        var response = await client.SendAsync(request);
 
-            var client = _factory.CreateClient();
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-        }
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 }

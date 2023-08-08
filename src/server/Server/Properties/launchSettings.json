@@ -2,16 +2,14 @@
   "profiles": {
     "http": {
       "commandName": "Project",
-      "launchUrl": "",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": ""
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5177"
     },
     "https": {
       "commandName": "Project",
-      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -20,7 +18,6 @@
     },
     "https (staging)": {
       "commandName": "Project",
-      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging"
       },
@@ -29,10 +26,21 @@
     },
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {
+        "ASPNETCORE_HTTPS_PORTS": "7207",
+        "ASPNETCORE_HTTP_PORTS": "5177"
+      },
+      "publishAllPorts": true,
+      "useSSL": true,
+      "httpPort": 5177,
+      "sslPort": 7207
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",

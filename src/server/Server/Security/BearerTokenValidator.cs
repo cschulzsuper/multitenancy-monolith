@@ -6,137 +6,136 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Security
+namespace ChristianSchulz.MultitenancyMonolith.Server.Security;
+
+public class BearerTokenValidator
 {
-    public class BearerTokenValidator
+
+
+    public virtual void Validate(MessageReceivedContext context, AuthenticationTicket ticket)
     {
-
-
-        public virtual void Validate(MessageReceivedContext context, AuthenticationTicket ticket)
+        var typeClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "type");
+        if (typeClaim == null)
         {
-            var typeClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "type");
-            if (typeClaim == null)
-            {
-                context.Fail("Token has no type");
-                return;
-            }
-
-            switch (typeClaim.Value)
-            {
-                case "identity":
-                    ValidateIdentity(context, ticket);
-                    return;
-
-                case "member":
-                    ValidateMember(context, ticket);
-                    return;
-            }
-
+            context.Fail("Token has no type");
             return;
         }
-        protected virtual void ValidateIdentity(MessageReceivedContext context, AuthenticationTicket ticket)
+
+        switch (typeClaim.Value)
         {
-            var clientClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "client");
-            if (clientClaim == null)
-            {
-                context.Fail("Token has no client");
+            case "identity":
+                ValidateIdentity(context, ticket);
                 return;
-            }
 
-            var identityClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "identity");
-            if (identityClaim == null)
-            {
-                context.Fail("Token has no identity");
+            case "member":
+                ValidateMember(context, ticket);
                 return;
-            }
-
-            var verificationKey = new AuthenticationIdentityVerificationKey
-            {
-                ClientName = clientClaim.Value,
-                AuthenticationIdentity = identityClaim.Value,
-            };
-
-            var verificationClaimString = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "verification");
-            if (verificationClaimString == null)
-            {
-                context.Fail("Token has no verification");
-                return;
-            }
-
-            var verificationClaim = Convert.FromBase64String(verificationClaimString.Value);
-
-            var valid = context.HttpContext.RequestServices
-                .GetRequiredService<IAuthenticationIdentityVerificationManager>()
-                .Has(verificationKey, verificationClaim);
-
-            if (!valid)
-            {
-                context.Fail("Token has invalid verification");
-                return;
-            }
-
-            context.Principal = ticket.Principal;
-            context.Success();
         }
-        protected virtual void ValidateMember(MessageReceivedContext context, AuthenticationTicket ticket)
+
+        return;
+    }
+    protected virtual void ValidateIdentity(MessageReceivedContext context, AuthenticationTicket ticket)
+    {
+        var clientClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "client");
+        if (clientClaim == null)
         {
-            var clientClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "client");
-            if (clientClaim == null)
-            {
-                context.Fail("Token has no client");
-                return;
-            }
-
-            var identityClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "identity");
-            if (identityClaim == null)
-            {
-                context.Fail("Token has no identity");
-                return;
-            }
-
-            var groupClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "group");
-            if (groupClaim == null)
-            {
-                context.Fail("Token has no group");
-                return;
-            }
-
-            var memberClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "member");
-            if (memberClaim == null)
-            {
-                context.Fail("Token has no member");
-                return;
-            }
-
-            var verificationKey = new AccountMemberVerificationKey
-            {
-                ClientName = clientClaim.Value,
-                AuthenticationIdentity = identityClaim.Value,
-                AccountGroup = groupClaim.Value,
-                AccountMember = memberClaim.Value,
-            };
-
-            var verificationClaimString = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "verification");
-            if (verificationClaimString == null)
-            {
-                context.Fail("Token has no verification");
-                return;
-            }
-
-            var verificationClaim = Convert.FromBase64String(verificationClaimString.Value);
-
-            var valid = context.HttpContext.RequestServices
-                .GetRequiredService<IAccountMemberVerificationManager>()
-                .Has(verificationKey, verificationClaim);
-
-            if (!valid)
-            {
-                context.Fail("Token has invalid verification");
-                return;
-            }
-
-            context.Principal = ticket.Principal;
-            context.Success();
+            context.Fail("Token has no client");
+            return;
         }
+
+        var identityClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "identity");
+        if (identityClaim == null)
+        {
+            context.Fail("Token has no identity");
+            return;
+        }
+
+        var verificationKey = new AuthenticationIdentityVerificationKey
+        {
+            ClientName = clientClaim.Value,
+            AuthenticationIdentity = identityClaim.Value,
+        };
+
+        var verificationClaimString = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "verification");
+        if (verificationClaimString == null)
+        {
+            context.Fail("Token has no verification");
+            return;
+        }
+
+        var verificationClaim = Convert.FromBase64String(verificationClaimString.Value);
+
+        var valid = context.HttpContext.RequestServices
+            .GetRequiredService<IAuthenticationIdentityVerificationManager>()
+            .Has(verificationKey, verificationClaim);
+
+        if (!valid)
+        {
+            context.Fail("Token has invalid verification");
+            return;
+        }
+
+        context.Principal = ticket.Principal;
+        context.Success();
+    }
+    protected virtual void ValidateMember(MessageReceivedContext context, AuthenticationTicket ticket)
+    {
+        var clientClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "client");
+        if (clientClaim == null)
+        {
+            context.Fail("Token has no client");
+            return;
+        }
+
+        var identityClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "identity");
+        if (identityClaim == null)
+        {
+            context.Fail("Token has no identity");
+            return;
+        }
+
+        var groupClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "group");
+        if (groupClaim == null)
+        {
+            context.Fail("Token has no group");
+            return;
+        }
+
+        var memberClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "member");
+        if (memberClaim == null)
+        {
+            context.Fail("Token has no member");
+            return;
+        }
+
+        var verificationKey = new AccountMemberVerificationKey
+        {
+            ClientName = clientClaim.Value,
+            AuthenticationIdentity = identityClaim.Value,
+            AccountGroup = groupClaim.Value,
+            AccountMember = memberClaim.Value,
+        };
+
+        var verificationClaimString = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "verification");
+        if (verificationClaimString == null)
+        {
+            context.Fail("Token has no verification");
+            return;
+        }
+
+        var verificationClaim = Convert.FromBase64String(verificationClaimString.Value);
+
+        var valid = context.HttpContext.RequestServices
+            .GetRequiredService<IAccountMemberVerificationManager>()
+            .Has(verificationKey, verificationClaim);
+
+        if (!valid)
+        {
+            context.Fail("Token has invalid verification");
+            return;
+        }
+
+        context.Principal = ticket.Principal;
+        context.Success();
     }
 }

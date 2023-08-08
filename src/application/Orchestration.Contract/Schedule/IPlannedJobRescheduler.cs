@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application.Schedule
+namespace ChristianSchulz.MultitenancyMonolith.Application.Schedule;
+
+public interface IPlannedJobRescheduler
 {
-    public interface IPlannedJobRescheduler
-    {
-        Task RescheduleAsync(long plannedJob);
-    }
+    Task RescheduleAsync(long plannedJob);
 }

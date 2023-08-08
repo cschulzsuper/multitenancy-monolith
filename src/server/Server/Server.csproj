@@ -6,10 +6,16 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Server</RootNamespace>
+		<UserSecretsId>5fc3e16b-6664-4557-9c4f-e7ff7d7a178e</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+		<DockerfileTag>multitenancy-monolith-server</DockerfileTag>
+		<DockerfileRunArguments>--name multitenancy-monolith-server</DockerfileRunArguments>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0-preview.6.23329.11" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.4" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 

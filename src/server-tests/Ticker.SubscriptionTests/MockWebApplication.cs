@@ -1,5 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Events;
+using ChristianSchulz.MultitenancyMonolith.Objects.Access;
+using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 using Microsoft.AspNetCore.Hosting;
@@ -20,7 +22,11 @@ internal static class MockWebApplication
     public const string Member = "default";
     public const string Mail = "default@localhost";
 
-    private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>();
+    private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
+    {
+        {"WebServices:0:UniqueName", "server"},
+        {"WebServices:1:UniqueName", "ticker"}
+    };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory, ITestOutputHelper? output = null)
         => factory.WithWebHostBuilder(app => app

@@ -2,7 +2,8 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 
-public interface ISwaggerDocsProvider
+public interface IWebServicesProvider
 {
-    ICollection<SwaggerDoc> Get();
+    WebService[] Get();
+    string[] GetUniqueNames();
 }
