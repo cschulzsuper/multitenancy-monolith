@@ -3,7 +3,9 @@ using ChristianSchulz.MultitenancyMonolith.Web;
 using Microsoft.AspNetCore.Builder;
 using NUglify;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Web;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
@@ -33,13 +35,16 @@ public sealed class SwaggerUIOptionsConfiguration
         """;
 
     private readonly ISwaggerDocsProvider _swaggerDocsProvider;
+    private readonly IServiceMappingsProvider _serviceMappingsProvider;
     private readonly IWebServiceClientFactory _webServiceClientFactory;
 
     public SwaggerUIOptionsConfiguration(
         ISwaggerDocsProvider swaggerDocsProvider,
+        IServiceMappingsProvider serviceMappingsProvider,
         IWebServiceClientFactory webServiceClientFactory) 
     {
         _swaggerDocsProvider = swaggerDocsProvider;
+        _serviceMappingsProvider = serviceMappingsProvider;
         _webServiceClientFactory = webServiceClientFactory;
     }
 
@@ -55,12 +60,17 @@ public sealed class SwaggerUIOptionsConfiguration
 
         foreach (var swaggerDoc in swaggerDocs)
         {
-            using var webServiceClient = _webServiceClientFactory.Create(swaggerDoc.WebService);
+            using var webServiceClient = _webServiceClientFactory.Create(swaggerDoc.Service);
 
             var webServiceStatusCodeResult = webServiceClient.TryGet(swaggerDoc.Path);
             if (webServiceStatusCodeResult.IsSuccessStatusCode)
             {
-                options.SwaggerEndpoint(webServiceStatusCodeResult.AbsoluteUri, swaggerDoc.DisplayName);
+                var @public = _serviceMappingsProvider.Get().Single(x => x.UniqueName == swaggerDoc.Service).PublicUrl;
+
+                var rootUrl = new Uri(@public);
+                var absUrl = new Uri(rootUrl,swaggerDoc.Path);
+
+                options.SwaggerEndpoint(absUrl.AbsoluteUri, swaggerDoc.DisplayName);
             }
         }
     }

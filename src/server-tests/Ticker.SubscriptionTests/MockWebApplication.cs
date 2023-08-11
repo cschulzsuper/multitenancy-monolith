@@ -1,7 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Events;
-using ChristianSchulz.MultitenancyMonolith.Objects.Access;
-using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 using Microsoft.AspNetCore.Hosting;
@@ -16,7 +14,7 @@ using Xunit.Abstractions;
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 internal static class MockWebApplication
 {
-    public const string Client = "event-tests";
+    public const string ClientName = "event-tests";
 
     public const string Group = "group";
     public const string Member = "default";
@@ -24,8 +22,10 @@ internal static class MockWebApplication
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
-        {"WebServices:0:UniqueName", "server"},
-        {"WebServices:1:UniqueName", "ticker"}
+        {"ServiceMappings:0:UniqueName", ClientName},
+        {"ServiceMappings:0:PublicUrl", "http://localhost"},
+
+        {"AuthenticationServer:Service", ClientName},
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory, ITestOutputHelper? output = null)

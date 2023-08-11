@@ -50,15 +50,12 @@ internal static class MockWebApplication
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
-        {"AllowedClients:0:UniqueName", "swagger"},
-        {"AllowedClients:0:Hosts:0", "https://localhost"},
+        {"AllowedClients:0:Service", "swagger"},
         {"AllowedClients:0:Scopes:0", "swagger-json"},
         {"AllowedClients:0:Scopes:1", "endpoints"},
-        {"AllowedClients:1:UniqueName", "endpoint-tests"},
-        {"AllowedClients:1:Hosts:0", "https://localhost"},
+        {"AllowedClients:1:Service", "endpoint-tests"},
         {"AllowedClients:1:Scopes:1", "endpoints"},
-        {"AllowedClients:2:UniqueName", "security-tests"},
-        {"AllowedClients:2:Hosts:0", "https://localhost"},
+        {"AllowedClients:2:Service", "security-tests"},
         {"AllowedClients:2:Scopes:1", "endpoints"},
 
         {"SeedData:Admission:AuthenticationIdentities:0:UniqueName", AuthenticationIdentityAdmin},

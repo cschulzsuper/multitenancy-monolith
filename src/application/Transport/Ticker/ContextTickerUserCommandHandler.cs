@@ -41,7 +41,7 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
     {
         var clientName = command.ClientName;
 
-        if (_allowedClientsProvider.Get().All(x => x.UniqueName != clientName))
+        if (_allowedClientsProvider.Get().All(x => x.Service != clientName))
         {
             TransportException.ThrowSecurityViolation($"Client '{clientName}' is not allowed to sign in");
         }

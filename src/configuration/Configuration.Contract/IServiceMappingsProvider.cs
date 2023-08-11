@@ -2,8 +2,8 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 
-public interface IWebServicesProvider
+public interface IServiceMappingsProvider
 {
-    WebService[] Get();
+    ServiceMapping[] Get();
     string[] GetUniqueNames();
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger;
@@ -15,5 +16,6 @@ public sealed class Program
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
+                webBuilder.ConfigureAppConfiguration(c => c.AddEnvironmentVariables("MM_Swagger_"));
             });
 }

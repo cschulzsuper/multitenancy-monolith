@@ -1,0 +1,71 @@
+version: '3.8'
+
+networks:
+  backend:
+
+services:
+  server:
+    container_name: ${COMPOSE_PROJECT_NAME}-server
+    build: 
+      context: ../src
+      dockerfile: server/Server/Dockerfile
+    ports:
+      - ${ServerPort:-7207}:443
+    networks:
+      - backend
+    env_file:
+      - certificates.env
+      - service-urls.env
+      - service-mappings.env
+    volumes:
+      - ~/.aspnet/https:/https/
+    environment:
+      ASPNETCORE_HTTP_PORTS: 
+      ASPNETCORE_HTTPS_PORTS: 443
+      ASPNETCORE_ENVIRONMENT: Development
+
+  ticker:
+    container_name: ${COMPOSE_PROJECT_NAME}-ticker
+    build: 
+      context: ../src
+      dockerfile: server/Ticker/Dockerfile
+    ports:
+      - ${TickerPort:-7206}:443
+    networks:
+      - backend
+    env_file:
+      - certificates.env
+      - service-urls.env
+      - service-mappings.env
+    volumes:
+      - ~/.aspnet/https:/https/
+    environment:
+      ASPNETCORE_HTTP_PORTS: 
+      ASPNETCORE_HTTPS_PORTS: 443
+      ASPNETCORE_ENVIRONMENT: Development
+
+  swagger:
+    container_name: ${COMPOSE_PROJECT_NAME}-swagger
+    build: 
+      context: ../src
+      dockerfile: server/Swagger/Dockerfile
+    ports:
+      - ${SwaggerPort:-7272}:443
+    networks:
+      - backend
+    depends_on:
+      server:
+        condition: service_started
+      ticker:
+        condition: service_started
+    env_file:
+      - certificates.env
+      - service-urls.env
+      - service-mappings.env
+    volumes:
+      - ~/.aspnet/https:/https/
+    environment:
+      ASPNETCORE_HTTP_PORTS: 
+      ASPNETCORE_HTTPS_PORTS: 443
+      ASPNETCORE_ENVIRONMENT: Development
+      

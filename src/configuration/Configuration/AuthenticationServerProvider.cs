@@ -5,7 +5,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 
 public sealed class AuthenticationServerProvider : IAuthenticationServerProvider
 {
-    private const string DefaultHost = "https://localhost:7207";
+    private const string DefaultService = "server";
 
     private readonly IConfiguration _configuration;
 
@@ -15,5 +15,5 @@ public sealed class AuthenticationServerProvider : IAuthenticationServerProvider
     }
 
     public AuthenticationServer Get()
-        => _configuration.GetSection("AuthenticationServer").Get<AuthenticationServer>() ?? new AuthenticationServer { Host = DefaultHost };
+        => _configuration.GetSection("AuthenticationServer").Get<AuthenticationServer>() ?? new AuthenticationServer { Service = DefaultService };
 }

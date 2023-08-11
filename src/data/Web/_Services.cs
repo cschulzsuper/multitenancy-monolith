@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace ChristianSchulz.MultitenancyMonolith.Web;
 
@@ -12,23 +14,36 @@ public static class _Services
     {
         foreach (var uniqueName in uniqueNames)
         {
-            services.AddHttpClient(uniqueName,
+            var builder = services.AddHttpClient(uniqueName,
                 (services, httpClient) =>
-                {
-                    var webServices = services
-                        .GetRequiredService<IWebServicesProvider>()
-                        .Get();
-
-                    var baseAddress = webServices.SingleOrDefault(x => x.UniqueName == uniqueName);
-
-                    if(baseAddress == null)
                     {
-                        throw new UnreachableException($"Client {uniqueName} is not configured");
-                    }
+                        var serviceMappings = services
+                            .GetRequiredService<IServiceMappingsProvider>()
+                            .Get();
 
-                    httpClient.BaseAddress = new Uri(baseAddress.Host);
-                    httpClient.Timeout = TimeSpan.FromMilliseconds(250);
+                        var serviceMapping = serviceMappings.SingleOrDefault(x => x.UniqueName == uniqueName);
+
+                        if (serviceMapping == null)
+                        {
+                            throw new UnreachableException($"Service mapping for '{uniqueName}' is not configured");
+                        }
+
+                        httpClient.BaseAddress = new Uri(serviceMapping.ServiceUrl);
+                        httpClient.Timeout = TimeSpan.FromMilliseconds(250);
+
+                    });
+
+            var devCertTrust = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == Environments.Development;
+            if (devCertTrust)
+            {
+                builder.ConfigurePrimaryHttpMessageHandler(services =>
+                {
+                    return new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    };
                 });
+            }
         }
 
         services.AddScoped<IWebServiceClientFactory, WebServiceClientFactory>();

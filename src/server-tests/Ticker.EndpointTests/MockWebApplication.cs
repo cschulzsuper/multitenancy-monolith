@@ -20,7 +20,7 @@ using Xunit.Abstractions;
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 internal static class MockWebApplication
 {
-    public const string Client = "endpoint-tests";
+    public const string ClientName = "endpoint-tests";
 
     public const string AuthenticationIdentity = "admin";
     public const string AccountGroup = "group";
@@ -29,11 +29,12 @@ internal static class MockWebApplication
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
-        {"WebServices:0:UniqueName", "server"},
-        {"WebServices:1:UniqueName", "ticker"},
+        {"ServiceMappings:0:UniqueName", ClientName},
+        {"ServiceMappings:0:PublicUrl", "http://localhost"},
 
-        {"AllowedClients:0:UniqueName", "endpoint-tests"},
-        {"AllowedClients:0:Hosts:0", "https://localhost"},
+        {"AuthenticationServer:Service", ClientName},
+
+        {"AllowedClients:0:Service", ClientName},
         {"AllowedClients:0:Scopes:0", "swagger-json"},
         {"AllowedClients:0:Scopes:1", "endpoints"},
     };
@@ -88,7 +89,7 @@ internal static class MockWebApplication
         var claims = new Claim[]
         {
             new Claim("type", "member"),
-            new Claim("client", Client),
+            new Claim("client", ClientName),
             new Claim("identity", AuthenticationIdentity),
             new Claim("group", AccountGroup),
             new Claim("member", AccountMember)
@@ -104,7 +105,7 @@ internal static class MockWebApplication
         var claims = new Claim[]
         {
             new Claim("type", "identity"),
-            new Claim("client", Client),
+            new Claim("client", ClientName),
             new Claim("identity", AuthenticationIdentity)
         };
 
@@ -118,7 +119,7 @@ internal static class MockWebApplication
         var claims = new Claim[]
         {
             new Claim("type", "ticker"),
-            new Claim("client", Client),
+            new Claim("client", ClientName),
             new Claim("group", AccountGroup),
             new Claim("mail", Mail)
         };

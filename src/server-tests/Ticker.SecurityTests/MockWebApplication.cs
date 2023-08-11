@@ -72,15 +72,17 @@ internal static class MockWebApplication
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
-        {"WebServices:0:UniqueName", "server"},
-        {"WebServices:1:UniqueName", "ticker"},
+        {"ServiceMappings:0:UniqueName", "server"},
+        {"ServiceMappings:0:PublicUrl", "http://localhost"},
+        {"ServiceMappings:1:UniqueName", "ticker"},
+        {"ServiceMappings:1:PublicUrl", "http://localhost"},
 
-        {"AllowedClients:0:UniqueName", "swagger"},
-        {"AllowedClients:0:Hosts:0", "https://localhost"},
+        {"AuthenticationServer:Service", ClientName},
+
+        {"AllowedClients:0:Service", "swagger"},
         {"AllowedClients:0:Scopes:0", "swagger-json"},
         {"AllowedClients:0:Scopes:1", "endpoints"},
-        {"AllowedClients:1:UniqueName", "security-tests"},
-        {"AllowedClients:1:Hosts:0", "https://localhost"},
+        {"AllowedClients:1:Service", "security-tests"},
         {"AllowedClients:1:Scopes:1", "endpoints"},
 
         {$"SeedData:Ticker:TickerUsers:{AccountGroup}:0:MailAddress", ConfirmedMailAddress},

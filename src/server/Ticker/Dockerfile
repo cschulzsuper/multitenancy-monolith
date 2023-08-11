@@ -1,6 +1,6 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview AS base
+FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS base
 USER app
 WORKDIR /app
 EXPOSE 5051
@@ -8,10 +8,9 @@ EXPOSE 7206
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
 WORKDIR /src
-COPY ["*", "*"]
-RUN dotnet restore "server/Ticker/Ticker.csproj"
 COPY . .
-WORKDIR "/src/server/Ticker"
+WORKDIR /src/server/Ticker
+RUN dotnet restore "Ticker.csproj"
 RUN dotnet build "Ticker.csproj" -c Release -o /app/build
 
 FROM build AS publish

@@ -40,7 +40,7 @@ public sealed class Startup
     private readonly ICollection<AllowedClient> _allowedClients;
     private readonly string[] _allowedClientHosts;
 
-    private readonly string[] _webServices;
+    private readonly string[] _services;
 
     public Startup(
         IWebHostEnvironment environment,
@@ -49,10 +49,20 @@ public sealed class Startup
         _environment = environment;
         _configuration = configuration;
 
-        _webServices = new WebServicesProvider(configuration).GetUniqueNames();
+        _services = new ServiceMappingsProvider(configuration)
+            .GetUniqueNames()
+            .Where(x => x == new AuthenticationServerProvider(configuration).Get().Service)
+            .ToArray();
 
         _allowedClients = new AllowedClientsProvider(_configuration).Get();
-        _allowedClientHosts = _allowedClients.SelectMany(x => x.Hosts).ToArray();
+
+        _allowedClientHosts = new ServiceMappingsProvider(_configuration)
+            .Get()
+            .Where(serviceMapping => _allowedClients
+                .Select(allowedClient => allowedClient.Service)
+                .Contains(serviceMapping.UniqueName))
+            .Select(x => x.PublicUrl)
+            .ToArray();
     }
 
     public void ConfigureServices(IServiceCollection services)
@@ -73,7 +83,7 @@ public sealed class Startup
             options.ConfigureAuthorization();
         });
 
-        services.AddWebServices(_webServices);
+        services.AddWebServices(_services);
 
         services.AddRequestUser(options => options.Configure(_allowedClients));
         services.AddCaching();

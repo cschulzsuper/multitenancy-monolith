@@ -10,17 +10,23 @@ namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger;
 
 public sealed class Startup
 {
-    private readonly string[] _webServices;
+    private readonly string[] _services;
 
     public Startup(IConfiguration configuration)
     {
-        _webServices = new WebServicesProvider(configuration).GetUniqueNames();
+        _services = new ServiceMappingsProvider(configuration)
+            .GetUniqueNames()
+            .Where(services => new SwaggerDocsProvider(configuration)
+                .Get()
+                .Select(swaggerDoc => swaggerDoc.Service)
+                .Contains(services))
+            .ToArray();
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddConfiguration();
-        services.AddWebServices(_webServices);
+        services.AddWebServices(_services);
 
         services.AddScoped<SwaggerUIOptionsConfiguration>();
     }

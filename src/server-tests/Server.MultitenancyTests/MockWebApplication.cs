@@ -27,8 +27,7 @@ internal static class MockWebApplication
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
-        {"AllowedClients:0:UniqueName", "multitenancy-tests"},
-        {"AllowedClients:0:Hosts:0", "https://localhost"},
+        {"AllowedClients:0:Service", "multitenancy-tests"},
         {"AllowedClients:0:Scopes:1", "endpoints"}
     };
 

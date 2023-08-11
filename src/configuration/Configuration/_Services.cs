@@ -12,7 +12,7 @@ public static class _Services
         services.AddSingleton<IAllowedClientsProvider, AllowedClientsProvider>();
         services.AddSingleton<ISeedDataProvider, SeedDataProvider>();
         services.AddSingleton<ISwaggerDocsProvider, SwaggerDocsProvider>();
-        services.AddSingleton<IWebServicesProvider, WebServicesProvider>();
+        services.AddSingleton<IServiceMappingsProvider, ServiceMappingsProvider>();
 
         return services;
     }

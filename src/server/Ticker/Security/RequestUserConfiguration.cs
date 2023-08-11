@@ -112,7 +112,7 @@ public static class RequestUserConfiguration
             foreach (var scope in allowedClient.Scopes)
             {
                 var isScopeFromAllowedClient =
-                    claims.Any(x => x.Type == "client" && x.Value == allowedClient.UniqueName);
+                    claims.Any(x => x.Type == "client" && x.Value == allowedClient.Service);
 
                 if (isScopeFromAllowedClient)
                 {

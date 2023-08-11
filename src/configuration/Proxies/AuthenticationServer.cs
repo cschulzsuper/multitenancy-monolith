@@ -2,6 +2,5 @@
 
 public class AuthenticationServer
 {
-    // TODO User WebService.Host
-    public required string Host { get; init; }
+    public required string Service { get; init; }
 }
