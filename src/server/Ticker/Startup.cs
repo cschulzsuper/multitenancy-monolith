@@ -16,6 +16,7 @@ using ChristianSchulz.MultitenancyMonolith.Server.Ticker.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 using ChristianSchulz.MultitenancyMonolith.Web;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -51,7 +52,7 @@ public sealed class Startup
 
         _services = new ServiceMappingsProvider(configuration)
             .GetUniqueNames()
-            .Where(x => x == new AuthenticationServerProvider(configuration).Get().Service)
+            .Where(x => x == new AdmissionServerProvider(configuration).Get().Service)
             .ToArray();
 
         _allowedClients = new AllowedClientsProvider(_configuration).Get();
@@ -61,7 +62,7 @@ public sealed class Startup
             .Where(serviceMapping => _allowedClients
                 .Select(allowedClient => allowedClient.Service)
                 .Contains(serviceMapping.UniqueName))
-            .Select(x => x.PublicUrl)
+            .Select(x => x.Url)
             .ToArray();
     }
 
@@ -69,6 +70,7 @@ public sealed class Startup
     {
         services.ConfigureJsonOptions();
 
+        services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
         services.AddAuthentication().AddBearerToken(options => options.Configure());
         services.AddAuthorization();
 
@@ -84,6 +86,7 @@ public sealed class Startup
         });
 
         services.AddWebServices(_services);
+        services.AddWebServiceTransportClients();
 
         services.AddRequestUser(options => options.Configure(_allowedClients));
         services.AddCaching();
@@ -120,8 +123,6 @@ public sealed class Startup
         }
 
         app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
-
-        app.UseHttpsRedirection();
 
         app.UseRouting();
 

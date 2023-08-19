@@ -101,6 +101,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "data\Web\Web.csproj"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Contract", "data\Web.Contract\Web.Contract.csproj", "{094B8612-3F86-48E4-BCA6-41F543ACB92C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Transport.Web", "application\Transport.Web\Transport.Web.csproj", "{7DBA285D-9978-4CDE-B04C-12B175CAA3D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -279,6 +281,10 @@ Global
 		{094B8612-3F86-48E4-BCA6-41F543ACB92C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{094B8612-3F86-48E4-BCA6-41F543ACB92C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{094B8612-3F86-48E4-BCA6-41F543ACB92C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DBA285D-9978-4CDE-B04C-12B175CAA3D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DBA285D-9978-4CDE-B04C-12B175CAA3D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DBA285D-9978-4CDE-B04C-12B175CAA3D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DBA285D-9978-4CDE-B04C-12B175CAA3D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -327,6 +333,7 @@ Global
 		{23A52B6C-FA92-4870-B5DF-6CDF07C618F5} = {F61E75CF-8C8A-4B31-A5D2-FF7B08451006}
 		{0E831A96-462C-4C0F-944A-C5D2F7095729} = {E9436848-A5FC-41BE-B345-609E35C38C00}
 		{094B8612-3F86-48E4-BCA6-41F543ACB92C} = {E9436848-A5FC-41BE-B345-609E35C38C00}
+		{7DBA285D-9978-4CDE-B04C-12B175CAA3D0} = {25356525-8AFD-4B87-9D27-D1CA1D1A6A17}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}

@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 
-public interface IAuthenticationServerProvider
+public interface IAdmissionServerProvider
 {
-    AuthenticationServer Get();
+    AdmissionServer Get();
 }

@@ -1,39 +1,38 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using ChristianSchulz.MultitenancyMonolith.Configuration;
+﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Net.Http;
 
 namespace ChristianSchulz.MultitenancyMonolith.Web;
 
+[SuppressMessage("Style", "IDE1006:Naming Styles")]
 public static class _Services
 {
+    private const int DefaultRequestTimeOut = 1000;
+
     public static IServiceCollection AddWebServices(this IServiceCollection services, params string[] uniqueNames)
     {
         foreach (var uniqueName in uniqueNames)
         {
-            var builder = services.AddHttpClient(uniqueName,
-                (services, httpClient) =>
+            var builder = services
+                .AddHttpClient(uniqueName, (services, httpClient) =>
                     {
                         var serviceMappings = services
                             .GetRequiredService<IServiceMappingsProvider>()
                             .Get();
 
-                        var serviceMapping = serviceMappings.SingleOrDefault(x => x.UniqueName == uniqueName);
+                        var serviceMapping = serviceMappings.SingleOrDefault(x => x.UniqueName == uniqueName)
+                            ?? throw new UnreachableException($"Service mapping for '{uniqueName}' is not configured");
 
-                        if (serviceMapping == null)
-                        {
-                            throw new UnreachableException($"Service mapping for '{uniqueName}' is not configured");
-                        }
-
-                        httpClient.BaseAddress = new Uri(serviceMapping.ServiceUrl);
-                        httpClient.Timeout = TimeSpan.FromMilliseconds(250);
-
+                        httpClient.BaseAddress = new Uri(serviceMapping.Url);
+                        httpClient.Timeout = TimeSpan.FromMilliseconds(DefaultRequestTimeOut);
                     });
 
-            var devCertTrust = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == Environments.Development;
+            var devCertTrust = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != Environments.Production;
             if (devCertTrust)
             {
                 builder.ConfigurePrimaryHttpMessageHandler(services =>

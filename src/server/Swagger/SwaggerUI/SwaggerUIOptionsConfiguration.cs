@@ -1,5 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
-using ChristianSchulz.MultitenancyMonolith.Web;
 using Microsoft.AspNetCore.Builder;
 using NUglify;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -10,21 +9,44 @@ using System.Web;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
 
-public sealed class SwaggerUIOptionsConfiguration
+internal sealed class SwaggerUIOptionsConfiguration
 {
     private const string AccessTokenRequestInterceptorJavaScript =
     """
             function n(req)
             {
-                var swaggerJsonRequest = req.url.endsWith('swagger.json');
+                let swaggerJsonRequest = req.url.endsWith('swagger.json');
                 if (!swaggerJsonRequest)
                 {
                     return req;
                 }
 
-                var queryString = new URLSearchParams(window.location.search);
-                var accessToken = queryString.get('access_token');
+                let queryString = new URLSearchParams(window.location.search);
+                let accessToken = queryString.get('access_token');
             
+                if(accessToken == null)
+                {
+                    if (document.cookie.length > 0)
+                    {
+                        let accessTokenName = "access_token";
+
+                        let accessTokenStart = document.cookie.indexOf(accessTokenName + "=");
+                        if (accessTokenStart != -1) 
+                        {
+                            
+                            accessTokenStart = accessTokenStart + accessTokenName.length + 1;
+                            let accessTokenEnd = document.cookie.indexOf(";", accessTokenStart);
+                            
+                            if (accessTokenEnd == -1) 
+                            {
+                                accessTokenEnd = document.cookie.length;
+                            }
+
+                            accessToken = unescape(document.cookie.substring(accessTokenStart, accessTokenEnd));
+                        }
+                    }
+                }
+
                 if(accessToken != null)
                 {
                     req.headers['Authorization'] = accessToken; 
@@ -36,16 +58,16 @@ public sealed class SwaggerUIOptionsConfiguration
 
     private readonly ISwaggerDocsProvider _swaggerDocsProvider;
     private readonly IServiceMappingsProvider _serviceMappingsProvider;
-    private readonly IWebServiceClientFactory _webServiceClientFactory;
+    private readonly SwaggerJsonClientFactory _swaggerJsonClientFactory;
 
     public SwaggerUIOptionsConfiguration(
         ISwaggerDocsProvider swaggerDocsProvider,
         IServiceMappingsProvider serviceMappingsProvider,
-        IWebServiceClientFactory webServiceClientFactory) 
+        SwaggerJsonClientFactory swaggerJsonClientFactory) 
     {
         _swaggerDocsProvider = swaggerDocsProvider;
         _serviceMappingsProvider = serviceMappingsProvider;
-        _webServiceClientFactory = webServiceClientFactory;
+        _swaggerJsonClientFactory = swaggerJsonClientFactory;
     }
 
     public void Configure(SwaggerUIOptions options)
@@ -54,30 +76,34 @@ public sealed class SwaggerUIOptionsConfiguration
         ConfigureAccessTokenRequestInterceptor(options);
     }
 
-    public void ConfigureSwaggerEndpoints(SwaggerUIOptions options)
+    private void ConfigureSwaggerEndpoints(SwaggerUIOptions options)
     {
-        var swaggerDocs = _swaggerDocsProvider.Get();
+        var swaggerDocGroups = _swaggerDocsProvider.Get()
+            .GroupBy(swaggerDoc => swaggerDoc.TestService);
 
-        foreach (var swaggerDoc in swaggerDocs)
+        foreach (var swaggerDocGroup in swaggerDocGroups)
         {
-            using var webServiceClient = _webServiceClientFactory.Create(swaggerDoc.Service);
+            using var swaggerJsonClient = _swaggerJsonClientFactory.Create(swaggerDocGroup.Key);
 
-            var webServiceStatusCodeResult = webServiceClient.TryGet(swaggerDoc.Path);
-            if (webServiceStatusCodeResult.IsSuccessStatusCode)
+            foreach (var swaggerDoc in swaggerDocGroup)
             {
-                var @public = _serviceMappingsProvider.Get().Single(x => x.UniqueName == swaggerDoc.Service).PublicUrl;
+                var success = swaggerJsonClient.Test(swaggerDoc.Path);
+                if (success)
+                {
+                    var @public = _serviceMappingsProvider.Get().Single(x => x.UniqueName == swaggerDoc.PublicService).Url;
 
-                var rootUrl = new Uri(@public);
-                var absUrl = new Uri(rootUrl,swaggerDoc.Path);
+                    var rootUrl = new Uri(@public);
+                    var absUrl = new Uri(rootUrl, swaggerDoc.Path);
 
-                options.SwaggerEndpoint(absUrl.AbsoluteUri, swaggerDoc.DisplayName);
+                    options.SwaggerEndpoint(absUrl.AbsoluteUri, swaggerDoc.DisplayName);
+                }
             }
         }
     }
 
-    public void ConfigureAccessTokenRequestInterceptor(SwaggerUIOptions options)
+    private static void ConfigureAccessTokenRequestInterceptor(SwaggerUIOptions options)
     {
-        var minifiedRequestInterceptor = Uglify.Js(AccessTokenRequestInterceptorJavaScript);
+        var minifiedRequestInterceptor =  Uglify.Js(AccessTokenRequestInterceptorJavaScript);
 
         if (minifiedRequestInterceptor.HasErrors)
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Schedule;
 
-public class PlannedJobRequestHandler : IPlannedJobRequestHandler
+internal sealed class PlannedJobRequestHandler : IPlannedJobRequestHandler
 {
     private readonly IPlannedJobManager _plannedJobManager;
 

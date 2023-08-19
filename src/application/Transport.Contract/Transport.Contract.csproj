@@ -8,6 +8,7 @@
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Application</RootNamespace>
 	</PropertyGroup>
 
+
 	<ItemGroup>
 	  <ProjectReference Include="..\..\data\ObjectValidation\ObjectValidation.csproj" />
 	  <ProjectReference Include="..\..\shared\Validation\Validation.csproj" />

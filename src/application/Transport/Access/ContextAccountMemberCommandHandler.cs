@@ -28,7 +28,7 @@ internal sealed class ContextAccountMemberCommandHandler : IContextAccountMember
         _user = user;
     }
 
-    public async Task<ClaimsPrincipal> AuthAsync(ContextAccountMemberAuthCommand command)
+    public async Task<object> AuthAsync(ContextAccountMemberAuthCommand command)
     {
         var clientName = command.ClientName;
 
@@ -85,5 +85,6 @@ internal sealed class ContextAccountMemberCommandHandler : IContextAccountMember
         return claimsPrincipal;
     }
 
-    public void Verify() { }
+    public Task VerifyAsync() 
+        => Task.CompletedTask;
 }

@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Schedule.PlannedJobResource;
 
-public class Get : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 

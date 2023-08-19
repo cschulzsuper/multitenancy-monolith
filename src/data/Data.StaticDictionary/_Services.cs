@@ -30,7 +30,7 @@ public static class _Services
         return services;
     }
 
-    public static IServiceCollection AddStaticDictionaryAdministrationData(this IServiceCollection services)
+    public static IServiceCollection AddStaticDictionaryExtensionData(this IServiceCollection services)
     {
         services.AddScoped(CreateRepository<ObjectTypeModel, ObjectType>);
         services.AddScoped(CreateRepository<DistinctionTypeModel, DistinctionType>);

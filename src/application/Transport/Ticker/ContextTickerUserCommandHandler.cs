@@ -37,7 +37,7 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
         _eventStorage = eventStorage;
     }
 
-    public async Task<ClaimsPrincipal> AuthAsync(ContextTickerUserAuthCommand command)
+    public async Task<object> AuthAsync(ContextTickerUserAuthCommand command)
     {
         var clientName = command.ClientName;
 

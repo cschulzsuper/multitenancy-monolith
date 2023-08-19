@@ -18,11 +18,12 @@ services:
       - service-urls.env
       - service-mappings.env
     volumes:
-      - ~/.aspnet/https:/https/
+      - ~/.aspnet/https:/home/app/.aspnet/https
+      - ~/.aspnet/DataProtection-Keys:/home/app/.aspnet/DataProtection-Keys
     environment:
       ASPNETCORE_HTTP_PORTS: 
       ASPNETCORE_HTTPS_PORTS: 443
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: Staging
 
   ticker:
     container_name: ${COMPOSE_PROJECT_NAME}-ticker
@@ -38,11 +39,12 @@ services:
       - service-urls.env
       - service-mappings.env
     volumes:
-      - ~/.aspnet/https:/https/
+      - ~/.aspnet/https:/home/app/.aspnet/https
+      - ~/.aspnet/DataProtection-Keys:/home/app/.aspnet/DataProtection-Keys
     environment:
       ASPNETCORE_HTTP_PORTS: 
       ASPNETCORE_HTTPS_PORTS: 443
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: Staging
 
   swagger:
     container_name: ${COMPOSE_PROJECT_NAME}-swagger
@@ -50,6 +52,7 @@ services:
       context: ../src
       dockerfile: server/Swagger/Dockerfile
     ports:
+      - 5108:80
       - ${SwaggerPort:-7272}:443
     networks:
       - backend
@@ -63,9 +66,11 @@ services:
       - service-urls.env
       - service-mappings.env
     volumes:
-      - ~/.aspnet/https:/https/
+      - ~/.aspnet/https:/home/app/.aspnet/https/
+      - ~/.aspnet/DataProtection-Keys:/home/app/.aspnet/DataProtection-Keys
     environment:
-      ASPNETCORE_HTTP_PORTS: 
+      ASPNETCORE_HTTP_PORTS: 80
       ASPNETCORE_HTTPS_PORTS: 443
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTPS_REDIRECT_PORT: ${SwaggerPort:-7272}
+      ASPNETCORE_ENVIRONMENT: Staging
       

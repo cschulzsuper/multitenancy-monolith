@@ -18,6 +18,7 @@ using ChristianSchulz.MultitenancyMonolith.Server.Security;
 using ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -56,7 +57,7 @@ public sealed class Startup
             .Where(serviceMapping => _allowedClients
                 .Select(allowedClient => allowedClient.Service)
                 .Contains(serviceMapping.UniqueName))
-            .Select(x => x.PublicUrl)
+            .Select(x => x.Url)
             .ToArray();
     }
 
@@ -64,6 +65,7 @@ public sealed class Startup
     {
         services.ConfigureJsonOptions();
 
+        services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
         services.AddAuthentication().AddBearerToken(options => options.Configure());
         services.AddAuthorization();
 
@@ -84,20 +86,20 @@ public sealed class Startup
         services.AddPlannedJobs(options => options.Configure());
 
         services.AddStaticDictionary();
-        services.AddStaticDictionaryAdministrationData();
-        services.AddStaticDictionaryAdmissionData();
         services.AddStaticDictionaryAccessData();
+        services.AddStaticDictionaryAdmissionData();
+        services.AddStaticDictionaryExtensionData();
         services.AddStaticDictionaryBusinessData();
         services.AddStaticDictionaryScheduleData();
 
-        services.AddExtensionManagement();
-        services.AddAdministrationTransport();
+        services.AddAccessManagement();
+        services.AddAccessTransport();
 
         services.AddAdmissionManagement();
         services.AddAdmissionTransport();
 
-        services.AddAccessManagement();
-        services.AddAccessTransport();
+        services.AddExtensionManagement();
+        services.AddExtensionTransport();
 
         services.AddBusinessManagement();
         services.AddBusinessTransport();
@@ -125,14 +127,12 @@ public sealed class Startup
 
         app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
 
-        app.UseHttpsRedirection();
-
         app.UseRouting();
 
         app.UseCors(config => config
             .WithOrigins(_allowedClientHosts)
             .WithHeaders(HeaderNames.Accept, HeaderNames.ContentType, HeaderNames.Authorization)
-            .WithMethods(HttpMethods.Get, HttpMethods.Head, HttpMethods.Post, HttpMethods.Put, HttpMethods.Delete));
+            .WithMethods(HttpMethods.Get, HttpMethods.Head, HttpMethods.Post, HttpMethods.Put, HttpMethods.Delete, HttpMethods.Options));
 
         app.UseAuthenticationScope();
         app.UseAuthentication();

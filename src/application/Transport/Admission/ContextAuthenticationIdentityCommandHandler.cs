@@ -24,7 +24,7 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
         _allowedClientsProvider = allowedClientsProvider;
     }
 
-    public async Task<ClaimsPrincipal> AuthAsync(ContextAuthenticationIdentityAuthCommand command)
+    public async Task<object> AuthAsync(ContextAuthenticationIdentityAuthCommand command)
     {
         var clientName = command.ClientName;
         if (_allowedClientsProvider.Get().All(x => x.Service != clientName))
@@ -53,7 +53,7 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
         var claims = new Claim[]
         {
             new Claim("type", "identity"),
-            new Claim("client", clientName),
+            new Claim("client", command.ClientName),
             new Claim("identity", command.AuthenticationIdentity),
             new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
         };
@@ -64,5 +64,6 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
         return claimsPrincipal;
     }
 
-    public void Verify() { }
+    public Task VerifyAsync()
+        => Task.CompletedTask;
 }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Schedule;
 
-public class PlannedJobRescheduler : IPlannedJobRescheduler
+internal sealed class PlannedJobRescheduler : IPlannedJobRescheduler
 {
     private readonly IPlannedJobManager _plannedJobManager;
     private readonly IPlannedJobScheduler _plannedJobScheduler;

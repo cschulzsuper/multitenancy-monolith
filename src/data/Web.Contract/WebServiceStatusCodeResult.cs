@@ -4,9 +4,9 @@ namespace ChristianSchulz.MultitenancyMonolith.Web;
 
 public sealed class WebServiceStatusCodeResult
 {
-    public static WebServiceStatusCodeResult Success(Uri baseUri, string path)
+    public static WebServiceStatusCodeResult Success(Uri baseUri, Uri requestUri)
     {
-        var absoluteUri = new Uri(baseUri, path);
+        var absoluteUri = new Uri(baseUri, requestUri);
 
         var result = new WebServiceStatusCodeResult
         {
@@ -17,9 +17,9 @@ public sealed class WebServiceStatusCodeResult
         return result;
     }
 
-    public static WebServiceStatusCodeResult Failed(Uri baseUri, string path)
+    public static WebServiceStatusCodeResult Failed(Uri baseUri, Uri requestUri)
     {
-        var absoluteUri = new Uri(baseUri, path);
+        var absoluteUri = new Uri(baseUri, requestUri);
 
         var result = new WebServiceStatusCodeResult
         {

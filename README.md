@@ -121,7 +121,10 @@ I said monolith, but with the latests features related to a ticker system, it is
 ## Developer Experience
   * /64 Kick-off for the `docker-compose` support. I added a `Dockerfile` to the `Swagger` client and optimized a little bit of code in it. https://github.com/cschulzsuper/multitenancy-monolith/commit/b992958d76b902fdcf5679be6727dde2b60308de
   * /65 `Dockerfile` for `server` and `ticker`, and aditionally a component to add `SwaggerDocs` only if the corresponding `swagger.json` endpoint is available. https://github.com/cschulzsuper/multitenancy-monolith/commit/f3f33add9eb79e729b746077cb5e402ea3a6ee66
-  * /66 Puh. A first `docker-compose.yml` is now integrated. Too have easy configuration of ports and host, I had to change some things in the configuration. There will be more `Docker` stuff, and I also have the feeling, that the configuration will change again. 
+  * /66 Puh. A first `docker-compose.yml` is now integrated. Too have easy configuration of ports and host, I had to change some things in the configuration. There will be more `Docker` stuff, and I also have the feeling, that the configuration will change again. https://github.com/cschulzsuper/multitenancy-monolith/commit/b0f897aebd3b0a44413988e79e54fc2248977caa
+
+## Swagger Staging Access
+  * /67 It took me a bit, and I'm still amazed that it is actually working. I added the groundwork for a sign-in. For now, this is located in the Swagger project, and it is only a simple redirect, with credentials from the configuration. While implementing this, I also refactored quite a bit in the web service layer.
 
 # Backlog
 

@@ -1,11 +1,12 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker;
+﻿using ChristianSchulz.MultitenancyMonolith.Application;
+using ChristianSchulz.MultitenancyMonolith.Application.Access;
+using ChristianSchulz.MultitenancyMonolith.Application.Admission;
+using ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
@@ -48,20 +49,20 @@ public class BearerTokenValidator
         }
 
         using var client = context.HttpContext.RequestServices
-            .GetRequiredService<IHttpClientFactory>()
-            .CreateClient("server");
+            .GetRequiredService<TransportWebServiceClientFactory>()
+            .Create<IContextAuthenticationIdentityCommandClient>("server", () => Task.FromResult(context.Token));
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(BearerTokenDefaults.AuthenticationScheme, context.Request.Headers.Authorization);
+        try
+        {
+            await client.VerifyAsync();
 
-        var response = await client.PostAsync("/api/admission/authentication-identities/_/verify", null);
-        if (!response.IsSuccessStatusCode)
+            context.Principal = ticket.Principal;
+            context.Success();
+        }
+        catch
         {
             context.Fail("Verifying token failed");
-            return;
-        };
-
-        context.Principal = ticket.Principal;
-        context.Success();
+        }
     }
 
     protected virtual async Task ValidateMemberAsync(MessageReceivedContext context, AuthenticationTicket ticket)
@@ -73,22 +74,21 @@ public class BearerTokenValidator
             return;
         }
 
-        using var client = context.HttpContext.RequestServices
-            .GetRequiredService<IHttpClientFactory>()
-            .CreateClient("server");
+        using var contextAuthenticationIdentityCommandHandler = context.HttpContext.RequestServices
+            .GetRequiredService<TransportWebServiceClientFactory>()
+            .Create<IContextAccountMemberCommandClient>("server", () => Task.FromResult(context.Token));
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(BearerTokenDefaults.AuthenticationScheme, context.Request.Headers.Authorization);
+        try
+        {
+            await contextAuthenticationIdentityCommandHandler.VerifyAsync();
 
-        var response = await client.PostAsync("/api/access/account-members/_/verify", null);
-        if (!response.IsSuccessStatusCode)
+            context.Principal = ticket.Principal;
+            context.Success();
+        }
+        catch
         {
             context.Fail("Verifying token failed");
-            return;
-        };
-
-        context.Principal = ticket.Principal;
-        context.Success();
-
+        }
     }
 
     protected virtual void ValidateTicker(MessageReceivedContext context, AuthenticationTicket ticket)

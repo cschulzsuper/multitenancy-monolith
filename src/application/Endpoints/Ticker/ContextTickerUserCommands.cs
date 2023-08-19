@@ -1,9 +1,12 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
+﻿using ChristianSchulz.MultitenancyMonolith.Application.Access;
+using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Ticker;
 
@@ -48,8 +51,16 @@ public static class ContextTickerUserCommands
     }
 
     private static Delegate Auth =>
-        async  (IContextTickerUserCommandHandler commandHandler, ContextTickerUserAuthCommand command)
-            => Results.SignIn(await commandHandler.AuthAsync(command), authenticationScheme: BearerTokenDefaults.AuthenticationScheme);
+        async (IContextTickerUserCommandHandler commandHandler, ContextTickerUserAuthCommand command) =>
+        {
+            var response = await commandHandler.AuthAsync(command) as ClaimsPrincipal;
+            if (response == null)
+            {
+                throw new UnreachableException($"{nameof(IContextAccountMemberCommandHandler.AuthAsync)} response is not a {nameof(ClaimsPrincipal)}");
+            }
+
+            return Results.SignIn(response, authenticationScheme: BearerTokenDefaults.AuthenticationScheme);
+        };
 
     private static Delegate Confirm =>
         (IContextTickerUserCommandHandler commandHandler, ContextTickerUserConfirmCommand command)

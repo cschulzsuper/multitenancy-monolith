@@ -5,11 +5,11 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MM_Ticker_ServiceMappings__0__UniqueName": "server",
-        "MM_Ticker_ServiceMappings__0__PublicUrl": "http://localhost:5177",
-        "MM_Ticker_ServiceMappings__0__ServiceUrl": "http://localhost:5177",
-        "MM_Ticker_ServiceMappings__1__UniqueName": "swagger",
-        "MM_Ticker_ServiceMappings__1__PublicUrl": "http://localhost:5108",
-        "MM_Ticker_ServiceMappings__1__ServiceUrl": "http://localhost:5108"
+        "MM_Ticker_ServiceMappings__0__Url": "http://localhost:5177",
+        "MM_Ticker_ServiceMappings__1__UniqueName": "swagger-ui",
+        "MM_Ticker_ServiceMappings__1__Url": "http://localhost:5108",
+        "MM_Ticker_ServiceMappings__2__UniqueName": "swagger-ui-host",
+        "MM_Ticker_ServiceMappings__2__Url": "http://localhost:5108"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5051"
@@ -19,11 +19,11 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MM_Ticker_ServiceMappings__0__UniqueName": "server",
-        "MM_Ticker_ServiceMappings__0__PublicUrl": "https://localhost:7207",
-        "MM_Ticker_ServiceMappings__0__ServiceUrl": "https://localhost:7207",
-        "MM_Ticker_ServiceMappings__1__UniqueName": "swagger",
-        "MM_Ticker_ServiceMappings__1__PublicUrl": "https://localhost:7272",
-        "MM_Ticker_ServiceMappings__1__ServiceUrl": "https://localhost:7272"
+        "MM_Ticker_ServiceMappings__0__Url": "https://localhost:7207",
+        "MM_Ticker_ServiceMappings__1__UniqueName": "swagger-ui",
+        "MM_Ticker_ServiceMappings__1__Url": "https://localhost:7272",
+        "MM_Ticker_ServiceMappings__2__UniqueName": "swagger-ui-host",
+        "MM_Ticker_ServiceMappings__2__Url": "https://localhost:7272"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7206;http://localhost:5051"
@@ -33,11 +33,11 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging",
         "MM_Ticker_ServiceMappings__0__UniqueName": "server",
-        "MM_Ticker_ServiceMappings__0__PublicUrl": "https://localhost:7207",
-        "MM_Ticker_ServiceMappings__0__ServiceUrl": "https://localhost:7207",
-        "MM_Ticker_ServiceMappings__1__UniqueName": "swagger",
-        "MM_Ticker_ServiceMappings__1__PublicUrl": "https://localhost:7272",
-        "MM_Ticker_ServiceMappings__1__ServiceUrl": "https://localhost:7272"
+        "MM_Ticker_ServiceMappings__0__Url": "https://localhost:7207",
+        "MM_Ticker_ServiceMappings__1__UniqueName": "swagger-ui",
+        "MM_Ticker_ServiceMappings__1__Url": "https://localhost:7272",
+        "MM_Ticker_ServiceMappings__2__UniqueName": "swagger-ui-host",
+        "MM_Ticker_ServiceMappings__2__Url": "https://localhost:7272"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7206;http://localhost:5051"
@@ -50,11 +50,11 @@
         "ASPNETCORE_HTTP_PORTS": "5177",
         "ASPNETCORE_HTTPS_PORTS": "7206",
         "MM_Ticker_ServiceMappings__0__UniqueName": "server",
-        "MM_Ticker_ServiceMappings__0__PublicUrl": "https://localhost:7207",
-        "MM_Ticker_ServiceMappings__0__ServiceUrl": "https://localhost:7207",
-        "MM_Ticker_ServiceMappings__1__UniqueName": "swagger",
-        "MM_Ticker_ServiceMappings__1__PublicUrl": "https://localhost:7272",
-        "MM_Ticker_ServiceMappings__1__ServiceUrl": "https://localhost:7272"
+        "MM_Ticker_ServiceMappings__0__Url": "https://localhost:7207",
+        "MM_Ticker_ServiceMappings__1__UniqueName": "swagger-ui",
+        "MM_Ticker_ServiceMappings__1__Url": "https://localhost:7272",
+        "MM_Ticker_ServiceMappings__2__UniqueName": "swagger-ui-host",
+        "MM_Ticker_ServiceMappings__2__Url": "https://localhost:7272"
       },
       "publishAllPorts": true,
       "useSSL": true,

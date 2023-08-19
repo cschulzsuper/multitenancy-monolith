@@ -10,8 +10,6 @@ namespace ChristianSchulz.MultitenancyMonolith.Server.Security;
 
 public class BearerTokenValidator
 {
-
-
     public virtual void Validate(MessageReceivedContext context, AuthenticationTicket ticket)
     {
         var typeClaim = ticket.Principal.Claims.SingleOrDefault(x => x.Type == "type");

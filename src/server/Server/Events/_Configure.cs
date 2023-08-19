@@ -2,11 +2,13 @@
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Events;
 
+[SuppressMessage("Style", "IDE1006:Naming Styles")]
 internal static class _Configure
 {
     public static EventsOptions Configure(this EventsOptions options)

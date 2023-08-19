@@ -1,23 +1,36 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Web;
 
-internal class WebServiceClientFactory : IWebServiceClientFactory
+internal sealed class WebServiceClientFactory : IWebServiceClientFactory
 {
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IHttpClientFactory _clientFactory;
 
-    public WebServiceClientFactory(IHttpClientFactory httpClientFactory)
+    public WebServiceClientFactory(IHttpClientFactory clientFactory)
     {
-        _httpClientFactory = httpClientFactory;
+        _clientFactory = clientFactory;
     }
 
-
-    public IWebServiceClient Create(string uniqueName)
+    public IWebServiceClient Create(string service)
     {
-        var httpClient = _httpClientFactory.CreateClient(uniqueName);
+        var httpClient = _clientFactory.CreateClient(service);
 
-        var webServiceClient = new WebServiceClient(httpClient);
+        var client = new WebServiceClient(httpClient);
 
-        return webServiceClient;
+        return client;
+    }
+
+    public IWebServiceClient Create(string webService, string token)
+        => Create(webService, () => Task.FromResult(token)!);
+
+    public IWebServiceClient Create(string webService, Func<Task<string?>> tokenProvider)
+    {
+        var httpClient = _clientFactory.CreateClient(webService);
+
+        var client = new WebServiceClient(httpClient, tokenProvider);
+
+        return client;
     }
 }

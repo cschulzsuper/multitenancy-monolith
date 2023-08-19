@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 
-public class RequestUserOptions
+public sealed class RequestUserOptions
 {
     public Func<ClaimsPrincipal, Task<ClaimsPrincipal>>? Transform { get; set; }
 }

@@ -3,17 +3,17 @@ using Microsoft.Extensions.Configuration;
 
 namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 
-public sealed class AuthenticationServerProvider : IAuthenticationServerProvider
+public sealed class AdmissionServerProvider : IAdmissionServerProvider
 {
     private const string DefaultService = "server";
 
     private readonly IConfiguration _configuration;
 
-    public AuthenticationServerProvider(IConfiguration configuration)
+    public AdmissionServerProvider(IConfiguration configuration)
     {
         _configuration = configuration;
     }
 
-    public AuthenticationServer Get()
-        => _configuration.GetSection("AuthenticationServer").Get<AuthenticationServer>() ?? new AuthenticationServer { Service = DefaultService };
+    public AdmissionServer Get()
+        => _configuration.GetSection("AdmissionServer").Get<AdmissionServer>() ?? new AdmissionServer { Service = DefaultService };
 }

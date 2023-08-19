@@ -6,15 +6,12 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Application</RootNamespace>
+		<NoWarn>IDE0290</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Business\04xm2p1j.rhs~" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-preview.6.23329.7" />
-		<PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.0-preview.6.23329.11" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-preview.7.23375.6" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.0-preview.7.23375.9" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -29,9 +29,9 @@ internal static class MockWebApplication
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
         {"ServiceMappings:0:UniqueName", ClientName},
-        {"ServiceMappings:0:PublicUrl", "http://localhost"},
+        {"ServiceMappings:0:Url", "http://localhost"},
 
-        {"AuthenticationServer:Service", ClientName},
+        {"AdmissionServer:Service", ClientName},
 
         {"AllowedClients:0:Service", ClientName},
         {"AllowedClients:0:Scopes:0", "swagger-json"},
