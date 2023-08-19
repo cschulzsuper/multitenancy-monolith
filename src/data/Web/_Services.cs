@@ -22,8 +22,8 @@ public static class _Services
                 .AddHttpClient(uniqueName, (services, httpClient) =>
                     {
                         var serviceMappings = services
-                            .GetRequiredService<IServiceMappingsProvider>()
-                            .Get();
+                            .GetRequiredService<IConfigurationProxyProvider>()
+                            .GetServiceMappings();
 
                         var serviceMapping = serviceMappings.SingleOrDefault(x => x.UniqueName == uniqueName)
                             ?? throw new UnreachableException($"Service mapping for '{uniqueName}' is not configured");

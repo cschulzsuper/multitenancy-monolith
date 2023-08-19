@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using Microsoft.AspNetCore.Builder;
 using NUglify;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -56,17 +57,16 @@ internal sealed class SwaggerUIOptionsConfiguration
             }
         """;
 
-    private readonly ISwaggerDocsProvider _swaggerDocsProvider;
-    private readonly IServiceMappingsProvider _serviceMappingsProvider;
+    private readonly SwaggerDoc[] _swaggerDocs;
+    private readonly ServiceMapping[] _serviceMappings;
     private readonly SwaggerJsonClientFactory _swaggerJsonClientFactory;
 
     public SwaggerUIOptionsConfiguration(
-        ISwaggerDocsProvider swaggerDocsProvider,
-        IServiceMappingsProvider serviceMappingsProvider,
+        IConfigurationProxyProvider configurationProxyProvider,
         SwaggerJsonClientFactory swaggerJsonClientFactory) 
     {
-        _swaggerDocsProvider = swaggerDocsProvider;
-        _serviceMappingsProvider = serviceMappingsProvider;
+        _swaggerDocs = configurationProxyProvider.GetSwaggerDocs();
+        _serviceMappings = configurationProxyProvider.GetServiceMappings();
         _swaggerJsonClientFactory = swaggerJsonClientFactory;
     }
 
@@ -78,7 +78,7 @@ internal sealed class SwaggerUIOptionsConfiguration
 
     private void ConfigureSwaggerEndpoints(SwaggerUIOptions options)
     {
-        var swaggerDocGroups = _swaggerDocsProvider.Get()
+        var swaggerDocGroups = _swaggerDocs
             .GroupBy(swaggerDoc => swaggerDoc.TestService);
 
         foreach (var swaggerDocGroup in swaggerDocGroups)
@@ -90,7 +90,7 @@ internal sealed class SwaggerUIOptionsConfiguration
                 var success = swaggerJsonClient.Test(swaggerDoc.Path);
                 if (success)
                 {
-                    var @public = _serviceMappingsProvider.Get().Single(x => x.UniqueName == swaggerDoc.PublicService).Url;
+                    var @public = _serviceMappings.Single(x => x.UniqueName == swaggerDoc.PublicService).Url;
 
                     var rootUrl = new Uri(@public);
                     var absUrl = new Uri(rootUrl, swaggerDoc.Path);

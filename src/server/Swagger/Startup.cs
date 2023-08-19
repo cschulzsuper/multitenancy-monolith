@@ -1,5 +1,6 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Server.Swagger.Blazor;
 using ChristianSchulz.MultitenancyMonolith.Server.Swagger.Endpoints;
 using ChristianSchulz.MultitenancyMonolith.Server.Swagger.Security;
 using ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,29 +22,44 @@ namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger;
 public sealed class Startup
 {
     private readonly IWebHostEnvironment _environment;
-    private readonly string[] _services;
+    private readonly IConfiguration _configuration;
 
     public Startup(
         IWebHostEnvironment environment, 
         IConfiguration configuration)
     {
         _environment = environment;
+        _configuration = configuration;
 
-        _services = new ServiceMappingsProvider(configuration)
-            .GetUniqueNames()
-            .Where(service => 
-                new SwaggerDocsProvider(configuration)
-                    .Get()
-                    .Select(swaggerDoc => swaggerDoc.TestService)
-                    .Contains(service) ||
-                service == new AdmissionServerProvider(configuration).Get().Service)
+        if (!environment.IsDevelopment())
+        {
+            // TODO https://github.com/dotnet/aspnetcore/issues/49577
+            StaticWebAssetsLoader.UseStaticWebAssets(environment, configuration);
+        }
+    }
+
+    private void LoadRequiredConfiguration(
+        out string[] webServices)
+    {
+        var configurationProxyProvider = new ConfigurationProxyProvider(_configuration);
+
+        var configuredAdmissionServer = configurationProxyProvider.GetAdmissionServer();
+        var configuredSwaggerDocs = configurationProxyProvider.GetSwaggerDocs();
+        var configuredServicesMappings = configurationProxyProvider.GetServiceMappings();
+
+        webServices = configuredServicesMappings
+            .Where(servicesMapping =>
+                servicesMapping.UniqueName == configuredAdmissionServer.Service ||
+                configuredSwaggerDocs.Select(swaggerDoc => swaggerDoc.TestService).Contains(servicesMapping.UniqueName))
+            .Select(x => x.UniqueName)
             .Distinct()
             .ToArray();
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddConfiguration();
+        LoadRequiredConfiguration(
+            out var webServices);
 
         if (!_environment.IsDevelopment())
         {
@@ -73,27 +90,39 @@ public sealed class Startup
             services.AddAuthorization(options => options.FallbackPolicy = options.DefaultPolicy);
         }
 
+        services.AddRazorComponents();
+        services.AddCors();
+
         services.AddScoped<SwaggerUIOptionsConfiguration>();
 
-        services.AddWebServices(_services);
+        services.AddConfiguration();
+
+        services.AddWebServices(webServices);
         services.AddWebServiceSwaggerJsonClients();
         services.AddWebServiceTransportClients();
+
+        // TODO https://github.com/dotnet/aspnetcore/issues/48769
+        services.AddHttpContextAccessor();
     }
 
     public void Configure(IApplicationBuilder app)
     {
         app.UseHttpsRedirection();
 
+        app.UseCors();
+        app.UseStaticFiles();
+
         if (!_environment.IsDevelopment())
         {
             app.UseRouting();
+            app.UseAntiforgery();
 
             app.UseAuthentication();
             app.UseAuthorization();
         }
-
+      
         app.UseSwaggerUI(options =>
-        {
+        {         
             using var scope = app.ApplicationServices.CreateScope();
 
             scope.ServiceProvider
@@ -105,8 +134,12 @@ public sealed class Startup
         {
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapIndex();
-                endpoints.MapSignIn();
+                var group = endpoints
+                    .MapGroup("/")
+                    .AllowAnonymous();
+
+                group.MapRazorComponents<App>();
+                group.MapIndex();
             });
         }
     }

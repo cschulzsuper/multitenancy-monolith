@@ -28,7 +28,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -40,36 +39,51 @@ public sealed class Startup
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;
 
-    private readonly ICollection<AllowedClient> _allowedClients;
-    private readonly string[] _allowedClientHosts;
-
     public Startup(
         IWebHostEnvironment environment,
         IConfiguration configuration)
     {
         _environment = environment;
         _configuration = configuration;
+    }
 
-        _allowedClients = new AllowedClientsProvider(_configuration).Get();
+    private void LoadRequiredConfiguration(
+        out AllowedClient[] allowedClients,
+        out string[] allowedClientHosts)
+    {
+        var configurationProxyProvider = new ConfigurationProxyProvider(_configuration);
 
-        _allowedClientHosts = new ServiceMappingsProvider(_configuration)
-            .Get()
-            .Where(serviceMapping => _allowedClients
+        var configuredAllowedClients = configurationProxyProvider.GetAllowedClients();
+        var configuredServicesMappings = configurationProxyProvider.GetServiceMappings();
+
+        allowedClients = configuredAllowedClients;
+
+        allowedClientHosts = configuredServicesMappings
+            .Where(serviceMapping => configuredAllowedClients
                 .Select(allowedClient => allowedClient.Service)
                 .Contains(serviceMapping.UniqueName))
-            .Select(x => x.Url)
+            .Select(servicesMapping => servicesMapping.Url)
             .ToArray();
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
+        LoadRequiredConfiguration(
+            out var allowedClients,
+            out var allowedClientHosts);
+
         services.ConfigureJsonOptions();
 
         services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
         services.AddAuthentication().AddBearerToken(options => options.Configure());
         services.AddAuthorization();
 
-        services.AddCors();
+        services.AddCors(setup => setup
+            .AddDefaultPolicy(config => config
+                .WithOrigins(allowedClientHosts)
+                .WithHeaders(HeaderNames.Accept, HeaderNames.ContentType, HeaderNames.Authorization)
+                .WithMethods(HttpMethods.Get, HttpMethods.Head, HttpMethods.Post, HttpMethods.Put, HttpMethods.Delete)));
+
         services.AddEndpointsApiExplorer();
 
         services.AddSwaggerGen(options =>
@@ -79,7 +93,7 @@ public sealed class Startup
             options.ConfigureAuthorization();
         });
 
-        services.AddRequestUser(options => options.Configure(_allowedClients));
+        services.AddRequestUser(options => options.Configure(allowedClients));
         services.AddCaching();
         services.AddConfiguration();
         services.AddEvents(options => options.Configure());
@@ -128,11 +142,7 @@ public sealed class Startup
         app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
 
         app.UseRouting();
-
-        app.UseCors(config => config
-            .WithOrigins(_allowedClientHosts)
-            .WithHeaders(HeaderNames.Accept, HeaderNames.ContentType, HeaderNames.Authorization)
-            .WithMethods(HttpMethods.Get, HttpMethods.Head, HttpMethods.Post, HttpMethods.Put, HttpMethods.Delete, HttpMethods.Options));
+        app.UseCors();
 
         app.UseAuthenticationScope();
         app.UseAuthentication();

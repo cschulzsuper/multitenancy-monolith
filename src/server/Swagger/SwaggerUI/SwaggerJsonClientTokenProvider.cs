@@ -14,10 +14,10 @@ internal sealed class SwaggerJsonClientTokenProvider
 
     public SwaggerJsonClientTokenProvider(
         TransportWebServiceClientFactory transportWebServiceClientFactory,
-        IAdmissionServerProvider admissionServerProvider)
+        IConfigurationProxyProvider IConfigurationProxyProvider)
     {
         _transportWebServiceClientFactory = transportWebServiceClientFactory;
-        _admissionServer = admissionServerProvider.Get();
+        _admissionServer = IConfigurationProxyProvider.GetAdmissionServer();
     }
 
     public async Task<string> GetAsync()

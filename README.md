@@ -124,7 +124,8 @@ I said monolith, but with the latests features related to a ticker system, it is
   * /66 Puh. A first `docker-compose.yml` is now integrated. Too have easy configuration of ports and host, I had to change some things in the configuration. There will be more `Docker` stuff, and I also have the feeling, that the configuration will change again. https://github.com/cschulzsuper/multitenancy-monolith/commit/b0f897aebd3b0a44413988e79e54fc2248977caa
 
 ## Swagger Staging Access
-  * /67 It took me a bit, and I'm still amazed that it is actually working. I added the groundwork for a sign-in. For now, this is located in the Swagger project, and it is only a simple redirect, with credentials from the configuration. While implementing this, I also refactored quite a bit in the web service layer.
+  * /67 It took me a bit, and I'm still amazed that it is actually working. I added the groundwork for a sign-in. For now, this is located in the Swagger project, and it is only a simple redirect, with credentials from the configuration. While implementing this, I also refactored quite a bit in the web service layer. https://github.com/cschulzsuper/multitenancy-monolith/commit/01c1db9a0bec0d5314d0b2a602d28a13f3482bba
+  * /68 Instead of the sign-in endpoint, I turn the Swagger project into a .NET 8 Blazor SSR. The same redirect code, that was previously in the sign-in endpoint is now in a simple sign-in page. This temporary code will be removed in the next commit.
 
 # Backlog
 

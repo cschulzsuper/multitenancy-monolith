@@ -26,7 +26,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -38,43 +37,59 @@ public sealed class Startup
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;
 
-    private readonly ICollection<AllowedClient> _allowedClients;
-    private readonly string[] _allowedClientHosts;
-
-    private readonly string[] _services;
-
     public Startup(
         IWebHostEnvironment environment,
         IConfiguration configuration)
     {
         _environment = environment;
         _configuration = configuration;
+    }
 
-        _services = new ServiceMappingsProvider(configuration)
-            .GetUniqueNames()
-            .Where(x => x == new AdmissionServerProvider(configuration).Get().Service)
-            .ToArray();
+    private void LoadRequiredConfiguration(
+        out AllowedClient[] allowedClients, 
+        out string[] allowedClientHosts, 
+        out string[] webServices)
+    {
+        var configurationProxyProvider = new ConfigurationProxyProvider(_configuration);
 
-        _allowedClients = new AllowedClientsProvider(_configuration).Get();
+        var configuredAdmissionServer = configurationProxyProvider.GetAdmissionServer();
+        var configuredAllowedClients = configurationProxyProvider.GetAllowedClients();
+        var configuredServicesMappings = configurationProxyProvider.GetServiceMappings();
 
-        _allowedClientHosts = new ServiceMappingsProvider(_configuration)
-            .Get()
-            .Where(serviceMapping => _allowedClients
+        allowedClients = configuredAllowedClients;
+
+        allowedClientHosts = configuredServicesMappings
+            .Where(serviceMapping => configuredAllowedClients
                 .Select(allowedClient => allowedClient.Service)
                 .Contains(serviceMapping.UniqueName))
-            .Select(x => x.Url)
+            .Select(servicesMapping => servicesMapping.Url)
+            .ToArray();
+
+        webServices = configuredServicesMappings
+            .Where(servicesMapping => servicesMapping.UniqueName == configuredAdmissionServer.Service)
+            .Select(servicesMapping => servicesMapping.UniqueName)
+            .Distinct()
             .ToArray();
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
+        LoadRequiredConfiguration(
+            out var allowedClients,
+            out var allowedClientHosts,
+            out var webServices);
+
         services.ConfigureJsonOptions();
 
         services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
         services.AddAuthentication().AddBearerToken(options => options.Configure());
         services.AddAuthorization();
 
-        services.AddCors();
+        services.AddCors(setup => setup
+            .AddDefaultPolicy(config => config
+                .WithOrigins(allowedClientHosts)
+                .WithHeaders(HeaderNames.Accept, HeaderNames.ContentType, HeaderNames.Authorization)
+                .WithMethods(HttpMethods.Get, HttpMethods.Head, HttpMethods.Post, HttpMethods.Put, HttpMethods.Delete)));
 
         services.AddEndpointsApiExplorer();
 
@@ -85,10 +100,10 @@ public sealed class Startup
             options.ConfigureAuthorization();
         });
 
-        services.AddWebServices(_services);
+        services.AddWebServices(webServices);
         services.AddWebServiceTransportClients();
 
-        services.AddRequestUser(options => options.Configure(_allowedClients));
+        services.AddRequestUser(options => options.Configure(allowedClients));
         services.AddCaching();
         services.AddConfiguration();
         services.AddEvents(options => options.Configure());
@@ -125,11 +140,7 @@ public sealed class Startup
         app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
 
         app.UseRouting();
-
-        app.UseCors(config => config
-            .WithOrigins(_allowedClientHosts)
-            .WithHeaders(HeaderNames.Accept, HeaderNames.ContentType, HeaderNames.Authorization)
-            .WithMethods(HttpMethods.Get, HttpMethods.Head, HttpMethods.Post, HttpMethods.Put, HttpMethods.Delete));
+        app.UseCors();
 
         app.UseAuthenticationScope();
         app.UseAuthentication();

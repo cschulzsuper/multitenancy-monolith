@@ -1,5 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission.Commands;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using System;
 using System.Linq;
@@ -12,22 +13,22 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
 {
     private readonly IAuthenticationIdentityManager _authenticationIdentityManager;
     private readonly IAuthenticationIdentityVerificationManager _identityVerificationManager;
-    private readonly IAllowedClientsProvider _allowedClientsProvider;
+    private readonly AllowedClient[] _allowedClients;
 
     public ContextAuthenticationIdentityCommandHandler(
         IAuthenticationIdentityManager authenticationIdentityManager,
         IAuthenticationIdentityVerificationManager identityVerificationManager,
-        IAllowedClientsProvider allowedClientsProvider)
+        IConfigurationProxyProvider configurationProxyProvider)
     {
         _authenticationIdentityManager = authenticationIdentityManager;
         _identityVerificationManager = identityVerificationManager;
-        _allowedClientsProvider = allowedClientsProvider;
+        _allowedClients = configurationProxyProvider.GetAllowedClients();
     }
 
     public async Task<object> AuthAsync(ContextAuthenticationIdentityAuthCommand command)
     {
         var clientName = command.ClientName;
-        if (_allowedClientsProvider.Get().All(x => x.Service != clientName))
+        if (_allowedClients.All(x => x.Service != clientName))
         {
             TransportException.ThrowSecurityViolation($"Client name '{clientName}' is not allowed to sign in");
         }

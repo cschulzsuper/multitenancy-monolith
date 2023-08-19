@@ -3,8 +3,10 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims</RootNamespace>
+		<NoWarn>IDE0290</NoWarn>
 	</PropertyGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Access.Commands;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using System;
@@ -13,18 +14,18 @@ internal sealed class ContextAccountMemberCommandHandler : IContextAccountMember
 {
     private readonly IAccountMemberManager _accountMemberManager;
     private readonly IAccountMemberVerificationManager _memberVerificationManager;
-    private readonly IAllowedClientsProvider _allowedClientsProvider;
+    private readonly AllowedClient[] _allowedClients;
     private readonly ClaimsPrincipal _user;
 
     public ContextAccountMemberCommandHandler(
         IAccountMemberManager accountMemberManager,
         IAccountMemberVerificationManager accountMemberVerificationManager,
-        IAllowedClientsProvider allowedClientsProvider,
+        IConfigurationProxyProvider configurationProxyProvider,
         ClaimsPrincipal user)
     {
         _accountMemberManager = accountMemberManager;
         _memberVerificationManager = accountMemberVerificationManager;
-        _allowedClientsProvider = allowedClientsProvider;
+        _allowedClients = configurationProxyProvider.GetAllowedClients();
         _user = user;
     }
 
@@ -32,7 +33,7 @@ internal sealed class ContextAccountMemberCommandHandler : IContextAccountMember
     {
         var clientName = command.ClientName;
 
-        if (_allowedClientsProvider.Get().All(x => x.Service != clientName))
+        if (_allowedClients.All(x => x.Service != clientName))
         {
             TransportException.ThrowSecurityViolation($"Client name '{clientName}' is not allowed to sign in.");
         }

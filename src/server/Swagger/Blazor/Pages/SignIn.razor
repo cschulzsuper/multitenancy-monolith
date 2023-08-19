@@ -1,0 +1,54 @@
+﻿@page "/sign-in"
+
+@attribute [AllowAnonymous]
+
+@layout EmptyLayout
+
+@inject IConfigurationProxyProvider ConfigurationProxyProvider
+@inject TransportWebServiceClientFactory TransportWebServiceClientFactory
+
+@* TODO https://github.com/dotnet/aspnetcore/issues/48769 *@
+@inject IHttpContextAccessor HttpContextAccessor
+
+<PageTitle>Sign-In</PageTitle>
+
+Unauthorized
+
+@code {
+
+    [SupplyParameterFromQuery(Name = "return")]
+    public required string Return { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // TODO Temporary placeholder, but kind of fascinating that this works. 😎
+
+        try
+        {
+            var admissionServer = ConfigurationProxyProvider.GetAdmissionServer();
+
+            using var client = TransportWebServiceClientFactory.Create<IContextAuthenticationIdentityCommandClient>(admissionServer.Service);
+
+            var command = new ContextAuthenticationIdentityAuthCommand
+            {
+                ClientName = "swagger-ui",
+                AuthenticationIdentity = admissionServer.MaintenanceAuthenticationIdentity,
+                Secret = admissionServer.MaintenanceAuthenticationIdentitySecret,
+            };
+
+            var tokenObject = await client.AuthAsync(command);
+            var token = $"{tokenObject}";
+
+            HttpContextAccessor.HttpContext!.Response.Cookies.Append("access_token", token);
+
+            // 🚀
+            await Results.LocalRedirect(Return).ExecuteAsync(HttpContextAccessor.HttpContext);
+        }
+        catch
+        {
+            // 💥
+            await Results.Unauthorized().ExecuteAsync(HttpContextAccessor.HttpContext!);
+        }
+    }
+}
+

@@ -6,6 +6,7 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Shared.Validation</RootNamespace>
+		<NoWarn>IDE0290</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

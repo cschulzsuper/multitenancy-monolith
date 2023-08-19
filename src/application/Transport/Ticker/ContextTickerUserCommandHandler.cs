@@ -1,5 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker.Commands;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
@@ -17,7 +18,7 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
     private readonly ITickerUserManager _tickerUserManager;
     private readonly ITickerMessageManager _tickerMessageManager;
     private readonly ITickerUserVerificationManager _tickerUserVerificationManager;
-    private readonly IAllowedClientsProvider _allowedClientsProvider;
+    private readonly AllowedClient[] _allowedClients;
     private readonly ClaimsPrincipal _user;
     private readonly IEventStorage _eventStorage;
 
@@ -25,14 +26,14 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
         ITickerUserManager tickerUserManager,
         ITickerUserVerificationManager tickerUserVerificationManager,
         ITickerMessageManager tickerMessageManager,
-        IAllowedClientsProvider allowedClientsProvider,
+        IConfigurationProxyProvider configurationProxyProvider,
         ClaimsPrincipal user,
         IEventStorage eventStorage)
     {
         _tickerUserManager = tickerUserManager;
         _tickerMessageManager = tickerMessageManager;
         _tickerUserVerificationManager = tickerUserVerificationManager;
-        _allowedClientsProvider = allowedClientsProvider;
+        _allowedClients = configurationProxyProvider.GetAllowedClients();
         _user = user;
         _eventStorage = eventStorage;
     }
@@ -41,7 +42,7 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
     {
         var clientName = command.ClientName;
 
-        if (_allowedClientsProvider.Get().All(x => x.Service != clientName))
+        if (_allowedClients.All(x => x.Service != clientName))
         {
             TransportException.ThrowSecurityViolation($"Client '{clientName}' is not allowed to sign in");
         }

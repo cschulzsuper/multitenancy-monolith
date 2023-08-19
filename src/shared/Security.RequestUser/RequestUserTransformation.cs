@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
-using System;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -26,7 +26,7 @@ internal sealed class RequestUserTransformation : IClaimsTransformation
             var user = await _options.Transform(principal);
             if (user == principal)
             {
-                throw new Exception("Please create a new principal");
+                throw new UnreachableException("Please create a new principal.");
             }
 
             _context.User = user;
