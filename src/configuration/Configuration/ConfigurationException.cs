@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace ChristianSchulz.MultitenancyMonolith.Application;
+namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 
 public sealed class ConfigurationException : Exception
 {

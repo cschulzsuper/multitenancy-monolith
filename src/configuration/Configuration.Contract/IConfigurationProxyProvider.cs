@@ -4,6 +4,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Configuration
 {
     public interface IConfigurationProxyProvider
     {
+        AccessServer GetAccessServer();
         AdmissionServer GetAdmissionServer();
         AllowedClient[] GetAllowedClients();
         ServiceMapping[] GetServiceMappings();

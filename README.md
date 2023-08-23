@@ -125,7 +125,8 @@ I said monolith, but with the latests features related to a ticker system, it is
 
 ## Swagger Staging Access
   * /67 It took me a bit, and I'm still amazed that it is actually working. I added the groundwork for a sign-in. For now, this is located in the Swagger project, and it is only a simple redirect, with credentials from the configuration. While implementing this, I also refactored quite a bit in the web service layer. https://github.com/cschulzsuper/multitenancy-monolith/commit/01c1db9a0bec0d5314d0b2a602d28a13f3482bba
-  * /68 Instead of the sign-in endpoint, I turn the Swagger project into a .NET 8 Blazor SSR. The same redirect code, that was previously in the sign-in endpoint is now in a simple sign-in page. This temporary code will be removed in the next commit.
+  * /68 Instead of the sign-in endpoint, I turn the Swagger project into a .NET 8 Blazor SSR. The same redirect code, that was previously in the sign-in endpoint is now in a simple sign-in page. This temporary code will be removed in the next commit. https://github.com/cschulzsuper/multitenancy-monolith/commit/b36a8f32d3682d16dcd3bb3183d88ab11ad39ad4
+  * /69 A very minimalistic Blazor SSR sign-in that still has some issues caused by .NET 8 preview 7, but I'm satisfied with this first implementation. The naming of the web service clients and the related extension methods is not yet perfect, so I'll come back to that once more.
 
 # Backlog
 

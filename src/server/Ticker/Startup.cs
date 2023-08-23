@@ -101,7 +101,7 @@ public sealed class Startup
         });
 
         services.AddWebServices(webServices);
-        services.AddWebServiceTransportClients();
+        services.AddTransportWebServiceClientFactory();
 
         services.AddRequestUser(options => options.Configure(allowedClients));
         services.AddCaching();

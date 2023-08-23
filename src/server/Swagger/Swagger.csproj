@@ -27,5 +27,9 @@
 	  <ProjectReference Include="..\..\data\Web\Web.csproj" />
 	  <ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="wwwroot\css\custom.css" />
+	</ItemGroup>
 	
 </Project>

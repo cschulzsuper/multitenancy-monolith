@@ -1,3 +1,10 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Comic Sans MS', cursive;
+    background-color: #f4f4f4;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;

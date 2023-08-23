@@ -1,11 +1,11 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application;
-using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
+﻿using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using Microsoft.Extensions.Configuration;
 
 namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 
 public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
 {
+    private const string AccessServer = nameof(AccessServer);
     private const string AdmissionServer = nameof(AdmissionServer);
     private const string AllowedClients = nameof(AllowedClients);
     private const string ServiceMappings = nameof(ServiceMappings);
@@ -16,6 +16,18 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
     public ConfigurationProxyProvider(IConfiguration configuration)
     {
         _configuration = configuration;
+    }
+
+    public AccessServer GetAccessServer()
+    {
+        var accessServer = _configuration.GetSection(AccessServer).Get<AccessServer>();
+
+        if (accessServer == null)
+        {
+            ConfigurationException.ThrowNotConfigured(AccessServer);
+        }
+
+        return accessServer;
     }
 
     public AdmissionServer GetAdmissionServer()

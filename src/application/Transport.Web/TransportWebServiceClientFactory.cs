@@ -18,7 +18,7 @@ public sealed class TransportWebServiceClientFactory
     {
         var client = _webServiceClientFactory.Create(webService);
 
-        var typeClient = TransportWebServiceClients.Mappings[typeof(TClient)];
+        var typeClient = TransportWebServiceClientMappings.Mappings[typeof(TClient)];
 
         return (TClient)Activator.CreateInstance(typeClient, client)!;
     }
@@ -28,7 +28,7 @@ public sealed class TransportWebServiceClientFactory
     {
         var client = _webServiceClientFactory.Create(webService, value);
 
-        var typeClient = TransportWebServiceClients.Mappings[typeof(T)];
+        var typeClient = TransportWebServiceClientMappings.Mappings[typeof(T)];
 
         return (T)Activator.CreateInstance(typeClient, client)!;
     }

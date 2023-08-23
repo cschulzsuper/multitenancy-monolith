@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application;
 
-public static class TransportWebServiceClients
+public static class TransportWebServiceClientMappings
 {
     public static Dictionary<Type, Type> Mappings { get; } = new Dictionary<Type, Type>()
     {

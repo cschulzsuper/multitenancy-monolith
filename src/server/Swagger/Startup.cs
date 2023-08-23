@@ -1,7 +1,9 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
+using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
-using ChristianSchulz.MultitenancyMonolith.Server.Swagger.Blazor;
 using ChristianSchulz.MultitenancyMonolith.Server.Swagger.Endpoints;
+using ChristianSchulz.MultitenancyMonolith.Server.Swagger.Frontend;
+using ChristianSchulz.MultitenancyMonolith.Server.Swagger.Frontend.Services;
 using ChristianSchulz.MultitenancyMonolith.Server.Swagger.Security;
 using ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
 using ChristianSchulz.MultitenancyMonolith.Web;
@@ -88,9 +90,12 @@ public sealed class Startup
                     });
 
             services.AddAuthorization(options => options.FallbackPolicy = options.DefaultPolicy);
+
+            services
+                .AddRazorComponents()
+                .AddFrontendServices();
         }
 
-        services.AddRazorComponents();
         services.AddCors();
 
         services.AddScoped<SwaggerUIOptionsConfiguration>();
@@ -98,8 +103,10 @@ public sealed class Startup
         services.AddConfiguration();
 
         services.AddWebServices(webServices);
-        services.AddWebServiceSwaggerJsonClients();
-        services.AddWebServiceTransportClients();
+        services.AddSwaggerJsonWebServiceClients();
+
+        services.AddTransportWebServiceClientFactory();
+        services.AddAdmissionTransportWebServiceClients();
 
         // TODO https://github.com/dotnet/aspnetcore/issues/48769
         services.AddHttpContextAccessor();
