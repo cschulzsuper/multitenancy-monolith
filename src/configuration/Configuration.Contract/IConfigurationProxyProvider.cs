@@ -1,13 +1,12 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 
-namespace ChristianSchulz.MultitenancyMonolith.Configuration
+namespace ChristianSchulz.MultitenancyMonolith.Configuration;
+
+public interface IConfigurationProxyProvider
 {
-    public interface IConfigurationProxyProvider
-    {
-        AccessServer GetAccessServer();
-        AdmissionServer GetAdmissionServer();
-        AllowedClient[] GetAllowedClients();
-        ServiceMapping[] GetServiceMappings();
-        SwaggerDoc[] GetSwaggerDocs();
-    }
+    AccessServer GetAccessServer();
+    AdmissionServer GetAdmissionServer();
+    AllowedClient[] GetAllowedClients();
+    ServiceMapping[] GetServiceMappings();
+    SwaggerDoc[] GetSwaggerDocs();
 }

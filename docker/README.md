@@ -1,9 +1,15 @@
 **Create a development certifciate**
 
-> `dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\multitenancy-monolith.pfx" -p default`
+``` bash
+dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\multitenancy-monolith.pfx" -p default
+```
 
-> `dotnet dev-certs https --trust`
+``` bash
+dotnet dev-certs https --trust
+```
 
 **Execute docker compose**
 
-> `docker compose -p test`
+``` bash
+docker compose -p multitenancy-monolith up
+```

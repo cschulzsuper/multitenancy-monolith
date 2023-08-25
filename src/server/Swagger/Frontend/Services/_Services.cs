@@ -9,6 +9,8 @@ public static class _Services
 {
     public static IRazorComponentsBuilder AddFrontendServices(this IRazorComponentsBuilder builder)
     {
+        builder.Services.AddHttpContextAccessor();
+
         builder.Services.AddScoped<SignInService>();
 
         return builder;

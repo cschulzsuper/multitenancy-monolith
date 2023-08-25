@@ -46,35 +46,20 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
     {
         var allowedClients = _configuration.GetSection(AllowedClients).Get<AllowedClient[]>();
 
-        if (allowedClients == null)
-        {
-            ConfigurationException.ThrowNotConfigured(AllowedClients);
-        }
-
-        return allowedClients;
+        return allowedClients ?? Array.Empty<AllowedClient>();
     }
 
     public ServiceMapping[] GetServiceMappings()
     {
-        var serviceMapping = _configuration.GetSection(ServiceMappings).Get<ServiceMapping[]>();
+        var serviceMappings = _configuration.GetSection(ServiceMappings).Get<ServiceMapping[]>();
 
-        if (serviceMapping == null)
-        {
-            ConfigurationException.ThrowNotConfigured(ServiceMappings);
-        }
-
-        return serviceMapping;
+        return serviceMappings ?? Array.Empty<ServiceMapping>();
     }
 
     public SwaggerDoc[] GetSwaggerDocs()
     {
         var swaggerDocs = _configuration.GetSection(SwaggerDocs).Get<SwaggerDoc[]>();
 
-        if (swaggerDocs == null)
-        {
-            ConfigurationException.ThrowNotConfigured(SwaggerDocs);
-        }
-
-        return swaggerDocs;
+        return swaggerDocs ?? Array.Empty<SwaggerDoc>();
     }
 }

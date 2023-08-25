@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
@@ -10,7 +9,7 @@ public static class _Services
     public static IServiceCollection AddAdmissionTransportWebServiceClients(this IServiceCollection services)
     {
         services.AddWebServiceTransportDefaultClient<IContextAuthenticationIdentityCommandClient>(
-            configuration => configuration.GetAdmissionServer().Service);
+            configuration => configuration.GetAdmissionServer().BackendService);
 
         return services;
     }

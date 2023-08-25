@@ -32,7 +32,7 @@ internal static class MockWebApplication
         {"ServiceMappings:0:UniqueName", ClientName},
         {"ServiceMappings:0:Url", "http://localhost"},
 
-        {"AdmissionServer:Service", ClientName},
+        {"AdmissionServer:BackendService", ClientName},
 
         {"AllowedClients:0:Service", ClientName},
         {"AllowedClients:0:Scopes:0", "swagger-json"},

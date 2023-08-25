@@ -10,7 +10,7 @@
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..</DockerfileContext>
 		<DockerfileTag>multitenancy-monolith-swagger</DockerfileTag>
-		<DockerfileRunArguments>--name multitenancy-monolith-swagger</DockerfileRunArguments>
+		<DockerfileRunArguments>--name multitenancy-monolith-swagger -p 5108:5108 -p 7272:7272 -p 7273:7273</DockerfileRunArguments>
 		<NoWarn>IDE0290</NoWarn>
 	</PropertyGroup>
 

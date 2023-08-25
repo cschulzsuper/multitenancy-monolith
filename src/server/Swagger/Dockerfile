@@ -5,6 +5,7 @@ USER app
 WORKDIR /app
 EXPOSE 5108
 EXPOSE 7272
+EXPOSE 7273
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
 WORKDIR /src

@@ -77,7 +77,7 @@ internal static class MockWebApplication
         {"ServiceMappings:1:UniqueName", "ticker"},
         {"ServiceMappings:1:Url", "http://localhost"},
 
-        {"AdmissionServer:Service", ClientName},
+        {"AdmissionServer:BackendService", ClientName},
 
         {"AllowedClients:0:Service", "swagger"},
         {"AllowedClients:0:Scopes:0", "swagger-json"},

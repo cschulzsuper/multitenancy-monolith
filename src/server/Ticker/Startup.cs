@@ -66,7 +66,7 @@ public sealed class Startup
             .ToArray();
 
         webServices = configuredServicesMappings
-            .Where(servicesMapping => servicesMapping.UniqueName == configuredAdmissionServer.Service)
+            .Where(servicesMapping => servicesMapping.UniqueName == configuredAdmissionServer.BackendService)
             .Select(servicesMapping => servicesMapping.UniqueName)
             .Distinct()
             .ToArray();

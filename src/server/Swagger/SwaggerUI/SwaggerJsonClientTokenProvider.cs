@@ -23,12 +23,12 @@ internal sealed class SwaggerJsonClientTokenProvider
     public async Task<string> GetAsync()
     {
         using var client = _transportWebServiceClientFactory
-            .Create<IContextAuthenticationIdentityCommandClient>(_admissionServer.Service);
+            .Create<IContextAuthenticationIdentityCommandClient>(_admissionServer.BackendService);
 
         var command = new ContextAuthenticationIdentityAuthCommand
         {
-            ClientName = "swagger-ui-host",
-            AuthenticationIdentity = _admissionServer.MaintenanceAuthenticationIdentity,
+            ClientName = _admissionServer.MaintenanceAuthenticationIdentityClientName,
+            AuthenticationIdentity = _admissionServer.MaintenanceAuthenticationIdentityUniqueName,
             Secret = _admissionServer.MaintenanceAuthenticationIdentitySecret
         };
 

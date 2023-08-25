@@ -7,17 +7,23 @@ using ChristianSchulz.MultitenancyMonolith.Server.Swagger.Frontend.Services;
 using ChristianSchulz.MultitenancyMonolith.Server.Swagger.Security;
 using ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
 using ChristianSchulz.MultitenancyMonolith.Web;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger;
 
@@ -41,6 +47,8 @@ public sealed class Startup
     }
 
     private void LoadRequiredConfiguration(
+        out string admissionClientName,
+        out string admissionFrontendUrl,
         out string[] webServices)
     {
         var configurationProxyProvider = new ConfigurationProxyProvider(_configuration);
@@ -51,50 +59,86 @@ public sealed class Startup
 
         webServices = configuredServicesMappings
             .Where(servicesMapping =>
-                servicesMapping.UniqueName == configuredAdmissionServer.Service ||
+                servicesMapping.UniqueName == configuredAdmissionServer.BackendService ||
                 configuredSwaggerDocs.Select(swaggerDoc => swaggerDoc.TestService).Contains(servicesMapping.UniqueName))
             .Select(x => x.UniqueName)
             .Distinct()
             .ToArray();
+
+        admissionClientName = configuredAdmissionServer.ClientName;
+
+        admissionFrontendUrl = configuredServicesMappings
+            .Where(servicesMapping =>
+                servicesMapping.UniqueName == configuredAdmissionServer.FrontendService)
+            .Select(x => x.Url)
+            .Single();
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
         LoadRequiredConfiguration(
+            out var admissionClientName,
+            out var admissionFrontendUrl,
             out var webServices);
 
-        if (!_environment.IsDevelopment())
+        services.AddHttpsRedirection(options =>
         {
-            services.AddHttpsRedirection(options =>
+            var httpsRedirectPortSetting = Environment.GetEnvironmentVariable("ASPNETCORE_HTTPS_REDIRECT_PORT");
+            var httpsRedirectPortValid = ushort.TryParse(httpsRedirectPortSetting, out ushort httpsRedirectPort);
+            if (httpsRedirectPortValid) 
             {
-                var httpsRedirectPortSetting = Environment.GetEnvironmentVariable("ASPNETCORE_HTTPS_REDIRECT_PORT");
-                var httpsRedirectPortValid = ushort.TryParse(httpsRedirectPortSetting, out ushort httpsRedirectPort);
-                if (httpsRedirectPortValid) 
+                options.HttpsPort = httpsRedirectPort;
+            }
+        });
+
+        services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
+        services.AddAuthentication(BearerTokenDefaults.AuthenticationScheme)
+            .AddBearerToken(options =>
                 {
-                    options.HttpsPort = httpsRedirectPort;
-                }
-            });
-
-            services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
-            services.AddAuthentication(BearerTokenDefaults.AuthenticationScheme)
-                .AddBearerToken(options =>
+                    options.Configure();
+                    options.ForwardChallenge = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+            .AddCookie(options =>
+                {
+                    options.LoginPath = "/sign-in";
+                    options.ReturnUrlParameter = "return";
+                    options.Cookie.Name = "access_token";
+                    options.Events = new CookieAuthenticationEvents()
                     {
-                        options.Configure();
-                        options.ForwardChallenge = CookieAuthenticationDefaults.AuthenticationScheme;
-                    })
-                .AddCookie(options =>
-                    {
-                        options.LoginPath = "/sign-in";
-                        options.ReturnUrlParameter = "return";
-                        options.Cookie.Name = "access_token";
-                    });
+                        OnRedirectToLogin = (context) =>
+                        {
+                            var _originalScheme = context.Request.Scheme;
+                            var _originalHost = context.Request.Host;
+                            var _originalPath = context.Request.Path;
+                            var _originalPathBase = context.Request.PathBase;
 
-            services.AddAuthorization(options => options.FallbackPolicy = options.DefaultPolicy);
+                            var redirectUri = $"{_originalScheme}://{_originalHost}{_originalPathBase}{_originalPath}{context.Request.QueryString}";
 
-            services
-                .AddRazorComponents()
-                .AddFrontendServices();
-        }
+                            var queryParameter = new[]
+                            {
+                                new KeyValuePair<string, string?>(options.ReturnUrlParameter, redirectUri),
+                                new KeyValuePair<string, string?>("client-name", admissionClientName)
+                            };
+
+                            var loginUri = $"{admissionFrontendUrl}{options.LoginPath}{QueryString.Create(queryParameter)}";
+
+                            context.HttpContext.Response.Redirect(loginUri);
+
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
+        services.AddAuthorization(options => 
+        {
+            options.FallbackPolicy = _environment.IsDevelopment() 
+                ? options.FallbackPolicy 
+                : options.DefaultPolicy;
+        });
+
+        services
+            .AddRazorComponents()
+            .AddFrontendServices();
 
         services.AddCors();
 
@@ -107,9 +151,6 @@ public sealed class Startup
 
         services.AddTransportWebServiceClientFactory();
         services.AddAdmissionTransportWebServiceClients();
-
-        // TODO https://github.com/dotnet/aspnetcore/issues/48769
-        services.AddHttpContextAccessor();
     }
 
     public void Configure(IApplicationBuilder app)
@@ -119,14 +160,11 @@ public sealed class Startup
         app.UseCors();
         app.UseStaticFiles();
 
-        if (!_environment.IsDevelopment())
-        {
-            app.UseRouting();
-            app.UseAntiforgery();
+        app.UseRouting();
+        app.UseAntiforgery();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
-        }
+        app.UseAuthentication();
+        app.UseAuthorization();
       
         app.UseSwaggerUI(options =>
         {         
@@ -137,17 +175,14 @@ public sealed class Startup
                 .Configure(options);           
         });
 
-        if (!_environment.IsDevelopment())
+        app.UseEndpoints(endpoints =>
         {
-            app.UseEndpoints(endpoints =>
-            {
-                var group = endpoints
-                    .MapGroup("/")
-                    .AllowAnonymous();
+            var group = endpoints
+                .MapGroup("/")
+                .AllowAnonymous();
 
-                group.MapRazorComponents<App>();
-                group.MapIndex();
-            });
-        }
+            group.MapRazorComponents<App>();
+            group.MapIndex();
+        });
     }
 }
