@@ -9,6 +9,9 @@ public static class _Services
 {
     public static IRazorComponentsBuilder AddDevDiaryServices(this IRazorComponentsBuilder builder)
     {
+
+        builder.Services.AddScoped<PostService>();
+
         return builder;
     }
 }

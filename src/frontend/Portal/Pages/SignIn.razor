@@ -15,11 +15,11 @@
         <h1 class="card-title">Sign-In</h1>
 
         ﻿@if (_errorMessage != null)
-        {
-            <div role="alert">
+    {
+        <div role="alert">
                  @_errorMessage
             </div>
-        } 
+    } 
 
         <EditForm id="account" 
                   method="post" 
@@ -64,36 +64,36 @@ public string? ClientName { get; set; }
 
 public async Task Submit()
 {
-    try
-    {
-        Model.ClientName = ClientName;
+try
+{
+    Model.ClientName = ClientName;
 
-        await SignInService.SignInAsync(Model);
+    await SignInService.SignInAsync(Model);
 
-        RedirectSuccess();
-    }
-    catch(Exception e) when (e is not NavigationException)
-    {
-        _errorMessage = e.Message;
-    }
+    RedirectSuccess();
+}
+catch(Exception e) when (e is not NavigationException)
+{
+    _errorMessage = e.Message;
+}
 }
 
 private void RedirectSuccess()
 {
-    var target = Return ?? "/";
-    var targetUri = new Uri(target, UriKind.RelativeOrAbsolute);
+var target = Return ?? "/";
+var targetUri = new Uri(target, UriKind.RelativeOrAbsolute);
 
-    if (!targetUri.IsAbsoluteUri)
-    {
-        // TODO https://github.com/dotnet/aspnetcore/issues/49670
+if (!targetUri.IsAbsoluteUri)
+{
+    // TODO https://github.com/dotnet/aspnetcore/issues/49670
 
-        var relative = NavigationManager.ToBaseRelativePath(NavigationManager.ToAbsoluteUri(target).AbsoluteUri);
-        var absolute = NavigationManager.ToAbsoluteUri(relative).AbsoluteUri;
-        NavigationManager.NavigateTo(absolute, true);
-    } 
-    else
-    {
-        NavigationManager.NavigateTo(targetUri.AbsoluteUri, true);
-    }
+    var relative = NavigationManager.ToBaseRelativePath(NavigationManager.ToAbsoluteUri(target).AbsoluteUri);
+    var absolute = NavigationManager.ToAbsoluteUri(relative).AbsoluteUri;
+    NavigationManager.NavigateTo(absolute, true);
+} 
+else
+{
+    NavigationManager.NavigateTo(targetUri.AbsoluteUri, true);
+}
 }
 }

@@ -131,8 +131,13 @@ public sealed class Startup
                     };
                 });
 
-        services.AddAuthorization(options => options.FallbackPolicy = options.DefaultPolicy);
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = _environment.IsDevelopment()
+                ? options.FallbackPolicy
+                : options.DefaultPolicy;
+        });
+
         services
             .AddRazorComponents()
             .AddDevDiaryServices();

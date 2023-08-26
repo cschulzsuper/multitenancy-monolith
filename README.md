@@ -135,7 +135,8 @@ Clone the repository and start the [compose file](./docker/README.md).
   * /70 Changed some minor things. The biggest change is an additional port mapping for the `Swagger` client. I use this temporarily to make sure that the Blazor SSR does a full reload for the Swagger UI redirect after the sign-in. https://github.com/cschulzsuper/multitenancy-monolith/commit/89a771b7c68d7d1bc0fe309fa43d1c0eff35419b
 
 ### Development Diary
-  * /71 I have not touched the seed data implementation for quite a while, but the moment has arrived to give it a much-needed overhaul. Beyond its existing applications, I plan to integrate it into a development diary. In a first step, I've separated the sign-in functionality from the `Swagger` project and moved it into a new frontend layer.
+  * /71 I have not touched the seed data implementation for quite a while, but the moment has arrived to give it a much-needed overhaul. Beyond its existing applications, I plan to integrate it into a development diary. In a first step, I've separated the sign-in functionality from the `Swagger` project and moved it into a new frontend layer. https://github.com/cschulzsuper/multitenancy-monolith/commit/d95d613a86d4abfd2260c2ff3c6d1dfdbf88713f
+  * /72 I'm sticking to the wireframe styles, when it comes to the development diary. This was more pain than gain, given my limited interest in UI/UX design.
 
 # Backlog
 
