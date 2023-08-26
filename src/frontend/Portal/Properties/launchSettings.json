@@ -1,0 +1,65 @@
+{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "launchUrl": "http://localhost:5015",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MM_Portal_ServiceMappings__0__UniqueName": "server",
+        "MM_Portal_ServiceMappings__0__Url": "http://localhost:5177",
+        "MM_Portal_ServiceMappings__1__UniqueName": "portal",
+        "MM_Portal_ServiceMappings__1__Url": "http://localhost:5015"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5015"
+    },
+    "https (development)": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "launchUrl": "https://localhost:7053",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MM_Portal_ServiceMappings__0__UniqueName": "server",
+        "MM_Portal_ServiceMappings__0__Url": "https://localhost:7207",
+        "MM_Portal_ServiceMappings__1__UniqueName": "portal",
+        "MM_Portal_ServiceMappings__1__Url": "https://localhost:7053"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7053;http://localhost:5015"
+    },
+    "https (staging)": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "launchUrl": "https://localhost:7053",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Staging",
+        "MM_Portal_ServiceMappings__0__UniqueName": "server",
+        "MM_Portal_ServiceMappings__0__Url": "https://localhost:7207",
+        "MM_Portal_ServiceMappings__1__UniqueName": "portal",
+        "MM_Portal_ServiceMappings__1__Url": "https://localhost:7053"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7053;http://localhost:5015"
+    },
+    "Docker (development)": {
+      "commandName": "Docker",
+      "launchBrowser": false,
+      "launchUrl": "https://localhost:7053",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HTTP_PORTS": "5015",
+        "ASPNETCORE_HTTPS_PORTS": "7053",
+        "MM_Portal_ServiceMappings__0__UniqueName": "server",
+        "MM_Portal_ServiceMappings__0__Url": "https://localhost:7207",
+        "MM_Portal_ServiceMappings__1__UniqueName": "portal",
+        "MM_Portal_ServiceMappings__1__Url": "https://localhost:7053"
+      },
+      "publishAllPorts": true,
+      "useSSL": true,
+      "httpPort": 5015,
+      "sslPort": 7053
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json"
+}

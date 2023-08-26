@@ -7,14 +7,15 @@ EXPOSE 5051
 EXPOSE 7206
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY . .
 WORKDIR /src/server/Ticker
 RUN dotnet restore "Ticker.csproj"
-RUN dotnet build "Ticker.csproj" -c Release -o /app/build
+RUN dotnet build "Ticker.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Ticker.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Ticker.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

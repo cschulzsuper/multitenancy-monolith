@@ -100,14 +100,14 @@ public sealed class Startup
             options.ConfigureAuthorization();
         });
 
-        services.AddWebServices(webServices);
-        services.AddTransportWebServiceClientFactory();
-
         services.AddRequestUser(options => options.Configure(allowedClients));
         services.AddCaching();
         services.AddConfiguration();
         services.AddEvents(options => options.Configure());
         services.AddPlannedJobs(options => options.Configure());
+
+        services.AddWebServices(webServices);
+        services.AddTransportWebServiceClientFactory();
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryScheduleData();

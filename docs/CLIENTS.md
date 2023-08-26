@@ -1,32 +1,50 @@
 # Clients
 
-## `swagger`
+## Frontend Clients
 
-  The `swagger` client must provide this value during authentication. 
+Frontend clients are applications or parts of an application that access backend clients.
 
-  * The `swagger` client has the `swagger-json` `scope` to read the `swagger.json`.
-  * The `swagger` client has the `endpoints` `scope` to access all `endpoints`.
+### `swagger-ui`
 
-## `endpoint-tests`
+  The `swagger-ui` client must provide this value during authentication. 
 
-  All endpoint tests project use this value for testing. 
+  * The `swagger-ui` client has the `swagger-json` `scope` to read the `swagger.json`.
+    * The `swagger-ui` loads the `swagger.json` files.
+  * The `swagger-ui` client has the `endpoints` `scope` to access all `endpoints`.
+    * This is required to access the REST API.
 
-  * The `endpoints-tests` client has the `endpoints` `scope` to access all `endpoints`.
+### `swagger-ui-host`
 
-## `integration-tests`
+  The `swagger-ui-host` client must provide this value during authentication. 
 
-  All integration tests project use this value for testing. 
+  * The `swagger-ui-host` client has the `swagger-json` `scope` to read the `swagger.json`.
+    * The `swagger-ui-host` tests the availability of `swagger.json` files.
+  * The `swagger-ui-host` client has the `endpoints` `scope` to access all `endpoints`.
+    * This is **currently** required for token verification.
 
-  * The `integration-tests` client has the `endpoints` `scope` to access all `endpoints`.
+### `portal`
 
-## `multitenancy-tests`
+  The `portal` client must provide this value during authentication. 
 
-  All multitenancy tests project use this value for testing. 
+  * The `portal` client has the `pages` `scope` to access all `portal` `pages`.
+    * This is **currently** required for the temporary `portal` index page.
+  * The `portal` client has the `endpoints` `scope` to access all `server` `endpoints`.
+    * This is **currently** required for token verification.
 
-  * The `multitenancy-tests` client has the `endpoints` `scope` to access all `endpoints`.
+### `dev-diary`
 
-## `security-tests`
+  The `dev-diary` client must provide this value during authentication. 
 
-  All security tests project use this value for testing. 
+  * The `dev-diary` client has the `pages` `scope` to access all `dev-diary` `pages`.
+    * This is required for the `dev-diary` pages.
+  * The `dev-diary` client has the `endpoints` `scope` to access all `server` `endpoints`.
+    * This is **currently** required for token verification.
 
-  * The `security-tests` client has the `endpoints` `scope` to access all `endpoints`.
+## Test Clients
+
+Test clients are only relevant in backend tests. Four different client names are used in different scenarios. 
+
+* `endpoint-tests`
+* `integration-tests`
+* `multitenancy-tests`
+* `security-tests`

@@ -1,0 +1,99 @@
+﻿@page "/sign-in"
+
+@attribute [AllowAnonymous]
+
+@layout EmptyLayout
+
+@inject SignInService SignInService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Sign-In</PageTitle>
+
+<div class="container">
+    <div class="card">
+
+        <h1 class="card-title">Sign-In</h1>
+
+        ﻿@if (_errorMessage != null)
+        {
+            <div role="alert">
+                 @_errorMessage
+            </div>
+        } 
+
+        <EditForm id="account" 
+                  method="post" 
+                  Model="@Model" 
+                  OnValidSubmit="Submit" 
+                  FormName="login">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <InputText id="username" 
+                           class="form-control" 
+                           aria-required="true"
+                           @bind-Value="Model.Username"  />
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <InputText id="password"
+                           class="form-control"
+                           type="password"
+                           aria-required="true"
+                           @bind-Value="Model.Password" />
+            </div>
+            <div class="form-group">
+                <button id="login-submit"
+                        class="btn btn-primary"
+                        type="submit">Submit</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+private string? _errorMessage;
+
+[SupplyParameterFromForm]
+public SignInModel Model { get; set; } = new();
+
+[SupplyParameterFromQuery(Name = "return")]
+public string? Return { get; set; }
+
+[SupplyParameterFromQuery(Name = "client-name")]
+public string? ClientName { get; set; }
+
+public async Task Submit()
+{
+    try
+    {
+        Model.ClientName = ClientName;
+
+        await SignInService.SignInAsync(Model);
+
+        RedirectSuccess();
+    }
+    catch(Exception e) when (e is not NavigationException)
+    {
+        _errorMessage = e.Message;
+    }
+}
+
+private void RedirectSuccess()
+{
+    var target = Return ?? "/";
+    var targetUri = new Uri(target, UriKind.RelativeOrAbsolute);
+
+    if (!targetUri.IsAbsoluteUri)
+    {
+        // TODO https://github.com/dotnet/aspnetcore/issues/49670
+
+        var relative = NavigationManager.ToBaseRelativePath(NavigationManager.ToAbsoluteUri(target).AbsoluteUri);
+        var absolute = NavigationManager.ToAbsoluteUri(relative).AbsoluteUri;
+        NavigationManager.NavigateTo(absolute, true);
+    } 
+    else
+    {
+        NavigationManager.NavigateTo(targetUri.AbsoluteUri, true);
+    }
+}
+}

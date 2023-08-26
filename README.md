@@ -8,6 +8,8 @@ If you are developing an ASP.NET Core application yourself and are looking for a
 
 * **I said monolith, but the monster is already evolving beyond that. 🚀**
 
+* **Check out the [container diagram](./docs/CONTAINERS.md).** 
+
 ## Getting Started
 
 Clone the repository and start the [compose file](./docker/README.md).
@@ -127,10 +129,13 @@ Clone the repository and start the [compose file](./docker/README.md).
   * /66 Puh. A first `docker-compose.yml` is now integrated. Too have easy configuration of ports and host, I had to change some things in the configuration. There will be more `Docker` stuff, and I also have the feeling, that the configuration will change again. https://github.com/cschulzsuper/multitenancy-monolith/commit/b0f897aebd3b0a44413988e79e54fc2248977caa
 
 ### Swagger Staging Access
-  * /67 It took me a bit, and I'm still amazed that it is actually working. I added the groundwork for a sign-in. For now, this is located in the Swagger project, and it is only a simple redirect, with credentials from the configuration. While implementing this, I also refactored quite a bit in the web service layer. https://github.com/cschulzsuper/multitenancy-monolith/commit/01c1db9a0bec0d5314d0b2a602d28a13f3482bba
-  * /68 Instead of the sign-in endpoint, I turn the Swagger project into a .NET 8 Blazor SSR. The same redirect code, that was previously in the sign-in endpoint is now in a simple sign-in page. This temporary code will be removed in the next commit. https://github.com/cschulzsuper/multitenancy-monolith/commit/b36a8f32d3682d16dcd3bb3183d88ab11ad39ad4
-  * /69 A very minimalistic Blazor SSR sign-in that still has some issues caused by .NET 8 preview 7, but I'm satisfied with this first implementation. The naming of the web service clients and the related extension methods is not yet perfect, so I'll come back to that once more. https://github.com/cschulzsuper/multitenancy-monolith/commit/d200a4fe5070305c07fa9197a352d16f76f02a6c
-  * /70 I kept the naming, but changed some minor things. The biggest change is an additional port mapping for the swagger client. I use this for now to make sure that the Blazor SSR does a full reload for the Swagger UI redirect after the sign-in.
+  * /67 It took me a bit, and I'm still amazed that it is actually working. I added the groundwork for a sign-in. For now, this is located in the `Swagger` project, and it is only a simple redirect, with credentials from the configuration. While implementing this, I also refactored quite a bit in the web service layer. https://github.com/cschulzsuper/multitenancy-monolith/commit/01c1db9a0bec0d5314d0b2a602d28a13f3482bba
+  * /68 I turned the `Swagger` project into a .NET 8 Blazor SSR. The same redirect code, that was previously in the `sign-in` endpoint is now in a simple `sign-in` page. https://github.com/cschulzsuper/multitenancy-monolith/commit/b36a8f32d3682d16dcd3bb3183d88ab11ad39ad4
+  * /69 A very minimalistic Blazor SSR `sign-in` page that still has some issues caused by .NET 8 preview 7, but I'm satisfied with this first implementation. https://github.com/cschulzsuper/multitenancy-monolith/commit/d200a4fe5070305c07fa9197a352d16f76f02a6c
+  * /70 Changed some minor things. The biggest change is an additional port mapping for the `Swagger` client. I use this temporarily to make sure that the Blazor SSR does a full reload for the Swagger UI redirect after the sign-in. https://github.com/cschulzsuper/multitenancy-monolith/commit/89a771b7c68d7d1bc0fe309fa43d1c0eff35419b
+
+### Development Diary
+  * /71 I have not touched the seed data implementation for quite a while, but the moment has arrived to give it a much-needed overhaul. Beyond its existing applications, I plan to integrate it into a development diary. In a first step, I've separated the sign-in functionality from the `Swagger` project and moved it into a new frontend layer.
 
 # Backlog
 

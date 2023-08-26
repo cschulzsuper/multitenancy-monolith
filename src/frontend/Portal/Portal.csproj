@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Frontend.Portal</RootNamespace>
+		<UserSecretsId>b769db1d-76e1-422d-88d0-fc82ba94e02c</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+		<DockerfileTag>multitenancy-monolith-portal</DockerfileTag>
+		<DockerfileRunArguments>--name multitenancy-monolith-portal</DockerfileRunArguments>
+		<NoWarn>IDE0290</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\application\Transport.Web\Transport.Web.csproj" />
+		<ProjectReference Include="..\..\configuration\Configuration\Configuration.csproj" />
+		<ProjectReference Include="..\..\data\Web\Web.csproj" />
+		<ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
+	</ItemGroup>
+
+</Project>

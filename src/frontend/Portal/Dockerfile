@@ -3,21 +3,21 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS base
 USER app
 WORKDIR /app
-EXPOSE 5177
-EXPOSE 7207
+EXPOSE 5015
+EXPOSE 7053
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY . .
-WORKDIR /src/server/Server
-RUN dotnet restore "Server.csproj"
-RUN dotnet build "Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR /src/frontend/Portal
+RUN dotnet restore "Portal.csproj"
+RUN dotnet build "Portal.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Portal.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Server.dll"]
+ENTRYPOINT ["dotnet", "Portal.dll"]
