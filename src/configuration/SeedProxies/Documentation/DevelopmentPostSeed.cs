@@ -2,7 +2,7 @@
 
 namespace ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Documentation;
 
-public class DevelopmentPostSeed
+public sealed class DevelopmentPostSeed
 {
     public required string Title { get; init; }
 

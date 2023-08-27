@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Admission;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
@@ -16,11 +17,20 @@ public static class _Configure
 {
     public static IServiceProvider ConfigureAuthenticationIdentities(this IServiceProvider services)
     {
-        var authenticationIdentities = services
-            .GetRequiredService<ISeedDataProvider>()
-            .Get<AuthenticationIdentity>("Admission", "AuthenticationIdentities");
+        var authenticationIdentitySeeds = services
+            .GetRequiredService<IConfigurationProxyProvider>()
+            .GetSeedData<AuthenticationIdentitySeed>("admission/authentication-identities");
 
         using var scope = services.CreateScope();
+
+        var authenticationIdentities = authenticationIdentitySeeds
+            .Select(seed => new AuthenticationIdentity
+            {
+                UniqueName = seed.UniqueName,
+                MailAddress = seed.MailAddress,
+                Secret = seed.Secret
+            })
+            .ToArray();
 
         scope.ServiceProvider
             .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -31,38 +41,55 @@ public static class _Configure
 
     public static IServiceProvider ConfigureAccountGroups(this IServiceProvider services)
     {
-        var accountGroups = services
-            .GetRequiredService<ISeedDataProvider>()
-            .GetGrouped<AccountMember>("Access", "AccountMembers")
-            .Select(x => x.Key)
-            .Distinct();
-
-        var @objects = accountGroups
-            .Select(group => new AccountGroup { UniqueName = group })
-            .ToArray();
+        var accountGroupSeeds = services
+            .GetRequiredService<IConfigurationProxyProvider>()
+            .GetSeedData<AccountGroupSeed>("access/account-groups");
 
         using var scope = services.CreateScope();
 
+        var accountGroups = accountGroupSeeds
+            .Select(seed => new AccountGroup
+            {
+                UniqueName = seed.UniqueName,
+            })
+            .ToArray();
+
         scope.ServiceProvider
             .GetRequiredService<IRepository<AccountGroup>>()
-            .Insert(@objects);
+            .Insert(accountGroups);
 
         return services;
     }
 
     public static IServiceProvider ConfigureAccountMembers(this IServiceProvider services)
     {
-        var groupedAccountMembers = services
-            .GetRequiredService<ISeedDataProvider>()
-            .GetGrouped<AccountMember>("Access", "AccountMembers");
+        var groupedAccountMemberSeeds = services
+            .GetRequiredService<IConfigurationProxyProvider>()
+            .GetSeedData<AccountMemberSeed>("access/account-members")
+            .GroupBy(x => x.AccountGroup);
 
-        foreach (var accountGroup in groupedAccountMembers)
+        foreach (var accountMemberSeedsGroup in groupedAccountMemberSeeds)
         {
-            using var scope = services.CreateMultitenancyScope(accountGroup.Key);
+            using var scope = services.CreateMultitenancyScope(accountMemberSeedsGroup.Key);
+
+            var accountMembers = accountMemberSeedsGroup
+                .Select(seed => new AccountMember
+                {
+                    UniqueName = seed.UniqueName,
+                    MailAddress = seed.MailAddress,
+                    
+                    AuthenticationIdentities = seed.AuthenticationIdentities
+                        .Select(authenticationIdentity => new AccountMemberAuthenticationIdentity 
+                        { 
+                            UniqueName = authenticationIdentity 
+                        })
+                        .ToArray()
+                })
+                .ToArray();
 
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountMember>>()
-                .Insert(accountGroup.Value);
+                .Insert(accountMembers);
         }
 
         return services;
@@ -70,17 +97,29 @@ public static class _Configure
 
     public static IServiceProvider ConfigureTickerUsers(this IServiceProvider services)
     {
-        var groupedTickerUsers = services
-            .GetRequiredService<ISeedDataProvider>()
-            .GetGrouped<TickerUser>("Ticker", "TickerUsers");
+        var groupedTickerUserSeeds = services
+            .GetRequiredService<IConfigurationProxyProvider>()
+            .GetSeedData<TickerUserSeed>("ticker/ticker-users")
+            .GroupBy(x => x.AccountGroup);
 
-        foreach (var group in groupedTickerUsers)
+        foreach (var tickerUserSeedsGroup in groupedTickerUserSeeds)
         {
-            using var scope = services.CreateMultitenancyScope(group.Key);
+            using var scope = services.CreateMultitenancyScope(tickerUserSeedsGroup.Key);
+
+            var tickerUsers = tickerUserSeedsGroup
+                .Select(seed => new TickerUser
+                {
+                    DisplayName = seed.DisplayName,
+                    MailAddress = seed.MailAddress,
+                    Secret = seed.Secret,
+                    SecretState = seed.SecretState,
+                    SecretToken = seed.SecretToken
+                })
+                .ToArray();
 
             scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerUser>>()
-                .Insert(group.Value);
+                .Insert(tickerUsers);
         }
 
         return services;
@@ -92,24 +131,23 @@ public static class _Configure
             .GetRequiredService<IConfigurationProxyProvider>()
             .GetSeedData<DevelopmentPostSeed>("documentation/development-posts");
 
-        foreach (var developmentPostSeed in developmentPostSeeds)
-        {
-            using var scope = services.CreateScope();
+        using var scope = services.CreateScope();
 
-            var developmentPost = new DevelopmentPost
+        var developmentPosts = developmentPostSeeds
+            .Select(seed => new DevelopmentPost
             {
-                Index = Array.IndexOf(developmentPostSeeds, developmentPostSeed),
-                Title = developmentPostSeed.Title,
-                DateTime = developmentPostSeed.DateTime,
-                Text = developmentPostSeed.Text,
-                Link = developmentPostSeed.Link,
-                Tags = developmentPostSeed.Tags
-            };
+                Index = Array.IndexOf(developmentPostSeeds, seed),
+                Title = seed.Title,
+                DateTime = seed.DateTime,
+                Text = seed.Text,
+                Link = seed.Link,
+                Tags = seed.Tags
+            })
+            .ToArray();
 
-            scope.ServiceProvider
-                .GetRequiredService<IRepository<DevelopmentPost>>()
-                .Insert(developmentPost);
-        }
+        scope.ServiceProvider
+            .GetRequiredService<IRepository<DevelopmentPost>>()
+            .Insert(developmentPosts);
 
         return services;
     }

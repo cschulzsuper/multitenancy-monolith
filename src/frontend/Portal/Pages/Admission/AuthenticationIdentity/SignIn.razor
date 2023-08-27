@@ -15,11 +15,11 @@
         <h1 class="card-title">Sign-In</h1>
 
         ﻿@if (_errorMessage != null)
-    {
-        <div role="alert">
-                 @_errorMessage
-            </div>
-    } 
+        {
+            <div role="alert">
+                     @_errorMessage
+                </div>
+        } 
 
         <EditForm id="account" 
                   method="post" 
@@ -51,49 +51,54 @@
 </div>
 
 @code {
-private string? _errorMessage;
+    private string? _errorMessage;
 
-[SupplyParameterFromForm]
-public SignInModel Model { get; set; } = new();
+    [SupplyParameterFromForm]
+    public SignInModel Model { get; set; } = new();
 
-[SupplyParameterFromQuery(Name = "return")]
-public string? Return { get; set; }
+    [SupplyParameterFromQuery(Name = "return")]
+    public string? Return { get; set; }
 
-[SupplyParameterFromQuery(Name = "client-name")]
-public string? ClientName { get; set; }
+    [SupplyParameterFromQuery(Name = "client-name")]
+    public string? ClientName { get; set; }
 
-public async Task Submit()
-{
-try
-{
-    Model.ClientName = ClientName;
+    protected override void OnInitialized()
+    {
+        SignInService.InitializeModel(Model);
+    }
 
-    await SignInService.SignInAsync(Model);
+    public async Task Submit()
+    {
+        try
+        {
+            Model.ClientName = ClientName;
 
-    RedirectSuccess();
-}
-catch(Exception e) when (e is not NavigationException)
-{
-    _errorMessage = e.Message;
-}
-}
+            await SignInService.SignInAsync(Model);
 
-private void RedirectSuccess()
-{
-var target = Return ?? "/";
-var targetUri = new Uri(target, UriKind.RelativeOrAbsolute);
+            RedirectSuccess();
+        }
+        catch(Exception e) when (e is not NavigationException)
+        {
+            _errorMessage = e.Message;
+        }
+    }
 
-if (!targetUri.IsAbsoluteUri)
-{
-    // TODO https://github.com/dotnet/aspnetcore/issues/49670
+    private void RedirectSuccess()
+    {
+        var target = Return ?? "/";
+        var targetUri = new Uri(target, UriKind.RelativeOrAbsolute);
 
-    var relative = NavigationManager.ToBaseRelativePath(NavigationManager.ToAbsoluteUri(target).AbsoluteUri);
-    var absolute = NavigationManager.ToAbsoluteUri(relative).AbsoluteUri;
-    NavigationManager.NavigateTo(absolute, true);
-} 
-else
-{
-    NavigationManager.NavigateTo(targetUri.AbsoluteUri, true);
-}
-}
+        if (!targetUri.IsAbsoluteUri)
+        {
+            // TODO https://github.com/dotnet/aspnetcore/issues/49670
+
+            var relative = NavigationManager.ToBaseRelativePath(NavigationManager.ToAbsoluteUri(target).AbsoluteUri);
+            var absolute = NavigationManager.ToAbsoluteUri(relative).AbsoluteUri;
+            NavigationManager.NavigateTo(absolute, true);
+        }
+        else
+        {
+            NavigationManager.NavigateTo(targetUri.AbsoluteUri, true);
+        }
+    }
 }

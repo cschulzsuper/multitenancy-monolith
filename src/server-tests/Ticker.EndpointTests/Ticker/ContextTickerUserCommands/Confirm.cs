@@ -60,8 +60,6 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         // Act
         var response = await client.SendAsync(request);
 
-        var x = await response.Content.ReadAsStringAsync();
-
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }

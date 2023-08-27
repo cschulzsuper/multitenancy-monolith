@@ -54,6 +54,7 @@ public sealed class Startup
         var configurationProxyProvider = new ConfigurationProxyProvider(_configuration);
 
         var configuredAdmissionServer = configurationProxyProvider.GetAdmissionServer();
+        var configuredAdmissionPortal = configurationProxyProvider.GetAdmissionPortal();
         var configuredAllowedClients = configurationProxyProvider.GetAllowedClients();
         var configuredSwaggerDocs = configurationProxyProvider.GetSwaggerDocs();
         var configuredServicesMappings = configurationProxyProvider.GetServiceMappings();
@@ -62,17 +63,17 @@ public sealed class Startup
 
         webServices = configuredServicesMappings
             .Where(servicesMapping =>
-                servicesMapping.UniqueName == configuredAdmissionServer.BackendService ||
+                servicesMapping.UniqueName == configuredAdmissionServer.Service ||
                 configuredSwaggerDocs.Select(swaggerDoc => swaggerDoc.TestService).Contains(servicesMapping.UniqueName))
             .Select(x => x.UniqueName)
             .Distinct()
             .ToArray();
 
-        admissionClientName = configuredAdmissionServer.ClientName;
+        admissionClientName = configuredAdmissionPortal.ClientName;
 
         admissionFrontendUrl = configuredServicesMappings
             .Where(servicesMapping =>
-                servicesMapping.UniqueName == configuredAdmissionServer.FrontendService)
+                servicesMapping.UniqueName == configuredAdmissionPortal.Service)
             .Select(x => x.Url)
             .Single();
     }
@@ -177,7 +178,8 @@ public sealed class Startup
 
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapRazorComponents<App>();
+            endpoints.MapRazorComponents<App>()
+                .RequireAuthorization(x => x.RequireClaim("scope","pages"));
         });
     }
 }

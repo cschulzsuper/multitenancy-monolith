@@ -9,7 +9,7 @@ public static class _Services
     public static IServiceCollection AddAdmissionTransportWebServiceClients(this IServiceCollection services)
     {
         services.AddWebServiceTransportDefaultClient<IContextAuthenticationIdentityCommandClient>(
-            configuration => configuration.GetAdmissionServer().BackendService);
+            configuration => configuration.GetAdmissionServer().Service);
 
         return services;
     }

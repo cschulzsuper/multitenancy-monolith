@@ -48,7 +48,7 @@ public class BearerTokenValidator
 
         using var client = context.HttpContext.RequestServices
             .GetRequiredService<TransportWebServiceClientFactory>()
-            .Create<IContextAuthenticationIdentityCommandClient>(admissionServer.BackendService, () => Task.FromResult(context.Token));
+            .Create<IContextAuthenticationIdentityCommandClient>(admissionServer.Service, () => Task.FromResult(context.Token));
 
         try
         {

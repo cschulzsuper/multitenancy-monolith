@@ -49,22 +49,23 @@ public sealed class Startup
         var configurationProxyProvider = new ConfigurationProxyProvider(_configuration);
 
         var configuredAdmissionServer = configurationProxyProvider.GetAdmissionServer();
+        var configuredAdmissionPortal = configurationProxyProvider.GetAdmissionPortal();
         var configuredSwaggerDocs = configurationProxyProvider.GetSwaggerDocs();
         var configuredServicesMappings = configurationProxyProvider.GetServiceMappings();
 
         webServices = configuredServicesMappings
             .Where(servicesMapping =>
-                servicesMapping.UniqueName == configuredAdmissionServer.BackendService ||
+                servicesMapping.UniqueName == configuredAdmissionServer.Service ||
                 configuredSwaggerDocs.Select(swaggerDoc => swaggerDoc.TestService).Contains(servicesMapping.UniqueName))
             .Select(x => x.UniqueName)
             .Distinct()
             .ToArray();
 
-        admissionClientName = configuredAdmissionServer.ClientName;
+        admissionClientName = configuredAdmissionPortal.ClientName;
 
         admissionFrontendUrl = configuredServicesMappings
             .Where(servicesMapping =>
-                servicesMapping.UniqueName == configuredAdmissionServer.FrontendService)
+                servicesMapping.UniqueName == configuredAdmissionPortal.Service)
             .Select(x => x.Url)
             .Single();
     }

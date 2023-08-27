@@ -8,7 +8,6 @@ public static class _Services
 {
     public static IServiceCollection AddConfiguration(this IServiceCollection services)
     {
-        services.AddSingleton<ISeedDataProvider, SeedDataProvider>();
         services.AddSingleton<IConfigurationProxyProvider, ConfigurationProxyProvider>();
 
         return services;
