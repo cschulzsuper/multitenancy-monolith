@@ -11,6 +11,10 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
     private const string ServiceMappings = nameof(ServiceMappings);
     private const string SwaggerDocs = nameof(SwaggerDocs);
 
+    private const string SeedData = nameof(SeedData);
+    private const string SeedDataUri = "Uri";
+    private const string SeedDataResource =  "Resource";
+
     private readonly IConfiguration _configuration;
 
     public ConfigurationProxyProvider(IConfiguration configuration)
@@ -61,5 +65,18 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
         var swaggerDocs = _configuration.GetSection(SwaggerDocs).Get<SwaggerDoc[]>();
 
         return swaggerDocs ?? Array.Empty<SwaggerDoc>();
+    }
+
+    public T[] GetSeedData<T>(string uri)
+    {
+        var seedData = _configuration
+            .GetSection(SeedData)
+            .GetChildren()
+            .Where(x => x.GetSection(SeedDataUri).Value == uri)
+            .Select(x => x.GetSection(SeedDataResource).Get<T>()!)
+            .Where(x => x != null)
+            .ToArray();
+
+        return seedData ?? Array.Empty<T>();
     }
 }

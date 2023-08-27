@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger.Security;
+namespace ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.Security;
 
 public class BearerTokenValidator
 {

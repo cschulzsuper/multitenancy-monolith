@@ -2,7 +2,7 @@
 using System;
 using System.Net.Http;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
+namespace ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.SwaggerUI;
 
 internal sealed class SwaggerJsonClient : IDisposable
 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Endpoints;
+﻿using ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services.Admission;
+using Microsoft.AspNetCore.Components.Endpoints;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 

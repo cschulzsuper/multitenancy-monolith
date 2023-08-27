@@ -1,4 +1,6 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
+﻿using System;
+
+namespace ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 
 public sealed class AllowedClient
 {

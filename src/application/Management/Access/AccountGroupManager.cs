@@ -42,7 +42,7 @@ internal sealed class AccountGroupManager : IAccountGroupManager
         return @object;
     }
 
-    public IQueryable<AccountGroup> GetAll()
+    public IQueryable<AccountGroup> GetQueryable()
         => _repository.GetQueryable();
 
     public async Task InsertAsync(AccountGroup @object)

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger;
+namespace ChristianSchulz.MultitenancyMonolith.Frontend.Swagger;
 
 public sealed class Program
 {

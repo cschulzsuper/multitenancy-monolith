@@ -39,7 +39,7 @@ internal sealed class AccountGroupRequestHandler : IAccountGroupRequestHandler
 
     public IQueryable<AccountGroupResponse> GetAll()
     {
-        var objects = _accountGroupManager.GetAll();
+        var objects = _accountGroupManager.GetQueryable();
 
         var response = objects.Select(@object =>
             new AccountGroupResponse

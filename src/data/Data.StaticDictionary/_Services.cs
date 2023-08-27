@@ -2,12 +2,14 @@
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Access;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Admission;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Business;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Extension;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Schedule;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using ChristianSchulz.MultitenancyMonolith.Objects.Business;
+using ChristianSchulz.MultitenancyMonolith.Objects.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Objects.Extension;
 using ChristianSchulz.MultitenancyMonolith.Objects.Schedule;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
@@ -32,58 +34,65 @@ public static class _Services
 
     public static IServiceCollection AddStaticDictionaryExtensionData(this IServiceCollection services)
     {
-        services.AddScoped(CreateRepository<ObjectTypeModel, ObjectType>);
-        services.AddScoped(CreateRepository<DistinctionTypeModel, DistinctionType>);
+        services.AddScoped(CreateRepository<ObjectTypeMapping, ObjectType>);
+        services.AddScoped(CreateRepository<DistinctionTypeMapping, DistinctionType>);
 
         return services;
     }
 
     public static IServiceCollection AddStaticDictionaryAdmissionData(this IServiceCollection services)
     {
-        services.AddScoped(CreateRepository<AuthenticationIdentityModel, AuthenticationIdentity>);
-        services.AddScoped(CreateRepository<AuthenticationRegistrationModel, AuthenticationRegistration>);
+        services.AddScoped(CreateRepository<AuthenticationIdentityMapping, AuthenticationIdentity>);
+        services.AddScoped(CreateRepository<AuthenticationRegistrationMapping, AuthenticationRegistration>);
 
         return services;
     }
 
     public static IServiceCollection AddStaticDictionaryAccessData(this IServiceCollection services)
     {
-        services.AddScoped(CreateRepository<AccountGroupModel, AccountGroup>);
-        services.AddScoped(CreateRepository<AccountMemberModel, AccountMember>);
-        services.AddScoped(CreateRepository<AccountRegistrationModel, AccountRegistration>);
+        services.AddScoped(CreateRepository<AccountGroupMapping, AccountGroup>);
+        services.AddScoped(CreateRepository<AccountMemberMapping, AccountMember>);
+        services.AddScoped(CreateRepository<AccountRegistrationMapping, AccountRegistration>);
 
         return services;
     }
 
     public static IServiceCollection AddStaticDictionaryBusinessData(this IServiceCollection services)
     {
-        services.AddScoped(CreateRepository<BusinessObjectModel, BusinessObject>);
+        services.AddScoped(CreateRepository<BusinessObjectMapping, BusinessObject>);
+
+        return services;
+    }
+
+    public static IServiceCollection AddStaticDictionaryDocumentationData(this IServiceCollection services)
+    {
+        services.AddScoped(CreateRepository<DevelopmentPostMapping, DevelopmentPost>);
 
         return services;
     }
 
     public static IServiceCollection AddStaticDictionaryScheduleData(this IServiceCollection services)
     {
-        services.AddScoped(CreateRepository<PlannedJobModel, PlannedJob>);
+        services.AddScoped(CreateRepository<PlannedJobMapping, PlannedJob>);
 
         return services;
     }
 
     public static IServiceCollection AddStaticDictionaryTickerData(this IServiceCollection services)
     {
-        services.AddScoped(CreateRepository<TickerBookmarkModel, TickerBookmark>);
-        services.AddScoped(CreateRepository<TickerMessageModel, TickerMessage>);
-        services.AddScoped(CreateRepository<TickerUserModel, TickerUser>);
+        services.AddScoped(CreateRepository<TickerBookmarkMapping, TickerBookmark>);
+        services.AddScoped(CreateRepository<TickerMessageMapping, TickerMessage>);
+        services.AddScoped(CreateRepository<TickerUserMapping, TickerUser>);
 
         return services;
     }
 
     [SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance")]
-    private static IRepository<TEntity> CreateRepository<TModel, TEntity>(IServiceProvider services)
-        where TModel : IModel<TEntity>
+    private static IRepository<TEntity> CreateRepository<TMapping, TEntity>(IServiceProvider services)
+        where TMapping : IMapping<TEntity>
         where TEntity : class, ICloneable
     {
-        var multitenancyDiscriminator = !TModel.Multitenancy
+        var multitenancyDiscriminator = !TMapping.Multitenancy
             ? string.Empty
             : services.GetRequiredService<MultitenancyContext>()
                 .MultitenancyDiscriminator;
@@ -92,9 +101,9 @@ public static class _Services
 
         var repositoryContextFactory = services.GetRequiredService<RepositoryContextFactory<TEntity>>();
         var repositoryContext = repositoryContextFactory.Create(multitenancyDiscriminator,
-            entity => TModel.SetSnowflake(entity, snowflakeGenerator.Next()),
-            entity => TModel.GetSnowflake(entity),
-            (data, entity) => TModel.Ensure(services, data, entity));
+            entity => TMapping.SetSnowflake(entity, snowflakeGenerator.Next()),
+            entity => TMapping.GetSnowflake(entity),
+            (data, entity) => TMapping.Ensure(services, data, entity));
 
         return new Repository<TEntity>(repositoryContext);
     }

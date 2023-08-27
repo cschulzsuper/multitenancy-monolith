@@ -1,8 +1,8 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
-using ChristianSchulz.MultitenancyMonolith.Server.Swagger.Security;
-using ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
+using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.Security;
+using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.SwaggerUI;
 using ChristianSchulz.MultitenancyMonolith.Web;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger;
+namespace ChristianSchulz.MultitenancyMonolith.Frontend.Swagger;
 
 public sealed class Startup
 {
@@ -28,7 +28,7 @@ public sealed class Startup
     private readonly IConfiguration _configuration;
 
     public Startup(
-        IWebHostEnvironment environment, 
+        IWebHostEnvironment environment,
         IConfiguration configuration)
     {
         _environment = environment;
@@ -80,7 +80,7 @@ public sealed class Startup
         {
             var httpsRedirectPortSetting = Environment.GetEnvironmentVariable("ASPNETCORE_HTTPS_REDIRECT_PORT");
             var httpsRedirectPortValid = ushort.TryParse(httpsRedirectPortSetting, out ushort httpsRedirectPort);
-            if (httpsRedirectPortValid) 
+            if (httpsRedirectPortValid)
             {
                 options.HttpsPort = httpsRedirectPort;
             }
@@ -124,10 +124,10 @@ public sealed class Startup
                     };
                 });
 
-        services.AddAuthorization(options => 
+        services.AddAuthorization(options =>
         {
-            options.FallbackPolicy = _environment.IsDevelopment() 
-                ? options.FallbackPolicy 
+            options.FallbackPolicy = _environment.IsDevelopment()
+                ? options.FallbackPolicy
                 : options.DefaultPolicy;
         });
 
@@ -155,14 +155,14 @@ public sealed class Startup
 
         app.UseAuthentication();
         app.UseAuthorization();
-      
+
         app.UseSwaggerUI(options =>
-        {         
+        {
             using var scope = app.ApplicationServices.CreateScope();
 
             scope.ServiceProvider
                 .GetRequiredService<SwaggerUIOptionsConfiguration>()
-                .Configure(options);           
+                .Configure(options);
         });
     }
 }

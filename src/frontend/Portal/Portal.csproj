@@ -15,22 +15,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Pages\Index.razor.css" />
-	  <None Remove="Pages\SignIn.razor.css" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="Pages\SignIn.razor.css">
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
-	  <Content Include="Pages\Index.razor.css">
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
 	</ItemGroup>
 

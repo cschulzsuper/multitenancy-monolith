@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.BearerToken;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger.Security;
+namespace ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.Security;
 
 [SuppressMessage("Style", "IDE1006:Naming Styles")]
 internal static class _Configure

@@ -1,7 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Web;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
+namespace ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.SwaggerUI;
 
 internal sealed class SwaggerJsonClientFactory
 {

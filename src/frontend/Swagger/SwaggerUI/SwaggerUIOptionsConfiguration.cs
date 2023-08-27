@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
+namespace ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.SwaggerUI;
 
 internal sealed class SwaggerUIOptionsConfiguration
 {
@@ -63,7 +63,7 @@ internal sealed class SwaggerUIOptionsConfiguration
 
     public SwaggerUIOptionsConfiguration(
         IConfigurationProxyProvider configurationProxyProvider,
-        SwaggerJsonClientFactory swaggerJsonClientFactory) 
+        SwaggerJsonClientFactory swaggerJsonClientFactory)
     {
         _swaggerDocs = configurationProxyProvider.GetSwaggerDocs();
         _serviceMappings = configurationProxyProvider.GetServiceMappings();
@@ -103,7 +103,7 @@ internal sealed class SwaggerUIOptionsConfiguration
 
     private static void ConfigureAccessTokenRequestInterceptor(SwaggerUIOptions options)
     {
-        var minifiedRequestInterceptor =  Uglify.Js(AccessTokenRequestInterceptorJavaScript);
+        var minifiedRequestInterceptor = Uglify.Js(AccessTokenRequestInterceptorJavaScript);
 
         if (minifiedRequestInterceptor.HasErrors)
         {

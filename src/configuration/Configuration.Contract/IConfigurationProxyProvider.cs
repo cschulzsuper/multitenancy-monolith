@@ -9,4 +9,6 @@ public interface IConfigurationProxyProvider
     AllowedClient[] GetAllowedClients();
     ServiceMapping[] GetServiceMappings();
     SwaggerDoc[] GetSwaggerDocs();
+
+    T[] GetSeedData<T>(string uri);
 }

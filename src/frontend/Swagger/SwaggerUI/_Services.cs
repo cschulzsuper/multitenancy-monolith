@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger.SwaggerUI;
+namespace ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.SwaggerUI;
 
 [SuppressMessage("Style", "IDE1006:Naming Styles")]
 public static class _Services

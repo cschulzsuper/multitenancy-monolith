@@ -105,14 +105,14 @@ services:
       ASPNETCORE_HTTPS_REDIRECT_PORT: ${SwaggerPort:-7272}
       ASPNETCORE_ENVIRONMENT: Staging
 
-  dev-diary:
-    container_name: ${COMPOSE_PROJECT_NAME}-dev-diary
+  dev-log:
+    container_name: ${COMPOSE_PROJECT_NAME}-dev-log
     build: 
       context: ../src
-      dockerfile: frontend/DevDiary/Dockerfile
+      dockerfile: frontend/DevLog/Dockerfile
     ports:
       - 5213:80
-      - ${DevDiaryPort:-7190}:443
+      - ${DevLogPort:-7190}:443
     networks:
       - default
     depends_on:
@@ -128,6 +128,6 @@ services:
     environment:
       ASPNETCORE_HTTP_PORTS: 80
       ASPNETCORE_HTTPS_PORTS: 443
-      ASPNETCORE_HTTPS_REDIRECT_PORT: ${DevDiaryPort:-7190}
+      ASPNETCORE_HTTPS_REDIRECT_PORT: ${DevLogPort:-7190}
       ASPNETCORE_ENVIRONMENT: Staging
       

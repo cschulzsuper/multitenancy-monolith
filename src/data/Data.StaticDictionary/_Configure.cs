@@ -1,6 +1,8 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
+using ChristianSchulz.MultitenancyMonolith.Objects.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -79,6 +81,34 @@ public static class _Configure
             scope.ServiceProvider
                 .GetRequiredService<IRepository<TickerUser>>()
                 .Insert(group.Value);
+        }
+
+        return services;
+    }
+
+    public static IServiceProvider ConfigureDevelopmentPosts(this IServiceProvider services)
+    {
+        var developmentPostSeeds = services
+            .GetRequiredService<IConfigurationProxyProvider>()
+            .GetSeedData<DevelopmentPostSeed>("documentation/development-posts");
+
+        foreach (var developmentPostSeed in developmentPostSeeds)
+        {
+            using var scope = services.CreateScope();
+
+            var developmentPost = new DevelopmentPost
+            {
+                Index = Array.IndexOf(developmentPostSeeds, developmentPostSeed),
+                Title = developmentPostSeed.Title,
+                DateTime = developmentPostSeed.DateTime,
+                Text = developmentPostSeed.Text,
+                Link = developmentPostSeed.Link,
+                Tags = developmentPostSeed.Tags
+            };
+
+            scope.ServiceProvider
+                .GetRequiredService<IRepository<DevelopmentPost>>()
+                .Insert(developmentPost);
         }
 
         return services;

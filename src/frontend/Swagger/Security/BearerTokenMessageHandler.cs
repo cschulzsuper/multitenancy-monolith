@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Swagger.Security;
+namespace ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.Security;
 
 public static class BearerTokenMessageHandler
 {

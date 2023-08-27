@@ -13,7 +13,7 @@ public interface IAccountGroupManager
 
     Task<AccountGroup> GetAsync(string accountGroup);
 
-    IQueryable<AccountGroup> GetAll();
+    IQueryable<AccountGroup> GetQueryable();
 
     Task InsertAsync(AccountGroup @object);
 

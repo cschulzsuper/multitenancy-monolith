@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Access;

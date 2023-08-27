@@ -18,7 +18,7 @@ docker compose -p multitenancy-monolith up
 
 # Access
 
-### DevDiary
+### DevLog
 
 * Browser: `https://localhost:7190`
 * Username: `admin`
