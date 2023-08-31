@@ -29,32 +29,32 @@ internal static class SwaggerGenOptionsExtensions
 
     public static SwaggerGenOptions ConfigureSwaggerDocs(this SwaggerGenOptions options)
     {
-        options.SwaggerDoc("v1", new()
+        options.SwaggerDoc("b1", new()
         {
-            Title = "Ticker V1",
-            Version = "v1"
+            Title = "Ticker B1",
+            Version = "b1"
         });
 
-        options.SwaggerDoc("v1-schedule", new()
+        options.SwaggerDoc("b1-schedule", new()
         {
-            Title = "Ticker V1 (schedule)",
-            Version = "v1-schedule"
+            Title = "Ticker B1 (schedule)",
+            Version = "B1-schedule"
         });
 
-        options.SwaggerDoc("v1-ticker", new()
+        options.SwaggerDoc("b1-ticker", new()
         {
-            Title = "Ticker V1 (ticker)",
-            Version = "v1-ticker"
+            Title = "Ticker B1 (ticker)",
+            Version = "b1-ticker"
         });
 
         options.DocInclusionPredicate((docName, apiDesc) =>
         {
-            if (docName == "v1")
+            if (docName == "b1")
             {
                 return true;
             }
 
-            if (docName.Equals($"v1-{apiDesc.GroupName}"))
+            if (docName.Equals($"b1-{apiDesc.GroupName}"))
             {
                 return true;
             }

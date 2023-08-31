@@ -135,12 +135,11 @@ Clone the repository and start the [compose file](./docker/README.md).
 ### Development Log
   * /71 I have not touched the seed data implementation for quite a while, but the moment has arrived to give it a much-needed overhaul. Beyond its existing applications, I plan to integrate it into a development diary. In a first step, I've separated the sign-in functionality from the `Swagger` project and moved it into a new frontend layer. https://github.com/cschulzsuper/multitenancy-monolith/commit/d95d613a86d4abfd2260c2ff3c6d1dfdbf88713f
   * /72 I'm sticking to the wireframe styles, when it comes to the development diary. This was more pain than gain, given my limited interest in UI/UX design. https://github.com/cschulzsuper/multitenancy-monolith/commit/6bbc53f0620b4f077f8daaa69e7a17da4766478c
-  * /73 Given that I'm not a thirteen-year-old girl, I renamed the development diary to development log. A new seed data implementation is used for its data. Additionally, the management and the data layer for the log have been implemented.
-  * /74 The old seed data provider is gone, and I also changed other things related to the configuration, that is provided via `appsettings.json`. I will fill the development log, when I have somthing deployable.
+  * /73 Given that I'm not a thirteen-year-old girl, I renamed the development diary to development log. A new seed data implementation is used for its data. Additionally, the management and the data layer for the log have been implemented. https://github.com/cschulzsuper/multitenancy-monolith/commit/8b05c0e43cd393159cac4eb11b66ea03abd3c7a9
+  * /74 The old seed data provider is gone, and I also changed other things related to the configuration, that is provided via `appsettings.json`. I will fill the development log, when I have something deployable. https://github.com/cschulzsuper/multitenancy-monolith/commit/0ce0bb460d3f1d2be2168da1dfab01b60bbafe48
 
 ### nginx Reverse Proxy
-
-  * ...
+  * /75 I'm not an expert when it comes to nginx, so this is just some early script kiddy experiment. I added an nginx container with a simple nginx.conf. Adjustments in the API routes and `<base>` tags where necessary. It seems to work. 
 
 # Backlog
 

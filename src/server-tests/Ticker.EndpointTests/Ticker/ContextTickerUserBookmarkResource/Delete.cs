@@ -38,7 +38,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerBookmark);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/_/bookmarks/{existingTickerBookmark.TickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-users/_/bookmarks/{existingTickerBookmark.TickerMessage}");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -66,7 +66,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentTickerBookmark = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/_/bookmarks/{absentTickerBookmark}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-users/_/bookmarks/{absentTickerBookmark}");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -85,7 +85,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidTickerBookmark = "invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/_/bookmarks/{invalidTickerBookmark}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-users/_/bookmarks/{invalidTickerBookmark}");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();

@@ -33,7 +33,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldFail_WhenNotAuthenticated(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 
@@ -58,7 +58,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 
@@ -100,7 +100,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var confirmRequest = new
@@ -132,7 +132,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldBeUnauthorized_WhenInvalid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 

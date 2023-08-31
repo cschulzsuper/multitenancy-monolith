@@ -42,7 +42,7 @@ public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerUser);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{existingTickerUser.Snowflake}/reset");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/{existingTickerUser.Snowflake}/reset");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.AccountGroup1);
 
         var client = _factory.CreateClient();

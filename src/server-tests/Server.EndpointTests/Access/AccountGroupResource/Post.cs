@@ -27,7 +27,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenValid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-groups");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new
@@ -77,7 +77,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountGroup);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-groups");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new
@@ -113,7 +113,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-groups");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new
@@ -146,7 +146,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-groups");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new
@@ -179,7 +179,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-groups");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new
@@ -212,7 +212,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-groups");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new

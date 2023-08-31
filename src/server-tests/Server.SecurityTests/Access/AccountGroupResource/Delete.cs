@@ -22,7 +22,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountGroup = "valid-account-group";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/access/account-groups/{validAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-groups/{validAccountGroup}");
 
         var client = _factory.CreateClient();
 
@@ -41,7 +41,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountGroup = "valid-account-group";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/access/account-groups/{validAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-groups/{validAccountGroup}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -66,7 +66,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountGroup = "valid-account-group";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/access/account-groups/{validAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-groups/{validAccountGroup}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();
@@ -92,7 +92,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountGroup = "valid-account-group";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/access/account-groups/{validAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-groups/{validAccountGroup}");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();

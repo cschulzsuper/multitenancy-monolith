@@ -27,7 +27,7 @@ internal sealed class ContextAuthenticationIdentityCommandHandlerWebServiceClien
         var request = new AnonymousHttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri($"api/admission/authentication-identities/_/auth", UriKind.Relative),
+            RequestUri = new Uri($"api/a1/admission/authentication-identities/_/auth", UriKind.Relative),
             Content = JsonContent.Create(command),
         };
        
@@ -47,7 +47,7 @@ internal sealed class ContextAuthenticationIdentityCommandHandlerWebServiceClien
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri($"api/admission/authentication-identities/_/verify", UriKind.Relative),
+            RequestUri = new Uri($"api/a1/admission/authentication-identities/_/verify", UriKind.Relative),
         };
 
         await _client.SendAsync(request);

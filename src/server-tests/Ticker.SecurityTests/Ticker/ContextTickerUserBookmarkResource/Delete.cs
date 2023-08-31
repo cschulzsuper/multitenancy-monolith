@@ -26,7 +26,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBookmark = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/_/bookmarks/{validBookmark}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-users/_/bookmarks/{validBookmark}");
 
         var client = _factory.CreateClient();
 
@@ -45,7 +45,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBookmark = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/_/bookmarks/{validBookmark}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-users/_/bookmarks/{validBookmark}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -77,7 +77,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerBookmark);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/_/bookmarks/{existingTickerBookmark.TickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-users/_/bookmarks/{existingTickerBookmark.TickerMessage}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -102,7 +102,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBookmark = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/_/bookmarks/{validBookmark}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-users/_/bookmarks/{validBookmark}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -128,7 +128,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/_/bookmarks/{validTickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-users/_/bookmarks/{validTickerMessage}");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 

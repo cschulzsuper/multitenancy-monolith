@@ -23,7 +23,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{validTickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{validTickerMessage}");
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
@@ -44,7 +44,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{validTickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{validTickerMessage}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 
@@ -70,7 +70,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{validTickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{validTickerMessage}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 
@@ -97,7 +97,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{validTickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{validTickerMessage}");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 

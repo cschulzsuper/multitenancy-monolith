@@ -48,7 +48,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{existingDistinctionTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{existingDistinctionTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
 
         var client = _factory.CreateClient();

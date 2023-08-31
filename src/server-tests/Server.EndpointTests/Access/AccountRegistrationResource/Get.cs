@@ -45,7 +45,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-registrations/{existingAccountRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -73,7 +73,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentAccountRegistration = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-registrations/{absentAccountRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-registrations/{absentAccountRegistration}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -92,7 +92,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidAccountRegistration = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-registrations/{invalidAccountRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-registrations/{invalidAccountRegistration}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();

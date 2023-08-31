@@ -44,7 +44,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var confirmRequest = new
@@ -85,7 +85,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var confirmRequest = new
@@ -127,7 +127,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var confirmRequest = new
@@ -169,7 +169,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var confirmRequest = new

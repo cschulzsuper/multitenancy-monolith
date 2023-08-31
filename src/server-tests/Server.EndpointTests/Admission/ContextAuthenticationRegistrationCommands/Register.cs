@@ -27,7 +27,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldSucceed_WhenValid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -80,7 +80,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -119,7 +119,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAuthenticationIdentityNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -153,7 +153,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAuthenticationIdentityEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -187,7 +187,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAuthenticationIdentityTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -221,7 +221,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAuthenticationIdentityInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -255,7 +255,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -289,7 +289,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -323,7 +323,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -357,7 +357,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -391,7 +391,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -425,7 +425,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenSecretNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -459,7 +459,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenSecretEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {
@@ -493,7 +493,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenSecretTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations/_/register");
 
         var registerAuthenticationRegistration = new
         {

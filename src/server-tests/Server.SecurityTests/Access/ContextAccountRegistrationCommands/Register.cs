@@ -21,7 +21,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/register");
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
@@ -45,7 +45,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
         request.Content = JsonContent.Create(new object());
 
@@ -70,7 +70,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldBeUnauthorized_WhenInvalid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 

@@ -25,7 +25,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var objectTypeBusinessObject = "business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/object-types/{objectTypeBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{objectTypeBusinessObject}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -51,7 +51,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentObjectType = "absent-object-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/object-types/{absentObjectType}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{absentObjectType}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -70,7 +70,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidObjectType = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/object-types/{invalidObjectType}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{invalidObjectType}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();

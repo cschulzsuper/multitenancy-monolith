@@ -39,7 +39,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -77,7 +77,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidAccountMember = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{invalidAccountMember}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{invalidAccountMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -104,7 +104,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentAccountMember = "absent-account-member";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{absentAccountMember}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{absentAccountMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -148,7 +148,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember, additionalMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -197,7 +197,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -235,7 +235,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -273,7 +273,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -311,7 +311,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -349,7 +349,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -387,7 +387,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -425,7 +425,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -463,7 +463,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new
@@ -501,7 +501,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putAccountMember = new

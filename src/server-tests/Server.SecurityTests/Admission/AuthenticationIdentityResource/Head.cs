@@ -22,7 +22,7 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAuthenticationIdentity = "valid-authentication-identity";
 
-        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/admission/authentication-identities/{validAuthenticationIdentity}");
+        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/a1/admission/authentication-identities/{validAuthenticationIdentity}");
 
         var client = _factory.CreateClient();
 
@@ -47,7 +47,7 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAuthenticationIdentity = "valid-authentication-identity";
 
-        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/admission/authentication-identities/{validAuthenticationIdentity}");
+        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/a1/admission/authentication-identities/{validAuthenticationIdentity}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();
@@ -73,7 +73,7 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAuthenticationIdentity = "valid-authentication-identity";
 
-        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/admission/authentication-identities/{validAuthenticationIdentity}");
+        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/a1/admission/authentication-identities/{validAuthenticationIdentity}");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();

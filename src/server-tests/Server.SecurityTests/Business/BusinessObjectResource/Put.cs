@@ -23,7 +23,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBusinessObject = "valid-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/business/business-objects/{validBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/business/business-objects/{validBusinessObject}");
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
@@ -43,7 +43,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBusinessObject = "valid-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/business/business-objects/{validBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/business/business-objects/{validBusinessObject}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 
@@ -69,7 +69,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBusinessObject = "valid-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/business/business-objects/{validBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/business/business-objects/{validBusinessObject}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
         request.Content = JsonContent.Create(new object());
 
@@ -96,7 +96,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBusinessObject = "valid-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/business/business-objects/{validBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/business/business-objects/{validBusinessObject}");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 

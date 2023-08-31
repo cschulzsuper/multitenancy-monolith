@@ -27,7 +27,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldSucceed_WhenValid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -82,7 +82,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -123,7 +123,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountGroupNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -158,7 +158,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountGroupEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -193,7 +193,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountGroupTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -228,7 +228,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountGroupInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -263,7 +263,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenSecretNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -298,7 +298,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenSecretEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -333,7 +333,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenSecretTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -368,7 +368,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -403,7 +403,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -438,7 +438,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -473,7 +473,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
@@ -508,7 +508,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-registrations/_/register");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new

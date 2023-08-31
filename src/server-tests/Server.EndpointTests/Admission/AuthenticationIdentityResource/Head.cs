@@ -38,7 +38,7 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -57,7 +57,7 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentAuthenticationIdentity = "absent-authentication-identity";
 
-        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/admission/authentication-identities/{absentAuthenticationIdentity}");
+        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/a1/admission/authentication-identities/{absentAuthenticationIdentity}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -76,7 +76,7 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidAuthenticationIdentity = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/admission/authentication-identities/{invalidAuthenticationIdentity}");
+        var request = new HttpRequestMessage(HttpMethod.Head, $"/api/a1/admission/authentication-identities/{invalidAuthenticationIdentity}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();

@@ -26,7 +26,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldRespectMultitenancy()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
 
         var postDistinctionType = new

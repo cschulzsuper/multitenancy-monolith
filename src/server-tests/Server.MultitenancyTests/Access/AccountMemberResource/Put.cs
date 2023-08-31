@@ -39,7 +39,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
 
         var putAccountMember = new

@@ -61,7 +61,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -99,7 +99,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidObjectType = "Invalid-object-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/object-types/{invalidObjectType}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{invalidObjectType}/custom-properties");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();

@@ -38,7 +38,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerBookmark);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/bookmarks/{existingTickerBookmark.TickerMessage}/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/bookmarks/{existingTickerBookmark.TickerMessage}/confirm");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -66,7 +66,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentTickerBookmark = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/bookmarks/{absentTickerBookmark}/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/bookmarks/{absentTickerBookmark}/confirm");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -85,7 +85,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidTickerBookmark = "invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/bookmarks/{invalidTickerBookmark}/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/bookmarks/{invalidTickerBookmark}/confirm");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();

@@ -42,7 +42,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}/approve");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}/approve");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -85,7 +85,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}/approve");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}/approve");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -129,7 +129,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}/approve");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}/approve");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -173,7 +173,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}/approve");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}/approve");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();

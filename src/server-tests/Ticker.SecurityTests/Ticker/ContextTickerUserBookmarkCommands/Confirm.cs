@@ -23,7 +23,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBookmark = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/bookmarks/{validBookmark}/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/bookmarks/{validBookmark}/confirm");
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
@@ -43,7 +43,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBookmark = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/bookmarks/{validBookmark}/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/bookmarks/{validBookmark}/confirm");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -68,7 +68,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBookmark = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/bookmarks/{validBookmark}/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/bookmarks/{validBookmark}/confirm");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -94,7 +94,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBookmark = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/bookmarks/{validBookmark}/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/bookmarks/{validBookmark}/confirm");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();

@@ -51,7 +51,7 @@ public sealed class UpdateFlow : IClassFixture<WebApplicationFactory<Program>>
                 tickerMessageInsertedTask.SetResult();
             };
 
-        var createRequest = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var createRequest = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         createRequest.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -88,7 +88,7 @@ public sealed class UpdateFlow : IClassFixture<WebApplicationFactory<Program>>
 
     private async Task TickerBookmark_Update_ShouldSucceed(long tickerMessage)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/bookmarks/{tickerMessage}/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/bookmarks/{tickerMessage}/confirm");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -134,7 +134,7 @@ public sealed class UpdateFlow : IClassFixture<WebApplicationFactory<Program>>
                 }
             };
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{tickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{tickerMessage}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -164,7 +164,7 @@ public sealed class UpdateFlow : IClassFixture<WebApplicationFactory<Program>>
     private async Task TickerBookmark_Query_ShouldSucceed()
     {
         // Arrange
-        var resetRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/_/bookmarks");
+        var resetRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-users/_/bookmarks");
         resetRequest.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();

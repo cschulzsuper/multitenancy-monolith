@@ -40,7 +40,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -81,7 +81,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidDistinctionType = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{invalidDistinctionType}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{invalidDistinctionType}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -109,7 +109,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentDistinctionType = "absent-distinction-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{absentDistinctionType}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{absentDistinctionType}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -156,7 +156,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType, additionalDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -209,7 +209,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -249,7 +249,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -289,7 +289,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -329,7 +329,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -369,7 +369,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -409,7 +409,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -449,7 +449,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -489,7 +489,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -529,7 +529,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new
@@ -569,7 +569,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putDistinctionType = new

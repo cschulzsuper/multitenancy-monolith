@@ -22,7 +22,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validDistinctionType = "valid-distinction-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/distinction-types/{validDistinctionType}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/distinction-types/{validDistinctionType}/custom-properties");
 
         var client = _factory.CreateClient();
 
@@ -43,7 +43,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validDistinctionType = "valid-distinction-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/distinction-types/{validDistinctionType}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/distinction-types/{validDistinctionType}/custom-properties");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();

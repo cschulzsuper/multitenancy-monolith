@@ -43,7 +43,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/_/confirm");
 
         var confirmRequest = new
         {
@@ -83,7 +83,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/_/confirm");
 
         var confirmRequest = new
         {
@@ -124,7 +124,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/_/confirm");
 
         var confirmRequest = new
         {
@@ -165,7 +165,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/_/confirm");
 
         var confirmRequest = new
         {

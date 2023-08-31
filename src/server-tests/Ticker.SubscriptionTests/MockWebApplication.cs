@@ -25,7 +25,7 @@ internal static class MockWebApplication
         {"ServiceMappings:0:UniqueName", ClientName},
         {"ServiceMappings:0:Url", "http://localhost"},
 
-        {"AdmissionServer:BackendService", ClientName},
+        {"AdmissionServer:Service", ClientName},
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory, ITestOutputHelper? output = null)

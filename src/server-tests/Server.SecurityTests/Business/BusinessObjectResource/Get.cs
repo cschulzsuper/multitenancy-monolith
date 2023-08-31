@@ -22,7 +22,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBusinessObject = "valid-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{validBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/business/business-objects/{validBusinessObject}");
 
         var client = _factory.CreateClient();
 
@@ -44,7 +44,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBusinessObject = "valid-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{validBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/business/business-objects/{validBusinessObject}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -66,7 +66,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBusinessObject = "valid-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{validBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/business/business-objects/{validBusinessObject}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();
@@ -92,7 +92,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validBusinessObject = "valid-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{validBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/business/business-objects/{validBusinessObject}");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();

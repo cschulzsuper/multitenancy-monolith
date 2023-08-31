@@ -45,7 +45,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
 
         var client = _factory.CreateClient();

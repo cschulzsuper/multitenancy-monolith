@@ -22,7 +22,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountRegistration = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-registrations/{validAccountRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-registrations/{validAccountRegistration}");
 
         var client = _factory.CreateClient();
 
@@ -42,7 +42,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountRegistration = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-registrations/{validAccountRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-registrations/{validAccountRegistration}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -67,7 +67,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountRegistration = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-registrations/{validAccountRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-registrations/{validAccountRegistration}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();

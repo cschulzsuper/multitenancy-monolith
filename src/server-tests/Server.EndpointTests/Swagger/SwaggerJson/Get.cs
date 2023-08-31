@@ -18,11 +18,12 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData("v1")]
-    [InlineData("v1-extension")]
-    [InlineData("v1-access")]
-    [InlineData("v1-admission")]
-    [InlineData("v1-business")]
+    [InlineData("a1")]
+    [InlineData("a1-extension")]
+    [InlineData("a1-access")]
+    [InlineData("a1-admission")]
+    [InlineData("a1-business")]
+    [InlineData("a1-schedule")]
     public async Task Get_ShouldSucceed_WhenValid(string doc)
     {
         // Arrange

@@ -27,7 +27,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenObjectTypeBusinessObject()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
@@ -86,7 +86,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
@@ -126,7 +126,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
@@ -161,7 +161,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
@@ -196,7 +196,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
@@ -231,7 +231,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
@@ -266,7 +266,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenDisplayNameNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
@@ -301,7 +301,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenDisplayNameEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
@@ -336,7 +336,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenDisplayNameTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
@@ -371,7 +371,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenObjectTypeNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
@@ -406,7 +406,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailObjectTypeEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
@@ -441,7 +441,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenObjectTypeInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new

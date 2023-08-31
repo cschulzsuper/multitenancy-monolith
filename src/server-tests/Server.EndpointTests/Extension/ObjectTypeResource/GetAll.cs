@@ -24,7 +24,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldSucceed()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/extension/object-types");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/extension/object-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();

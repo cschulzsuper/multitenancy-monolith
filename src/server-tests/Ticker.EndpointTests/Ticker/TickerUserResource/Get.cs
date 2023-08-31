@@ -44,7 +44,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerUser);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/{existingTickerUser.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-users/{existingTickerUser.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -70,7 +70,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentTickerUser = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/{absentTickerUser}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-users/{absentTickerUser}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -89,7 +89,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidTickerUser = "invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/{invalidTickerUser}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-users/{invalidTickerUser}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();

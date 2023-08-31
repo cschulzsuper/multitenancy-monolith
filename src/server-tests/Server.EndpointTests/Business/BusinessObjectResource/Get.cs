@@ -41,7 +41,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingBusinessObject);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{existingBusinessObject.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/business/business-objects/{existingBusinessObject.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -105,7 +105,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingBusinessObject);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{existingBusinessObject.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/business/business-objects/{existingBusinessObject.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -135,7 +135,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentBusinessObject = "absent-business-object";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{absentBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/business/business-objects/{absentBusinessObject}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -154,7 +154,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidBusinessObject = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/business/business-objects/{invalidBusinessObject}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/business/business-objects/{invalidBusinessObject}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();

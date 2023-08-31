@@ -23,7 +23,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-messages/{validTickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-messages/{validTickerMessage}");
 
         var client = _factory.CreateClient();
 
@@ -43,7 +43,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-messages/{validTickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-messages/{validTickerMessage}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -68,7 +68,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-messages/{validTickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-messages/{validTickerMessage}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -94,7 +94,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-messages/{validTickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-messages/{validTickerMessage}");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 

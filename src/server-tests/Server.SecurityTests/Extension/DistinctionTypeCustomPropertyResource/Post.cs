@@ -23,7 +23,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validDistinctionType = "required-distinction-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/distinction-types/{validDistinctionType}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/distinction-types/{validDistinctionType}/custom-properties");
 
         var postDistinctionTypeCustomProperty = new
         {
@@ -54,7 +54,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validDistinctionType = "required-distinction-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/distinction-types/{validDistinctionType}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/distinction-types/{validDistinctionType}/custom-properties");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var postDistinctionTypeCustomProperty = new

@@ -23,7 +23,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var validObjectType = "valid-object-type";
         var validObjectTypeCustomProperty = "valid-object-type-custom-property";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/object-types/{validObjectType}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{validObjectType}/custom-properties/{validObjectTypeCustomProperty}");
 
         var client = _factory.CreateClient();
 
@@ -45,7 +45,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var validObjectType = "valid-object-type";
         var validObjectTypeCustomProperty = "valid-object-type-custom-property";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/object-types/{validObjectType}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{validObjectType}/custom-properties/{validObjectTypeCustomProperty}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();

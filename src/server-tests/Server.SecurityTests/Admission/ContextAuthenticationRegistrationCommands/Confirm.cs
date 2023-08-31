@@ -26,7 +26,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldFail_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/_/confirm");
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
@@ -50,7 +50,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/_/confirm");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
         request.Content = JsonContent.Create(new object());
 
@@ -84,7 +84,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/_/confirm");
 
         var confirmRequest = new
         {
@@ -125,7 +125,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/_/confirm");
 
         var confirmRequest = new
         {
@@ -157,7 +157,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldFail_WhenInvalid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations/_/confirm");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 

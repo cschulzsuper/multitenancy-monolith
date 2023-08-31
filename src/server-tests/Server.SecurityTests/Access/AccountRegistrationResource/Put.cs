@@ -23,7 +23,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountRegistration = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-registrations/{validAccountRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{validAccountRegistration}");
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
@@ -42,7 +42,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountRegistration = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-registrations/{validAccountRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{validAccountRegistration}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 
@@ -68,7 +68,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountRegistration = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-registrations/{validAccountRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{validAccountRegistration}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 

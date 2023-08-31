@@ -27,7 +27,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenValid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAuthenticationIdentity = new
@@ -83,7 +83,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAuthenticationIdentity = new
@@ -122,7 +122,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAuthenticationIdentity = new
@@ -156,7 +156,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAuthenticationIdentity = new
@@ -190,7 +190,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAuthenticationIdentity = new
@@ -224,7 +224,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAuthenticationIdentity = new
@@ -258,7 +258,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAuthenticationIdentity = new
@@ -292,7 +292,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAuthenticationIdentity = new
@@ -326,7 +326,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAuthenticationIdentity = new
@@ -360,7 +360,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAuthenticationIdentity = new
@@ -394,7 +394,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-identities");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var postAuthenticationIdentity = new

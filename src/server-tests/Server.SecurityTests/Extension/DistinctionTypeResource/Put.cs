@@ -23,7 +23,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validDistinctionType = "valid-distinction-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{validDistinctionType}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{validDistinctionType}");
 
         var putDistinctionType = new
         {
@@ -56,7 +56,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validDistinctionType = "valid-distinction-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{validDistinctionType}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{validDistinctionType}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var putDistinctionType = new

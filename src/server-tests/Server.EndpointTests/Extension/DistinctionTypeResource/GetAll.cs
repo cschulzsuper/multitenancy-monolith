@@ -49,7 +49,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType1, existingDistinctionType2);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();

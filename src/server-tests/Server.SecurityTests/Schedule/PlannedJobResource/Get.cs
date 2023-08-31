@@ -22,7 +22,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validPlannedJob = "valid-planned-job";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/schedule/planned-jobs/{validPlannedJob}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/schedule/planned-jobs/{validPlannedJob}");
 
         var client = _factory.CreateClient();
 
@@ -46,7 +46,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validPlannedJob = "valid-planned-job";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/schedule/planned-jobs/{validPlannedJob}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/schedule/planned-jobs/{validPlannedJob}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();

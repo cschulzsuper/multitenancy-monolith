@@ -44,7 +44,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingBusinessObject);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/business/business-objects/{existingBusinessObject.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/business/business-objects/{existingBusinessObject.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
 
         var client = _factory.CreateClient();

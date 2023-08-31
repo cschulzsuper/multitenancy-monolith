@@ -39,7 +39,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.AccountGroup1);
 
         var client = _factory.CreateClient();

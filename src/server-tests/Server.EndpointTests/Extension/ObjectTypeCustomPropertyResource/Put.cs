@@ -51,7 +51,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -96,7 +96,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var invalidObjectType = "Invalid";
         var validObjectTypeCustomProperty = "valid-object-type-custom-property";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{invalidObjectType}/custom-properties/{validObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{invalidObjectType}/custom-properties/{validObjectTypeCustomProperty}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -137,7 +137,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         var invalidObjectTypeCustomProperty = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{invalidObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{invalidObjectTypeCustomProperty}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -178,7 +178,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         var absentObjectTypeCustomProperty = "absent-object-type-custom-property";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{absentObjectTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{absentObjectTypeCustomProperty}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -237,7 +237,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -303,7 +303,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -354,7 +354,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -405,7 +405,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -456,7 +456,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -507,7 +507,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -558,7 +558,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -609,7 +609,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -660,7 +660,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -711,7 +711,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -762,7 +762,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -813,7 +813,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -872,7 +872,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -938,7 +938,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -989,7 +989,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new
@@ -1040,7 +1040,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putObjectTypeCustomProperty = new

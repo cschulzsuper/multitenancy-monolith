@@ -22,7 +22,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members/_/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-members/_/auth");
 
         var client = _factory.CreateClient();
 
@@ -42,7 +42,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldSucceed_WhenValid(int mock, string accountMember)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members/_/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-members/_/auth");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var authRequest = new
@@ -70,7 +70,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldFail_WhenMemberAbsent(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members/_/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-members/_/auth");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var authRequest = new
@@ -98,7 +98,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldFail_WhenIdentityUnassigned(int mock, string accountMember)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members/_/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-members/_/auth");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var authRequest = new
@@ -130,7 +130,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldFail_WhenGroupAbsent(int mock, string accountMember)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members/_/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-members/_/auth");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var authRequest = new
@@ -162,7 +162,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     public async Task Auth_ShouldFail_WhenClientInvalid(int mock, string accountMember)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/access/account-members/_/auth");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-members/_/auth");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var authRequest = new

@@ -54,7 +54,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingRegistration1, existingRegistration2);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/admission/authentication-registrations");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/admission/authentication-registrations");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();

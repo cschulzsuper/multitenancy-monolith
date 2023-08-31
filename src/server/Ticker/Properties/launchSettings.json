@@ -21,7 +21,7 @@
         "MM_Ticker_ServiceMappings__0__UniqueName": "server",
         "MM_Ticker_ServiceMappings__0__Url": "https://localhost:7207",
         "MM_Ticker_ServiceMappings__1__UniqueName": "swagger-ui",
-        "MM_Ticker_ServiceMappings__1__Url": "https://localhost:7273",
+        "MM_Ticker_ServiceMappings__1__Url": "https://localhost:7272",
         "MM_Ticker_ServiceMappings__2__UniqueName": "swagger-ui-host",
         "MM_Ticker_ServiceMappings__2__Url": "https://localhost:7272"
       },
@@ -35,7 +35,7 @@
         "MM_Ticker_ServiceMappings__0__UniqueName": "server",
         "MM_Ticker_ServiceMappings__0__Url": "https://localhost:7207",
         "MM_Ticker_ServiceMappings__1__UniqueName": "swagger-ui",
-        "MM_Ticker_ServiceMappings__1__Url": "https://localhost:7273",
+        "MM_Ticker_ServiceMappings__1__Url": "https://localhost:7272",
         "MM_Ticker_ServiceMappings__2__UniqueName": "swagger-ui-host",
         "MM_Ticker_ServiceMappings__2__Url": "https://localhost:7272"
       },
@@ -51,7 +51,7 @@
         "MM_Ticker_ServiceMappings__0__UniqueName": "server",
         "MM_Ticker_ServiceMappings__0__Url": "https://localhost:7207",
         "MM_Ticker_ServiceMappings__1__UniqueName": "swagger-ui",
-        "MM_Ticker_ServiceMappings__1__Url": "https://localhost:7273",
+        "MM_Ticker_ServiceMappings__1__Url": "https://localhost:7272",
         "MM_Ticker_ServiceMappings__2__UniqueName": "swagger-ui-host",
         "MM_Ticker_ServiceMappings__2__Url": "https://localhost:7272"
       },

@@ -20,7 +20,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/business/business-objects");
 
         var client = _factory.CreateClient();
 
@@ -40,7 +40,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldSucceed_WhenAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -60,7 +60,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();
@@ -84,7 +84,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldBeUnauthorized_WhenInvalid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();

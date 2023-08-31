@@ -42,7 +42,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -69,7 +69,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentTickerMessage = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-messages/{absentTickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-messages/{absentTickerMessage}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -88,7 +88,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidTickerMessage = "invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-messages/{invalidTickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-messages/{invalidTickerMessage}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();

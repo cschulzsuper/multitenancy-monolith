@@ -86,16 +86,6 @@ public sealed class Startup
             out var admissionFrontendUrl,
             out var webServices);
 
-        services.AddHttpsRedirection(options =>
-        {
-            var httpsRedirectPortSetting = Environment.GetEnvironmentVariable("ASPNETCORE_HTTPS_REDIRECT_PORT");
-            var httpsRedirectPortValid = ushort.TryParse(httpsRedirectPortSetting, out ushort httpsRedirectPort);
-            if (httpsRedirectPortValid)
-            {
-                options.HttpsPort = httpsRedirectPort;
-            }
-        });
-
         services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
         services.AddAuthentication(BearerTokenDefaults.AuthenticationScheme)
             .AddBearerToken(options =>
@@ -165,21 +155,23 @@ public sealed class Startup
     {
         app.ApplicationServices.ConfigureDevelopmentPosts();
 
-        app.UseHttpsRedirection();
-
         app.UseCors();
-        app.UseStaticFiles();
 
-        app.UseRouting();
-        app.UseAntiforgery();
-
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-        app.UseEndpoints(endpoints =>
+        app.Map("/dev-log", builder =>
         {
-            endpoints.MapRazorComponents<App>()
-                .RequireAuthorization(x => x.RequireClaim("scope","pages"));
+            builder.UseStaticFiles();
+            builder.UseRouting();
+            builder.UseAntiforgery();
+
+            builder.UseAuthentication();
+            builder.UseAuthorization();
+
+            builder.UseEndpoints(endpoints =>
+            {
+                endpoints
+                    .MapRazorComponents<App>()
+                    .RequireAuthorization(x => x.RequireClaim("scope", "pages"));
+            });
         });
     }
 }

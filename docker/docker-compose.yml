@@ -4,13 +4,29 @@ networks:
   default:
 
 services:
+  nginx:    
+    container_name: ${COMPOSE_PROJECT_NAME}-nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ~/.aspnet/https:/etc/nginx/cert
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - server
+      - ticker
+      - portal
+      - swagger
+      - dev-log
+    networks:
+      - default
+
   server:
     container_name: ${COMPOSE_PROJECT_NAME}-server
     build: 
       context: ../src
       dockerfile: server/Server/Dockerfile
-    ports:
-      - ${ServerPort:-7207}:443
     networks:
       - default
     env_file:
@@ -30,8 +46,6 @@ services:
     build: 
       context: ../src
       dockerfile: server/Ticker/Dockerfile
-    ports:
-      - ${TickerPort:-7206}:443
     networks:
       - default
     depends_on:
@@ -54,9 +68,6 @@ services:
     build: 
       context: ../src
       dockerfile: frontend/Portal/Dockerfile
-    ports:
-      - 5015:80
-      - ${PortalPort:-7053}:443
     networks:
       - default
     depends_on:
@@ -70,9 +81,8 @@ services:
       - ~/.aspnet/https:/home/app/.aspnet/https/
       - ~/.aspnet/DataProtection-Keys:/home/app/.aspnet/DataProtection-Keys
     environment:
-      ASPNETCORE_HTTP_PORTS: 80
+      ASPNETCORE_HTTP_PORTS: 
       ASPNETCORE_HTTPS_PORTS: 443
-      ASPNETCORE_HTTPS_REDIRECT_PORT: ${PortalPort:-7053}
       ASPNETCORE_ENVIRONMENT: Staging
 
   swagger:
@@ -80,9 +90,6 @@ services:
     build: 
       context: ../src
       dockerfile: frontend/Swagger/Dockerfile
-    ports:
-      - 5108:80
-      - ${SwaggerPort:-7272}:443
     networks:
       - default
     depends_on:
@@ -100,9 +107,8 @@ services:
       - ~/.aspnet/https:/home/app/.aspnet/https/
       - ~/.aspnet/DataProtection-Keys:/home/app/.aspnet/DataProtection-Keys
     environment:
-      ASPNETCORE_HTTP_PORTS: 80
+      ASPNETCORE_HTTP_PORTS: 
       ASPNETCORE_HTTPS_PORTS: 443
-      ASPNETCORE_HTTPS_REDIRECT_PORT: ${SwaggerPort:-7272}
       ASPNETCORE_ENVIRONMENT: Staging
 
   dev-log:
@@ -110,9 +116,6 @@ services:
     build: 
       context: ../src
       dockerfile: frontend/DevLog/Dockerfile
-    ports:
-      - 5213:80
-      - ${DevLogPort:-7190}:443
     networks:
       - default
     depends_on:
@@ -126,8 +129,7 @@ services:
       - ~/.aspnet/https:/home/app/.aspnet/https/
       - ~/.aspnet/DataProtection-Keys:/home/app/.aspnet/DataProtection-Keys
     environment:
-      ASPNETCORE_HTTP_PORTS: 80
+      ASPNETCORE_HTTP_PORTS: 
       ASPNETCORE_HTTPS_PORTS: 443
-      ASPNETCORE_HTTPS_REDIRECT_PORT: ${DevLogPort:-7190}
       ASPNETCORE_ENVIRONMENT: Staging
       

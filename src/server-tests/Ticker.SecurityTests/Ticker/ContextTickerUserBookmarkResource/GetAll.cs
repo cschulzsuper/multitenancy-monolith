@@ -25,7 +25,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/ticker/ticker-users/_/bookmarks");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/b1/ticker/ticker-users/_/bookmarks");
 
         var client = _factory.CreateClient();
 
@@ -43,7 +43,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldSucceed_WhenAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/ticker/ticker-users/_/bookmarks");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/b1/ticker/ticker-users/_/bookmarks");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -75,7 +75,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerBookmark);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/ticker/ticker-users/_/bookmarks");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/b1/ticker/ticker-users/_/bookmarks");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -101,7 +101,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/ticker/ticker-users/_/bookmarks");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/b1/ticker/ticker-users/_/bookmarks");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -125,7 +125,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldBeUnauthorized_WhenInvalid(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/ticker/ticker-users/_/bookmarks");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/b1/ticker/ticker-users/_/bookmarks");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();

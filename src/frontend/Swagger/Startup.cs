@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -77,16 +78,6 @@ public sealed class Startup
             out var admissionFrontendUrl,
             out var webServices);
 
-        services.AddHttpsRedirection(options =>
-        {
-            var httpsRedirectPortSetting = Environment.GetEnvironmentVariable("ASPNETCORE_HTTPS_REDIRECT_PORT");
-            var httpsRedirectPortValid = ushort.TryParse(httpsRedirectPortSetting, out ushort httpsRedirectPort);
-            if (httpsRedirectPortValid)
-            {
-                options.HttpsPort = httpsRedirectPort;
-            }
-        });
-
         services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
         services.AddAuthentication(BearerTokenDefaults.AuthenticationScheme)
             .AddBearerToken(options =>
@@ -147,8 +138,6 @@ public sealed class Startup
 
     public void Configure(IApplicationBuilder app)
     {
-        app.UseHttpsRedirection();
-
         app.UseCors();
         app.UseStaticFiles();
 

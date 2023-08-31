@@ -42,7 +42,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
@@ -85,7 +85,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidDistinctionType = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/distinction-types/{invalidDistinctionType}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/distinction-types/{invalidDistinctionType}/custom-properties");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
@@ -132,7 +132,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
@@ -170,7 +170,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
@@ -222,7 +222,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
@@ -274,7 +274,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new
@@ -326,7 +326,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postDistinctionTypeCustomProperty = new

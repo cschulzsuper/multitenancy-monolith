@@ -22,7 +22,7 @@ public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerUser = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{validTickerUser}/reset");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/{validTickerUser}/reset");
 
         var client = _factory.CreateClient();
 
@@ -42,7 +42,7 @@ public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerUser = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{validTickerUser}/reset");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/{validTickerUser}/reset");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -67,7 +67,7 @@ public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerUser = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{validTickerUser}/reset");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/{validTickerUser}/reset");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -93,7 +93,7 @@ public sealed class Reset : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validTickerUser = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{validTickerUser}/reset");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/{validTickerUser}/reset");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();

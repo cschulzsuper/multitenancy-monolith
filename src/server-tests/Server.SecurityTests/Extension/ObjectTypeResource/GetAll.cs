@@ -20,7 +20,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/extension/object-types");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/extension/object-types");
 
         var client = _factory.CreateClient();
 
@@ -39,7 +39,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/extension/object-types");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/extension/object-types");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();

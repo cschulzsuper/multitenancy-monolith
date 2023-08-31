@@ -51,7 +51,7 @@
         "ASPNETCORE_HTTP_PORTS": "5015",
         "ASPNETCORE_HTTPS_PORTS": "7053",
         "MM_Portal_ServiceMappings__0__UniqueName": "server",
-        "MM_Portal_ServiceMappings__0__Url": "https://localhost:7207",
+        "MM_Portal_ServiceMappings__0__Url": "https://host.docker.internal:7207",
         "MM_Portal_ServiceMappings__1__UniqueName": "portal",
         "MM_Portal_ServiceMappings__1__Url": "https://localhost:7053"
       },

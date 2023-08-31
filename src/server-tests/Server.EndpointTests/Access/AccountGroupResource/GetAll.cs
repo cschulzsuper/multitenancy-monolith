@@ -45,7 +45,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountGroup1, existingAccountGroup2);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/access/account-groups");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/access/account-groups");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();

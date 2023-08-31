@@ -21,7 +21,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations");
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
@@ -39,7 +39,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/admission/authentication-registrations");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-registrations");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
         request.Content = JsonContent.Create(new object());
 
@@ -63,7 +63,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/admission/authentication-registrations");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-registrations");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 

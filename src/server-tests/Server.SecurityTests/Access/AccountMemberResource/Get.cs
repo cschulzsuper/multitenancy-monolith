@@ -22,7 +22,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountMember = "valid-account-member";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-members/{validAccountMember}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-members/{validAccountMember}");
 
         var client = _factory.CreateClient();
 
@@ -42,7 +42,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountMember = "valid-account-member";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-members/{validAccountMember}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-members/{validAccountMember}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -66,7 +66,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountMember = "valid-account-member";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-members/{validAccountMember}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-members/{validAccountMember}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();

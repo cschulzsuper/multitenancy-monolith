@@ -27,7 +27,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldRespectMultitenancy()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
 
         var postBusinessObject = new

@@ -3,7 +3,7 @@
     "http": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5213",
+      "launchUrl": "http://localhost:5213/dev-log",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MM_DevLog_ServiceMappings__0__UniqueName": "server",
@@ -17,7 +17,7 @@
     "https (development)": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:7190",
+      "launchUrl": "https://localhost:7190/dev-log",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MM_DevLog_ServiceMappings__0__UniqueName": "server",
@@ -31,7 +31,7 @@
     "https (staging)": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:7190",
+      "launchUrl": "https://localhost:7190/dev-log",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging",
         "MM_DevLog_ServiceMappings__0__UniqueName": "server",
@@ -45,13 +45,13 @@
     "Docker  (development)": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:7190",
+      "launchUrl": "https://localhost:7190/dev-log",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HTTP_PORTS": "5213",
         "ASPNETCORE_HTTPS_PORTS": "7190",
         "MM_DevLog_ServiceMappings__0__UniqueName": "server",
-        "MM_DevLog_ServiceMappings__0__Url": "https://localhost:7207",
+        "MM_DevLog_ServiceMappings__0__Url": "https://host.docker.internal:7207",
         "MM_DevLog_ServiceMappings__1__UniqueName": "portal",
         "MM_DevLog_ServiceMappings__1__Url": "https://localhost:7053"
       },

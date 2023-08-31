@@ -27,7 +27,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenPriorityLow()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -74,7 +74,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenPriorityDefault()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -121,7 +121,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenPriorityHigh()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -168,7 +168,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenPriorityCatastrophe()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -215,7 +215,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenTextNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -250,7 +250,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenTextEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -285,7 +285,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenTextTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -320,7 +320,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenPriorityNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -355,7 +355,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenPriorityEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -390,7 +390,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenPriorityInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -425,7 +425,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenTickerUserNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -460,7 +460,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenTickerUserEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -495,7 +495,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenTickerUserTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -530,7 +530,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenTickerUserLocalPartTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -565,7 +565,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenTickerUserInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new

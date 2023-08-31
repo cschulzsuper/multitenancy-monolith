@@ -21,7 +21,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
 
         var postDistinctionType = new
         {
@@ -52,7 +52,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/extension/distinction-types");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var postDistinctionType = new

@@ -23,7 +23,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountGroup = "valid-account-group";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{validAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{validAccountGroup}");
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();
@@ -43,7 +43,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountGroup = "valid-account-group";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{validAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{validAccountGroup}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 
@@ -69,7 +69,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountGroup = "valid-account-group";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{validAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{validAccountGroup}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
         request.Content = JsonContent.Create(new object());
 
@@ -96,7 +96,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validAccountGroup = "valid-account-group";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{validAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{validAccountGroup}");
         request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
         request.Content = JsonContent.Create(new object());
 

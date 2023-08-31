@@ -39,7 +39,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerBookmark);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/_/bookmarks");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-users/_/bookmarks");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader(MockWebApplication.AccountGroup1);
 
         var client = _factory.CreateClient();

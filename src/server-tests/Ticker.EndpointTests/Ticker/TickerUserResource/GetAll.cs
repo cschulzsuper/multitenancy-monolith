@@ -54,7 +54,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerUser1, existingTickerUser2);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/ticker/ticker-users");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/b1/ticker/ticker-users");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();

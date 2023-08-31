@@ -42,7 +42,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -70,7 +70,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentAuthenticationRegistration = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/admission/authentication-registrations/{absentAuthenticationRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/admission/authentication-registrations/{absentAuthenticationRegistration}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -89,7 +89,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidAuthenticationRegistration = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/admission/authentication-registrations/{invalidAuthenticationRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/admission/authentication-registrations/{invalidAuthenticationRegistration}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();

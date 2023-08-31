@@ -38,7 +38,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountGroup);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{existingAccountGroup.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
@@ -75,7 +75,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidAccountGroup = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{invalidAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{invalidAccountGroup}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
@@ -101,7 +101,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentAccountGroup = "absent-account-group";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{absentAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{absentAccountGroup}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
@@ -142,7 +142,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountGroup, additionalIdentity);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{existingAccountGroup.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
@@ -190,7 +190,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountGroup);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{existingAccountGroup.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
@@ -226,7 +226,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountGroup);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{existingAccountGroup.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
@@ -262,7 +262,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountGroup);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{existingAccountGroup.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
@@ -298,7 +298,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountGroup);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/access/account-groups/{existingAccountGroup.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new

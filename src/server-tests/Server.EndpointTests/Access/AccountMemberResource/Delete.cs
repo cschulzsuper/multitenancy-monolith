@@ -38,7 +38,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/access/account-members/{existingAccountMember.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -66,7 +66,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentAccountMember = "absent-account-member";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/access/account-members/{absentAccountMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-members/{absentAccountMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -85,7 +85,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidAccountMember = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/access/account-members/{invalidAccountMember}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-members/{invalidAccountMember}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();

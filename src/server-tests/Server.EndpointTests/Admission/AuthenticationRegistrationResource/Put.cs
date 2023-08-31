@@ -43,7 +43,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -82,7 +82,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidAuthenticationRegistration = "invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{invalidAuthenticationRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{invalidAuthenticationRegistration}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -109,7 +109,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentAuthenticationRegistration = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{absentAuthenticationRegistration}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{absentAuthenticationRegistration}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -159,7 +159,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration, additionalAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -211,7 +211,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -254,7 +254,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -295,7 +295,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -336,7 +336,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -377,7 +377,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -418,7 +418,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -459,7 +459,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -500,7 +500,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new
@@ -541,7 +541,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAuthenticationRegistration);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationRegistration = new

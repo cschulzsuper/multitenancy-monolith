@@ -23,7 +23,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var validDistinctionType = "valid-distinction-type";
         var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
 
         var client = _factory.CreateClient();
 
@@ -45,7 +45,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var validDistinctionType = "valid-distinction-type";
         var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -69,7 +69,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var validDistinctionType = "valid-distinction-type";
         var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();

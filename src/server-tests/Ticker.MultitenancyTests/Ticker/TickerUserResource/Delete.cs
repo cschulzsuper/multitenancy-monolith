@@ -49,7 +49,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerUser);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-users/{existingTickerUser.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-users/{existingTickerUser.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.AccountGroup2);
 
         var client = _factory.CreateClient();

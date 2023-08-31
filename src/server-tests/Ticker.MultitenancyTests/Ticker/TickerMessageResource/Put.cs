@@ -41,7 +41,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.AccountGroup1);
 
         var putTickerMessage = new

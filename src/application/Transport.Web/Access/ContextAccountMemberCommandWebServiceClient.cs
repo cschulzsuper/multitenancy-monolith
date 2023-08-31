@@ -27,7 +27,7 @@ internal sealed class ContextAccountMemberCommandWebServiceClient : IContextAcco
         var request = new AnonymousHttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri($"api/access/account-members/_/auth", UriKind.Relative),
+            RequestUri = new Uri($"api/a1/access/account-members/_/auth", UriKind.Relative),
             Content = JsonContent.Create(command),
         };
 
@@ -47,7 +47,7 @@ internal sealed class ContextAccountMemberCommandWebServiceClient : IContextAcco
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri($"api/access/account-members/_/verify", UriKind.Relative),
+            RequestUri = new Uri($"api/a1/access/account-members/_/verify", UriKind.Relative),
         };
 
         await _client.SendAsync(request);

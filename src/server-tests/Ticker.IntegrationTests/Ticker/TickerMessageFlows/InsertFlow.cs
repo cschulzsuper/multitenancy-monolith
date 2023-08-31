@@ -68,7 +68,7 @@ public sealed class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
                 }
             };
 
-        var createRequest = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var createRequest = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         createRequest.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -118,7 +118,7 @@ public sealed class InsertFlow : IClassFixture<WebApplicationFactory<Program>>
                 tickerBookmarkInsertedTask.SetResult();
             };
 
-        var queryRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/_/bookmarks");
+        var queryRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-users/_/bookmarks");
         queryRequest.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();

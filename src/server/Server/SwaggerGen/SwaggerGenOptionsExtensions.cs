@@ -29,50 +29,50 @@ internal static class SwaggerGenOptionsExtensions
 
     public static SwaggerGenOptions ConfigureSwaggerDocs(this SwaggerGenOptions options)
     {
-        options.SwaggerDoc("v1", new()
+        options.SwaggerDoc("a1", new()
         {
-            Title = "Multitenancy Monolith V1",
-            Version = "v1"
+            Title = "Server A1",
+            Version = "a1"
         });
 
-        options.SwaggerDoc("v1-access", new()
+        options.SwaggerDoc("a1-access", new()
         {
-            Title = "Multitenancy Monolith V1 (access)",
-            Version = "v1-access"
+            Title = "Server A1 (access)",
+            Version = "a1-access"
         });
 
-        options.SwaggerDoc("v1-admission", new()
+        options.SwaggerDoc("a1-admission", new()
         {
-            Title = "Multitenancy Monolith V1 (admission)",
-            Version = "v1-admission"
+            Title = "Server A1 (admission)",
+            Version = "a1-admission"
         });
 
-        options.SwaggerDoc("v1-business", new()
+        options.SwaggerDoc("a1-business", new()
         {
-            Title = "Multitenancy Monolith V1 (business)",
-            Version = "v1-business"
+            Title = "Server A1 (business)",
+            Version = "a1-business"
         });
 
-        options.SwaggerDoc("v1-extension", new()
+        options.SwaggerDoc("a1-extension", new()
         {
-            Title = "Multitenancy Monolith V1 (extension)",
-            Version = "v1-extension"
+            Title = "Server A1 (extension)",
+            Version = "a1-extension"
         });
 
-        options.SwaggerDoc("v1-schedule", new()
+        options.SwaggerDoc("a1-schedule", new()
         {
-            Title = "Multitenancy Monolith V1 (schedule)",
-            Version = "v1-schedule"
+            Title = "Server A1 (schedule)",
+            Version = "a1-schedule"
         });
 
         options.DocInclusionPredicate((docName, apiDesc) =>
         {
-            if (docName == "v1")
+            if (docName == "a1")
             {
                 return true;
             }
 
-            if (docName.Equals($"v1-{apiDesc.GroupName}"))
+            if (docName.Equals($"a1-{apiDesc.GroupName}"))
             {
                 return true;
             }

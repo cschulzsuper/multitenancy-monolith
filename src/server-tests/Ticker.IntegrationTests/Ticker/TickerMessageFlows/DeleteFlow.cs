@@ -48,7 +48,7 @@ public sealed class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
                 tickerMessageInsertedTask.SetResult();
             };
 
-        var createRequest = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-messages");
+        var createRequest = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-messages");
         createRequest.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postTickerMessage = new
@@ -116,7 +116,7 @@ public sealed class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
                 }
             };
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/ticker/ticker-messages/{tickerMessage}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-messages/{tickerMessage}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -137,7 +137,7 @@ public sealed class DeleteFlow : IClassFixture<WebApplicationFactory<Program>>
     private async Task TickerBookmark_Query_ShouldSucceed()
     {
         // Arrange
-        var resetRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/_/bookmarks");
+        var resetRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-users/_/bookmarks");
         resetRequest.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var client = _factory.CreateClient();

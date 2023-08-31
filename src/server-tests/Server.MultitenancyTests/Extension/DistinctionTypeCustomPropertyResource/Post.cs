@@ -47,7 +47,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
 
         var postDistinctionTypeCustomProperty = new

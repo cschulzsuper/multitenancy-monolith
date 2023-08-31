@@ -22,7 +22,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validDistinctionType = "valid-distinction-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/extension/distinction-types/{validDistinctionType}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/extension/distinction-types/{validDistinctionType}");
 
         var client = _factory.CreateClient();
 
@@ -46,7 +46,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validDistinctionType = "valid-distinction-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/extension/distinction-types/{validDistinctionType}");
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/extension/distinction-types/{validDistinctionType}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();

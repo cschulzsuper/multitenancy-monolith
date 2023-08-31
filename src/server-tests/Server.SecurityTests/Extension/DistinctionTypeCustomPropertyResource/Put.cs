@@ -24,7 +24,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var validDistinctionType = "valid-distinction-type";
         var validDistinctionTypeCustomProperty = "put-distinction-type-custom-property";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
 
         var putDistinctionTypeCustomProperty = new
         {
@@ -56,7 +56,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         var validDistinctionType = "valid-distinction-type";
         var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/extension/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/extension/distinction-types/{validDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var putDistinctionTypeCustomProperty = new

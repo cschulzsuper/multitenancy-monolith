@@ -24,7 +24,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldSucceed_WhenValid(string mail, string secret)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/confirm");
 
         var confirmRequest = new
         {
@@ -49,7 +49,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldBeForbidden_WhenGroupAbsent()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/confirm");
 
         var confirmRequest = new
         {
@@ -75,7 +75,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldBeForbidden_WhenTickerUserAbsent()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/confirm");
 
         var confirmRequest = new
         {
@@ -101,7 +101,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldBeForbidden_WhenSecretIncorrect()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/confirm");
 
         var confirmRequest = new
         {
@@ -127,7 +127,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldBeForbidden_WhenSecretTokenIncorrect()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/confirm");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/confirm");
 
         var confirmRequest = new
         {

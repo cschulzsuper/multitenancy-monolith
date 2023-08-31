@@ -26,7 +26,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenValid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/_/bookmarks");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-users/_/bookmarks");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var postTickerBookmark = new
@@ -67,7 +67,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenTickerMessageZero()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/_/bookmarks");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-users/_/bookmarks");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var postTickerBookmark = new
@@ -100,7 +100,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenTickerMessageNegative()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/ticker/ticker-users/_/bookmarks");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/b1/ticker/ticker-users/_/bookmarks");
         request.Headers.Authorization = _factory.MockValidTickerAuthorizationHeader();
 
         var postTickerBookmark = new

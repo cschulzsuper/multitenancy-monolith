@@ -51,7 +51,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingDistinctionType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{existingDistinctionTypeCustomProperty.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{existingDistinctionTypeCustomProperty.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -76,7 +76,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         var invalidDistinctionType = "Invalid-distinction-type";
         var validDistinctionTypeCustomProperty = "valid-distinction-type-custom-property";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/distinction-types/{invalidDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/distinction-types/{invalidDistinctionType}/custom-properties/{validDistinctionTypeCustomProperty}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -109,7 +109,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
         var invalidDistinctionTypeCustomProperty = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{invalidDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{invalidDistinctionTypeCustomProperty}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -142,7 +142,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
         var absentDistinctionTypeCustomProperty = "absent-distinction-type-custom-property";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{absentDistinctionTypeCustomProperty}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/distinction-types/{existingDistinctionType.UniqueName}/custom-properties/{absentDistinctionTypeCustomProperty}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();

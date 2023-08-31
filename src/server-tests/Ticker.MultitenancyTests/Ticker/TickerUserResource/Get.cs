@@ -41,7 +41,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerUser);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/ticker/ticker-users/{existingTickerUser.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-users/{existingTickerUser.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.AccountGroup1);
 
         var client = _factory.CreateClient();

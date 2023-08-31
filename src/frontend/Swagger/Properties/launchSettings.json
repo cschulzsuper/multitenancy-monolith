@@ -2,7 +2,7 @@
   "profiles": {
     "http": {
       "commandName": "Project",
-      "launchBrowser": false,
+      "launchBrowser": true,
       "launchUrl": "http://localhost:5109/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
@@ -24,7 +24,7 @@
     },
     "https (development)": {
       "commandName": "Project",
-      "launchBrowser": false,
+      "launchBrowser": true,
       "launchUrl": "https://localhost:7272/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
@@ -46,7 +46,7 @@
     },
     "https (staging)": {
       "commandName": "Project",
-      "launchBrowser": false,
+      "launchBrowser": true,
       "launchUrl": "https://localhost:7272/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging",
@@ -68,7 +68,7 @@
     },
     "Docker (development)": {
       "commandName": "Docker",
-      "launchBrowser": false,
+      "launchBrowser": true,
       "launchUrl": "https://localhost:7272/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",

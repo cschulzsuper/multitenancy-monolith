@@ -53,7 +53,7 @@ public sealed class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
     private async Task TickerUser_Create_ShouldSucceed()
     {
         // Arrange
-        var createRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users");
+        var createRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users");
         createRequest.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var createContent = new
@@ -99,7 +99,7 @@ public sealed class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         var cancellationTokenSource = new CancellationTokenSource(2000);
         cancellationTokenSource.Token.Register(_eventPublicationInterceptorTask.SetCanceled);
 
-        var resetRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/{existingTickerUser.Snowflake}/reset");
+        var resetRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/{existingTickerUser.Snowflake}/reset");
         resetRequest.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -131,7 +131,7 @@ public sealed class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
         var cancellationTokenSource = new CancellationTokenSource(2000);
         cancellationTokenSource.Token.Register(_eventPublicationInterceptorTask.SetCanceled);
 
-        var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/auth");
+        var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/auth");
         var authContent = new
         {
             ClientName = MockWebApplication.ClientName,
@@ -168,7 +168,7 @@ public sealed class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
     private async Task TickerUser_Auth_ShouldBeForbidden()
     {
         // Arrange
-        var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/auth");
+        var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/auth");
         var authContent = new
         {
             ClientName = MockWebApplication.ClientName,
@@ -203,7 +203,7 @@ public sealed class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
             tickerUserSecretToken = @object.SecretToken;
         }
 
-        var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/confirm");
+        var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/confirm");
         var authContent = new
         {
             ClientName = MockWebApplication.ClientName,
@@ -252,7 +252,7 @@ public sealed class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
             tickerUserSecretToken = @object.SecretToken;
         }
 
-        var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/confirm");
+        var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/confirm");
         var authContent = new
         {
             ClientName = MockWebApplication.ClientName,
@@ -276,7 +276,7 @@ public sealed class SecretFlow : IClassFixture<WebApplicationFactory<Program>>
     private async Task TickerUser_Auth_ShouldSucceed_WithSecretStateConfirmed()
     {
         // Arrange
-        var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/ticker/ticker-users/_/auth");
+        var authRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/b1/ticker/ticker-users/_/auth");
         var authContent = new
         {
             ClientName = MockWebApplication.ClientName,

@@ -39,7 +39,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountGroup);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-groups/{existingAccountGroup.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -62,7 +62,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentAccountGroup = "absent-account-group";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-groups/{absentAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-groups/{absentAccountGroup}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();
@@ -81,7 +81,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidAccountGroup = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/access/account-groups/{invalidAccountGroup}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-groups/{invalidAccountGroup}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();

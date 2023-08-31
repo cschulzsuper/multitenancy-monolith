@@ -29,7 +29,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WithoutCustomProperties()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postBusinessObject = new
@@ -75,7 +75,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenCustomPropertyUnknown()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postBusinessObject = new
@@ -149,7 +149,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingObjectType);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postBusinessObject = new
@@ -215,7 +215,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingBusinessObject);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postBusinessObject = new
@@ -252,7 +252,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postBusinessObject = new
@@ -286,7 +286,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postBusinessObject = new
@@ -320,7 +320,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postBusinessObject = new
@@ -354,7 +354,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/business/business-objects");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/business/business-objects");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postBusinessObject = new

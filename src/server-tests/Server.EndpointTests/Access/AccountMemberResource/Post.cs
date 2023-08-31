@@ -27,7 +27,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenValid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
@@ -80,7 +80,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingAccountMember);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
@@ -117,7 +117,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameIsNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
@@ -151,7 +151,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameIsEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
@@ -185,7 +185,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
@@ -219,7 +219,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
@@ -253,7 +253,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressNull()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
@@ -287,7 +287,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressEmpty()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
@@ -321,7 +321,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
@@ -355,7 +355,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
@@ -389,7 +389,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressInvalid()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/access/account-members");
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new

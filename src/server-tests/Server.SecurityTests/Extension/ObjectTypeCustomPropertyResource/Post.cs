@@ -23,7 +23,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validObjectType = "required-object-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/object-types/{validObjectType}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{validObjectType}/custom-properties");
 
         var postObjectTypeCustomProperty = new
         {
@@ -57,7 +57,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var validObjectType = "required-object-type";
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/extension/object-types/{validObjectType}/custom-properties");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{validObjectType}/custom-properties");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var postObjectTypeCustomProperty = new

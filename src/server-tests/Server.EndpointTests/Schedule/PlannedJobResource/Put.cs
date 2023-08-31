@@ -40,7 +40,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingPlannedJob);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
@@ -77,7 +77,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidPlannedJob = "Invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/schedule/planned-jobs/{invalidPlannedJob}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{invalidPlannedJob}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
@@ -103,7 +103,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var absentPlannedJob = "absent-job";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/schedule/planned-jobs/{absentPlannedJob}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{absentPlannedJob}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
@@ -141,7 +141,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingPlannedJob);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
@@ -179,7 +179,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingPlannedJob);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
@@ -217,7 +217,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingPlannedJob);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
@@ -255,7 +255,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingPlannedJob);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new

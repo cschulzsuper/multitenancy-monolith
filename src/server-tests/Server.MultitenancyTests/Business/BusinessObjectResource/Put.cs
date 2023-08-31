@@ -39,7 +39,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingBusinessObject);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/business/business-objects/{existingBusinessObject.UniqueName}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/business/business-objects/{existingBusinessObject.UniqueName}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader(MockWebApplication.Group1);
 
         var putBusinessObject = new

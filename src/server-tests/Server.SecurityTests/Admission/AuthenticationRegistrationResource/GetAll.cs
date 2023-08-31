@@ -20,7 +20,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldBeUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/admission/authentication-registrations");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/admission/authentication-registrations");
 
         var client = _factory.CreateClient();
 
@@ -37,7 +37,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/admission/authentication-registrations");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/admission/authentication-registrations");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -60,7 +60,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/admission/authentication-registrations");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/admission/authentication-registrations");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock); ;
 
         var client = _factory.CreateClient();

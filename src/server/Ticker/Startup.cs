@@ -160,7 +160,7 @@ public sealed class Startup
                         .RequireClaim("scope", "swagger-json"));
             }
 
-            var apiEndpoints = endpoints.MapGroup("api");
+            var apiEndpoints = endpoints.MapGroup("api/b1");
 
             apiEndpoints.MapTickerEndpoints();
             apiEndpoints.MapScheduleEndpoints();

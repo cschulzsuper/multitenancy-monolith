@@ -54,7 +54,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingPlannedJob1, existingPlannedJob2);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/schedule/planned-jobs");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/b1/schedule/planned-jobs");
         request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
 
         var client = _factory.CreateClient();

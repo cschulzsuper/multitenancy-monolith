@@ -41,7 +41,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -94,7 +94,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -147,7 +147,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
 
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
@@ -201,7 +201,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -241,7 +241,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidTickerMessages = "invalid";
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{invalidTickerMessages}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{invalidTickerMessages}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -269,7 +269,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var invalidTickerMessages = 1;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{invalidTickerMessages}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{invalidTickerMessages}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -310,7 +310,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -366,7 +366,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -422,7 +422,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -478,7 +478,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -534,7 +534,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -590,7 +590,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -646,7 +646,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -702,7 +702,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -758,7 +758,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -814,7 +814,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
@@ -870,7 +870,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
                 .Insert(existingTickerMessage);
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/b1/ticker/ticker-messages/{existingTickerMessage.Snowflake}");
         request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
 
         var putTickerMessage = new
