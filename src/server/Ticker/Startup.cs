@@ -14,7 +14,6 @@ using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Middleware;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
-using ChristianSchulz.MultitenancyMonolith.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
@@ -47,12 +46,10 @@ public sealed class Startup
 
     private void LoadRequiredConfiguration(
         out AllowedClient[] allowedClients, 
-        out string[] allowedClientHosts, 
-        out string[] webServices)
+        out string[] allowedClientHosts)
     {
         var configurationProxyProvider = new ConfigurationProxyProvider(_configuration);
 
-        var configuredAdmissionServer = configurationProxyProvider.GetAdmissionServer();
         var configuredAllowedClients = configurationProxyProvider.GetAllowedClients();
         var configuredServicesMappings = configurationProxyProvider.GetServiceMappings();
 
@@ -64,20 +61,13 @@ public sealed class Startup
                 .Contains(serviceMapping.UniqueName))
             .Select(servicesMapping => servicesMapping.Url)
             .ToArray();
-
-        webServices = configuredServicesMappings
-            .Where(servicesMapping => servicesMapping.UniqueName == configuredAdmissionServer.Service)
-            .Select(servicesMapping => servicesMapping.UniqueName)
-            .Distinct()
-            .ToArray();
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
         LoadRequiredConfiguration(
             out var allowedClients,
-            out var allowedClientHosts,
-            out var webServices);
+            out var allowedClientHosts);
 
         services.ConfigureJsonOptions();
 
@@ -105,9 +95,6 @@ public sealed class Startup
         services.AddConfiguration();
         services.AddEvents(options => options.Configure());
         services.AddPlannedJobs(options => options.Configure());
-
-        services.AddWebServices(webServices);
-        services.AddTransportWebServiceClientFactory();
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryScheduleData();

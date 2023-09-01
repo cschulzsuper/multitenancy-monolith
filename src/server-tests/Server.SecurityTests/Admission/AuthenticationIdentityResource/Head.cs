@@ -60,21 +60,14 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(response.Content.Headers.ContentLength);
     }
 
-    [Theory]
-    [InlineData(MockWebApplication.MockAdmin)]
-    [InlineData(MockWebApplication.MockIdentity)]
-    [InlineData(MockWebApplication.MockDemo)]
-    [InlineData(MockWebApplication.MockChief)]
-    [InlineData(MockWebApplication.MockChiefObserver)]
-    [InlineData(MockWebApplication.MockMember)]
-    [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Head_ShouldFail_WhenInvalid(int mock)
+    [Fact]
+    public async Task Head_ShouldFail_WhenInvalid()
     {
         // Arrange
         var validAuthenticationIdentity = "valid-authentication-identity";
 
         var request = new HttpRequestMessage(HttpMethod.Head, $"/api/a1/admission/authentication-identities/{validAuthenticationIdentity}");
-        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader();
 
         var client = _factory.CreateClient();
 

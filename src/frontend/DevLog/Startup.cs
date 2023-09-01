@@ -1,11 +1,8 @@
-using ChristianSchulz.MultitenancyMonolith.Application;
-using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Security;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Services;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
-using ChristianSchulz.MultitenancyMonolith.Web;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,7 +15,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,26 +44,15 @@ public sealed class Startup
     private void LoadRequiredConfiguration(
         out AllowedClient[] allowedClients,
         out string admissionClientName,
-        out string admissionFrontendUrl,
-        out string[] webServices)
+        out string admissionFrontendUrl)
     {
         var configurationProxyProvider = new ConfigurationProxyProvider(_configuration);
 
-        var configuredAdmissionServer = configurationProxyProvider.GetAdmissionServer();
         var configuredAdmissionPortal = configurationProxyProvider.GetAdmissionPortal();
         var configuredAllowedClients = configurationProxyProvider.GetAllowedClients();
-        var configuredSwaggerDocs = configurationProxyProvider.GetSwaggerDocs();
         var configuredServicesMappings = configurationProxyProvider.GetServiceMappings();
 
         allowedClients = configuredAllowedClients;
-
-        webServices = configuredServicesMappings
-            .Where(servicesMapping =>
-                servicesMapping.UniqueName == configuredAdmissionServer.Service ||
-                configuredSwaggerDocs.Select(swaggerDoc => swaggerDoc.TestService).Contains(servicesMapping.UniqueName))
-            .Select(x => x.UniqueName)
-            .Distinct()
-            .ToArray();
 
         admissionClientName = configuredAdmissionPortal.ClientName;
 
@@ -83,8 +68,7 @@ public sealed class Startup
         LoadRequiredConfiguration(
             out var allowedClients,
             out var admissionClientName,
-            out var admissionFrontendUrl,
-            out var webServices);
+            out var admissionFrontendUrl);
 
         services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
         services.AddAuthentication(BearerTokenDefaults.AuthenticationScheme)
@@ -139,11 +123,6 @@ public sealed class Startup
 
         services.AddRequestUser(options => options.Configure(allowedClients));
         services.AddConfiguration();
-
-        services.AddWebServices(webServices);
-
-        services.AddTransportWebServiceClientFactory();
-        services.AddAdmissionTransportWebServiceClients();
 
         services.AddStaticDictionary();
         services.AddStaticDictionaryDocumentationData();

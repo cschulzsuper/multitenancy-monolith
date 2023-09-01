@@ -3,7 +3,6 @@ using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
 using Microsoft.AspNetCore.Authentication.BearerToken;
-using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -13,18 +12,15 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Access;
 internal sealed class ContextAccountMemberCommandHandler : IContextAccountMemberCommandHandler
 {
     private readonly IAccountMemberManager _accountMemberManager;
-    private readonly IAccountMemberVerificationManager _memberVerificationManager;
     private readonly AllowedClient[] _allowedClients;
     private readonly ClaimsPrincipal _user;
 
     public ContextAccountMemberCommandHandler(
         IAccountMemberManager accountMemberManager,
-        IAccountMemberVerificationManager accountMemberVerificationManager,
         IConfigurationProxyProvider configurationProxyProvider,
         ClaimsPrincipal user)
     {
         _accountMemberManager = accountMemberManager;
-        _memberVerificationManager = accountMemberVerificationManager;
         _allowedClients = configurationProxyProvider.GetAllowedClients();
         _user = user;
     }
@@ -56,20 +52,6 @@ internal sealed class ContextAccountMemberCommandHandler : IContextAccountMember
             TransportException.ThrowSecurityViolation($"Can not sign in as account member '{command.AccountMember}' in account group '{command.AccountGroup}'.");
         }
 
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var verificationKey = new AccountMemberVerificationKey
-        {
-            ClientName = clientName,
-            AuthenticationIdentity = authenticationIdentity,
-            AccountGroup = command.AccountGroup,
-            AccountMember = command.AccountMember
-        };
-
-        _memberVerificationManager.Set(verificationKey, verification);
-
-        var verificationValue = Convert.ToBase64String(verification);
-
         var claims = new Claim[]
         {
             new Claim("type", "member"),
@@ -77,7 +59,6 @@ internal sealed class ContextAccountMemberCommandHandler : IContextAccountMember
             new Claim("identity", authenticationIdentity),
             new Claim("group", command.AccountGroup),
             new Claim("member", command.AccountMember),
-            new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);

@@ -76,14 +76,12 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     }
 
 
-    [Theory]
-    [InlineData(MockWebApplication.MockMember)]
-    [InlineData(MockWebApplication.MockTicker)]
-    public async Task GetAll_ShouldBeUnauthorized_WhenInvalid(int mock)
+    [Fact]
+    public async Task GetAll_ShouldBeUnauthorized_WhenInvalid()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/b1/ticker/ticker-messages");
-        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader();
 
         var client = _factory.CreateClient();
 

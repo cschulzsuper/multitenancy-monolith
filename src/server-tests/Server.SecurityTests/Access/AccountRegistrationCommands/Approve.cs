@@ -56,20 +56,14 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
         Assert.NotEqual(0, response.Content.Headers.ContentLength);
     }
 
-    [Theory]
-    [InlineData(MockWebApplication.MockIdentity)]
-    [InlineData(MockWebApplication.MockDemo)]
-    [InlineData(MockWebApplication.MockChief)]
-    [InlineData(MockWebApplication.MockChiefObserver)]
-    [InlineData(MockWebApplication.MockMember)]
-    [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Approve_ShouldBeUnauthorized_WhenInvalid(int mock)
+    [Fact]
+    public async Task Approve_ShouldBeUnauthorized_WhenInvalid()
     {
         // Arrange
         var validAccountRegistration = 1;
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/{validAccountRegistration}/approve");
-        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader();
 
         var client = _factory.CreateClient();
 

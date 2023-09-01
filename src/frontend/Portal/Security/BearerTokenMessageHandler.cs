@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Authentication.BearerToken;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Security.Claims;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Security;
 
 public static class BearerTokenMessageHandler
 {
-    public static async Task Handle<TBearerTokenValidator>(MessageReceivedContext context)
-        where TBearerTokenValidator : BearerTokenValidator
+    private static readonly string[] allowedAuthenticationTypes = { "identity", "member" };
+
+    public static Task Handle(MessageReceivedContext context)
     {
         context.Token =
             GetTokenFromHeaders(context.HttpContext) ??
@@ -19,11 +22,21 @@ public static class BearerTokenMessageHandler
         if (ticket == null)
         {
             context.Fail("Unprotected token failed");
-            return;
+            return Task.CompletedTask;
         }
 
-        await Activator.CreateInstance<TBearerTokenValidator>()
-            .ValidateAsync(context, ticket);
+        var authenticationType = ticket.Principal.GetClaimOrDefault("type");
+        var authenticationTypeAllowed = allowedAuthenticationTypes.Contains(authenticationType);
+
+        if (!authenticationTypeAllowed)
+        {
+            context.Fail($"Authentication type '{authenticationType}' not allowed");
+            return Task.CompletedTask;
+        }
+
+        context.Principal = ticket.Principal;
+        context.Success();
+        return Task.CompletedTask;
     }
 
     private static string? GetTokenFromHeaders(HttpContext context)

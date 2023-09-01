@@ -56,11 +56,11 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
     [InlineData(MockWebApplication.MockChiefObserver)]
     [InlineData(MockWebApplication.MockMember)]
     [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Verify_ShouldBeUnauthorized_WhenNotIdentity(int mock)
+    public async Task Verify_ShouldBeForbidden_WhenNotAuthorized(int mock)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities/_/verify");
-        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
 
@@ -68,22 +68,15 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
-    [Theory]
-    [InlineData(MockWebApplication.MockAdmin)]
-    [InlineData(MockWebApplication.MockIdentity)]
-    [InlineData(MockWebApplication.MockDemo)]
-    [InlineData(MockWebApplication.MockChief)]
-    [InlineData(MockWebApplication.MockChiefObserver)]
-    [InlineData(MockWebApplication.MockMember)]
-    [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Verify_ShouldBeUnauthorized_WhenInvalid(int mock)
+    [Fact]
+    public async Task Verify_ShouldBeUnauthorized_WhenInvalid()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/admission/authentication-identities/_/verify");
-        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader();
 
         var client = _factory.CreateClient();
 

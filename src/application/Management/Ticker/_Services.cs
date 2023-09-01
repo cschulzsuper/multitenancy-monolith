@@ -11,7 +11,6 @@ public static class _Services
         services.AddScoped<ITickerBookmarkManager, TickerBookmarkManager>();
         services.AddScoped<ITickerMessageManager, TickerMessageManager>();
         services.AddScoped<ITickerUserManager, TickerUserManager>();
-        services.AddScoped<ITickerUserVerificationManager, TickerUserVerificationManager>();
 
         return services;
     }

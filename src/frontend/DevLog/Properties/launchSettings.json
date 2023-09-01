@@ -6,10 +6,8 @@
       "launchUrl": "http://localhost:5213/dev-log",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "MM_DevLog_ServiceMappings__0__UniqueName": "server",
-        "MM_DevLog_ServiceMappings__0__Url": "http://localhost:5177",
-        "MM_DevLog_ServiceMappings__1__UniqueName": "portal",
-        "MM_DevLog_ServiceMappings__1__Url": "http://localhost:5015"
+        "MM_DevLog_ServiceMappings__0__UniqueName": "portal",
+        "MM_DevLog_ServiceMappings__0__Url": "http://localhost:5015"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5213"
@@ -20,10 +18,8 @@
       "launchUrl": "https://localhost:7190/dev-log",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "MM_DevLog_ServiceMappings__0__UniqueName": "server",
-        "MM_DevLog_ServiceMappings__0__Url": "https://localhost:7207",
-        "MM_DevLog_ServiceMappings__1__UniqueName": "portal",
-        "MM_DevLog_ServiceMappings__1__Url": "https://localhost:7053"
+        "MM_DevLog_ServiceMappings__0__UniqueName": "portal",
+        "MM_DevLog_ServiceMappings__0__Url": "https://localhost:7053"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7190;http://localhost:5213"
@@ -34,10 +30,8 @@
       "launchUrl": "https://localhost:7190/dev-log",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging",
-        "MM_DevLog_ServiceMappings__0__UniqueName": "server",
-        "MM_DevLog_ServiceMappings__0__Url": "https://localhost:7207",
-        "MM_DevLog_ServiceMappings__1__UniqueName": "portal",
-        "MM_DevLog_ServiceMappings__1__Url": "https://localhost:7053"
+        "MM_DevLog_ServiceMappings__0__UniqueName": "portal",
+        "MM_DevLog_ServiceMappings__0__Url": "https://localhost:7053"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7190;http://localhost:5213"
@@ -50,10 +44,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HTTP_PORTS": "5213",
         "ASPNETCORE_HTTPS_PORTS": "7190",
-        "MM_DevLog_ServiceMappings__0__UniqueName": "server",
-        "MM_DevLog_ServiceMappings__0__Url": "https://host.docker.internal:7207",
-        "MM_DevLog_ServiceMappings__1__UniqueName": "portal",
-        "MM_DevLog_ServiceMappings__1__Url": "https://localhost:7053"
+        "MM_DevLog_ServiceMappings__0__UniqueName": "portal",
+        "MM_DevLog_ServiceMappings__0__Url": "https://localhost:7053"
       },
       "publishAllPorts": true,
       "useSSL": true,

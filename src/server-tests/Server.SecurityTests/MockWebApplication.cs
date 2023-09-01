@@ -1,6 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Access;
-using ChristianSchulz.MultitenancyMonolith.Application.Admission;
-using ChristianSchulz.MultitenancyMonolith.Server;
+﻿using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Hosting;
@@ -127,26 +125,11 @@ internal static class MockWebApplication
 
     private static AuthenticationHeaderValue MockValidAdminAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
     {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var verificationKey = new AuthenticationIdentityVerificationKey
-        {
-            ClientName = client,
-            AuthenticationIdentity = AuthenticationIdentityAdmin
-        };
-
-        using var scope = factory.Services.CreateScope();
-
-        scope.ServiceProvider
-            .GetRequiredService<IAuthenticationIdentityVerificationManager>()
-            .Set(verificationKey, verification);
-
         var claims = new Claim[]
         {
             new Claim("type", "identity"),
             new Claim("client", client),
-            new Claim("identity", AuthenticationIdentityAdmin),
-            new Claim("verification", Convert.ToBase64String(verification)),
+            new Claim("identity", AuthenticationIdentityAdmin)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -156,26 +139,11 @@ internal static class MockWebApplication
 
     private static AuthenticationHeaderValue MockValidIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
     {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var verificationKey = new AuthenticationIdentityVerificationKey
-        {
-            ClientName = client,
-            AuthenticationIdentity = AuthenticationIdentityIdentity
-        };
-
-        using var scope = factory.Services.CreateScope();
-
-        scope.ServiceProvider
-            .GetRequiredService<IAuthenticationIdentityVerificationManager>()
-            .Set(verificationKey, verification);
-
         var claims = new Claim[]
         {
             new Claim("type", "identity"),
             new Claim("client", client),
-            new Claim("identity", AuthenticationIdentityIdentity),
-            new Claim("verification", Convert.ToBase64String(verification)),
+            new Claim("identity", AuthenticationIdentityIdentity)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -185,26 +153,11 @@ internal static class MockWebApplication
 
     private static AuthenticationHeaderValue MockValidDemoAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
     {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var verificationKey = new AuthenticationIdentityVerificationKey
-        {
-            ClientName = client,
-            AuthenticationIdentity = AuthenticationIdentityDemo
-        };
-
-        using var scope = factory.Services.CreateScope();
-
-        scope.ServiceProvider
-            .GetRequiredService<IAuthenticationIdentityVerificationManager>()
-            .Set(verificationKey, verification);
-
         var claims = new Claim[]
         {
             new Claim("type", "identity"),
             new Claim("client", client),
-            new Claim("identity", AuthenticationIdentityDemo),
-            new Claim("verification", Convert.ToBase64String(verification)),
+            new Claim("identity", AuthenticationIdentityDemo)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -214,30 +167,13 @@ internal static class MockWebApplication
 
     private static AuthenticationHeaderValue MockValidChiefAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
     {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var verificationKey = new AccountMemberVerificationKey
-        {
-            ClientName = client,
-            AuthenticationIdentity = AuthenticationIdentityIdentity,
-            AccountGroup = AccountGroup,
-            AccountMember = AccountGroupChief,
-        };
-
-        using var scope = factory.Services.CreateScope();
-
-        scope.ServiceProvider
-            .GetRequiredService<IAccountMemberVerificationManager>()
-            .Set(verificationKey, verification);
-
         var claims = new Claim[]
         {
             new Claim("type", "member"),
             new Claim("client", client),
             new Claim("identity", AuthenticationIdentityIdentity),
             new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupChief),
-            new Claim("verification", Convert.ToBase64String(verification)),
+            new Claim("member", AccountGroupChief)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -247,30 +183,13 @@ internal static class MockWebApplication
 
     private static AuthenticationHeaderValue MockValidChiefObserverAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
     {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var verificationKey = new AccountMemberVerificationKey
-        {
-            ClientName = client,
-            AuthenticationIdentity = AuthenticationIdentityDemo,
-            AccountGroup = AccountGroup,
-            AccountMember = AccountGroupChief,
-        };
-
-        using var scope = factory.Services.CreateScope();
-
-        scope.ServiceProvider
-            .GetRequiredService<IAccountMemberVerificationManager>()
-            .Set(verificationKey, verification);
-
         var claims = new Claim[]
         {
             new Claim("type", "member"),
             new Claim("client", client),
             new Claim("identity", AuthenticationIdentityDemo),
             new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupChief),
-            new Claim("verification", Convert.ToBase64String(verification)),
+            new Claim("member", AccountGroupChief)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -280,30 +199,13 @@ internal static class MockWebApplication
 
     private static AuthenticationHeaderValue MockValidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
     {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var verificationKey = new AccountMemberVerificationKey
-        {
-            ClientName = client,
-            AuthenticationIdentity = AuthenticationIdentityIdentity,
-            AccountGroup = AccountGroup,
-            AccountMember = AccountGroupMember,
-        };
-
-        using var scope = factory.Services.CreateScope();
-
-        scope.ServiceProvider
-            .GetRequiredService<IAccountMemberVerificationManager>()
-            .Set(verificationKey, verification);
-
         var claims = new Claim[]
         {
             new Claim("type", "member"),
             new Claim("client", client),
             new Claim("identity", AuthenticationIdentityIdentity),
             new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupMember),
-            new Claim("verification", Convert.ToBase64String(verification)),
+            new Claim("member", AccountGroupMember)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -313,30 +215,13 @@ internal static class MockWebApplication
 
     private static AuthenticationHeaderValue MockValidMemberObserverAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
     {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var verificationKey = new AccountMemberVerificationKey
-        {
-            ClientName = client,
-            AuthenticationIdentity = AuthenticationIdentityDemo,
-            AccountGroup = AccountGroup,
-            AccountMember = AccountGroupMember,
-        };
-
-        using var scope = factory.Services.CreateScope();
-
-        scope.ServiceProvider
-            .GetRequiredService<IAccountMemberVerificationManager>()
-            .Set(verificationKey, verification);
-
         var claims = new Claim[]
         {
             new Claim("type", "member"),
             new Claim("client", client),
             new Claim("identity", AuthenticationIdentityDemo),
             new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupMember),
-            new Claim("verification", Convert.ToBase64String(verification)),
+            new Claim("member", AccountGroupMember)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -344,144 +229,15 @@ internal static class MockWebApplication
         return new AuthenticationHeaderValue("Bearer", token);
     }
 
-    public static AuthenticationHeaderValue MockInvalidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock)
-        => mock switch
-        {
-            MockAdmin => factory.MockInvalidAdminAuthorizationHeader(),
-            MockIdentity => factory.MockInvalidAuthenticationIdentityAuthorizationHeader(),
-            MockDemo => factory.MockInvalidDemoAuthorizationHeader(),
-            MockChief => factory.MockInvalidChiefAuthorizationHeader(),
-            MockChiefObserver => factory.MockInvalidChiefObserverAuthorizationHeader(),
-            MockMember => factory.MockInvalidMemberAuthorizationHeader(),
-            MockMemberObserver => factory.MockInvalidMemberObserverAuthorizationHeader(),
-            _ => throw new UnreachableException("Mock not found!")
-        };
-
-    private static AuthenticationHeaderValue MockInvalidAdminAuthorizationHeader(this WebApplicationFactory<Program> factory)
+    public static AuthenticationHeaderValue MockInvalidAuthorizationHeader(this WebApplicationFactory<Program> factory)
     {
-        var verification = Guid.NewGuid().ToByteArray();
-
         var claims = new Claim[]
         {
-            new Claim("type", "identity"),
-            new Claim("client", Client),
-            new Claim("identity", AuthenticationIdentityAdmin),
-            new Claim("verification", Convert.ToBase64String(verification)),
+            new Claim("type", "invalid")
         };
 
         var token = factory.ProtectClaims(claims);
 
         return new AuthenticationHeaderValue("Bearer", token);
     }
-
-    private static AuthenticationHeaderValue MockInvalidAuthenticationIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory)
-    {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var claims = new Claim[]
-        {
-            new Claim("type", "identity"),
-            new Claim("client", Client),
-            new Claim("identity", AuthenticationIdentityIdentity),
-            new Claim("verification", Convert.ToBase64String(verification)),
-        };
-
-        var token = factory.ProtectClaims(claims);
-
-        return new AuthenticationHeaderValue("Bearer", token);
-    }
-
-    private static AuthenticationHeaderValue MockInvalidDemoAuthorizationHeader(this WebApplicationFactory<Program> factory)
-    {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var claims = new Claim[]
-        {
-            new Claim("type", "identity"),
-            new Claim("client", Client),
-            new Claim("identity", AuthenticationIdentityDemo),
-            new Claim("verification", Convert.ToBase64String(verification)),
-        };
-
-        var token = factory.ProtectClaims(claims);
-
-        return new AuthenticationHeaderValue("Bearer", token);
-    }
-
-    private static AuthenticationHeaderValue MockInvalidChiefAuthorizationHeader(this WebApplicationFactory<Program> factory)
-    {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var claims = new Claim[]
-        {
-            new Claim("type", "member"),
-            new Claim("client", Client),
-            new Claim("identity", AuthenticationIdentityIdentity),
-            new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupChief),
-            new Claim("verification", Convert.ToBase64String(verification)),
-        };
-
-        var token = factory.ProtectClaims(claims);
-
-        return new AuthenticationHeaderValue("Bearer", token);
-    }
-
-    private static AuthenticationHeaderValue MockInvalidChiefObserverAuthorizationHeader(this WebApplicationFactory<Program> factory)
-    {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var claims = new Claim[]
-        {
-            new Claim("type", "member"),
-            new Claim("client", Client),
-            new Claim("identity", AuthenticationIdentityDemo),
-            new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupChief),
-            new Claim("verification", Convert.ToBase64String(verification)),
-        };
-
-        var token = factory.ProtectClaims(claims);
-
-        return new AuthenticationHeaderValue("Bearer", token);
-    }
-
-    private static AuthenticationHeaderValue MockInvalidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory)
-    {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var claims = new Claim[]
-        {
-            new Claim("type", "member"),
-            new Claim("client", Client),
-            new Claim("identity", AuthenticationIdentityIdentity),
-            new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupMember),
-            new Claim("verification", Convert.ToBase64String(verification)),
-        };
-
-        var token = factory.ProtectClaims(claims);
-
-        return new AuthenticationHeaderValue("Bearer", token);
-    }
-
-    private static AuthenticationHeaderValue MockInvalidMemberObserverAuthorizationHeader(this WebApplicationFactory<Program> factory)
-    {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var claims = new Claim[]
-        {
-            new Claim("type", "member"),
-            new Claim("client", Client),
-            new Claim("identity", AuthenticationIdentityDemo),
-            new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupMember),
-            new Claim("verification", Convert.ToBase64String(verification)),
-        };
-
-        var token = factory.ProtectClaims(claims);
-
-        return new AuthenticationHeaderValue("Bearer", token);
-    }
-
 }

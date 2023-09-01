@@ -20,10 +20,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\application\Management\Management.csproj" />
-		<ProjectReference Include="..\..\application\Transport.Web\Transport.Web.csproj" />
 		<ProjectReference Include="..\..\configuration\Configuration\Configuration.csproj" />
 		<ProjectReference Include="..\..\data\Data.StaticDictionary\Data.StaticDictionary.csproj" />
-		<ProjectReference Include="..\..\data\Web\Web.csproj" />
 		<ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
 	</ItemGroup>
 

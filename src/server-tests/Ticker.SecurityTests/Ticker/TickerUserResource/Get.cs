@@ -81,21 +81,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 
-    [Theory]
-    [InlineData(MockWebApplication.MockAdmin)]
-    [InlineData(MockWebApplication.MockIdentity)]
-    [InlineData(MockWebApplication.MockDemo)]
-    [InlineData(MockWebApplication.MockChiefObserver)]
-    [InlineData(MockWebApplication.MockMember)]
-    [InlineData(MockWebApplication.MockMemberObserver)]
-    [InlineData(MockWebApplication.MockTicker)]
-    public async Task GetAll_ShouldBeUnauthorized_WhenInvalid(int mock)
+    [Fact]
+    public async Task GetAll_ShouldBeUnauthorized_WhenInvalid()
     {
         // Arrange
         var validTickerUser = 1;
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/b1/ticker/ticker-users/{validTickerUser}");
-        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader();
 
         var client = _factory.CreateClient();
 

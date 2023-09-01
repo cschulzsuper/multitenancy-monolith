@@ -26,14 +26,12 @@
 		<ProjectReference Include="..\..\application\Orchestration\Orchestration.csproj" />
 		<ProjectReference Include="..\..\application\Schedule\Schedule.csproj" />
 		<ProjectReference Include="..\..\application\Subscriptions\Subscriptions.csproj" />
-		<ProjectReference Include="..\..\application\Transport.Web\Transport.Web.csproj" />
 		<ProjectReference Include="..\..\application\Transport\Transport.csproj" />
 		<ProjectReference Include="..\..\configuration\Configuration\Configuration.csproj" />
 		<ProjectReference Include="..\..\data\Caching\Caching.csproj" />
 		<ProjectReference Include="..\..\data\Data.StaticDictionary\Data.StaticDictionary.csproj" />
 		<ProjectReference Include="..\..\data\Events.ThreadingChannels\Events.ThreadingChannels.csproj" />
 		<ProjectReference Include="..\..\data\Jobs.SequentialQueue\Jobs.SequentialQueue.csproj" />
-		<ProjectReference Include="..\..\data\Web\Web.csproj" />
 	</ItemGroup>
 	
 </Project>

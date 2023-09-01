@@ -1,8 +1,6 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Ticker;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
+﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Ticker.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker;
-using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
 using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
@@ -121,13 +119,6 @@ internal static class MockWebApplication
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory, ITestOutputHelper? output = null)
         => factory.WithWebHostBuilder(app => app
             .UseEnvironment("Staging")
-            .ConfigureServices(services =>
-            {
-                services.Configure<BearerTokenOptions>(BearerTokenDefaults.AuthenticationScheme, options =>
-                {
-                    options.Events.OnMessageReceived = BearerTokenMessageHandler.Handle<MockBearerTokenValidator>;
-                });
-            })
             .ConfigureLogging(loggingBuilder =>
             {
                 if (output != null)
@@ -285,28 +276,12 @@ internal static class MockWebApplication
 
     private static AuthenticationHeaderValue MockValidTickerAuthorizationHeader(this WebApplicationFactory<Program> factory, string client)
     {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var verificationKey = new TickerUserVerificationKey
-        {
-            ClientName = client,
-            AccountGroup = AccountGroup,
-            Mail = ConfirmedMailAddress,
-        };
-
-        using var scope = factory.Services.CreateScope();
-
-        scope.ServiceProvider
-            .GetRequiredService<ITickerUserVerificationManager>()
-            .Set(verificationKey, verification);
-
         var claims = new Claim[]
         {
             new Claim("type", "ticker"),
             new Claim("client", client),
             new Claim("group", AccountGroup),
-            new Claim("mail", ConfirmedMailAddress),
-            new Claim("verification", Convert.ToBase64String(verification)),
+            new Claim("mail", ConfirmedMailAddress)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -314,60 +289,11 @@ internal static class MockWebApplication
         return new AuthenticationHeaderValue("Bearer", token);
     }
 
-    public static AuthenticationHeaderValue MockInvalidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock)
-        => mock switch
-        {
-            MockAdmin => factory.MockInvalidIdentityAuthorizationHeader(),
-            MockIdentity => factory.MockInvalidIdentityAuthorizationHeader(),
-            MockDemo => factory.MockInvalidIdentityAuthorizationHeader(),
-            MockChief => factory.MockInvalidMemberAuthorizationHeader(),
-            MockChiefObserver => factory.MockInvalidMemberAuthorizationHeader(),
-            MockMember => factory.MockInvalidMemberAuthorizationHeader(),
-            MockMemberObserver => factory.MockInvalidMemberAuthorizationHeader(),
-            MockTicker => factory.MockInvalidTickerAuthorizationHeader(),
-            _ => throw new UnreachableException("Mock not found!")
-        };
-
-    private static AuthenticationHeaderValue MockInvalidIdentityAuthorizationHeader(this WebApplicationFactory<Program> factory)
+    public static AuthenticationHeaderValue MockInvalidAuthorizationHeader(this WebApplicationFactory<Program> factory)
     {
         var claims = new Claim[]
         {
-            new Claim("type", "identity"),
-            new Claim("client", ClientName),
-            new Claim("identity", "invalid")
-        };
-
-        var token = factory.ProtectClaims(claims);
-
-        return new AuthenticationHeaderValue("Bearer", token);
-    }
-
-    private static AuthenticationHeaderValue MockInvalidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory)
-    {
-        var claims = new Claim[]
-        {
-            new Claim("type", "member"),
-            new Claim("client", ClientName),
-            new Claim("group", AccountGroup),
-            new Claim("member", "invalid")
-        };
-
-        var token = factory.ProtectClaims(claims);
-
-        return new AuthenticationHeaderValue("Bearer", token);
-    }
-
-    private static AuthenticationHeaderValue MockInvalidTickerAuthorizationHeader(this WebApplicationFactory<Program> factory)
-    {
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var claims = new Claim[]
-        {
-            new Claim("type", "ticker"),
-            new Claim("client", ClientName),
-            new Claim("group", AccountGroup),
-            new Claim("mail", InvalidMailAddress),
-            new Claim("verification", Convert.ToBase64String(verification)),
+            new Claim("type", "invalid")
         };
 
         var token = factory.ProtectClaims(claims);

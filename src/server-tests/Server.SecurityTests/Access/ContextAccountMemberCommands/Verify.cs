@@ -71,19 +71,12 @@ public sealed class Verify : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
-    [Theory]
-    [InlineData(MockWebApplication.MockAdmin)]
-    [InlineData(MockWebApplication.MockIdentity)]
-    [InlineData(MockWebApplication.MockDemo)]
-    [InlineData(MockWebApplication.MockChief)]
-    [InlineData(MockWebApplication.MockChiefObserver)]
-    [InlineData(MockWebApplication.MockMember)]
-    [InlineData(MockWebApplication.MockMemberObserver)]
-    public async Task Verify_ShouldBeUnauthorized_WhenInvalid(int mock)
+    [Fact]
+    public async Task Verify_ShouldBeUnauthorized_WhenInvalid()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members/_/verify");
-        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader();
 
         var client = _factory.CreateClient();
 

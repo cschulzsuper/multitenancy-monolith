@@ -115,21 +115,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(0, response.Content.Headers.ContentLength);
     }
 
-    [Theory]
-    [InlineData(MockWebApplication.MockAdmin)]
-    [InlineData(MockWebApplication.MockIdentity)]
-    [InlineData(MockWebApplication.MockDemo)]
-    [InlineData(MockWebApplication.MockChiefObserver)]
-    [InlineData(MockWebApplication.MockMember)]
-    [InlineData(MockWebApplication.MockMemberObserver)]
-    [InlineData(MockWebApplication.MockTicker)]
-    public async Task Delete_ShouldBeUnauthorized_WhenInvalid(int mock)
+    [Fact]
+    public async Task Delete_ShouldBeUnauthorized_WhenInvalid()
     {
         // Arrange
         var validTickerMessage = 1;
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/b1/ticker/ticker-users/_/bookmarks/{validTickerMessage}");
-        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader(mock);
+        request.Headers.Authorization = _factory.MockInvalidAuthorizationHeader();
         request.Content = JsonContent.Create(new object());
 
         var client = _factory.CreateClient();

@@ -2,11 +2,13 @@
 
 ### Create a development certifciate
 
+#### Used by ASP.NET Core
 ``` bash
 dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\multitenancy-monolith.pfx" -p default
 dotnet dev-certs https --trust
 ```
 
+#### Used by `nginx`
 ``` bash
 openssl pkcs12 -in ./multitenancy-monolith.pfx -clcerts -nokeys -out multitenancy-monolith.crt
 openssl pkcs12 -in ./multitenancy-monolith.pfx -nocerts -nodes -out multitenancy-monolith.rsa
@@ -22,13 +24,13 @@ docker compose -p multitenancy-monolith up
 
 ### DevLog
 
-* Browser: `https://localhost:7190`
+* Browser: `https://localhost`
 * Username: `demo`
 * Password: `default`
 
 
 ### Swagger
 
-* Browser: `https://localhost:7272`
+* Browser: `https://localhost/swagger`
 * Username: `demo`
 * Password: `default`

@@ -2,7 +2,6 @@
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using Microsoft.AspNetCore.Authentication.BearerToken;
-using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -12,16 +11,13 @@ namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
 internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuthenticationIdentityCommandHandler
 {
     private readonly IAuthenticationIdentityManager _authenticationIdentityManager;
-    private readonly IAuthenticationIdentityVerificationManager _identityVerificationManager;
     private readonly AllowedClient[] _allowedClients;
 
     public ContextAuthenticationIdentityCommandHandler(
         IAuthenticationIdentityManager authenticationIdentityManager,
-        IAuthenticationIdentityVerificationManager identityVerificationManager,
         IConfigurationProxyProvider configurationProxyProvider)
     {
         _authenticationIdentityManager = authenticationIdentityManager;
-        _identityVerificationManager = identityVerificationManager;
         _allowedClients = configurationProxyProvider.GetAllowedClients();
     }
 
@@ -39,24 +35,11 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
             TransportException.ThrowSecurityViolation($"Could not match authentication identity '{command.AuthenticationIdentity}' against secret");
         }
 
-        var verification = Guid.NewGuid().ToByteArray();
-
-        var verificationKey = new AuthenticationIdentityVerificationKey
-        {
-            ClientName = clientName,
-            AuthenticationIdentity = command.AuthenticationIdentity
-        };
-
-        _identityVerificationManager.Set(verificationKey, verification);
-
-        var verificationValue = Convert.ToBase64String(verification);
-
         var claims = new Claim[]
         {
             new Claim("type", "identity"),
             new Claim("client", command.ClientName),
-            new Claim("identity", command.AuthenticationIdentity),
-            new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
+            new Claim("identity", command.AuthenticationIdentity)
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);

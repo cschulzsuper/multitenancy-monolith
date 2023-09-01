@@ -139,7 +139,10 @@ Clone the repository and start the [compose file](./docker/README.md).
   * /74 The old seed data provider is gone, and I also changed other things related to the configuration, that is provided via `appsettings.json`. I will fill the development log, when I have something deployable. https://github.com/cschulzsuper/multitenancy-monolith/commit/0ce0bb460d3f1d2be2168da1dfab01b60bbafe48
 
 ### nginx Reverse Proxy
-  * /75 I'm not an expert when it comes to nginx, so this is just some early script kiddy experiment. I added an nginx container with a simple nginx.conf. Adjustments in the API routes and `<base>` tags where necessary. It seems to work. 
+  * /75 I'm not an expert when it comes to nginx, so this is just some early script kiddy experiment. I added an nginx container with a simple nginx.conf. Adjustments in the API routes and `<base>` tags where necessary. It seems to work. https://github.com/cschulzsuper/multitenancy-monolith/commit/f707807d2f6867618aef48c2889f637033a0a145
+
+### Bearer Token Clean Up
+  * /76 After the recent _Bearer Token Refactoring_, I had to evaluate, if the `verification` keys, that are stored in the token, are still needed. The build-in `DataProtection` secures the token for my needs quite well. I decided now, to remove everthing releted to the `verification` and also made the token validation much simpler. 
 
 # Backlog
 

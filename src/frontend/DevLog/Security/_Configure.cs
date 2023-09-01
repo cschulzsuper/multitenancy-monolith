@@ -18,7 +18,7 @@ internal static class _Configure
 
     public static BearerTokenOptions Configure(this BearerTokenOptions options)
     {
-        options.Events.OnMessageReceived = BearerTokenMessageHandler.Handle<BearerTokenValidator>;
+        options.Events.OnMessageReceived = BearerTokenMessageHandler.Handle;
 
         return options;
     }

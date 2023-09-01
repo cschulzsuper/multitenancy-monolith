@@ -10,7 +10,6 @@ public static class _Services
     {
         services.AddScoped<IAccountGroupManager, AccountGroupManager>();
         services.AddScoped<IAccountMemberManager, AccountMemberManager>();
-        services.AddScoped<IAccountMemberVerificationManager, AccountMemberVerificationManager>();
         services.AddScoped<IAccountRegistrationManager, AccountRegistrationManager>();
 
         return services;

@@ -17,14 +17,12 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
 {
     private readonly ITickerUserManager _tickerUserManager;
     private readonly ITickerMessageManager _tickerMessageManager;
-    private readonly ITickerUserVerificationManager _tickerUserVerificationManager;
     private readonly AllowedClient[] _allowedClients;
     private readonly ClaimsPrincipal _user;
     private readonly IEventStorage _eventStorage;
 
     public ContextTickerUserCommandHandler(
         ITickerUserManager tickerUserManager,
-        ITickerUserVerificationManager tickerUserVerificationManager,
         ITickerMessageManager tickerMessageManager,
         IConfigurationProxyProvider configurationProxyProvider,
         ClaimsPrincipal user,
@@ -32,7 +30,6 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
     {
         _tickerUserManager = tickerUserManager;
         _tickerMessageManager = tickerMessageManager;
-        _tickerUserVerificationManager = tickerUserVerificationManager;
         _allowedClients = configurationProxyProvider.GetAllowedClients();
         _user = user;
         _eventStorage = eventStorage;
@@ -86,25 +83,12 @@ internal sealed class ContextTickerUserCommandHandler : IContextTickerUserComman
 
         await _tickerUserManager.UpdateAsync(command.Mail, updateAction, defaultAction);
 
-        var verification = Guid.NewGuid().ToByteArray();
-        var verificationKey = new TickerUserVerificationKey
-        {
-            AccountGroup = command.AccountGroup,
-            ClientName = clientName,
-            Mail = command.Mail
-        };
-
-        _tickerUserVerificationManager.Set(verificationKey, verification);
-
-        var verificationValue = Convert.ToBase64String(verification);
-
         var claims = new Claim[]
         {
             new Claim("type", "ticker"),
             new Claim("group", command.AccountGroup),
             new Claim("client", clientName),
-            new Claim("mail", command.Mail),
-            new Claim("verification", verificationValue, ClaimValueTypes.Base64Binary)
+            new Claim("mail", command.Mail)
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);
