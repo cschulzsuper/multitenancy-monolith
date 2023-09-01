@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EventPublisher;
+namespace EventPublisherTests;
 
-public sealed class PublicationFlow
+public sealed class PublishAsync
 {
     private readonly IServiceProvider _services;
 
-    public PublicationFlow(ITestOutputHelper output)
+    public PublishAsync(ITestOutputHelper output)
     {
         var services = new ServiceCollection();
 
@@ -47,7 +47,7 @@ public sealed class PublicationFlow
     [InlineData(10, 100)]
     [InlineData(100, 100)]
     [InlineData(500, 100)]
-    public async Task PublicationFlow_ShouldPublish_ToScope(int scopes, int calls)
+    public async Task PublishAsync_ShouldPublish_ToScope(int scopes, int calls)
     {
         // Arrange
         var cancellationTokenSource = new CancellationTokenSource();

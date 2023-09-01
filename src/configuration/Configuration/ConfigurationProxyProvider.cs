@@ -76,20 +76,6 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
         return allowedClients ?? Array.Empty<AllowedClient>();
     }
 
-    public DefaultStagingAuthenticationIdentity GetDefaultStagingAuthenticationIdentity()
-    {
-        var defaultStagingAuthenticationIdentity = _configuration
-            .GetSection(DefaultStagingAuthenticationIdentity)
-            .Get<DefaultStagingAuthenticationIdentity>();
-
-        if (defaultStagingAuthenticationIdentity == null)
-        {
-            ConfigurationException.ThrowNotConfigured(DefaultStagingAuthenticationIdentity);
-        }
-
-        return defaultStagingAuthenticationIdentity;
-    }
-
     public MaintenanceAuthenticationIdentity GetMaintenanceAuthenticationIdentity()
     {
         var maintenanceAuthenticationIdentity = _configuration

@@ -1,6 +1,8 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Access;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Admission;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Documentation;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using ChristianSchulz.MultitenancyMonolith.Objects.Documentation;

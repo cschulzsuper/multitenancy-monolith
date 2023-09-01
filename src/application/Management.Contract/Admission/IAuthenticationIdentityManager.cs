@@ -1,5 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ public interface IAuthenticationIdentityManager
 
     Task<AuthenticationIdentity> GetAsync(string authenticationIdentity);
 
-    IQueryable<AuthenticationIdentity> GetQueryable();
+    IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<AuthenticationIdentity>, IQueryable<TResult>> query);
 
     Task InsertAsync(AuthenticationIdentity @object);
 

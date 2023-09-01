@@ -1,4 +1,4 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Admission;
+﻿namespace ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Access;
 
 public sealed class AccountGroupSeed
 {

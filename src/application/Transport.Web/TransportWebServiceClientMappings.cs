@@ -10,6 +10,8 @@ public static class TransportWebServiceClientMappings
     public static Dictionary<Type, Type> Mappings { get; } = new Dictionary<Type, Type>()
     {
         [typeof(IContextAccountMemberCommandClient)] = typeof(ContextAccountMemberCommandWebServiceClient),
+
+        [typeof(IAuthenticationIdentityRequestClient)] = typeof(AuthenticationIdentityRequestClientWebServiceClient),
         [typeof(IContextAuthenticationIdentityCommandClient)] = typeof(ContextAuthenticationIdentityCommandHandlerWebServiceClient)
     };
 }

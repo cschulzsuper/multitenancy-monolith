@@ -1,64 +1,103 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission;
+﻿using ChristianSchulz.MultitenancyMonolith.Application;
+using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission.Commands;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
-using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services.Admission.Models;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
+using System;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services.Admission;
 
 public class SignInService
 {
-    private readonly IContextAuthenticationIdentityCommandClient _authenticationClient;
     private readonly IHttpContextAccessor _contextAccessor;
+    private readonly TransportWebServiceClientFactory _transportWebServiceClientFactory;
     private readonly IConfigurationProxyProvider _configurationProxyProvider;
-    private readonly AdmissionPortal _admissionPortal;
-    private readonly IWebHostEnvironment _environment;
 
     public SignInService(
-        IContextAuthenticationIdentityCommandClient authenticationClient,
         IConfigurationProxyProvider configurationProxyProvider,
-        IHttpContextAccessor contextAccessor, 
-        IWebHostEnvironment environment)
+        IHttpContextAccessor contextAccessor,
+        TransportWebServiceClientFactory transportWebServiceClientFactory)
     {
-        _authenticationClient = authenticationClient;
         _contextAccessor = contextAccessor;
+        _transportWebServiceClientFactory = transportWebServiceClientFactory;
         _configurationProxyProvider = configurationProxyProvider;
-        _admissionPortal = configurationProxyProvider.GetAdmissionPortal();
-        _environment = environment;
     }
 
     public void InitializeModel(SignInModel model)
     {
-        if (_environment.IsStaging()) 
+        var admissionPortal = _configurationProxyProvider.GetAdmissionPortal();
+
+        model.Stage ??= "username";
+        model.ClientName ??= admissionPortal.ClientName;
+    }
+
+    public string NextStage(string stage)
+        => stage switch
         {
-            var defaultStagingAuthenticationIdentity = _configurationProxyProvider.GetDefaultStagingAuthenticationIdentity();
+            "username" => "password",
+            _ => throw new InvalidOperationException("No successor stage.")
+        };
 
-            model.Username = string.IsNullOrWhiteSpace(model.Username)
-                ? defaultStagingAuthenticationIdentity.UniqueName ?? string.Empty
-                : model.Username;
+    public async Task<string> ResolveAuthenticationIdentityAsync(string username)
+    {
+        var maintenanceAuthenticationIdentity = _configurationProxyProvider.GetMaintenanceAuthenticationIdentity();
 
-            model.Password = string.IsNullOrWhiteSpace(model.Password)
-                ? defaultStagingAuthenticationIdentity.Secret ?? string.Empty
-                : model.Password;
+        var command = new ContextAuthenticationIdentityAuthCommand
+        {
+            ClientName = maintenanceAuthenticationIdentity.ClientName,
+            AuthenticationIdentity = maintenanceAuthenticationIdentity.UniqueName,
+            Secret = maintenanceAuthenticationIdentity.Secret,
+        };
+
+        var token = await AuthAsync(command);
+
+        var admissionServer = _configurationProxyProvider.GetAdmissionServer();
+
+        using var client = _transportWebServiceClientFactory
+            .Create<IAuthenticationIdentityRequestClient>(admissionServer.Service, () => Task.FromResult(token)!);
+
+        var potentialIdentities = client.GetAll($"mail-address:{username} unique-name:{username}", 0, 2);
+
+        string? identity = null;
+
+        await foreach (var potentialIdentity in potentialIdentities)
+        {
+            if(identity != null) throw new Exception("User not found");
+
+            identity = potentialIdentity.UniqueName;
         }
+
+        if (identity == null) throw new Exception("User not found");
+
+        return identity;
     }
 
     public async Task SignInAsync(SignInModel model)
     {
         var command = new ContextAuthenticationIdentityAuthCommand
         {
-            ClientName = model.ClientName ?? _admissionPortal.ClientName,
-            AuthenticationIdentity = model.Username,
-            Secret = model.Password,
+            ClientName = model.ClientName!,
+            AuthenticationIdentity = model.Username!,
+            Secret = model.Password!,
         };
 
-        var tokenObject = await _authenticationClient.AuthAsync(command);
-        var token = $"{tokenObject}";
+        var token = await AuthAsync(command);
 
         _contextAccessor.HttpContext?.Response.Cookies.Append("access_token", token);
+    }
+
+    private async Task<string> AuthAsync(ContextAuthenticationIdentityAuthCommand command)
+    {
+        var admissionServer = _configurationProxyProvider.GetAdmissionServer();
+
+        using var client = _transportWebServiceClientFactory
+            .Create<IContextAuthenticationIdentityCommandClient>(admissionServer.Service);
+
+        var tokenObject = await client.AuthAsync(command);
+        var token = $"{tokenObject}";
+
+        return token;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -55,8 +56,8 @@ internal sealed class AuthenticationIdentityManager : IAuthenticationIdentityMan
         return @object;
     }
 
-    public IQueryable<AuthenticationIdentity> GetQueryable()
-        => _repository.GetQueryable();
+    public IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<AuthenticationIdentity>, IQueryable<TResult>> query)
+        => _repository.GetAsyncEnumerable(query);
 
     public async Task InsertAsync(AuthenticationIdentity @object)
     {

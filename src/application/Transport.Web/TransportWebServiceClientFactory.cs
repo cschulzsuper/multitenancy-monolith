@@ -23,10 +23,10 @@ public sealed class TransportWebServiceClientFactory
         return (TClient)Activator.CreateInstance(typeClient, client)!;
     }
 
-    public T Create<T>(string webService, Func<Task<string?>> value)
+    public T Create<T>(string webService, Func<Task<string?>> tokenProvider)
         where T : IDisposable
     {
-        var client = _webServiceClientFactory.Create(webService, value);
+        var client = _webServiceClientFactory.Create(webService, tokenProvider);
 
         var typeClient = TransportWebServiceClientMappings.Mappings[typeof(T)];
 

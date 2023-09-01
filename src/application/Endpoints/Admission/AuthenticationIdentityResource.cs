@@ -1,6 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission.Requests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System;
 
@@ -66,8 +67,11 @@ internal static class AuthenticationIdentityResource
             => requestHandler.HeadAsync(authenticationIdentity);
 
     private static Delegate GetAll =>
-        (IAuthenticationIdentityRequestHandler requestHandler)
-            => requestHandler.GetAll();
+        (IAuthenticationIdentityRequestHandler requestHandler, 
+            [FromQuery(Name = "q")] string? query,
+            [FromQuery(Name = "s")] int? skip,
+            [FromQuery(Name = "t")] int? take)
+            => requestHandler.GetAll(query, skip, take);
 
     private static Delegate Get =>
         (IAuthenticationIdentityRequestHandler requestHandler, string authenticationIdentity)

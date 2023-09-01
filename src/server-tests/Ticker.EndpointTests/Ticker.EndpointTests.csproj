@@ -7,6 +7,7 @@
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace></RootNamespace>
 		<IsPackable>false</IsPackable>
+		<NoWarn>IDE0290, IDE0017</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

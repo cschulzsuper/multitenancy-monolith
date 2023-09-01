@@ -8,6 +8,9 @@ public static class _Services
 {
     public static IServiceCollection AddAdmissionTransportWebServiceClients(this IServiceCollection services)
     {
+        services.AddWebServiceTransportDefaultClient<IAuthenticationIdentityRequestClient>(
+            configuration => configuration.GetAdmissionServer().Service);
+
         services.AddWebServiceTransportDefaultClient<IContextAuthenticationIdentityCommandClient>(
             configuration => configuration.GetAdmissionServer().Service);
 

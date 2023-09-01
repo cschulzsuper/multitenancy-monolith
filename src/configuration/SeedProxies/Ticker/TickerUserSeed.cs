@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Admission;
+namespace ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Ticker;
 
 public sealed class TickerUserSeed
 {

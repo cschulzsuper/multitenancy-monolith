@@ -19,6 +19,7 @@
 		<ProjectReference Include="..\..\data\Events.Contract\Events.Contract.csproj" />
 		<ProjectReference Include="..\..\data\Jobs.Contract\Jobs.Contract.csproj" />
 		<ProjectReference Include="..\..\data\Jobs.SequentialQueue\Jobs.SequentialQueue.csproj" />
+		<ProjectReference Include="..\..\shared\QuerySearch\QuerySearch.csproj" />
 		<ProjectReference Include="..\..\shared\Security.Claims\Security.Claims.csproj" />
 		<ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
 		<ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />

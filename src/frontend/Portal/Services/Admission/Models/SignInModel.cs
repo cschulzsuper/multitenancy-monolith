@@ -4,12 +4,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services.Admissio
 
 public class SignInModel
 {
-    [Required]
+    public string? Stage { get; set; }
+
     public string? ClientName { get; set; }
 
-    [Required]
-    public string Username { get; set; } = string.Empty;
+    public string? Username { get; set; }
 
-    [Required]
-    public string Password { get; set; } = string.Empty;
+    public string? Password { get; set; }
 }

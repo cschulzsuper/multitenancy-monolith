@@ -8,7 +8,6 @@ public interface IConfigurationProxyProvider
     AdmissionPortal GetAdmissionPortal();
     AdmissionServer GetAdmissionServer();
     AllowedClient[] GetAllowedClients();
-    DefaultStagingAuthenticationIdentity GetDefaultStagingAuthenticationIdentity();
     MaintenanceAuthenticationIdentity GetMaintenanceAuthenticationIdentity();
     ServiceMapping[] GetServiceMappings();
     SwaggerDoc[] GetSwaggerDocs();

@@ -26,21 +26,41 @@
                   Model="@Model" 
                   OnValidSubmit="Submit" 
                   FormName="login">
-            <div class="form-group">
-                <label for="username" class="form-label">Username</label>
-                <InputText id="username" 
-                           class="form-control" 
-                           aria-required="true"
-                           @bind-Value="Model.Username"  />
-            </div>
-            <div class="form-group">
-                <label for="password" class="form-label">Password</label>
-                <InputText id="password"
-                           class="form-control"
-                           type="password"
-                           aria-required="true"
-                           @bind-Value="Model.Password" />
-            </div>
+
+            @switch (Model.Stage)
+            {
+                case "username":
+                    <div class="form-group">
+
+                        <InputText type="hidden" @bind-Value="Model.ClientName" />
+                        <InputText type="hidden" @bind-Value="Model.Stage" />
+
+                        <label for="username" class="form-label">Username</label>
+                        <InputText id="username"
+                                   class="form-control"
+                                   aria-required="true"
+                                   @bind-Value="Model.Username" />
+                    </div>
+                    
+                    break;
+                
+                case "password":
+                    <div class="form-group">
+
+                        <InputText type="hidden" @bind-Value="Model.ClientName" />
+                        <InputText type="hidden" @bind-Value="Model.Stage" />
+                        <InputText type="hidden" @bind-Value="Model.Username" />
+
+                        <label for="password" class="form-label">Password</label>
+                        <InputText id="password"
+                                   class="form-control"
+                                   type="password"
+                                   aria-required="true"
+                                   @bind-Value="Model.Password" />
+                    </div>
+
+                    break;
+            }
             <div class="form-group">
                 <button id="login-submit"
                         class="btn btn-primary"
@@ -64,6 +84,9 @@
 
     protected override void OnInitialized()
     {
+        Model.Stage ??= "username";
+        Model.ClientName ??= ClientName;
+
         SignInService.InitializeModel(Model);
     }
 
@@ -71,11 +94,18 @@
     {
         try
         {
-            Model.ClientName = ClientName;
+            switch (Model.Stage)
+            {
+                case "username":
+                    Model.Username = await SignInService.ResolveAuthenticationIdentityAsync(Model.Username!);
+                    Model.Stage = SignInService.NextStage(Model.Stage);
+                    break;
 
-            await SignInService.SignInAsync(Model);
-
-            RedirectSuccess();
+                case "password":
+                    await SignInService.SignInAsync(Model);
+                    RedirectSuccess();
+                    break;
+            }
         }
         catch(Exception e) when (e is not NavigationException)
         {

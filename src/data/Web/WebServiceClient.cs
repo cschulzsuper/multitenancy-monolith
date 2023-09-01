@@ -13,6 +13,8 @@ namespace ChristianSchulz.MultitenancyMonolith.Web;
 
 internal sealed class WebServiceClient : IWebServiceClient
 {
+    private static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+
     public static Func<Task<string?>> DefaultTokenProvider = () => Task.FromResult((string?)null);
     
     private readonly HttpClient _client;
@@ -77,7 +79,7 @@ internal sealed class WebServiceClient : IWebServiceClient
         responseMessage.EnsureSuccessStatusCode();
 
         var responseStream = await responseMessage.Content.ReadAsStreamAsync(cancellationToken);
-        var response = JsonSerializer.DeserializeAsyncEnumerable<TResponse>(responseStream, (JsonSerializerOptions?)null, cancellationToken);
+        var response = JsonSerializer.DeserializeAsyncEnumerable<TResponse>(responseStream, JsonSerializerOptions, cancellationToken);
 
         await foreach (var responseItem in response
             .WithCancellation(cancellationToken))

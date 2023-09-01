@@ -1,6 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission.Responses;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Admission;
@@ -11,7 +11,7 @@ public interface IAuthenticationIdentityRequestHandler
 
     Task<AuthenticationIdentityResponse> GetAsync(string authenticationIdentity);
 
-    IQueryable<AuthenticationIdentityResponse> GetAll();
+    IAsyncEnumerable<AuthenticationIdentityResponse> GetAll(string? query, int? skip, int? take);
 
     Task<AuthenticationIdentityResponse> InsertAsync(AuthenticationIdentityRequest request);
 
