@@ -4,15 +4,26 @@ networks:
   default:
 
 services:
+
+  caddy:
+    container_name: ${COMPOSE_PROJECT_NAME}-caddy
+    image: caddy:latest
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ~/.aspnet/https:/etc/caddy/cert
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - nginx
+    networks:
+      - default
+
   nginx:    
     container_name: ${COMPOSE_PROJECT_NAME}-nginx
     image: nginx:latest
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ~/.aspnet/https:/etc/nginx/cert
-    ports:
-      - 80:80
-      - 443:443
     depends_on:
       - server
       - ticker
@@ -30,15 +41,13 @@ services:
     networks:
       - default
     env_file:
-      - certificates.env
       - service-urls.env
       - service-mappings.env
     volumes:
-      - ~/.aspnet/https:/home/app/.aspnet/https
       - ~/.aspnet/DataProtection-Keys:/home/app/.aspnet/DataProtection-Keys
     environment:
-      ASPNETCORE_HTTP_PORTS: 
-      ASPNETCORE_HTTPS_PORTS: 443
+      ASPNETCORE_HTTP_PORTS: 80
+      ASPNETCORE_HTTPS_PORTS: 
       ASPNETCORE_ENVIRONMENT: Staging
 
   ticker:
@@ -52,15 +61,13 @@ services:
       server:
         condition: service_started
     env_file:
-      - certificates.env
       - service-urls.env
       - service-mappings.env
     volumes:
-      - ~/.aspnet/https:/home/app/.aspnet/https
       - ~/.aspnet/DataProtection-Keys:/home/app/.aspnet/DataProtection-Keys
     environment:
-      ASPNETCORE_HTTP_PORTS: 
-      ASPNETCORE_HTTPS_PORTS: 443
+      ASPNETCORE_HTTP_PORTS: 80
+      ASPNETCORE_HTTPS_PORTS: 
       ASPNETCORE_ENVIRONMENT: Staging
 
   portal:
@@ -74,15 +81,13 @@ services:
       server:
         condition: service_started
     env_file:
-      - certificates.env
       - service-urls.env
       - service-mappings.env
     volumes:
-      - ~/.aspnet/https:/home/app/.aspnet/https/
       - ~/.aspnet/DataProtection-Keys:/home/app/.aspnet/DataProtection-Keys
     environment:
-      ASPNETCORE_HTTP_PORTS: 
-      ASPNETCORE_HTTPS_PORTS: 443
+      ASPNETCORE_HTTP_PORTS: 80
+      ASPNETCORE_HTTPS_PORTS: 
       ASPNETCORE_ENVIRONMENT: Staging
 
   swagger:
@@ -100,15 +105,13 @@ services:
       ticker:
         condition: service_started
     env_file:
-      - certificates.env
       - service-urls.env
       - service-mappings.env
     volumes:
-      - ~/.aspnet/https:/home/app/.aspnet/https/
       - ~/.aspnet/DataProtection-Keys:/home/app/.aspnet/DataProtection-Keys
     environment:
-      ASPNETCORE_HTTP_PORTS: 
-      ASPNETCORE_HTTPS_PORTS: 443
+      ASPNETCORE_HTTP_PORTS: 80
+      ASPNETCORE_HTTPS_PORTS: 
       ASPNETCORE_ENVIRONMENT: Staging
 
   dev-log:
@@ -122,14 +125,12 @@ services:
       portal:
         condition: service_started
     env_file:
-      - certificates.env
       - service-urls.env
       - service-mappings.env
     volumes:
-      - ~/.aspnet/https:/home/app/.aspnet/https/
       - ~/.aspnet/DataProtection-Keys:/home/app/.aspnet/DataProtection-Keys
     environment:
-      ASPNETCORE_HTTP_PORTS: 
-      ASPNETCORE_HTTPS_PORTS: 443
+      ASPNETCORE_HTTP_PORTS: 80
+      ASPNETCORE_HTTPS_PORTS: 
       ASPNETCORE_ENVIRONMENT: Staging
       

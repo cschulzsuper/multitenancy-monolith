@@ -141,9 +141,12 @@ Clone the repository and start the [compose file](./docker/README.md).
 ### nginx Reverse Proxy
   * /75 I'm not an expert when it comes to nginx, so this is just some early script kiddy experiment. I added an nginx container with a simple nginx.conf. Adjustments in the API routes and `<base>` tags where necessary. It seems to work. https://github.com/cschulzsuper/multitenancy-monolith/commit/f707807d2f6867618aef48c2889f637033a0a145
 
-### Sign-In Extension
+### Sign-In Extension (1/2)
   * /76 After the recent _Bearer Token Refactoring_, I had to evaluate, if the `verification` keys, that are stored in the token, are still needed. The build-in `DataProtection` secures the token for my needs quite well. I decided now, to remove everthing releted to the `verification` and also made the token validation much simpler. https://github.com/cschulzsuper/multitenancy-monolith/commit/91fd58ddc8f3d8d6b8f9a90600c23815b615d516
-  * /77 At some point in the future I want a more flexible sign-in. That sign-in should support MFA. In a first step I decieded to split the `sign-in` page in two steps. One for the username and one for the password. 
+  * /77 At some point in the future I want a more flexible sign-in. That sign-in should support MFA. In a first step I decieded to split the `sign-in` page in two steps. One for the username and one for the password. https://github.com/cschulzsuper/multitenancy-monolith/commit/5aafd1a5feb9e0d101502e0a7470578094f3bbf5
+
+### Caddy Reverse Proxy
+  * /78 Why use only one reverse proxy if you can have two. Caddy seems to have good build-in SSL handling and can retriev certificates from [Let's Encrypt](https://letsencrypt.org/) automatically. From now on, _Caddy_ will terminate SSL. Since this was very easy to integrate, I wanted to push this while I'm working on the _Sign-In Extension_.
 
 # Backlog
 

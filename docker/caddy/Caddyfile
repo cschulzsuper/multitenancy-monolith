@@ -1,0 +1,5 @@
+localhost {
+    reverse_proxy http://nginx:8080
+    tls internal
+    tls /etc/caddy/cert/multitenancy-monolith.crt /etc/caddy/cert/multitenancy-monolith.rsa
+}

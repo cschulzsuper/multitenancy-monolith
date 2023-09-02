@@ -3,7 +3,7 @@
     "http": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5109/swagger",
+      "launchUrl": "http://localhost:5108/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MM_Swagger_ServiceMappings__0__UniqueName": "server",
