@@ -12,7 +12,7 @@ public static class _Services
     {
         builder.Services.AddHttpContextAccessor();
 
-        builder.Services.AddScoped<SignInService>();
+        builder.Services.AddScoped<AuthService>();
 
         return builder;
     }

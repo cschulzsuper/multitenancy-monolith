@@ -126,8 +126,8 @@ public sealed class Startup
 
         app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
 
-        app.UseRouting();
         app.UseCors();
+        app.UseRouting();
 
         app.UseAuthenticationScope();
         app.UseAuthentication();

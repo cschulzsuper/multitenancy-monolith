@@ -12,7 +12,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Web;
 [SuppressMessage("Style", "IDE1006:Naming Styles")]
 public static class _Services
 {
-    private const int DefaultRequestTimeOut = 1000;
+    private const int DefaultRequestTimeOut = 6_250;
 
     public static IServiceCollection AddWebServices(this IServiceCollection services, params string[] uniqueNames)
     {

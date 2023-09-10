@@ -10,7 +10,6 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
     private const string AdmissionServer = nameof(AdmissionServer);
     private const string AllowedClients = nameof(AllowedClients);
     private const string ServiceMappings = nameof(ServiceMappings);
-    private const string DefaultStagingAuthenticationIdentity = nameof(DefaultStagingAuthenticationIdentity);
     private const string MaintenanceAuthenticationIdentity = nameof(MaintenanceAuthenticationIdentity);
     private const string SwaggerDocs = nameof(SwaggerDocs);
 

@@ -1,6 +1,7 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.Endpoints;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.Security;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.SwaggerUI;
 using ChristianSchulz.MultitenancyMonolith.Web;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -42,6 +44,7 @@ public sealed class Startup
     }
 
     private void LoadRequiredConfiguration(
+        out string[] allowedClientHosts,
         out string admissionClientName,
         out string admissionFrontendUrl,
         out string[] webServices)
@@ -52,6 +55,7 @@ public sealed class Startup
         var configuredAdmissionPortal = configurationProxyProvider.GetAdmissionPortal();
         var configuredSwaggerDocs = configurationProxyProvider.GetSwaggerDocs();
         var configuredServicesMappings = configurationProxyProvider.GetServiceMappings();
+        var configuredAllowedClients = configurationProxyProvider.GetAllowedClients();
 
         webServices = configuredServicesMappings
             .Where(servicesMapping =>
@@ -59,6 +63,13 @@ public sealed class Startup
                 configuredSwaggerDocs.Select(swaggerDoc => swaggerDoc.TestService).Contains(servicesMapping.UniqueName))
             .Select(x => x.UniqueName)
             .Distinct()
+            .ToArray();
+
+        allowedClientHosts = configuredServicesMappings
+            .Where(serviceMapping => configuredAllowedClients
+                .Select(allowedClient => allowedClient.Service)
+                .Contains(serviceMapping.UniqueName))
+            .Select(servicesMapping => servicesMapping.Url)
             .ToArray();
 
         admissionClientName = configuredAdmissionPortal.ClientName;
@@ -73,9 +84,17 @@ public sealed class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         LoadRequiredConfiguration(
+            out var allowedClientHosts,
             out var admissionClientName,
             out var admissionFrontendUrl,
             out var webServices);
+
+        services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            options.KnownNetworks.Clear();
+            options.KnownProxies.Clear();
+        });
 
         services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
         services.AddAuthentication(BearerTokenDefaults.AuthenticationScheme)
@@ -86,7 +105,7 @@ public sealed class Startup
                 })
             .AddCookie(options =>
                 {
-                    options.LoginPath = "/sign-in";
+                    options.LoginPath = "/auth";
                     options.ReturnUrlParameter = "return";
                     options.Cookie.Name = "access_token";
                     options.Events = new CookieAuthenticationEvents()
@@ -122,7 +141,10 @@ public sealed class Startup
                 : options.DefaultPolicy;
         });
 
-        services.AddCors();
+        services.AddCors(setup => setup
+            .AddDefaultPolicy(config => config
+                .WithOrigins(allowedClientHosts)
+                .WithMethods(HttpMethods.Get)));
 
         services.AddScoped<SwaggerUIOptionsConfiguration>();
 
@@ -137,6 +159,8 @@ public sealed class Startup
 
     public void Configure(IApplicationBuilder app)
     {
+        app.UseForwardedHeaders();
+
         app.UseCors();
         app.UseStaticFiles();
 
@@ -152,6 +176,11 @@ public sealed class Startup
             scope.ServiceProvider
                 .GetRequiredService<SwaggerUIOptionsConfiguration>()
                 .Configure(options);
+        });
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapSignIn();
         });
     }
 }

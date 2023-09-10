@@ -14,6 +14,8 @@ Clone the repository and start the [compose file](./docker/README.md).
 
 ## History
 
+> The [dev-log](https://mmdevlogapp.azurewebsites.net/dev-log) hosted on Azure is not yet up-to-date. It runs in `staging` mode, with username `admin` and password `default`.
+
 ### Initial template
   * /1 In the initial commit I only created a single Visual Studio project from the built-in template and the GitHub repository. https://github.com/cschulzsuper/multitenancy-monolith/commit/0a18987ba7518789da227fce88915b55f3635d78
   * /2 I took the application logic from the template and moved it into an application layer. This layer is split into endpoints and transport. Endpoints only maps routes, while transport contains the logic to handle requests. https://github.com/cschulzsuper/multitenancy-monolith/commit/91a308bdb5b3593ac53061d309caf45837e36c45
@@ -147,6 +149,9 @@ Clone the repository and start the [compose file](./docker/README.md).
 
 ### Caddy Reverse Proxy
   * /78 Why use only one reverse proxy if you can have two. Caddy seems to have good build-in SSL handling and can retriev certificates from [Let's Encrypt](https://letsencrypt.org/) automatically. From now on, _Caddy_ will terminate SSL. Since this was very easy to integrate, I wanted to push this while I'm working on the _Sign-In Extension_.
+
+### It's alive
+  * /79 I wanted the [dev-log](https://mmdevlogapp.azurewebsites.net/dev-log) to be available on the web. I played around with multiple options for the deployment, and ended up with simple Azure Web Apps. This option is enough for now. It alone brought some TODO's to light, which first need to be sorted out. If anybody ever tells you, that you should not implement your own authentication, listen to him. Nevertheless, I will stick with my custom authentication, as it actually forced me to understand how OIDC and OAuth do things.
 
 # Backlog
 

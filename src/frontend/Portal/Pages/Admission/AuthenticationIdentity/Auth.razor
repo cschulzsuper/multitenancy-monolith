@@ -1,11 +1,12 @@
-﻿@page "/sign-in"
+﻿@page "/auth"
 
 @attribute [AllowAnonymous]
 
 @layout EmptyLayout
 
-@inject SignInService SignInService
+@inject AuthService AuthService
 @inject NavigationManager NavigationManager
+@inject IHttpContextAccessor HttpContextAccessor
 
 <PageTitle>Sign-In</PageTitle>
 
@@ -15,11 +16,11 @@
         <h1 class="card-title">Sign-In</h1>
 
         ﻿@if (_errorMessage != null)
-        {
-            <div role="alert">
+    {
+        <div role="alert">
                      @_errorMessage
                 </div>
-        } 
+    } 
 
         <EditForm id="account" 
                   method="post" 
@@ -28,9 +29,9 @@
                   FormName="login">
 
             @switch (Model.Stage)
-            {
-                case "username":
-                    <div class="form-group">
+        {
+            case "username":
+                <div class="form-group">
 
                         <InputText type="hidden" @bind-Value="Model.ClientName" />
                         <InputText type="hidden" @bind-Value="Model.Stage" />
@@ -41,11 +42,11 @@
                                    aria-required="true"
                                    @bind-Value="Model.Username" />
                     </div>
-                    
-                    break;
                 
-                case "password":
-                    <div class="form-group">
+                break;
+            
+            case "password":
+                <div class="form-group">
 
                         <InputText type="hidden" @bind-Value="Model.ClientName" />
                         <InputText type="hidden" @bind-Value="Model.Stage" />
@@ -59,8 +60,8 @@
                                    @bind-Value="Model.Password" />
                     </div>
 
-                    break;
-            }
+                break;
+        }
             <div class="form-group">
                 <button id="login-submit"
                         class="btn btn-primary"
@@ -74,7 +75,7 @@
     private string? _errorMessage;
 
     [SupplyParameterFromForm]
-    public SignInModel Model { get; set; } = new();
+    public AuthModel Model { get; set; } = new();
 
     [SupplyParameterFromQuery(Name = "return")]
     public string? Return { get; set; }
@@ -87,7 +88,7 @@
         Model.Stage ??= "username";
         Model.ClientName ??= ClientName;
 
-        SignInService.InitializeModel(Model);
+        AuthService.InitializeModel(Model);
     }
 
     public async Task Submit()
@@ -97,12 +98,12 @@
             switch (Model.Stage)
             {
                 case "username":
-                    Model.Username = await SignInService.ResolveAuthenticationIdentityAsync(Model.Username!);
-                    Model.Stage = SignInService.NextStage(Model.Stage);
+                    Model.Username = await AuthService.ResolveAuthenticationIdentityAsync(Model.Username!);
+                    Model.Stage = AuthService.NextStage(Model.Stage);
                     break;
 
                 case "password":
-                    await SignInService.SignInAsync(Model);
+                    await AuthService.SignInAsync(Model);
                     RedirectSuccess();
                     break;
             }
@@ -115,20 +116,28 @@
 
     private void RedirectSuccess()
     {
-        var target = Return ?? "/";
+        var target =  $"/redirect?return={Return}";
         var targetUri = new Uri(target, UriKind.RelativeOrAbsolute);
 
         if (!targetUri.IsAbsoluteUri)
         {
             // TODO https://github.com/dotnet/aspnetcore/issues/49670
-
             var relative = NavigationManager.ToBaseRelativePath(NavigationManager.ToAbsoluteUri(target).AbsoluteUri);
             var absolute = NavigationManager.ToAbsoluteUri(relative).AbsoluteUri;
-            NavigationManager.NavigateTo(absolute, true);
+
+            // TODO https://github.com/dotnet/aspnetcore/issues/50384
+            HttpContextAccessor.HttpContext!.Response.Headers.Add("blazor-enhanced-nav-redirect-location", absolute);
+            HttpContextAccessor.HttpContext!.Response.StatusCode = 200;
+
+            //NavigationManager.NavigateTo(targetUri.absolute, true);
         }
         else
         {
-            NavigationManager.NavigateTo(targetUri.AbsoluteUri, true);
+            // TODO https://github.com/dotnet/aspnetcore/issues/50384
+            HttpContextAccessor.HttpContext!.Response.Headers.Add("blazor-enhanced-nav-redirect-location", targetUri.AbsoluteUri);
+            HttpContextAccessor.HttpContext!.Response.StatusCode = 200;
+
+            //NavigationManager.NavigateTo(targetUri.AbsoluteUri, true);
         }
     }
 }

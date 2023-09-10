@@ -1,5 +1,14 @@
+:80 {
+    redir https://{host}{uri} permanent 
+}
+
 localhost {
-    reverse_proxy http://nginx:8080
+    reverse_proxy http://nginx:8080 {
+        trusted_proxies private_ranges
+    }
     tls internal
     tls /etc/caddy/cert/multitenancy-monolith.crt /etc/caddy/cert/multitenancy-monolith.rsa
 }
+
+
+

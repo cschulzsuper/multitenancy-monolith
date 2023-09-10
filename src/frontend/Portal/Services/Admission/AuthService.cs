@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services.Admission;
 
-public class SignInService
+public class AuthService
 {
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly TransportWebServiceClientFactory _transportWebServiceClientFactory;
     private readonly IConfigurationProxyProvider _configurationProxyProvider;
 
-    public SignInService(
+    public AuthService(
         IConfigurationProxyProvider configurationProxyProvider,
         IHttpContextAccessor contextAccessor,
         TransportWebServiceClientFactory transportWebServiceClientFactory)
@@ -25,7 +25,7 @@ public class SignInService
         _configurationProxyProvider = configurationProxyProvider;
     }
 
-    public void InitializeModel(SignInModel model)
+    public void InitializeModel(AuthModel model)
     {
         var admissionPortal = _configurationProxyProvider.GetAdmissionPortal();
 
@@ -74,7 +74,7 @@ public class SignInService
         return identity;
     }
 
-    public async Task SignInAsync(SignInModel model)
+    public async Task SignInAsync(AuthModel model)
     {
         var command = new ContextAuthenticationIdentityAuthCommand
         {
@@ -85,7 +85,13 @@ public class SignInService
 
         var token = await AuthAsync(command);
 
-        _contextAccessor.HttpContext?.Response.Cookies.Append("access_token", token);
+        _contextAccessor.HttpContext?.Response.Cookies.Append("access_token", token, 
+            new CookieOptions {
+                SameSite = SameSiteMode.None,
+                Secure = true,
+                HttpOnly = true
+            });
+
     }
 
     private async Task<string> AuthAsync(ContextAuthenticationIdentityAuthCommand command)

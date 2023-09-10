@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Application.Documentation;
+using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Endpoints;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.DevLog;
 
@@ -43,6 +45,7 @@ public sealed class Startup
 
     private void LoadRequiredConfiguration(
         out AllowedClient[] allowedClients,
+        out string[] allowedClientHosts,
         out string admissionClientName,
         out string admissionFrontendUrl)
     {
@@ -53,6 +56,13 @@ public sealed class Startup
         var configuredServicesMappings = configurationProxyProvider.GetServiceMappings();
 
         allowedClients = configuredAllowedClients;
+
+        allowedClientHosts = configuredServicesMappings
+            .Where(serviceMapping => configuredAllowedClients
+                .Select(allowedClient => allowedClient.Service)
+                .Contains(serviceMapping.UniqueName))
+            .Select(servicesMapping => servicesMapping.Url)
+            .ToArray();
 
         admissionClientName = configuredAdmissionPortal.ClientName;
 
@@ -67,8 +77,16 @@ public sealed class Startup
     {
         LoadRequiredConfiguration(
             out var allowedClients,
+            out var allowedClientHosts,
             out var admissionClientName,
             out var admissionFrontendUrl);
+
+        services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            options.KnownNetworks.Clear();
+            options.KnownProxies.Clear();
+        });
 
         services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
         services.AddAuthentication(BearerTokenDefaults.AuthenticationScheme)
@@ -79,7 +97,7 @@ public sealed class Startup
                 })
             .AddCookie(options =>
                 {
-                    options.LoginPath = "/sign-in";
+                    options.LoginPath = "/auth";
                     options.ReturnUrlParameter = "return";
                     options.Cookie.Name = "access_token";
                     options.Events = new CookieAuthenticationEvents()
@@ -108,18 +126,16 @@ public sealed class Startup
                     };
                 });
 
-        services.AddAuthorization(options =>
-        {
-            options.FallbackPolicy = _environment.IsDevelopment()
-                ? options.FallbackPolicy
-                : options.DefaultPolicy;
-        });
+        services.AddAuthorization();
 
         services
             .AddRazorComponents()
             .AddDevLogServices();
 
-        services.AddCors();
+        services.AddCors(setup => setup
+            .AddDefaultPolicy(config => config
+                .WithOrigins(allowedClientHosts)
+                .WithMethods(HttpMethods.Get)));
 
         services.AddRequestUser(options => options.Configure(allowedClients));
         services.AddConfiguration();
@@ -134,6 +150,8 @@ public sealed class Startup
     {
         app.ApplicationServices.ConfigureDevelopmentPosts();
 
+        app.UseForwardedHeaders();
+
         app.UseCors();
 
         app.Map("/dev-log", builder =>
@@ -147,9 +165,8 @@ public sealed class Startup
 
             builder.UseEndpoints(endpoints =>
             {
-                endpoints
-                    .MapRazorComponents<App>()
-                    .RequireAuthorization(x => x.RequireClaim("scope", "pages"));
+                endpoints.MapRazorComponents<App>();
+                endpoints.MapSignIn();
             });
         });
     }

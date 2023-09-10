@@ -1,6 +1,4 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview-jammy-chiseled AS base
 USER app
 WORKDIR /app
 EXPOSE 5051
@@ -20,4 +18,6 @@ RUN dotnet publish "Ticker.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:Us
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY ./key-1a9b98c1-cf82-4cb8-a58a-b233c5a5be27.xml /home/app/.aspnet/DataProtection-Keys/key-1a9b98c1-cf82-4cb8-a58a-b233c5a5be27.xml
+COPY ./key-1a9b98c1-cf82-4cb8-a58a-b233c5a5be27.xml /home/app/ASP.NET/DataProtection-Keys/key-1a9b98c1-cf82-4cb8-a58a-b233c5a5be27.xml
 ENTRYPOINT ["dotnet", "Ticker.dll"]

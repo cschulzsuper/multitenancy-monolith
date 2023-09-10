@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services.Admission.Models;
 
-namespace ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services.Admission.Models;
-
-public class SignInModel
+public class AuthModel
 {
     public string? Stage { get; set; }
 
