@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Builder;
-using System.Collections.Generic;
 using System;
 using System.Linq;
 
@@ -19,29 +18,40 @@ public static class RedirectEndpoint
                 return Results.NotFound();
             }
 
-            context.Request.Cookies.TryGetValue("access_token", out var accessToken);
-            if (string.IsNullOrWhiteSpace(accessToken)) 
+            context.Request.Cookies.TryGetValue("access-token", out var accessToken);
+            if (string.IsNullOrWhiteSpace(accessToken))
             {
-                return Results.Redirect($"/sign-in{context.Request.QueryString}");
+                return Results.NotFound();
             }
-            else
-            {
-                var queryParameter = new[]
-                {
-                    new KeyValuePair<string, string?>("access_code", accessToken),
-                    new KeyValuePair<string, string?>("return", @return)
-                };
 
-                var returnUri = new Uri(@return!);
-                var returnUriScheme = returnUri.Scheme;
-                var returnUriHost = returnUri.Host;
-                var returnUriPort = returnUri.Port;
-                var returnUriSegment = returnUri.Segments.Skip(1).Select(x => x.Trim('/') + '/').FirstOrDefault() ?? string.Empty;
+            var returnUri = new Uri(@return!);
+            var returnUriScheme = returnUri.Scheme;
+            var returnUriHost = returnUri.Host;
+            var returnUriPort = returnUri.Port;
+            var returnUriSegment = returnUri.Segments.Skip(1).Select(x => x.Trim('/') + '/').FirstOrDefault() ?? string.Empty;
 
-                var redirect = $"{returnUriScheme}://{returnUriHost}:{returnUriPort}/{returnUriSegment}sign-in{QueryString.Create(queryParameter)}";
+            var redirect = $"{returnUriScheme}://{returnUriHost}:{returnUriPort}/{returnUriSegment}sign-in";
 
-                return Results.Redirect(redirect);
-            }
+            var redirectContent =
+                $"""
+                    <html>
+                        <head>
+                            <title>Auth Redirect</title>
+                        </head>
+                        <body onload="document.forms[0].submit()">
+                            <form method="POST" action="{redirect}">;
+                                <input type="hidden" name="access-code" value="{accessToken}" />
+                                <input type="hidden" name="return" value="{@return}" />
+                                <noscript>
+                                    <p>JavaScript is disabled. Click the button below to continue.</p>
+                                    <input name="continue" type="submit" value="CONTINUE" />
+                                </noscript>
+                            </form>
+                        </body>
+                    </html>
+                """;
+
+            return Results.Content(redirectContent, "text/html");
         });
 
         return endpoints;

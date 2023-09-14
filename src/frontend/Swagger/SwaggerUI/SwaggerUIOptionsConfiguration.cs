@@ -1,5 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
+using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.Security;
 using Microsoft.AspNetCore.Builder;
 using NUglify;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -13,7 +14,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.SwaggerUI;
 internal sealed class SwaggerUIOptionsConfiguration
 {
     private const string AccessTokenRequestInterceptorJavaScript =
-    """
+    $$"""
             function n(req)
             {
                 let swaggerJsonRequest = req.url.endsWith('swagger.json');
@@ -23,13 +24,13 @@ internal sealed class SwaggerUIOptionsConfiguration
                 }
 
                 let queryString = new URLSearchParams(window.location.search);
-                let accessToken = queryString.get('access_token');
+                let accessToken = queryString.get('access-token');
             
                 if(accessToken == null)
                 {
                     if (document.cookie.length > 0)
                     {
-                        let accessTokenName = "access_token";
+                        let accessTokenName = {{BearerTokenConstants.CookieName}};
 
                         let accessTokenStart = document.cookie.indexOf(accessTokenName + "=");
                         if (accessTokenStart != -1) 
@@ -50,7 +51,7 @@ internal sealed class SwaggerUIOptionsConfiguration
 
                 if(accessToken != null)
                 {
-                    req.headers['Authorization'] = accessToken; 
+                    req.headers['Authorization'] = 'Bearer ' + accessToken; 
                 }
 
                 return req; 

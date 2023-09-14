@@ -51,7 +51,7 @@ public static class BearerTokenMessageHandler
     private static string? GetTokenFromCookies(HttpContext context)
     {
         var hasAuthorizationCookie = context.Request.Cookies
-            .TryGetValue("access_token", out var authorizationCookie);
+            .TryGetValue(BearerTokenConstants.CookieName, out var authorizationCookie);
 
         return hasAuthorizationCookie && !string.IsNullOrWhiteSpace(authorizationCookie)
             ? authorizationCookie
@@ -61,7 +61,7 @@ public static class BearerTokenMessageHandler
     private static string? GetTokenFromQuery(HttpContext context)
     {
         var hasAuthorizationQuery = context.Request.Query
-            .TryGetValue("access_token", out var authorizationQuery);
+            .TryGetValue("access-token", out var authorizationQuery);
 
         return hasAuthorizationQuery && !string.IsNullOrWhiteSpace(authorizationQuery)
             ? authorizationQuery.ToString()

@@ -113,7 +113,7 @@ public sealed class Startup
                 {
                     options.LoginPath = "/auth";
                     options.ReturnUrlParameter = "return";
-                    options.Cookie.Name = "access_token";
+                    options.Cookie.Name = BearerTokenConstants.CookieName;
                     options.Events = new CookieAuthenticationEvents()
                     {
                         OnRedirectToLogin = (context) =>

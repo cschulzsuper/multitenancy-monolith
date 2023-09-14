@@ -1,4 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Server;
+﻿using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Admission.ConcreteValidators;
+using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Hosting;
@@ -24,7 +25,7 @@ internal static class MockWebApplication
     public const int MockMember = 6;
     public const int MockMemberObserver = 7;
 
-    public const string Client = "security-tests";
+    public const string ClientName = "security-tests";
 
     public const string AuthenticationIdentityAdmin = "admin";
     public const string AuthenticationIdentityAdminMailAddress = "admin@localhost";
@@ -36,7 +37,6 @@ internal static class MockWebApplication
 
     public const string AuthenticationIdentityDemo = "demo";
     public const string AuthenticationIdentityDemoMailAddress = "demo@localhost";
-    public const string AuthenticationIdentityDemoSecret = "secret";
 
     public const string AccountGroup = "group";
     
@@ -65,21 +65,29 @@ internal static class MockWebApplication
         {"SeedData:2:Scheme", "admission/authentication-identities"},
         {"SeedData:2:Resource:UniqueName", AuthenticationIdentityDemo},
         {"SeedData:2:Resource:MailAddress", AuthenticationIdentityDemoMailAddress},
-        {"SeedData:2:Resource:Secret", AuthenticationIdentityDemoSecret},
-        {"SeedData:3:Scheme", "access/account-groups"},
-        {"SeedData:3:Resource:UniqueName", AccountGroup},
-        {"SeedData:4:Scheme", "access/account-members"},
-        {"SeedData:4:Resource:AccountGroup", AccountGroup},
-        {"SeedData:4:Resource:UniqueName", AccountGroupChief},
-        {"SeedData:4:Resource:MailAddress", AccountGroupChiefMailAddress},
-        {"SeedData:4:Resource:AuthenticationIdentities:0", AuthenticationIdentityIdentity},
-        {"SeedData:4:Resource:AuthenticationIdentities:1", AuthenticationIdentityDemo},
+        {"SeedData:2:Resource:Secret", $"{Guid.NewGuid()}"},
+
+        {"SeedData:3:Scheme", "admission/authentication-identity-authentication-flows"},
+        {"SeedData:3:Resource:AuthenticationIdentity", AuthenticationIdentityDemo},
+        {"SeedData:3:Resource:ClientName", ClientName},
+        {"SeedData:3:Resource:AuthenticationMethod", AuthenticationMethods.Anonymouse},
+
+        {"SeedData:4:Scheme", "access/account-groups"},
+        {"SeedData:4:Resource:UniqueName", AccountGroup},
+
         {"SeedData:5:Scheme", "access/account-members"},
         {"SeedData:5:Resource:AccountGroup", AccountGroup},
-        {"SeedData:5:Resource:UniqueName", AccountGroupMember},
-        {"SeedData:5:Resource:MailAddress", AccountGroupMemberMailAddress},
+        {"SeedData:5:Resource:UniqueName", AccountGroupChief},
+        {"SeedData:5:Resource:MailAddress", AccountGroupChiefMailAddress},
         {"SeedData:5:Resource:AuthenticationIdentities:0", AuthenticationIdentityIdentity},
         {"SeedData:5:Resource:AuthenticationIdentities:1", AuthenticationIdentityDemo},
+
+        {"SeedData:6:Scheme", "access/account-members"},
+        {"SeedData:6:Resource:AccountGroup", AccountGroup},
+        {"SeedData:6:Resource:UniqueName", AccountGroupMember},
+        {"SeedData:6:Resource:MailAddress", AccountGroupMemberMailAddress},
+        {"SeedData:6:Resource:AuthenticationIdentities:0", AuthenticationIdentityIdentity},
+        {"SeedData:6:Resource:AuthenticationIdentities:1", AuthenticationIdentityDemo},
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory)
@@ -110,7 +118,7 @@ internal static class MockWebApplication
         return token;
     }
 
-    public static AuthenticationHeaderValue MockValidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock, string client = Client)
+    public static AuthenticationHeaderValue MockValidAuthorizationHeader(this WebApplicationFactory<Program> factory, int mock, string client = ClientName)
         => mock switch
         {
             MockAdmin => factory.MockValidAdminAuthorizationHeader(client),

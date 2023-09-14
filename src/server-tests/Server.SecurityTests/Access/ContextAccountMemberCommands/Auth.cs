@@ -47,7 +47,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            ClientName = MockWebApplication.Client,
+            ClientName = MockWebApplication.ClientName,
             MockWebApplication.AccountGroup,
             AccountMember = accountMember
         };
@@ -75,7 +75,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            ClientName = MockWebApplication.Client,
+            ClientName = MockWebApplication.ClientName,
             MockWebApplication.AccountGroup,
             AccountMember = "absent"
         };
@@ -103,7 +103,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            ClientName = MockWebApplication.Client,
+            ClientName = MockWebApplication.ClientName,
             MockWebApplication.AccountGroup,
             AccountMember = accountMember
         };
@@ -135,7 +135,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
         var authRequest = new
         {
-            ClientName = MockWebApplication.Client,
+            ClientName = MockWebApplication.ClientName,
             AccountGroup = "absent",
             AccountMember = accountMember
         };

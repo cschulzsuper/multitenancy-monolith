@@ -57,3 +57,25 @@
     .btn-primary:hover {
         background-color: #666;
     }
+
+.btn-link {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    font-size: 14px; /* Adjust the font size to make it smaller */
+    color: #6c757d; /* Grey color */
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 10px; /* Add a top margin of 10px (adjust as needed) */
+}
+
+    .btn-link:hover {
+        color: #555; /* Darker grey for hover effect */
+        text-decoration: underline;
+    }
+
+    .btn-link:focus {
+        color: #555; /* Darker grey for focus effect */
+        text-decoration: underline;
+        outline: none;
+    }

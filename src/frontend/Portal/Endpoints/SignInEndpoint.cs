@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
+using ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Security;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Endpoints;
 
@@ -8,25 +10,24 @@ public static class SignInEndpoint
 {
     public static IEndpointRouteBuilder MapSignIn(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("sign-in", (HttpContext context) =>
+        endpoints.MapPost("sign-in", (HttpContext context,
+            [FromForm(Name = "return")] string @return,
+            [FromForm(Name = "access-code")] string accessCode) =>
         {
-            var @return = context.Request.Query["return"];
-            if (string.IsNullOrWhiteSpace(@return))
-            {
-                return Results.NotFound();
-            }
-
-            context.Request.Query.TryGetValue("access_code", out var accessToken);
-            if (string.IsNullOrWhiteSpace(accessToken))
-            {
-                return Results.NotFound();
-            }
-
             context.Response.StatusCode = 302;
-            context.Response.Cookies.Append("access_token", accessToken!);
+            context.Response.Cookies.Append(BearerTokenConstants.CookieName, accessCode!,
+                new CookieOptions
+                {
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    HttpOnly = true
+                });
 
             return Results.Redirect(@return!);
-        }).AllowAnonymous();
+        })
+            .AllowAnonymous()
+            .DisableAntiforgery();
+
 
         return endpoints;
     }

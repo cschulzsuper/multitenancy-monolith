@@ -1,3 +1,4 @@
+using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Admission.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
@@ -19,19 +20,20 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(MockWebApplication.AuthenticationIdentityAdmin, MockWebApplication.AuthenticationIdentityAdminSecret)]
-    [InlineData(MockWebApplication.AuthenticationIdentityIdentity, MockWebApplication.AuthenticationIdentityIdentitySecret)]
-    [InlineData(MockWebApplication.AuthenticationIdentityDemo, MockWebApplication.AuthenticationIdentityDemoSecret)]
-    public async Task Auth_ShouldSucceed_WhenValid(string authenticationIdentity, string secret)
+    [InlineData(MockWebApplication.AuthenticationIdentityAdmin, MockWebApplication.AuthenticationIdentityAdminSecret, null)]
+    [InlineData(MockWebApplication.AuthenticationIdentityIdentity, MockWebApplication.AuthenticationIdentityIdentitySecret, AuthenticationMethods.Secret)]
+    [InlineData(MockWebApplication.AuthenticationIdentityDemo, null, AuthenticationMethods.Anonymouse)]
+    public async Task Auth_ShouldSucceed_WhenValid(string authenticationIdentity, string secret, string method)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-identities/_/auth");
 
         var authRequest = new
         {
-            ClientName = MockWebApplication.Client,
+            ClientName = MockWebApplication.ClientName,
             AuthenticationIdentity = authenticationIdentity,
-            Secret = secret
+            Secret = secret,
+            Method = method
         };
 
         request.Content = JsonContent.Create(authRequest);
@@ -46,19 +48,20 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(MockWebApplication.AuthenticationIdentityAdmin)]
-    [InlineData(MockWebApplication.AuthenticationIdentityIdentity)]
-    [InlineData(MockWebApplication.AuthenticationIdentityDemo)]
-    public async Task Auth_ShouldFail_WhenSecretInvalid(string authenticationIdentity)
+    [InlineData(MockWebApplication.AuthenticationIdentityAdmin, "invalid", null)]
+    [InlineData(MockWebApplication.AuthenticationIdentityIdentity, "invalid", AuthenticationMethods.Secret)]
+    [InlineData(MockWebApplication.AuthenticationIdentityDemo, null, AuthenticationMethods.Secret)]
+    public async Task Auth_ShouldFail_WhenSecretInvalid(string authenticationIdentity, string secret, string method)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-identities/_/auth");
 
         var authRequest = new
         {
-            ClientName = MockWebApplication.Client,
+            ClientName = MockWebApplication.ClientName,
             AuthenticationIdentity = authenticationIdentity,
-            Secret = "invalid"
+            Secret = secret,
+            Method = method
         };
 
         request.Content = JsonContent.Create(authRequest);
@@ -74,10 +77,10 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData(MockWebApplication.AuthenticationIdentityAdmin, MockWebApplication.AuthenticationIdentityAdminSecret)]
-    [InlineData(MockWebApplication.AuthenticationIdentityIdentity, MockWebApplication.AuthenticationIdentityIdentitySecret)]
-    [InlineData(MockWebApplication.AuthenticationIdentityDemo, MockWebApplication.AuthenticationIdentityDemoSecret)]
-    public async Task Auth_ShouldFail_WhenClientInvalid(string authenticationIdentity, string secret)
+    [InlineData(MockWebApplication.AuthenticationIdentityAdmin, MockWebApplication.AuthenticationIdentityAdminSecret, null)]
+    [InlineData(MockWebApplication.AuthenticationIdentityIdentity, MockWebApplication.AuthenticationIdentityIdentitySecret, AuthenticationMethods.Secret)]
+    [InlineData(MockWebApplication.AuthenticationIdentityDemo, null, AuthenticationMethods.Anonymouse)]
+    public async Task Auth_ShouldFail_WhenClientInvalid(string authenticationIdentity, string secret, string method)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-identities/_/auth");
@@ -86,7 +89,8 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
         {
             ClientName = "Invalid",
             AuthenticationIdentity = authenticationIdentity,
-            Secret = secret
+            Secret = secret,
+            Method = method
         };
 
         request.Content = JsonContent.Create(authRequest);

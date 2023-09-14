@@ -1,7 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Application.Admission.Requests;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission.Responses;
 using ChristianSchulz.MultitenancyMonolith.Web;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -41,12 +41,12 @@ internal sealed class AuthenticationIdentityRequestClientWebServiceClient : IAut
         if (skip != null) queryStringParameters.Add(new KeyValuePair<string, string?>("s", $"{skip}"));
         if (take != null) queryStringParameters.Add(new KeyValuePair<string, string?>("t", $"{take}"));
 
-        var queryString = QueryString.Create(queryStringParameters);
-
+        var requestUrl = QueryHelpers.AddQueryString($"api/a1/admission/authentication-identities",queryStringParameters)
+            ;
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri($"api/a1/admission/authentication-identities{queryString}", UriKind.Relative)
+            RequestUri = new Uri(requestUrl, UriKind.Relative)
         };
 
         var response = _client.Stream<AuthenticationIdentityResponse>(request);

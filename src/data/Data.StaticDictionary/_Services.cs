@@ -43,6 +43,7 @@ public static class _Services
     public static IServiceCollection AddStaticDictionaryAdmissionData(this IServiceCollection services)
     {
         services.AddScoped(CreateRepository<AuthenticationIdentityMapping, AuthenticationIdentity>);
+        services.AddScoped(CreateRepository<AuthenticationIdentityAuthenticationMethodMapping, AuthenticationIdentityAuthenticationMethod>);
         services.AddScoped(CreateRepository<AuthenticationRegistrationMapping, AuthenticationRegistration>);
 
         return services;

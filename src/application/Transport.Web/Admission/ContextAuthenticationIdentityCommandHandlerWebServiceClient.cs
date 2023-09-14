@@ -32,11 +32,11 @@ internal sealed class ContextAuthenticationIdentityCommandHandlerWebServiceClien
         };
        
         var response = await _client.SendAsync<JsonObject>(request);
-        var responseAccessToken = response["access_token"]?.GetValue<string>();
+        var responseAccessToken = response["accessToken"]?.GetValue<string>();
 
         if (responseAccessToken == null)
         {
-            TransportException.ThrowProcessViolation("Response does not contain a valid 'access_token'.");
+            TransportException.ThrowProcessViolation("Response does not contain a valid 'accessToken'.");
         }
 
         return responseAccessToken;

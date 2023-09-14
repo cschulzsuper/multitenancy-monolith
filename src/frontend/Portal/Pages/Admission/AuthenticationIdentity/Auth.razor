@@ -16,31 +16,31 @@
         <h1 class="card-title">Sign-In</h1>
 
         ﻿@if (_errorMessage != null)
-    {
-        <div role="alert">
-                     @_errorMessage
-                </div>
-    } 
+        {
+            <div role="alert">
+                         @_errorMessage
+            </div>
+        } 
 
         <EditForm id="account" 
                   method="post" 
-                  Model="@Model" 
-                  OnValidSubmit="Submit" 
-                  FormName="login">
+                  Model="@AccountModel"
+                  OnValidSubmit="SubmitAccount" 
+                  FormName="account-login">
 
-            @switch (Model.Stage)
+            @switch (AccountModel.Stage)
         {
             case "username":
                 <div class="form-group">
 
-                        <InputText type="hidden" @bind-Value="Model.ClientName" />
-                        <InputText type="hidden" @bind-Value="Model.Stage" />
+                        <InputText type="hidden" @bind-Value="AccountModel.ClientName" />
+                        <InputText type="hidden" @bind-Value="AccountModel.Stage" />
 
                         <label for="username" class="form-label">Username</label>
                         <InputText id="username"
                                    class="form-control"
                                    aria-required="true"
-                                   @bind-Value="Model.Username" />
+                        @bind-Value="AccountModel.Username" />
                     </div>
                 
                 break;
@@ -48,25 +48,37 @@
             case "password":
                 <div class="form-group">
 
-                        <InputText type="hidden" @bind-Value="Model.ClientName" />
-                        <InputText type="hidden" @bind-Value="Model.Stage" />
-                        <InputText type="hidden" @bind-Value="Model.Username" />
+                        <InputText type="hidden" @bind-Value="AccountModel.ClientName" />
+                        <InputText type="hidden" @bind-Value="AccountModel.Stage" />
+                        <InputText type="hidden" @bind-Value="AccountModel.Username" />
 
                         <label for="password" class="form-label">Password</label>
                         <InputText id="password"
                                    class="form-control"
                                    type="password"
                                    aria-required="true"
-                                   @bind-Value="Model.Password" />
+                        @bind-Value="AccountModel.Password" />
                     </div>
 
                 break;
         }
             <div class="form-group">
-                <button id="login-submit"
+                <button id="account-login-submit"
                         class="btn btn-primary"
                         type="submit">Submit</button>
             </div>
+        </EditForm>
+        <EditForm id="guest" 
+                  method="post" 
+                  Model="@AccountModel"
+                  OnValidSubmit="SubmitGuest"
+                  FormName="guest-login">
+            <InputText type="hidden" @bind-Value="AccountModel.ClientName" />
+            <button id="guest-login-submit"
+                    class="btn btn-link"
+                    type="submit">
+                Be My Guest!
+            </button>
         </EditForm>
     </div>
 </div>
@@ -75,7 +87,7 @@
     private string? _errorMessage;
 
     [SupplyParameterFromForm]
-    public AuthModel Model { get; set; } = new();
+    public AuthModel AccountModel { get; set; } = new();
 
     [SupplyParameterFromQuery(Name = "return")]
     public string? Return { get; set; }
@@ -85,30 +97,46 @@
 
     protected override void OnInitialized()
     {
-        Model.Stage ??= "username";
-        Model.ClientName ??= ClientName;
+        AccountModel.Stage ??= "username";
+        AccountModel.ClientName ??= ClientName;
 
-        AuthService.InitializeModel(Model);
+        AuthService.InitializeModel(AccountModel);
     }
 
-    public async Task Submit()
+    public async Task SubmitAccount()
     {
         try
         {
-            switch (Model.Stage)
+            switch (AccountModel.Stage)
             {
                 case "username":
-                    Model.Username = await AuthService.ResolveAuthenticationIdentityAsync(Model.Username!);
-                    Model.Stage = AuthService.NextStage(Model.Stage);
+                    AccountModel.Username = await AuthService.ResolveAuthenticationIdentityAsync(AccountModel.Username!);
+                    AccountModel.Stage = AuthService.NextStage(AccountModel.Stage);
                     break;
 
                 case "password":
-                    await AuthService.SignInAsync(Model);
+                    AccountModel.Method = "secret";
+                    await AuthService.SignInAsync(AccountModel);
                     RedirectSuccess();
                     break;
             }
         }
         catch(Exception e) when (e is not NavigationException)
+        {
+            _errorMessage = e.Message;
+        }
+    }
+
+    public async Task SubmitGuest()
+    {
+        try
+        {
+            AccountModel.Username = "demo";
+            AccountModel.Method = "anonymouse";
+            await AuthService.SignInAsync(AccountModel);
+            RedirectSuccess();
+        }
+        catch (Exception e) when (e is not NavigationException)
         {
             _errorMessage = e.Message;
         }

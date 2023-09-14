@@ -135,6 +135,7 @@ public sealed class Startup
         if (!_environment.IsProduction())
         {
             app.ApplicationServices.ConfigureAuthenticationIdentities();
+            app.ApplicationServices.ConfigureAuthenticationIdentityAuthenticationMethods();
             app.ApplicationServices.ConfigureAccountGroups();
             app.ApplicationServices.ConfigureAccountMembers();
         }

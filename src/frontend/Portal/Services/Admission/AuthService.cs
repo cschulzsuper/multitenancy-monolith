@@ -81,14 +81,16 @@ public class AuthService
             ClientName = model.ClientName!,
             AuthenticationIdentity = model.Username!,
             Secret = model.Password!,
+            AuthenticationMethod = model.Method
         };
 
         var token = await AuthAsync(command);
 
-        _contextAccessor.HttpContext?.Response.Cookies.Append("access_token", token, 
-            new CookieOptions {
-                SameSite = SameSiteMode.None,
+        _contextAccessor.HttpContext?.Response.Cookies.Append("access-token", token,
+            new CookieOptions
+            {
                 Secure = true,
+                SameSite = SameSiteMode.Strict,
                 HttpOnly = true
             });
 

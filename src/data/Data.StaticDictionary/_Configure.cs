@@ -41,6 +41,30 @@ public static class _Configure
         return services;
     }
 
+    public static IServiceProvider ConfigureAuthenticationIdentityAuthenticationMethods(this IServiceProvider services)
+    {
+        var authenticationIdentityAuthenticationMethodSeeds = services
+            .GetRequiredService<IConfigurationProxyProvider>()
+            .GetSeedData<AuthenticationIdentityAuthenticationMethodSeed>("admission/authentication-identity-authentication-methods");
+
+        using var scope = services.CreateScope();
+
+        var authenticationIdentityAuthenticationMethods = authenticationIdentityAuthenticationMethodSeeds
+            .Select(seed => new AuthenticationIdentityAuthenticationMethod
+            {
+                AuthenticationMethod = seed.AuthenticationMethod,
+                ClientName = seed.ClientName,
+                AuthenticationIdentity = seed.AuthenticationIdentity
+            })
+            .ToArray();
+
+        scope.ServiceProvider
+            .GetRequiredService<IRepository<AuthenticationIdentityAuthenticationMethod>>()
+            .Insert(authenticationIdentityAuthenticationMethods);
+
+        return services;
+    }
+
     public static IServiceProvider ConfigureAccountGroups(this IServiceProvider services)
     {
         var accountGroupSeeds = services

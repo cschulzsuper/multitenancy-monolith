@@ -14,7 +14,7 @@ Clone the repository and start the [compose file](./docker/README.md).
 
 ## History
 
-> The [dev-log](https://mmdevlogapp.azurewebsites.net/dev-log) hosted on Azure is not yet up-to-date. It runs in `staging` mode, with username `admin` and password `default`.
+> The [dev-log](https://mmdevlogapp.azurewebsites.net/dev-log) hosted on Azure runs in `staging` mode and is not yet up-to-date.
 
 ### Initial template
   * /1 In the initial commit I only created a single Visual Studio project from the built-in template and the GitHub repository. https://github.com/cschulzsuper/multitenancy-monolith/commit/0a18987ba7518789da227fce88915b55f3635d78
@@ -148,10 +148,13 @@ Clone the repository and start the [compose file](./docker/README.md).
   * /77 At some point in the future I want a more flexible sign-in. That sign-in should support MFA. In a first step I decieded to split the `sign-in` page in two steps. One for the username and one for the password. https://github.com/cschulzsuper/multitenancy-monolith/commit/5aafd1a5feb9e0d101502e0a7470578094f3bbf5
 
 ### Caddy Reverse Proxy
-  * /78 Why use only one reverse proxy if you can have two. Caddy seems to have good build-in SSL handling and can retriev certificates from [Let's Encrypt](https://letsencrypt.org/) automatically. From now on, _Caddy_ will terminate SSL. Since this was very easy to integrate, I wanted to push this while I'm working on the _Sign-In Extension_.
+  * /78 Why use only one reverse proxy if you can have two. Caddy seems to have good build-in SSL handling and can retriev certificates from [Let's Encrypt](https://letsencrypt.org/) automatically. From now on, _Caddy_ will terminate SSL. Since this was very easy to integrate, I wanted to push this while I'm working on the _Sign-In Extension_. https://github.com/cschulzsuper/multitenancy-monolith/commit/253b3c7eaf30438158a3743512c48c62afa35a9b
 
 ### It's alive
-  * /79 I wanted the [dev-log](https://mmdevlogapp.azurewebsites.net/dev-log) to be available on the web. I played around with multiple options for the deployment, and ended up with simple Azure Web Apps. This option is enough for now. It alone brought some TODO's to light, which first need to be sorted out. If anybody ever tells you, that you should not implement your own authentication, listen to him. Nevertheless, I will stick with my custom authentication, as it actually forced me to understand how OIDC and OAuth do things.
+  * /79 I wanted the [dev-log](https://mmdevlogapp.azurewebsites.net/dev-log) to be available on the web. I played around with multiple options for the deployment, and ended up with simple Azure Web Apps. This option is enough for now. It alone brought some TODO's to light, which first need to be sorted out. If anybody ever tells you, that you should not implement your own authentication, listen to him. Nevertheless, I will stick with my custom authentication, as it actually forced me to understand how OIDC and OAuth do things. https://github.com/cschulzsuper/multitenancy-monolith/commit/8531c25faac6b3d1ee9458fea83217ee955bba32
+
+### Sign-In Extension (2/2)
+  * /80 A guest sign-in is possible for everybody who does not want to sign-in with credentials. The guest sign-in still goes through authentication, but an extension of the data model allows to authenticate anonymously. The anonymous authentication method is used for the demo account for now.
 
 # Backlog
 
