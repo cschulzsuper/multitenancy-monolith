@@ -21,6 +21,9 @@ using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Application.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Endpoints;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
+using System.Globalization;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.DevLog;
 
@@ -126,6 +129,18 @@ public sealed class Startup
                     };
                 });
 
+        services.AddRequestLocalization(options =>
+        {
+            var supportedCultures = new List<CultureInfo>
+                    {
+                        new CultureInfo("en-US")
+                    };
+
+            options.DefaultRequestCulture = new RequestCulture("en-US");
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+        });
+
         services.AddAuthorization();
 
         services
@@ -151,6 +166,7 @@ public sealed class Startup
         app.ApplicationServices.ConfigureDevelopmentPosts();
 
         app.UseForwardedHeaders();
+        app.UseRequestLocalization();
 
         app.UseCors();
 

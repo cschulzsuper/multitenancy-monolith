@@ -3,7 +3,7 @@
     "http": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
         "MM_Ticker_ServiceMappings__0__UniqueName": "swagger-ui",
         "MM_Ticker_ServiceMappings__0__Url": "http://localhost:5109",
         "MM_Ticker_ServiceMappings__1__UniqueName": "swagger-ui-host",

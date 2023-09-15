@@ -18,11 +18,13 @@ public sealed class DevelopmentPostService
     {
         var models = _repository
             .GetQueryable()
+            .OrderByDescending(x => x.Index)
             .Select(x => new DevelopmentPostModel
             {
-                DateTime = x.DateTime,
+                Project = x.Project,
+                Time = x.Time,
                 Link = x.Link,
-                Tag = x.Tags.First(),
+                Tags = x.Tags,
                 Text = x.Text,
                 Title = x.Title
             })

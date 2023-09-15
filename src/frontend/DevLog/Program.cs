@@ -16,6 +16,8 @@ public sealed class Program
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
-                webBuilder.ConfigureAppConfiguration(c => c.AddEnvironmentVariables("MM_DevLog_"));
+                webBuilder.ConfigureAppConfiguration(c => c
+                    .AddJsonFile("appsettings.SeedData.json")
+                    .AddEnvironmentVariables("MM_DevLog_"));
             });
 }

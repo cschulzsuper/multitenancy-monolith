@@ -30,7 +30,7 @@ internal sealed class SwaggerUIOptionsConfiguration
                 {
                     if (document.cookie.length > 0)
                     {
-                        let accessTokenName = {{BearerTokenConstants.CookieName}};
+                        let accessTokenName = '{{BearerTokenConstants.CookieName}}';
 
                         let accessTokenStart = document.cookie.indexOf(accessTokenName + "=");
                         if (accessTokenStart != -1) 

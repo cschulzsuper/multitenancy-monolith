@@ -4,9 +4,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Documentati
 
 public sealed class DevelopmentPostSeed
 {
+    public required string Project { get; init; }
+
     public required string Title { get; init; }
 
-    public required DateTime DateTime { get; init; }
+    public required DateTime Time { get; init; }
 
     public required string Text { get; init; }
 

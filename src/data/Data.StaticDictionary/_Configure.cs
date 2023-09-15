@@ -163,11 +163,12 @@ public static class _Configure
             .Select(seed => new DevelopmentPost
             {
                 Index = Array.IndexOf(developmentPostSeeds, seed),
+                Project = seed.Project,
                 Title = seed.Title,
-                DateTime = seed.DateTime,
+                Time = seed.Time,
                 Text = seed.Text,
                 Link = seed.Link,
-                Tags = seed.Tags
+                Tags = seed.Tags ?? Array.Empty<string>(),
             })
             .ToArray();
 

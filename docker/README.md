@@ -8,7 +8,7 @@ dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\multitenancy-monolith
 dotnet dev-certs https --trust
 ```
 
-#### Used by `nginx`
+#### Used in `caddy`
 ``` bash
 openssl pkcs12 -in ./multitenancy-monolith.pfx -clcerts -nokeys -out multitenancy-monolith.crt
 openssl pkcs12 -in ./multitenancy-monolith.pfx -nocerts -nodes -out multitenancy-monolith.rsa
@@ -22,15 +22,5 @@ docker compose -p multitenancy-monolith up
 
 # Access
 
-### DevLog
-
-* Browser: `https://localhost`
-* Username: `demo`
-* Password: `default`
-
-
-### Swagger
-
-* Browser: `https://localhost/swagger`
-* Username: `demo`
-* Password: `default`
+* DevLog: `https://localhost`
+* Swagger: `https://localhost/swagger`
