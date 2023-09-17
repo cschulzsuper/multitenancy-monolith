@@ -2,21 +2,22 @@
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Middleware;
-
-public sealed class EndpointEventsMiddleware
+namespace ChristianSchulz.MultitenancyMonolith.Server.Middleware
 {
-    private readonly RequestDelegate _next;
-
-    public EndpointEventsMiddleware(RequestDelegate next)
+    public sealed class EndpointEventsMiddleware
     {
-        _next = next;
-    }
+        private readonly RequestDelegate _next;
 
-    public async Task Invoke(HttpContext context, IEventStorage eventStorage)
-    {
-        await _next.Invoke(context);
+        public EndpointEventsMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
 
-        await eventStorage.FlushAsync();
+        public async Task Invoke(HttpContext context, IEventStorage eventStorage)
+        {
+            await _next.Invoke(context);
+
+            await eventStorage.FlushAsync();
+        }
     }
 }

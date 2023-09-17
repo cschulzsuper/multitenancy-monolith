@@ -4,6 +4,7 @@
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "MM_Server_MaintenanceSecret": "default",
         "MM_Server_ServiceMappings__0__UniqueName": "swagger-ui",
         "MM_Server_ServiceMappings__0__Url": "http://localhost:5108",
         "MM_Server_ServiceMappings__1__UniqueName": "swagger-ui-host",
@@ -22,6 +23,7 @@
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "MM_Server_MaintenanceSecret": "default",
         "MM_Server_ServiceMappings__0__UniqueName": "swagger-ui",
         "MM_Server_ServiceMappings__0__Url": "https://localhost:7272",
         "MM_Server_ServiceMappings__1__UniqueName": "swagger-ui-host",
@@ -40,6 +42,9 @@
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging",
+        "MM_Server_MaintenanceSecret": "default",
+        "MM_Server_DistributedCache__Host": "localhost:6379",
+        "MM_Server_DistributedCache__Secret": "default",
         "MM_Server_ServiceMappings__0__UniqueName": "swagger-ui",
         "MM_Server_ServiceMappings__0__Url": "https://localhost:7272",
         "MM_Server_ServiceMappings__1__UniqueName": "swagger-ui-host",
@@ -60,6 +65,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HTTP_PORTS": "5177",
         "ASPNETCORE_HTTPS_PORTS": "7207",
+        "MM_Server_MaintenanceSecret": "default",
         "MM_Server_ServiceMappings__0__UniqueName": "swagger-ui",
         "MM_Server_ServiceMappings__0__Url": "https://loclahost:7272",
         "MM_Server_ServiceMappings__1__UniqueName": "swagger-ui-host",

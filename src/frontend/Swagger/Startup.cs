@@ -1,6 +1,8 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
+using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.DataProtection;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.Endpoints;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.Security;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.SwaggerUI;
@@ -8,7 +10,6 @@ using ChristianSchulz.MultitenancyMonolith.Web;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Http;
@@ -53,9 +54,9 @@ public sealed class Startup
 
         var configuredAdmissionServer = configurationProxyProvider.GetAdmissionServer();
         var configuredAdmissionPortal = configurationProxyProvider.GetAdmissionPortal();
+        var configuredAllowedClients = configurationProxyProvider.GetAllowedClients();
         var configuredSwaggerDocs = configurationProxyProvider.GetSwaggerDocs();
         var configuredServicesMappings = configurationProxyProvider.GetServiceMappings();
-        var configuredAllowedClients = configurationProxyProvider.GetAllowedClients();
 
         webServices = configuredServicesMappings
             .Where(servicesMapping =>
@@ -96,7 +97,8 @@ public sealed class Startup
             options.KnownProxies.Clear();
         });
 
-        services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
+        services.AddDataProtection().Configure(_environment, _configuration);
+
         services.AddAuthentication(BearerTokenDefaults.AuthenticationScheme)
             .AddBearerToken(options =>
                 {

@@ -2,84 +2,85 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
-
-internal static class SwaggerGenOptionsExtensions
+namespace ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen
 {
-
-    public static SwaggerGenOptions ConfigureAuthentication(this SwaggerGenOptions options)
+    internal static class SwaggerGenOptionsExtensions
     {
-        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+
+        public static SwaggerGenOptions ConfigureAuthentication(this SwaggerGenOptions options)
         {
-            Scheme = "Bearer",
-            Type = SecuritySchemeType.Http,
-            In = ParameterLocation.Header
-        });
-
-        return options;
-    }
-
-    public static SwaggerGenOptions ConfigureAuthorization(this SwaggerGenOptions options)
-    {
-        options.OperationFilter<StatusCodeOperationFilter>();
-        options.OperationFilter<AuthorizationOperationFilter>();
-
-        return options;
-    }
-
-    public static SwaggerGenOptions ConfigureSwaggerDocs(this SwaggerGenOptions options)
-    {
-        options.SwaggerDoc("a1", new()
-        {
-            Title = "Server A1",
-            Version = "a1"
-        });
-
-        options.SwaggerDoc("a1-access", new()
-        {
-            Title = "Server A1 (access)",
-            Version = "a1-access"
-        });
-
-        options.SwaggerDoc("a1-admission", new()
-        {
-            Title = "Server A1 (admission)",
-            Version = "a1-admission"
-        });
-
-        options.SwaggerDoc("a1-business", new()
-        {
-            Title = "Server A1 (business)",
-            Version = "a1-business"
-        });
-
-        options.SwaggerDoc("a1-extension", new()
-        {
-            Title = "Server A1 (extension)",
-            Version = "a1-extension"
-        });
-
-        options.SwaggerDoc("a1-schedule", new()
-        {
-            Title = "Server A1 (schedule)",
-            Version = "a1-schedule"
-        });
-
-        options.DocInclusionPredicate((docName, apiDesc) =>
-        {
-            if (docName == "a1")
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                return true;
-            }
+                Scheme = "Bearer",
+                Type = SecuritySchemeType.Http,
+                In = ParameterLocation.Header
+            });
 
-            if (docName.Equals($"a1-{apiDesc.GroupName}"))
+            return options;
+        }
+
+        public static SwaggerGenOptions ConfigureAuthorization(this SwaggerGenOptions options)
+        {
+            options.OperationFilter<StatusCodeOperationFilter>();
+            options.OperationFilter<AuthorizationOperationFilter>();
+
+            return options;
+        }
+
+        public static SwaggerGenOptions ConfigureSwaggerDocs(this SwaggerGenOptions options)
+        {
+            options.SwaggerDoc("a1", new()
             {
-                return true;
-            }
+                Title = "Server A1",
+                Version = "a1"
+            });
 
-            return false;
-        });
+            options.SwaggerDoc("a1-access", new()
+            {
+                Title = "Server A1 (access)",
+                Version = "a1-access"
+            });
 
-        return options;
+            options.SwaggerDoc("a1-admission", new()
+            {
+                Title = "Server A1 (admission)",
+                Version = "a1-admission"
+            });
+
+            options.SwaggerDoc("a1-business", new()
+            {
+                Title = "Server A1 (business)",
+                Version = "a1-business"
+            });
+
+            options.SwaggerDoc("a1-extension", new()
+            {
+                Title = "Server A1 (extension)",
+                Version = "a1-extension"
+            });
+
+            options.SwaggerDoc("a1-schedule", new()
+            {
+                Title = "Server A1 (schedule)",
+                Version = "a1-schedule"
+            });
+
+            options.DocInclusionPredicate((docName, apiDesc) =>
+            {
+                if (docName == "a1")
+                {
+                    return true;
+                }
+
+                if (docName.Equals($"a1-{apiDesc.GroupName}"))
+                {
+                    return true;
+                }
+
+                return false;
+            });
+
+            return options;
+        }
     }
 }

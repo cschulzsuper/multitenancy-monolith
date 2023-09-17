@@ -6,36 +6,37 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Events;
-
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
-internal static class _Configure
+namespace ChristianSchulz.MultitenancyMonolith.Server.Events
 {
-    public static EventsOptions Configure(this EventsOptions options)
+    [SuppressMessage("Style", "IDE1006:Naming Styles")]
+    internal static class _Configure
     {
-        options.ChannelNameResolver = provider => provider
-            .GetRequiredService<ClaimsPrincipal>()
-            .GetClaimOrDefault("group") ?? string.Empty;
+        public static EventsOptions Configure(this EventsOptions options)
+        {
+            options.ChannelNameResolver = provider => provider
+                .GetRequiredService<ClaimsPrincipal>()
+                .GetClaimOrDefault("group") ?? string.Empty;
 
-        options.BeforeSubscriptionInvocation = BeforeSubscriptionInvocation;
-        options.AfterSubscriptionInvocation = AfterSubscriptionInvocation;
+            options.BeforeSubscriptionInvocation = BeforeSubscriptionInvocation;
+            options.AfterSubscriptionInvocation = AfterSubscriptionInvocation;
 
-        return options;
-    }
+            return options;
+        }
 
-    private static Task BeforeSubscriptionInvocation(IServiceProvider services, string channelName)
-    {
-        services
-            .GetRequiredService<ClaimsPrincipal>()
-            .AddIdentity(new ClaimsIdentity(new[] { new Claim("group", channelName) }));
+        private static Task BeforeSubscriptionInvocation(IServiceProvider services, string channelName)
+        {
+            services
+                .GetRequiredService<ClaimsPrincipal>()
+                .AddIdentity(new ClaimsIdentity(new[] { new Claim("group", channelName) }));
 
-        return Task.CompletedTask;
-    }
+            return Task.CompletedTask;
+        }
 
-    private static async Task AfterSubscriptionInvocation(IServiceProvider services, string _)
-    {
-        await services
-            .GetRequiredService<IEventStorage>()
-            .FlushAsync();
+        private static async Task AfterSubscriptionInvocation(IServiceProvider services, string _)
+        {
+            await services
+                .GetRequiredService<IEventStorage>()
+                .FlushAsync();
+        }
     }
 }

@@ -2,38 +2,39 @@
 using Cronos;
 using System;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Jobs;
-
-public sealed class CronExpressionSchedule : IPlannedJobSchedule
+namespace ChristianSchulz.MultitenancyMonolith.Server.Jobs
 {
-
-    private readonly CronExpression _expression;
-
-    private readonly string _expressionLiteral;
-
-    public CronExpressionSchedule(string expression)
+    public sealed class CronExpressionSchedule : IPlannedJobSchedule
     {
-        _expression = CronExpression.Parse(expression, CronFormat.Standard);
-        _expressionLiteral = expression;
-    }
 
-    public string Expression => _expressionLiteral;
+        private readonly CronExpression _expression;
 
-    public DateTime Next(DateTime @base)
-    {
-        var adjustedBase = @base;
+        private readonly string _expressionLiteral;
 
-        do
+        public CronExpressionSchedule(string expression)
         {
-            var nextOccurrence = _expression.GetNextOccurrence(adjustedBase);
+            _expression = CronExpression.Parse(expression, CronFormat.Standard);
+            _expressionLiteral = expression;
+        }
 
-            if (nextOccurrence != null)
+        public string Expression => _expressionLiteral;
+
+        public DateTime Next(DateTime @base)
+        {
+            var adjustedBase = @base;
+
+            do
             {
-                return nextOccurrence.Value;
-            }
+                var nextOccurrence = _expression.GetNextOccurrence(adjustedBase);
 
-            adjustedBase = adjustedBase.AddMinutes(1);
+                if (nextOccurrence != null)
+                {
+                    return nextOccurrence.Value;
+                }
 
-        } while (true);
+                adjustedBase = adjustedBase.AddMinutes(1);
+
+            } while (true);
+        }
     }
 }

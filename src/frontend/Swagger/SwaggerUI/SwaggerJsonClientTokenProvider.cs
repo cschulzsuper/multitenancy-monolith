@@ -11,7 +11,6 @@ internal sealed class SwaggerJsonClientTokenProvider
 {
     private readonly TransportWebServiceClientFactory _transportWebServiceClientFactory;
     private readonly AdmissionServer _admissionServer;
-    private readonly MaintenanceAuthenticationIdentity _maintenanceAuthenticationIdentity;
 
     public SwaggerJsonClientTokenProvider(
         TransportWebServiceClientFactory transportWebServiceClientFactory,
@@ -19,7 +18,6 @@ internal sealed class SwaggerJsonClientTokenProvider
     {
         _transportWebServiceClientFactory = transportWebServiceClientFactory;
         _admissionServer = configurationProxyProvider.GetAdmissionServer();
-        _maintenanceAuthenticationIdentity = configurationProxyProvider.GetMaintenanceAuthenticationIdentity();
     }
 
     public async Task<string> GetAsync()
@@ -29,9 +27,9 @@ internal sealed class SwaggerJsonClientTokenProvider
 
         var command = new ContextAuthenticationIdentityAuthCommand
         {
-            ClientName = _maintenanceAuthenticationIdentity.ClientName,
-            AuthenticationIdentity = _maintenanceAuthenticationIdentity.UniqueName,
-            Secret = _maintenanceAuthenticationIdentity.Secret
+            ClientName = _admissionServer.MaintenanceClient,
+            AuthenticationIdentity = _admissionServer.MaintenanceIdentity,
+            Secret = _admissionServer.MaintenanceSecret
         };
 
         var tokenObject = await client.AuthAsync(command);

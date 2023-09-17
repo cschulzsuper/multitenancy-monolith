@@ -4,24 +4,25 @@ using Microsoft.AspNetCore.Authentication.BearerToken;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Security;
-
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
-internal static class _Configure
+namespace ChristianSchulz.MultitenancyMonolith.Server.Security
 {
-    public static RequestUserOptions Configure(this RequestUserOptions options, ICollection<AllowedClient> allowedClients)
+    [SuppressMessage("Style", "IDE1006:Naming Styles")]
+    internal static class _Configure
     {
-        options.Transform = user => RequestUserConfiguration.TransformAsync(user, allowedClients);
+        public static RequestUserOptions Configure(this RequestUserOptions options, ICollection<AllowedClient> allowedClients)
+        {
+            options.Transform = user => RequestUserConfiguration.TransformAsync(user, allowedClients);
 
-        return options;
+            return options;
+        }
+
+        public static BearerTokenOptions Configure(this BearerTokenOptions options)
+        {
+            options.Events.OnMessageReceived = BearerTokenMessageHandler.Handle;
+
+            return options;
+        }
+
+
     }
-
-    public static BearerTokenOptions Configure(this BearerTokenOptions options)
-    {
-        options.Events.OnMessageReceived = BearerTokenMessageHandler.Handle;
-
-        return options;
-    }
-
-
 }

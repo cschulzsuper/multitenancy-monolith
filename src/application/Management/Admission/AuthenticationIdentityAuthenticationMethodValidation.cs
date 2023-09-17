@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
-using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Admission.ConcreteValidators;
+﻿using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Admission.ConcreteValidators;
 using ChristianSchulz.MultitenancyMonolith.Shared.Validation;
 using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
 

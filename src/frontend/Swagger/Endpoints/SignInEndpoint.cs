@@ -10,7 +10,7 @@ public static class SignInEndpoint
 {
     public static IEndpointRouteBuilder MapSignIn(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("sign-in", (HttpContext context,
+        endpoints.MapPost("swagger/sign-in", (HttpContext context,
             [FromForm(Name = "return")] string @return,
             [FromForm(Name = "access-code")] string accessCode) =>
         {
@@ -20,7 +20,7 @@ public static class SignInEndpoint
                 {
                     Secure = true,
                     SameSite = SameSiteMode.None,
-                    HttpOnly = true
+                    HttpOnly = false
                 });
 
             return Results.Redirect(@return!);

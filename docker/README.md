@@ -22,5 +22,5 @@ docker compose -p multitenancy-monolith up
 
 # Access
 
-* DevLog: `https://localhost`
+* DevLog: `https://localhost/dev-log`
 * Swagger: `https://localhost/swagger`

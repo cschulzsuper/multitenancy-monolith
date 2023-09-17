@@ -3,7 +3,8 @@ version: '3.8'
 name: "multitenancy-monolith"
 
 networks:
-  nginx:
+  caddy:
+  redis:
   default:
 
 services:
@@ -18,9 +19,10 @@ services:
       - 80:80
       - 443:443
     depends_on:
-      - nginx
+      nginx:
+        condition: service_started
     networks:
-      - nginx
+      - caddy
 
   nginx:    
     container_name: ${COMPOSE_PROJECT_NAME}-nginx
@@ -35,8 +37,27 @@ services:
       - swagger
       - dev-log
     networks:
-      - nginx
+      - caddy
       - default
+
+  redis:    
+    container_name: ${COMPOSE_PROJECT_NAME}-redis-server
+    image: cschulzsuper/mm-redis-server:dev
+    build: 
+      context: redis-server
+      dockerfile: Dockerfile
+    environment:
+      - REDIS_PASSWORD=default
+    ports:
+      - 6379:6379
+    networks:
+      - redis    
+    healthcheck:
+      test: ["CMD", "redis-cli", "-h", "localhost", "-p", "6379", "ping"]
+      interval: 2s
+      timeout: 1m30s
+      retries: 5
+      start_period: 5s
 
   server:
     container_name: ${COMPOSE_PROJECT_NAME}-server
@@ -46,14 +67,16 @@ services:
       dockerfile: server/Server/Dockerfile
     networks:
       - default
+      - redis
+    depends_on:
+      redis:
+        condition: service_healthy
     env_file:
       - service-mappings.env
     environment:
       ASPNETCORE_HTTP_PORTS: 80
       ASPNETCORE_HTTPS_PORTS: 
       ASPNETCORE_ENVIRONMENT: ${ENVIRONMENT:-Staging}
-      WEBSITE_INSTANCE_ID: "11"
-      HOME: "/home/app"
 
   ticker:
     container_name: ${COMPOSE_PROJECT_NAME}-ticker
@@ -63,7 +86,10 @@ services:
       dockerfile: server/Ticker/Dockerfile
     networks:
       - default
+      - redis
     depends_on:
+      redis:
+        condition: service_healthy
       server:
         condition: service_started
     env_file:
@@ -72,8 +98,6 @@ services:
       ASPNETCORE_HTTP_PORTS: 80
       ASPNETCORE_HTTPS_PORTS: 
       ASPNETCORE_ENVIRONMENT: ${ENVIRONMENT:-Staging}
-      WEBSITE_INSTANCE_ID: "11"
-      HOME: "/home/app"
 
   portal:
     container_name: ${COMPOSE_PROJECT_NAME}-portal
@@ -83,7 +107,10 @@ services:
       dockerfile: frontend/Portal/Dockerfile
     networks:
       - default
+      - redis
     depends_on:
+      redis:
+        condition: service_healthy
       server:
         condition: service_started
     env_file:
@@ -92,8 +119,6 @@ services:
       ASPNETCORE_HTTP_PORTS: 80
       ASPNETCORE_HTTPS_PORTS: 
       ASPNETCORE_ENVIRONMENT: ${ENVIRONMENT:-Staging}
-      WEBSITE_INSTANCE_ID: "11"
-      HOME: "/home/app"
 
   swagger:
     container_name: ${COMPOSE_PROJECT_NAME}-swagger
@@ -103,7 +128,10 @@ services:
       dockerfile: frontend/Swagger/Dockerfile
     networks:
       - default
+      - redis
     depends_on:
+      redis:
+        condition: service_healthy
       portal:
         condition: service_started
       server:
@@ -116,8 +144,6 @@ services:
       ASPNETCORE_HTTP_PORTS: 80
       ASPNETCORE_HTTPS_PORTS: 
       ASPNETCORE_ENVIRONMENT: ${ENVIRONMENT:-Staging}
-      WEBSITE_INSTANCE_ID: "11"
-      HOME: "/home/app"
 
   dev-log:
     container_name: ${COMPOSE_PROJECT_NAME}-dev-log
@@ -127,7 +153,10 @@ services:
       dockerfile: frontend/DevLog/Dockerfile
     networks:
       - default
+      - redis
     depends_on:
+      redis:
+        condition: service_healthy
       portal:
         condition: service_started
     env_file:
@@ -136,6 +165,4 @@ services:
       ASPNETCORE_HTTP_PORTS: 80
       ASPNETCORE_HTTPS_PORTS: 
       ASPNETCORE_ENVIRONMENT: ${ENVIRONMENT:-Staging}
-      WEBSITE_INSTANCE_ID: "11"
-      HOME: "/home/app"
       

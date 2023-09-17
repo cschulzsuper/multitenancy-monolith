@@ -2,6 +2,7 @@ using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
+using ChristianSchulz.MultitenancyMonolith.Frontend.Portal.DataProtection;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Endpoints;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Security;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services;
@@ -10,7 +11,6 @@ using ChristianSchulz.MultitenancyMonolith.Web;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Http;
@@ -102,7 +102,8 @@ public sealed class Startup
             options.KnownProxies.Clear();
         });
 
-        services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
+        services.AddDataProtection().Configure(_environment, _configuration);
+
         services.AddAuthentication(BearerTokenDefaults.AuthenticationScheme)
             .AddBearerToken(options =>
                 {

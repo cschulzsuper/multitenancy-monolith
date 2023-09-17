@@ -28,6 +28,8 @@
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging",
+        "MM_Ticker_DistributedCache__Host": "localhost:6379",
+        "MM_Ticker_DistributedCache__Secret": "default",
         "MM_Ticker_ServiceMappings__0__UniqueName": "swagger-ui",
         "MM_Ticker_ServiceMappings__0__Url": "https://localhost:7272",
         "MM_Ticker_ServiceMappings__1__UniqueName": "swagger-ui-host",

@@ -6,6 +6,7 @@
       "launchUrl": "http://localhost:5015",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "MM_Portal_AdmissionServer__MaintenanceSecret": "default",
         "MM_Portal_ServiceMappings__0__UniqueName": "server",
         "MM_Portal_ServiceMappings__0__Url": "http://localhost:5177",
         "MM_Portal_ServiceMappings__1__UniqueName": "portal",
@@ -20,6 +21,7 @@
       "launchUrl": "https://localhost:7053",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "MM_Portal_AdmissionServer__MaintenanceSecret": "default",
         "MM_Portal_ServiceMappings__0__UniqueName": "server",
         "MM_Portal_ServiceMappings__0__Url": "https://localhost:7207",
         "MM_Portal_ServiceMappings__1__UniqueName": "portal",
@@ -34,6 +36,9 @@
       "launchUrl": "https://localhost:7053",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging",
+        "MM_Portal_AdmissionServer__MaintenanceSecret": "default",
+        "MM_Portal_DistributedCache__Host": "localhost:6379",
+        "MM_Portal_DistributedCache__Secret": "default",
         "MM_Portal_ServiceMappings__0__UniqueName": "server",
         "MM_Portal_ServiceMappings__0__Url": "https://localhost:7207",
         "MM_Portal_ServiceMappings__1__UniqueName": "portal",
@@ -50,6 +55,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HTTP_PORTS": "5015",
         "ASPNETCORE_HTTPS_PORTS": "7053",
+        "MM_Portal_AdmissionServer__MaintenanceSecret": "default",
         "MM_Portal_ServiceMappings__0__UniqueName": "server",
         "MM_Portal_ServiceMappings__0__Url": "https://host.docker.internal:7207",
         "MM_Portal_ServiceMappings__1__UniqueName": "portal",

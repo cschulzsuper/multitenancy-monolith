@@ -2,6 +2,7 @@
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission.Commands;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services.Admission.Models;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -42,18 +43,16 @@ public class AuthService
 
     public async Task<string> ResolveAuthenticationIdentityAsync(string username)
     {
-        var maintenanceAuthenticationIdentity = _configurationProxyProvider.GetMaintenanceAuthenticationIdentity();
+        var admissionServer = _configurationProxyProvider.GetAdmissionServer();
 
         var command = new ContextAuthenticationIdentityAuthCommand
         {
-            ClientName = maintenanceAuthenticationIdentity.ClientName,
-            AuthenticationIdentity = maintenanceAuthenticationIdentity.UniqueName,
-            Secret = maintenanceAuthenticationIdentity.Secret,
+            ClientName = admissionServer.MaintenanceClient,
+            AuthenticationIdentity = admissionServer.MaintenanceIdentity,
+            Secret = admissionServer.MaintenanceSecret,
         };
 
         var token = await AuthAsync(command);
-
-        var admissionServer = _configurationProxyProvider.GetAdmissionServer();
 
         using var client = _transportWebServiceClientFactory
             .Create<IAuthenticationIdentityRequestClient>(admissionServer.Service, () => Task.FromResult(token)!);

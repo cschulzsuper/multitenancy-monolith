@@ -14,6 +14,7 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
     private readonly IAuthenticationIdentityManager _authenticationIdentityManager;
     private readonly IAuthenticationIdentityAuthenticationMethodManager _authenticationIdentityAuthenticationMethodManager;
     private readonly AllowedClient[] _allowedClients;
+    private readonly string _maintenanceSecret;
 
     public ContextAuthenticationIdentityCommandHandler(
         IAuthenticationIdentityManager authenticationIdentityManager,
@@ -23,6 +24,7 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
         _authenticationIdentityManager = authenticationIdentityManager;
         _authenticationIdentityAuthenticationMethodManager = authenticationIdentityAuthenticationMethodManager;
         _allowedClients = configurationProxyProvider.GetAllowedClients();
+        _maintenanceSecret = configurationProxyProvider.GetMaintenanceSecret();
     }
 
     public async Task<object> AuthAsync(ContextAuthenticationIdentityAuthCommand command)
@@ -41,9 +43,23 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
             case AuthenticationMethods.Anonymouse when authenticationMethodExists:
                 break;
 
+            case AuthenticationMethods.Maintenance when authenticationMethodExists:
+                var maintenanceSecretProvided = command.Secret != null;
+                if (!maintenanceSecretProvided)
+                {
+                    TransportException.ThrowSecurityViolation($"Secret is required for authentication method '{AuthenticationMethods.Maintenance}'");
+                }
+
+                var maintenanceSecretMatch = _maintenanceSecret == command.Secret;
+                if (!maintenanceSecretMatch)
+                {
+                    TransportException.ThrowSecurityViolation($"Could not match authentication identity '{command.AuthenticationIdentity}' against secret");
+                }
+                break;
+
             case AuthenticationMethods.Secret:
-                var secretProvided = command.Secret != null;
-                if (!secretProvided)
+                var identitySecretProvided = command.Secret != null;
+                if (!identitySecretProvided)
                 {
                     TransportException.ThrowSecurityViolation($"Secret is required for authentication method '{AuthenticationMethods.Secret}'");
                 }
@@ -63,9 +79,9 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
 
         var claims = new Claim[]
         {
-            new Claim("type", "identity"),
-            new Claim("client", command.ClientName),
-            new Claim("identity", command.AuthenticationIdentity)
+            new("type", "identity"),
+            new("client", command.ClientName),
+            new("identity", command.AuthenticationIdentity)
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);

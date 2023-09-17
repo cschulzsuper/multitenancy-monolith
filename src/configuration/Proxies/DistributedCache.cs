@@ -1,7 +1,8 @@
 ﻿namespace ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 
-public sealed class DefaultStagingAuthenticationIdentity
+public class DistributedCache
 {
-    public required string UniqueName { get; init; }
+    public required string Host { get; init; }
+
     public required string Secret { get; init; }
 }

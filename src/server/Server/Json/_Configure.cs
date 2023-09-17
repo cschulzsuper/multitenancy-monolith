@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Json;
-
-internal static class _Configure
+namespace ChristianSchulz.MultitenancyMonolith.Server.Json
 {
-    public static IServiceCollection ConfigureJsonOptions(this IServiceCollection services)
+    internal static class _Configure
     {
-        services.Configure<JsonOptions>(options => { options.SerializerOptions.TypeInfoResolver = new CustomPropertiesResolver(); });
+        public static IServiceCollection ConfigureJsonOptions(this IServiceCollection services)
+        {
+            services.Configure<JsonOptions>(options => { options.SerializerOptions.TypeInfoResolver = new CustomPropertiesResolver(); });
 
-        return services;
+            return services;
+        }
     }
 }

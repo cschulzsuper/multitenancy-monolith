@@ -30,6 +30,8 @@
       "launchUrl": "https://localhost:7190/dev-log",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging",
+        "MM_DevLog_DistributedCache__Host": "localhost:6379",
+        "MM_DevLog_DistributedCache__Secret": "default",
         "MM_DevLog_ServiceMappings__0__UniqueName": "portal",
         "MM_DevLog_ServiceMappings__0__Url": "https://localhost:7053"
       },

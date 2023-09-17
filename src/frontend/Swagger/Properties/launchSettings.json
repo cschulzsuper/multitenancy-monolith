@@ -6,6 +6,7 @@
       "launchUrl": "http://localhost:5108/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "MM_Swagger_AdmissionServer__MaintenanceSecret": "default",
         "MM_Swagger_ServiceMappings__0__UniqueName": "server",
         "MM_Swagger_ServiceMappings__0__Url": "http://localhost:5177",
         "MM_Swagger_ServiceMappings__1__UniqueName": "server-public",
@@ -28,6 +29,7 @@
       "launchUrl": "https://localhost:7272/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "MM_Swagger_AdmissionServer__MaintenanceSecret": "default",
         "MM_Swagger_ServiceMappings__0__UniqueName": "server",
         "MM_Swagger_ServiceMappings__0__Url": "https://localhost:7207",
         "MM_Swagger_ServiceMappings__1__UniqueName": "server-public",
@@ -50,6 +52,9 @@
       "launchUrl": "https://localhost:7272/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging",
+        "MM_Swagger_AdmissionServer__MaintenanceSecret": "default",
+        "MM_Swagger_DistributedCache__Host": "localhost:6379",
+        "MM_Swagger_DistributedCache__Secret": "default",
         "MM_Swagger_ServiceMappings__0__UniqueName": "server",
         "MM_Swagger_ServiceMappings__0__Url": "https://localhost:7207",
         "MM_Swagger_ServiceMappings__1__UniqueName": "server-public",
@@ -74,6 +79,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HTTP_PORTS": "5108",
         "ASPNETCORE_HTTPS_PORTS": "7272",
+        "MM_Swagger_AdmissionServer__MaintenanceSecret": "default",
         "MM_Swagger_ServiceMappings__0__UniqueName": "server",
         "MM_Swagger_ServiceMappings__0__Url": "https://host.docker.internal:7207",
         "MM_Swagger_ServiceMappings__1__UniqueName": "server-public",

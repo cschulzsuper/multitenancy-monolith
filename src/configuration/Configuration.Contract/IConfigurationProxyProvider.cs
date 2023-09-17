@@ -7,8 +7,9 @@ public interface IConfigurationProxyProvider
     AccessServer GetAccessServer();
     AdmissionPortal GetAdmissionPortal();
     AdmissionServer GetAdmissionServer();
+    DistributedCache GetDistributedCache();
     AllowedClient[] GetAllowedClients();
-    MaintenanceAuthenticationIdentity GetMaintenanceAuthenticationIdentity();
+    string GetMaintenanceSecret();
     ServiceMapping[] GetServiceMappings();
     SwaggerDoc[] GetSwaggerDocs();
 

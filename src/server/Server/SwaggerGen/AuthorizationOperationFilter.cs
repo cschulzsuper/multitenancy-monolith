@@ -4,40 +4,41 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
-
-internal sealed class AuthorizationOperationFilter : IOperationFilter
+namespace ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen
 {
-    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    internal sealed class AuthorizationOperationFilter : IOperationFilter
     {
-        var hasAuthorizeAttribute = context.ApiDescription
-            .ActionDescriptor
-            .EndpointMetadata
-            .Any(x => x is AuthorizeAttribute);
-
-        if (!hasAuthorizeAttribute)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            return;
-        }
+            var hasAuthorizeAttribute = context.ApiDescription
+                .ActionDescriptor
+                .EndpointMetadata
+                .Any(x => x is AuthorizeAttribute);
 
-        var authorizations = new List<string>();
-
-        operation.Security = new List<OpenApiSecurityRequirement>
-{
-    new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
+            if (!hasAuthorizeAttribute)
             {
-                Reference = new OpenApiReference
+                return;
+            }
+
+            var authorizations = new List<string>();
+
+            operation.Security = new List<OpenApiSecurityRequirement>
+    {
+        new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            authorizations
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                authorizations
+            }
         }
-    }
-};
+    };
+        }
     }
 }

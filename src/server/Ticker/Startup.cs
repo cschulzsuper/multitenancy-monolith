@@ -7,6 +7,7 @@ using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Jobs;
+using ChristianSchulz.MultitenancyMonolith.Server.Ticker.DataProtection;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Events;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Jobs;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Json;
@@ -15,7 +16,6 @@ using ChristianSchulz.MultitenancyMonolith.Server.Ticker.Security;
 using ChristianSchulz.MultitenancyMonolith.Server.Ticker.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -71,7 +71,8 @@ public sealed class Startup
 
         services.ConfigureJsonOptions();
 
-        services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
+        services.AddDataProtection().Configure(_environment, _configuration);
+
         services.AddAuthentication().AddBearerToken(options => options.Configure());
         services.AddAuthorization();
 

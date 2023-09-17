@@ -1,5 +1,6 @@
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
+using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.DataProtection;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Security;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Services;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
@@ -7,7 +8,6 @@ using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +22,6 @@ using ChristianSchulz.MultitenancyMonolith.Application.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Endpoints;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Options;
 using System.Globalization;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.DevLog;
@@ -91,7 +90,8 @@ public sealed class Startup
             options.KnownProxies.Clear();
         });
 
-        services.AddDataProtection().SetApplicationName(nameof(MultitenancyMonolith));
+        services.AddDataProtection().Configure(_environment, _configuration);
+
         services.AddAuthentication(BearerTokenDefaults.AuthenticationScheme)
             .AddBearerToken(options =>
                 {
@@ -131,10 +131,7 @@ public sealed class Startup
 
         services.AddRequestLocalization(options =>
         {
-            var supportedCultures = new List<CultureInfo>
-                    {
-                        new CultureInfo("en-US")
-                    };
+            var supportedCultures = new List<CultureInfo> { new("en-US") };
 
             options.DefaultRequestCulture = new RequestCulture("en-US");
             options.SupportedCultures = supportedCultures;

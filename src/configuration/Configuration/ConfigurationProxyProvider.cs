@@ -9,8 +9,9 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
     private const string AdmissionPortal = nameof(AdmissionPortal);
     private const string AdmissionServer = nameof(AdmissionServer);
     private const string AllowedClients = nameof(AllowedClients);
+    private const string DistributedCache = nameof(DistributedCache);
+    private const string MaintenanceSecret = nameof(MaintenanceSecret);
     private const string ServiceMappings = nameof(ServiceMappings);
-    private const string MaintenanceAuthenticationIdentity = nameof(MaintenanceAuthenticationIdentity);
     private const string SwaggerDocs = nameof(SwaggerDocs);
 
     private const string SeedData = nameof(SeedData);
@@ -66,27 +67,41 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
         return admissionServer;
     }
 
+    public DistributedCache GetDistributedCache()
+    {
+        var distributedCache = _configuration
+            .GetSection(DistributedCache)
+            .Get<DistributedCache>();
+
+        if (distributedCache == null)
+        {
+            ConfigurationException.ThrowNotConfigured(DistributedCache);
+        }
+
+        return distributedCache;
+    }
+
     public AllowedClient[] GetAllowedClients()
     {
         var allowedClients = _configuration
             .GetSection(AllowedClients)
             .Get<AllowedClient[]>();
 
-        return allowedClients ?? Array.Empty<AllowedClient>();
+        return allowedClients ?? [];
     }
 
-    public MaintenanceAuthenticationIdentity GetMaintenanceAuthenticationIdentity()
+    public string GetMaintenanceSecret()
     {
-        var maintenanceAuthenticationIdentity = _configuration
-            .GetSection(MaintenanceAuthenticationIdentity)
-            .Get<MaintenanceAuthenticationIdentity>();
+        var maintenanceSecret = _configuration
+            .GetSection(MaintenanceSecret)
+            .Get<string>();
 
-        if (maintenanceAuthenticationIdentity == null)
+        if (maintenanceSecret == null)
         {
-            ConfigurationException.ThrowNotConfigured(MaintenanceAuthenticationIdentity);
+            ConfigurationException.ThrowNotConfigured(MaintenanceSecret);
         }
 
-        return maintenanceAuthenticationIdentity;
+        return maintenanceSecret;
     }
 
     public ServiceMapping[] GetServiceMappings()
@@ -95,7 +110,7 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
             .GetSection(ServiceMappings)
             .Get<ServiceMapping[]>();
 
-        return serviceMappings ?? Array.Empty<ServiceMapping>();
+        return serviceMappings ?? [];
     }
 
     public SwaggerDoc[] GetSwaggerDocs()
@@ -104,7 +119,7 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
             .GetSection(SwaggerDocs)
             .Get<SwaggerDoc[]>();
 
-        return swaggerDocs ?? Array.Empty<SwaggerDoc>();
+        return swaggerDocs ?? [];
     }
 
     public T[] GetSeedData<T>(string uri)
@@ -117,6 +132,6 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
             .Where(seed => seed != null)
             .ToArray();
 
-        return seeds ?? Array.Empty<T>();
+        return seeds ?? [];
     }
 }
