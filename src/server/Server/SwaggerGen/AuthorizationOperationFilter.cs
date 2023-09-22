@@ -4,41 +4,40 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen
+namespace ChristianSchulz.MultitenancyMonolith.Server.SwaggerGen;
+
+internal sealed class AuthorizationOperationFilter : IOperationFilter
 {
-    internal sealed class AuthorizationOperationFilter : IOperationFilter
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        var hasAuthorizeAttribute = context.ApiDescription
+            .ActionDescriptor
+            .EndpointMetadata
+            .Any(x => x is AuthorizeAttribute);
+
+        if (!hasAuthorizeAttribute)
         {
-            var hasAuthorizeAttribute = context.ApiDescription
-                .ActionDescriptor
-                .EndpointMetadata
-                .Any(x => x is AuthorizeAttribute);
+            return;
+        }
 
-            if (!hasAuthorizeAttribute)
-            {
-                return;
-            }
+        var authorizations = new List<string>();
 
-            var authorizations = new List<string>();
-
-            operation.Security = new List<OpenApiSecurityRequirement>
+        operation.Security = new List<OpenApiSecurityRequirement>
+{
+    new OpenApiSecurityRequirement
     {
-        new OpenApiSecurityRequirement
         {
+            new OpenApiSecurityScheme
             {
-                new OpenApiSecurityScheme
+                Reference = new OpenApiReference
                 {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                },
-                authorizations
-            }
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            authorizations
         }
-    };
-        }
+    }
+};
     }
 }

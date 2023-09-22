@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Frontend.Swagger</RootNamespace>
 		<UserSecretsId>76ce64e3-bbfa-45d2-89fb-8a1199aab691</UserSecretsId>

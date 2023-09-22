@@ -1,28 +1,30 @@
+using ChristianSchulz.MultitenancyMonolith.Application.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.DataProtection;
+using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Endpoints;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Security;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Services;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
+using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework;
+using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite;
+using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Documentation;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Application.Documentation;
-using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Endpoints;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Localization;
-using System.Globalization;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.DevLog;
 
@@ -152,16 +154,15 @@ public sealed class Startup
         services.AddRequestUser(options => options.Configure(allowedClients));
         services.AddConfiguration();
 
-        services.AddStaticDictionary();
-        services.AddStaticDictionaryDocumentationData();
+        services.AddDataEntityFramework();
+        services.AddDataEntityFrameworkSqlite();
+        services.AddDataEntityFrameworkSqliteDocumentation();
 
         services.AddDocumentationManagement();
     }
 
     public void Configure(IApplicationBuilder app)
     {
-        app.ApplicationServices.ConfigureDevelopmentPosts();
-
         app.UseForwardedHeaders();
         app.UseRequestLocalization();
 

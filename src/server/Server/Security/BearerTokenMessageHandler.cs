@@ -5,56 +5,55 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Security
+namespace ChristianSchulz.MultitenancyMonolith.Server.Security;
+
+public static class BearerTokenMessageHandler
 {
-    public static class BearerTokenMessageHandler
+    private static readonly string[] allowedAuthenticationTypes = ["identity", "member"];
+
+    public static Task Handle(MessageReceivedContext context)
     {
-        private static readonly string[] allowedAuthenticationTypes = ["identity", "member"];
+        context.Token =
+            GetTokenFromHeaders(context.HttpContext) ??
+            GetTokenFromQuery(context.HttpContext);
 
-        public static Task Handle(MessageReceivedContext context)
+        var ticket = context.Options.BearerTokenProtector.Unprotect(context.Token);
+        if (ticket == null)
         {
-            context.Token =
-                GetTokenFromHeaders(context.HttpContext) ??
-                GetTokenFromQuery(context.HttpContext);
-
-            var ticket = context.Options.BearerTokenProtector.Unprotect(context.Token);
-            if (ticket == null)
-            {
-                context.Fail("Unprotected token failed");
-                return Task.CompletedTask;
-            }
-
-            var authenticationType = ticket.Principal.GetClaimOrDefault("type");
-            var authenticationTypeAllowed = allowedAuthenticationTypes.Contains(authenticationType);
-
-            if (!authenticationTypeAllowed)
-            {
-                context.Fail($"Authentication type '{authenticationType}' not allowed");
-                return Task.CompletedTask;
-            }
-
-            context.Principal = ticket.Principal;
-            context.Success();
+            context.Fail("Unprotected token failed");
             return Task.CompletedTask;
         }
 
-        private static string? GetTokenFromHeaders(HttpContext context)
-        {
-            var authorizationHeader = context.Request.Headers.Authorization.ToString();
+        var authenticationType = ticket.Principal.GetClaimOrDefault("type");
+        var authenticationTypeAllowed = allowedAuthenticationTypes.Contains(authenticationType);
 
-            return !string.IsNullOrWhiteSpace(authorizationHeader)
-                ? authorizationHeader.Replace("Bearer ", string.Empty)
-                : null;
+        if (!authenticationTypeAllowed)
+        {
+            context.Fail($"Authentication type '{authenticationType}' not allowed");
+            return Task.CompletedTask;
         }
 
-        private static string? GetTokenFromQuery(HttpContext context)
-        {
-            var hasAuthorizationQuery = context.Request.Query
-                .TryGetValue("access-token", out var authorizationQuery);
+        context.Principal = ticket.Principal;
+        context.Success();
+        return Task.CompletedTask;
+    }
 
-            return hasAuthorizationQuery && !string.IsNullOrWhiteSpace(authorizationQuery)
-                ? authorizationQuery.ToString()
-                : null;
-        }
+    private static string? GetTokenFromHeaders(HttpContext context)
+    {
+        var authorizationHeader = context.Request.Headers.Authorization.ToString();
+
+        return !string.IsNullOrWhiteSpace(authorizationHeader)
+            ? authorizationHeader.Replace("Bearer ", string.Empty)
+            : null;
+    }
+
+    private static string? GetTokenFromQuery(HttpContext context)
+    {
+        var hasAuthorizationQuery = context.Request.Query
+            .TryGetValue("access-token", out var authorizationQuery);
+
+        return hasAuthorizationQuery && !string.IsNullOrWhiteSpace(authorizationQuery)
+            ? authorizationQuery.ToString()
+            : null;
     }
 }

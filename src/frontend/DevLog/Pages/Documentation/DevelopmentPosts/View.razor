@@ -12,8 +12,8 @@
     <h1>Development Log</h1>
     <div>
     @foreach (var post in DevelopmentPostService.GetAll())
-    {
-        <div>
+{
+    <div>
                 <div class="card">
                     <div class="card-body">
                         <p class="card-text">
@@ -28,29 +28,29 @@
                     </div>
                 </div>
             </div>
-    }
+}
     </div>
 </div>
 
 @code {
 
-    public MarkupString Markdown(string value)
-    {
-        return new MarkupString(
-            TrimParagraph(Markdig.Markdown.ToHtml(value)));
-    }
+public MarkupString Markdown(string value)
+{
+    return new MarkupString(
+        TrimParagraph(Markdig.Markdown.ToHtml(value)));
+}
 
-    private static string TrimParagraph(string html)
-    {
-        html = html.Trim();
+private static string TrimParagraph(string html)
+{
+    html = html.Trim();
 
-        if (html.StartsWith("<p>"))
-            html = html.Remove(0, 3);
+    if (html.StartsWith("<p>"))
+        html = html.Remove(0, 3);
 
-        if (html.EndsWith("</p>"))
-            html = html.Substring(0, html.LastIndexOf("</p>"));
+    if (html.EndsWith("</p>"))
+        html = html.Substring(0, html.LastIndexOf("</p>"));
 
-        return html;
-    }
+    return html;
+}
 
 }

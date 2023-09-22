@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Frontend.Portal</RootNamespace>
 		<UserSecretsId>b769db1d-76e1-422d-88d0-fc82ba94e02c</UserSecretsId>

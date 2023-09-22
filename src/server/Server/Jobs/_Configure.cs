@@ -10,57 +10,56 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Jobs
+namespace ChristianSchulz.MultitenancyMonolith.Server.Jobs;
+
+[SuppressMessage("Style", "IDE1006:Naming Styles")]
+internal static class _Configure
 {
-    [SuppressMessage("Style", "IDE1006:Naming Styles")]
-    internal static class _Configure
+    public static IPlannedJobScheduler ConfigureJobScheduler(this IApplicationBuilder app)
     {
-        public static IPlannedJobScheduler ConfigureJobScheduler(this IApplicationBuilder app)
-        {
-            var scheduler = app.ApplicationServices
-                .GetRequiredService<IPlannedJobScheduler>()
-                .WithScheduleResolver(job =>
+        var scheduler = app.ApplicationServices
+            .GetRequiredService<IPlannedJobScheduler>()
+            .WithScheduleResolver(job =>
+            {
+                using var scope = app.ApplicationServices.CreateScope();
+
+                var jobManager = scope.ServiceProvider.GetRequiredService<IPlannedJobManager>();
+
+                var @object = jobManager.GetOrDefault(job);
+                if (@object == null)
                 {
-                    using var scope = app.ApplicationServices.CreateScope();
-
-                    var jobManager = scope.ServiceProvider.GetRequiredService<IPlannedJobManager>();
-
-                    var @object = jobManager.GetOrDefault(job);
-                    if (@object == null)
+                    @object = new PlannedJob
                     {
-                        @object = new PlannedJob
-                        {
-                            UniqueName = job,
-                            ExpressionType = ScheduleExpressionTypes.CronExpression,
-                            Expression = "*/5 * * * *"
-                        };
+                        UniqueName = job,
+                        ExpressionType = ScheduleExpressionTypes.CronExpression,
+                        Expression = "*/5 * * * *"
+                    };
 
-                        jobManager.Insert(@object);
-                    }
+                    jobManager.Insert(@object);
+                }
 
-                    if(@object.ExpressionType != ScheduleExpressionTypes.CronExpression)
-                    {
-                        throw new UnreachableException("Only cron expressions are supported.");
-                    }
+                if(@object.ExpressionType != ScheduleExpressionTypes.CronExpression)
+                {
+                    throw new UnreachableException("Only cron expressions are supported.");
+                }
 
-                    return new CronExpressionSchedule(@object.Expression);
-                });
+                return new CronExpressionSchedule(@object.Expression);
+            });
 
-            return scheduler;
-        }
+        return scheduler;
+    }
 
-        public static PlannedJobsOptions Configure(this PlannedJobsOptions options)
-        {
-            options.AfterJobInvocation = AfterJobInvocation;
+    public static PlannedJobsOptions Configure(this PlannedJobsOptions options)
+    {
+        options.AfterJobInvocation = AfterJobInvocation;
 
-            return options;
-        }
+        return options;
+    }
 
-        private static async Task AfterJobInvocation(IServiceProvider services, string _)
-        {
-            await services
-                .GetRequiredService<IEventStorage>()
-                .FlushAsync();
-        }
+    private static async Task AfterJobInvocation(IServiceProvider services, string _)
+    {
+        await services
+            .GetRequiredService<IEventStorage>()
+            .FlushAsync();
     }
 }

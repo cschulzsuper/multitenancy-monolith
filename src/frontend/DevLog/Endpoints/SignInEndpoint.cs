@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
+﻿using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Security;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Security;
+using Microsoft.AspNetCore.Routing;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Endpoints;
 

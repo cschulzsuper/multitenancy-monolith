@@ -2,7 +2,6 @@
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission.Commands;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
-using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services.Admission.Models;
 using Microsoft.AspNetCore.Http;
 using System;

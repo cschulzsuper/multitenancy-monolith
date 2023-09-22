@@ -4,103 +4,102 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Security
+namespace ChristianSchulz.MultitenancyMonolith.Server.Security;
+
+public static class RequestUserConfiguration
 {
-    public static class RequestUserConfiguration
+    public static Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal, ICollection<AllowedClient> allowedClients)
     {
-        public static Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal, ICollection<AllowedClient> allowedClients)
+        var claims = new List<Claim>(principal.Claims);
+
+        TransformAdminRoleClaim(claims);
+        TransformChiefRoleClaim(claims);
+        TransformChiefObserverRoleClaim(claims);
+        TransformMemberRoleClaim(claims);
+        TransformMemberObserverRoleClaim(claims);
+
+        TransformScopeClaims(claims, allowedClients);
+
+        var user = new ClaimsPrincipal(
+            new ClaimsIdentity(claims, principal.Identity!.AuthenticationType));
+
+        return Task.FromResult(user);
+    }
+
+    private static void TransformAdminRoleClaim(List<Claim> claims)
+    {
+        var isAdmin = claims.Any(x => x.Type == "identity" && x.Value == "admin");
+
+        if (isAdmin)
         {
-            var claims = new List<Claim>(principal.Claims);
-
-            TransformAdminRoleClaim(claims);
-            TransformChiefRoleClaim(claims);
-            TransformChiefObserverRoleClaim(claims);
-            TransformMemberRoleClaim(claims);
-            TransformMemberObserverRoleClaim(claims);
-
-            TransformScopeClaims(claims, allowedClients);
-
-            var user = new ClaimsPrincipal(
-                new ClaimsIdentity(claims, principal.Identity!.AuthenticationType));
-
-            return Task.FromResult(user);
+            claims.Add(new Claim(ClaimTypes.Role, "admin", ClaimValueTypes.String));
         }
+    }
 
-        private static void TransformAdminRoleClaim(List<Claim> claims)
+    private static void TransformChiefRoleClaim(List<Claim> claims)
+    {
+        var isChief =
+            claims.Any(x => x.Type == "type" && x.Value == "member") &&
+            claims.Any(x => x.Type == "identity" && x.Value != "demo") &&
+            claims.Any(x => x.Type == "member" && x.Value.StartsWith("chief-"));
+
+        if (isChief)
         {
-            var isAdmin = claims.Any(x => x.Type == "identity" && x.Value == "admin");
-
-            if (isAdmin)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, "admin", ClaimValueTypes.String));
-            }
+            claims.Add(new Claim(ClaimTypes.Role, "chief", ClaimValueTypes.String));
         }
+    }
 
-        private static void TransformChiefRoleClaim(List<Claim> claims)
+    private static void TransformChiefObserverRoleClaim(List<Claim> claims)
+    {
+        var isChiefObserver =
+            claims.Any(x => x.Type == "type" && x.Value == "member") &&
+            claims.Any(x => x.Type == "identity" && x.Value == "demo") &&
+            claims.Any(x => x.Type == "member" && x.Value.StartsWith("chief-"));
+
+        if (isChiefObserver)
         {
-            var isChief =
-                claims.Any(x => x.Type == "type" && x.Value == "member") &&
-                claims.Any(x => x.Type == "identity" && x.Value != "demo") &&
-                claims.Any(x => x.Type == "member" && x.Value.StartsWith("chief-"));
-
-            if (isChief)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, "chief", ClaimValueTypes.String));
-            }
+            claims.Add(new Claim(ClaimTypes.Role, "chief-observer", ClaimValueTypes.String));
         }
+    }
 
-        private static void TransformChiefObserverRoleClaim(List<Claim> claims)
+    private static void TransformMemberRoleClaim(List<Claim> claims)
+    {
+        var isMember =
+            claims.Any(x => x.Type == "type" && x.Value == "member") &&
+            claims.Any(x => x.Type == "identity" && x.Value != "demo") &&
+            claims.Any(x => x.Type == "member" && !string.IsNullOrWhiteSpace(x.Value));
+
+        if (isMember)
         {
-            var isChiefObserver =
-                claims.Any(x => x.Type == "type" && x.Value == "member") &&
-                claims.Any(x => x.Type == "identity" && x.Value == "demo") &&
-                claims.Any(x => x.Type == "member" && x.Value.StartsWith("chief-"));
-
-            if (isChiefObserver)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, "chief-observer", ClaimValueTypes.String));
-            }
+            claims.Add(new Claim(ClaimTypes.Role, "member", ClaimValueTypes.String));
         }
+    }
 
-        private static void TransformMemberRoleClaim(List<Claim> claims)
+    private static void TransformMemberObserverRoleClaim(List<Claim> claims)
+    {
+        var isMemberObserver =
+            claims.Any(x => x.Type == "type" && x.Value == "member") &&
+            claims.Any(x => x.Type == "identity" && x.Value == "demo") &&
+            claims.Any(x => x.Type == "member" && !string.IsNullOrWhiteSpace(x.Value));
+
+        if (isMemberObserver)
         {
-            var isMember =
-                claims.Any(x => x.Type == "type" && x.Value == "member") &&
-                claims.Any(x => x.Type == "identity" && x.Value != "demo") &&
-                claims.Any(x => x.Type == "member" && !string.IsNullOrWhiteSpace(x.Value));
-
-            if (isMember)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, "member", ClaimValueTypes.String));
-            }
+            claims.Add(new Claim(ClaimTypes.Role, "member-observer", ClaimValueTypes.String));
         }
+    }
 
-        private static void TransformMemberObserverRoleClaim(List<Claim> claims)
+    private static void TransformScopeClaims(List<Claim> claims, ICollection<AllowedClient> allowedClients)
+    {
+        foreach (var allowedClient in allowedClients)
         {
-            var isMemberObserver =
-                claims.Any(x => x.Type == "type" && x.Value == "member") &&
-                claims.Any(x => x.Type == "identity" && x.Value == "demo") &&
-                claims.Any(x => x.Type == "member" && !string.IsNullOrWhiteSpace(x.Value));
-
-            if (isMemberObserver)
+            foreach (var scope in allowedClient.Scopes)
             {
-                claims.Add(new Claim(ClaimTypes.Role, "member-observer", ClaimValueTypes.String));
-            }
-        }
+                var isScopeFromAllowedClient =
+                    claims.Any(x => x.Type == "client" && x.Value == allowedClient.Service);
 
-        private static void TransformScopeClaims(List<Claim> claims, ICollection<AllowedClient> allowedClients)
-        {
-            foreach (var allowedClient in allowedClients)
-            {
-                foreach (var scope in allowedClient.Scopes)
+                if (isScopeFromAllowedClient)
                 {
-                    var isScopeFromAllowedClient =
-                        claims.Any(x => x.Type == "client" && x.Value == allowedClient.Service);
-
-                    if (isScopeFromAllowedClient)
-                    {
-                        claims.Add(new Claim("scope", scope, ClaimValueTypes.String));
-                    }
+                    claims.Add(new Claim("scope", scope, ClaimValueTypes.String));
                 }
             }
         }

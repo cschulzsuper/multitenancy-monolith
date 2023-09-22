@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Frontend.DevLog</RootNamespace>
 		<UserSecretsId>227e0cd5-d2e6-407e-b90f-71b6be1d295c</UserSecretsId>
@@ -24,7 +23,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\application\Management\Management.csproj" />
 		<ProjectReference Include="..\..\configuration\Configuration\Configuration.csproj" />
-		<ProjectReference Include="..\..\data\Data.StaticDictionary\Data.StaticDictionary.csproj" />
+		<ProjectReference Include="..\..\data\Data.EntityFramework.Sqlite\Data.EntityFramework.Sqlite.csproj" />
+		<ProjectReference Include="..\..\data\Data.EntityFramework\Data.EntityFramework.csproj" />
 		<ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
 	</ItemGroup>
 

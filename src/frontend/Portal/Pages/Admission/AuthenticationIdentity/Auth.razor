@@ -16,11 +16,11 @@
         <h1 class="card-title">Sign-In</h1>
 
         ﻿@if (_errorMessage != null)
-        {
-            <div role="alert">
+    {
+        <div role="alert">
                          @_errorMessage
             </div>
-        } 
+    } 
 
         <EditForm id="account" 
                   method="post" 
@@ -29,9 +29,9 @@
                   FormName="account-login">
 
             @switch (AccountModel.Stage)
-        {
-            case "username":
-                <div class="form-group">
+    {
+        case "username":
+            <div class="form-group">
 
                         <InputText type="hidden" @bind-Value="AccountModel.ClientName" />
                         <InputText type="hidden" @bind-Value="AccountModel.Stage" />
@@ -42,11 +42,11 @@
                                    aria-required="true"
                         @bind-Value="AccountModel.Username" />
                     </div>
-                
-                break;
             
-            case "password":
-                <div class="form-group">
+            break;
+        
+        case "password":
+            <div class="form-group">
 
                         <InputText type="hidden" @bind-Value="AccountModel.ClientName" />
                         <InputText type="hidden" @bind-Value="AccountModel.Stage" />
@@ -60,8 +60,8 @@
                         @bind-Value="AccountModel.Password" />
                     </div>
 
-                break;
-        }
+            break;
+    }
             <div class="form-group">
                 <button id="account-login-submit"
                         class="btn btn-primary"
@@ -84,88 +84,88 @@
 </div>
 
 @code {
-    private string? _errorMessage;
+private string? _errorMessage;
 
-    [SupplyParameterFromForm]
-    public AuthModel AccountModel { get; set; } = new();
+[SupplyParameterFromForm]
+public AuthModel AccountModel { get; set; } = new();
 
-    [SupplyParameterFromQuery(Name = "return")]
-    public string? Return { get; set; }
+[SupplyParameterFromQuery(Name = "return")]
+public string? Return { get; set; }
 
-    [SupplyParameterFromQuery(Name = "client-name")]
-    public string? ClientName { get; set; }
+[SupplyParameterFromQuery(Name = "client-name")]
+public string? ClientName { get; set; }
 
-    protected override void OnInitialized()
+protected override void OnInitialized()
+{
+    AccountModel.Stage ??= "username";
+    AccountModel.ClientName ??= ClientName;
+
+    AuthService.InitializeModel(AccountModel);
+}
+
+public async Task SubmitAccount()
+{
+    try
     {
-        AccountModel.Stage ??= "username";
-        AccountModel.ClientName ??= ClientName;
-
-        AuthService.InitializeModel(AccountModel);
-    }
-
-    public async Task SubmitAccount()
-    {
-        try
+        switch (AccountModel.Stage)
         {
-            switch (AccountModel.Stage)
-            {
-                case "username":
-                    AccountModel.Username = await AuthService.ResolveAuthenticationIdentityAsync(AccountModel.Username!);
-                    AccountModel.Stage = AuthService.NextStage(AccountModel.Stage);
-                    break;
+            case "username":
+                AccountModel.Username = await AuthService.ResolveAuthenticationIdentityAsync(AccountModel.Username!);
+                AccountModel.Stage = AuthService.NextStage(AccountModel.Stage);
+                break;
 
-                case "password":
-                    AccountModel.Method = "secret";
-                    await AuthService.SignInAsync(AccountModel);
-                    RedirectSuccess();
-                    break;
-            }
-        }
-        catch(Exception e) when (e is not NavigationException)
-        {
-            _errorMessage = e.Message;
+            case "password":
+                AccountModel.Method = "secret";
+                await AuthService.SignInAsync(AccountModel);
+                RedirectSuccess();
+                break;
         }
     }
-
-    public async Task SubmitGuest()
+    catch(Exception e) when (e is not NavigationException)
     {
-        try
-        {
-            AccountModel.Username = "demo";
-            AccountModel.Method = "anonymouse";
-            await AuthService.SignInAsync(AccountModel);
-            RedirectSuccess();
-        }
-        catch (Exception e) when (e is not NavigationException)
-        {
-            _errorMessage = e.Message;
-        }
+        _errorMessage = e.Message;
     }
+}
 
-    private void RedirectSuccess()
+public async Task SubmitGuest()
+{
+    try
     {
-        var target =  $"/redirect?return={Return}";
-        var targetUri = new Uri(target, UriKind.RelativeOrAbsolute);
-
-        if (!targetUri.IsAbsoluteUri)
-        {
-            // TODO https://github.com/dotnet/aspnetcore/issues/49670
-            var relative = NavigationManager.ToBaseRelativePath(NavigationManager.ToAbsoluteUri(target).AbsoluteUri);
-            var absolute = NavigationManager.ToAbsoluteUri(relative).AbsoluteUri;
-
-            // TODO https://github.com/dotnet/aspnetcore/issues/50384
-            HttpContextAccessor.HttpContext!.Response.Headers.Add("blazor-enhanced-nav-redirect-location", absolute);
-            HttpContextAccessor.HttpContext!.Response.StatusCode = 200;
-
-            //NavigationManager.NavigateTo(targetUri.absolute, true);
-        }
-        else
-        {
-            // TODO https://github.com/dotnet/aspnetcore/issues/50384
-            HttpContextAccessor.HttpContext!.Response.Headers.Add("blazor-enhanced-nav-redirect-location", targetUri.AbsoluteUri);
-            HttpContextAccessor.HttpContext!.Response.StatusCode = 200;
-
-            //NavigationManager.NavigateTo(targetUri.AbsoluteUri, true);
-        }
+        AccountModel.Username = "demo";
+        AccountModel.Method = "anonymouse";
+        await AuthService.SignInAsync(AccountModel);
+        RedirectSuccess();
     }
+    catch (Exception e) when (e is not NavigationException)
+    {
+        _errorMessage = e.Message;
+    }
+}
+
+private void RedirectSuccess()
+{
+    var target =  $"/redirect?return={Return}";
+    var targetUri = new Uri(target, UriKind.RelativeOrAbsolute);
+
+    if (!targetUri.IsAbsoluteUri)
+    {
+        // TODO https://github.com/dotnet/aspnetcore/issues/49670
+        var relative = NavigationManager.ToBaseRelativePath(NavigationManager.ToAbsoluteUri(target).AbsoluteUri);
+        var absolute = NavigationManager.ToAbsoluteUri(relative).AbsoluteUri;
+
+        // TODO https://github.com/dotnet/aspnetcore/issues/50384
+        HttpContextAccessor.HttpContext!.Response.Headers.Add("blazor-enhanced-nav-redirect-location", absolute);
+        HttpContextAccessor.HttpContext!.Response.StatusCode = 200;
+
+        //NavigationManager.NavigateTo(targetUri.absolute, true);
+    }
+    else
+    {
+        // TODO https://github.com/dotnet/aspnetcore/issues/50384
+        HttpContextAccessor.HttpContext!.Response.Headers.Add("blazor-enhanced-nav-redirect-location", targetUri.AbsoluteUri);
+        HttpContextAccessor.HttpContext!.Response.StatusCode = 200;
+
+        //NavigationManager.NavigateTo(targetUri.AbsoluteUri, true);
+    }
+}
 }

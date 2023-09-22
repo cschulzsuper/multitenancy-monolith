@@ -111,9 +111,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeedProxies", "configuratio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevLog", "frontend\DevLog\DevLog.csproj", "{28F13B18-9DF0-4AEC-A6DD-D2AD3E80CA12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuerySearch", "shared\QuerySearch\QuerySearch.csproj", "{CF732CB8-0EC5-40D1-B7E1-3340F1E8F046}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuerySearch", "shared\QuerySearch\QuerySearch.csproj", "{CF732CB8-0EC5-40D1-B7E1-3340F1E8F046}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuerySearch.Tests", "shared\QuerySearch.Tests\QuerySearch.Tests.csproj", "{FCB4D446-9EFD-464C-8B0A-664C69A4F32D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuerySearch.Tests", "shared\QuerySearch.Tests\QuerySearch.Tests.csproj", "{FCB4D446-9EFD-464C-8B0A-664C69A4F32D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.EntityFramework", "data\Data.EntityFramework\Data.EntityFramework.csproj", "{563E8AF8-5FEF-4210-AB09-DEF5666F5905}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.EntityFramework.Sqlite", "data\Data.EntityFramework.Sqlite\Data.EntityFramework.Sqlite.csproj", "{63168C85-EA99-417F-A98E-6DE6E9F13572}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -317,6 +321,14 @@ Global
 		{FCB4D446-9EFD-464C-8B0A-664C69A4F32D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCB4D446-9EFD-464C-8B0A-664C69A4F32D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCB4D446-9EFD-464C-8B0A-664C69A4F32D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{563E8AF8-5FEF-4210-AB09-DEF5666F5905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{563E8AF8-5FEF-4210-AB09-DEF5666F5905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{563E8AF8-5FEF-4210-AB09-DEF5666F5905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{563E8AF8-5FEF-4210-AB09-DEF5666F5905}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63168C85-EA99-417F-A98E-6DE6E9F13572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63168C85-EA99-417F-A98E-6DE6E9F13572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63168C85-EA99-417F-A98E-6DE6E9F13572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63168C85-EA99-417F-A98E-6DE6E9F13572}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -371,6 +383,8 @@ Global
 		{28F13B18-9DF0-4AEC-A6DD-D2AD3E80CA12} = {1E235EAA-8537-49A2-9D80-643C1025DB78}
 		{CF732CB8-0EC5-40D1-B7E1-3340F1E8F046} = {536F15A9-214D-459F-8EC4-8950C78E1BD0}
 		{FCB4D446-9EFD-464C-8B0A-664C69A4F32D} = {536F15A9-214D-459F-8EC4-8950C78E1BD0}
+		{563E8AF8-5FEF-4210-AB09-DEF5666F5905} = {E9436848-A5FC-41BE-B345-609E35C38C00}
+		{63168C85-EA99-417F-A98E-6DE6E9F13572} = {E9436848-A5FC-41BE-B345-609E35C38C00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}

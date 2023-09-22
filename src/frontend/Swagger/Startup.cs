@@ -1,7 +1,6 @@
 using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
-using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.DataProtection;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.Endpoints;
 using ChristianSchulz.MultitenancyMonolith.Frontend.Swagger.Security;

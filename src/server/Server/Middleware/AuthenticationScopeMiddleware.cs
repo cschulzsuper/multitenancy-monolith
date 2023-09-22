@@ -7,62 +7,61 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
-namespace ChristianSchulz.MultitenancyMonolith.Server.Middleware
-{
-    public sealed class AuthenticationScopeMiddleware
-    {
-        private readonly RequestDelegate _next;
+namespace ChristianSchulz.MultitenancyMonolith.Server.Middleware;
 
-        public AuthenticationScopeMiddleware(RequestDelegate next)
+public sealed class AuthenticationScopeMiddleware
+{
+    private readonly RequestDelegate _next;
+
+    public AuthenticationScopeMiddleware(RequestDelegate next)
+    {
+        _next = next;
+    }
+
+    public async Task Invoke(HttpContext context)
+    {
+        if (context.GetEndpoint()?.Metadata.GetMetadata<AuthenticationAttribute>() == null ||
+                        !context.Request.HasJsonContentType())
         {
-            _next = next;
+            await _next.Invoke(context);
+            return;
         }
 
-        public async Task Invoke(HttpContext context)
+        var buffer = new MemoryStream();
+        await context.Request.Body.CopyToAsync(buffer);
+        buffer.Position = 0;
+
+        var @object = await JsonSerializer.DeserializeAsync<JsonObject>(buffer);
+
+        buffer.Position = 0;
+        context.Request.Body = buffer;
+
+        if (@object?.ContainsKey("accountGroup") != true)
         {
-            if (context.GetEndpoint()?.Metadata.GetMetadata<AuthenticationAttribute>() == null ||
-                            !context.Request.HasJsonContentType())
-            {
-                await _next.Invoke(context);
-                return;
-            }
+            await _next.Invoke(context);
+            return;
+        }
 
-            var buffer = new MemoryStream();
-            await context.Request.Body.CopyToAsync(buffer);
-            buffer.Position = 0;
+        var group = @object["accountGroup"]!.GetValue<string>();
 
-            var @object = await JsonSerializer.DeserializeAsync<JsonObject>(buffer);
+        var existingServices = context.RequestServices;
+        var existingFeature = context.Features.Get<IServiceProvidersFeature>();
+        if (existingFeature == null)
+        {
+            await _next.Invoke(context);
+            return;
+        }
 
-            buffer.Position = 0;
-            context.Request.Body = buffer;
+        await using var scope = existingServices.CreateAsyncMultitenancyScope(group);
 
-            if (@object?.ContainsKey("accountGroup") != true)
-            {
-                await _next.Invoke(context);
-                return;
-            }
-
-            var group = @object["accountGroup"]!.GetValue<string>();
-
-            var existingServices = context.RequestServices;
-            var existingFeature = context.Features.Get<IServiceProvidersFeature>();
-            if (existingFeature == null)
-            {
-                await _next.Invoke(context);
-                return;
-            }
-
-            await using var scope = existingServices.CreateAsyncMultitenancyScope(group);
-
-            try
-            {
-                existingFeature.RequestServices = scope.ServiceProvider;
-                await _next.Invoke(context);
-            }
-            finally
-            {
-                existingFeature.RequestServices = existingServices;
-            }
+        try
+        {
+            existingFeature.RequestServices = scope.ServiceProvider;
+            await _next.Invoke(context);
+        }
+        finally
+        {
+            existingFeature.RequestServices = existingServices;
         }
     }
 }
