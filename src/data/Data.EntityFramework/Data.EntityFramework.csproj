@@ -4,14 +4,14 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite</RootNamespace>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Data.EntityFramework</RootNamespace>
+		<NoWarn>IDE0290</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="IdGen" Version="3.0.3" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.0-rc.1.23419.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0-rc.1.23419.6" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-rc.1.23419.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-rc.1.23419.6" />
 	</ItemGroup>
 
 	<ItemGroup>

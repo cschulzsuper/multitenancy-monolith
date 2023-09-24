@@ -2,7 +2,6 @@
 using ChristianSchulz.MultitenancyMonolith.Server;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +37,8 @@ internal static class MockWebApplication
     public const string AuthenticationIdentityDemo = "demo";
     public const string AuthenticationIdentityDemoMailAddress = "demo@localhost";
 
+    public const string MaintenanceSecret = "default";
+
     public const string AccountGroup = "group";
     
     public const string AccountGroupChief = "chief-member";
@@ -48,6 +49,8 @@ internal static class MockWebApplication
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
+        {"MaintenanceSecret", MaintenanceSecret},
+
         {"AllowedClients:0:Service", "security-tests"},
         {"AllowedClients:0:Scopes:1", "endpoints"},
         {"AllowedClients:1:Service", "swagger"},
@@ -67,32 +70,36 @@ internal static class MockWebApplication
         {"SeedData:2:Resource:MailAddress", AuthenticationIdentityDemoMailAddress},
         {"SeedData:2:Resource:Secret", $"{Guid.NewGuid()}"},
 
-        {"SeedData:3:Scheme", "admission/authentication-identity-authentication-flows"},
+        {"SeedData:3:Scheme", "admission/authentication-identity-authentication-methods"},
         {"SeedData:3:Resource:AuthenticationIdentity", AuthenticationIdentityDemo},
         {"SeedData:3:Resource:ClientName", ClientName},
         {"SeedData:3:Resource:AuthenticationMethod", AuthenticationMethods.Anonymouse},
 
-        {"SeedData:4:Scheme", "access/account-groups"},
-        {"SeedData:4:Resource:UniqueName", AccountGroup},
+        {"SeedData:4:Scheme", "admission/authentication-identity-authentication-methods"},
+        {"SeedData:4:Resource:AuthenticationIdentity", AuthenticationIdentityAdmin},
+        {"SeedData:4:Resource:ClientName", ClientName},
+        {"SeedData:4:Resource:AuthenticationMethod", AuthenticationMethods.Maintenance},
 
-        {"SeedData:5:Scheme", "access/account-members"},
-        {"SeedData:5:Resource:AccountGroup", AccountGroup},
-        {"SeedData:5:Resource:UniqueName", AccountGroupChief},
-        {"SeedData:5:Resource:MailAddress", AccountGroupChiefMailAddress},
-        {"SeedData:5:Resource:AuthenticationIdentities:0", AuthenticationIdentityIdentity},
-        {"SeedData:5:Resource:AuthenticationIdentities:1", AuthenticationIdentityDemo},
+        {"SeedData:5:Scheme", "access/account-groups"},
+        {"SeedData:5:Resource:UniqueName", AccountGroup},
 
         {"SeedData:6:Scheme", "access/account-members"},
         {"SeedData:6:Resource:AccountGroup", AccountGroup},
-        {"SeedData:6:Resource:UniqueName", AccountGroupMember},
-        {"SeedData:6:Resource:MailAddress", AccountGroupMemberMailAddress},
+        {"SeedData:6:Resource:UniqueName", AccountGroupChief},
+        {"SeedData:6:Resource:MailAddress", AccountGroupChiefMailAddress},
         {"SeedData:6:Resource:AuthenticationIdentities:0", AuthenticationIdentityIdentity},
         {"SeedData:6:Resource:AuthenticationIdentities:1", AuthenticationIdentityDemo},
+
+        {"SeedData:7:Scheme", "access/account-members"},
+        {"SeedData:7:Resource:AccountGroup", AccountGroup},
+        {"SeedData:7:Resource:UniqueName", AccountGroupMember},
+        {"SeedData:7:Resource:MailAddress", AccountGroupMemberMailAddress},
+        {"SeedData:7:Resource:AuthenticationIdentities:0", AuthenticationIdentityIdentity},
+        {"SeedData:7:Resource:AuthenticationIdentities:1", AuthenticationIdentityDemo},
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory)
         => factory.WithWebHostBuilder(app => app
-            .UseEnvironment("Staging")
             .ConfigureAppConfiguration((_, config) =>
             {
                 config.Sources.Clear();

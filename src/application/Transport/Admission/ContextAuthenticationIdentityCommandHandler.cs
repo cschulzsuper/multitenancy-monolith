@@ -35,8 +35,10 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
             TransportException.ThrowSecurityViolation($"Client name '{clientName}' is not allowed to sign in");
         }
 
+        var authenticationIdentity = await _authenticationIdentityManager.GetAsync(command.AuthenticationIdentity);
         var authenticationMethod = command.AuthenticationMethod ?? AuthenticationMethods.Secret;
-        var authenticationMethodExists = await _authenticationIdentityAuthenticationMethodManager.ExistsAsync(command.AuthenticationIdentity, command.ClientName, authenticationMethod);
+        var authenticationMethodExists = await _authenticationIdentityAuthenticationMethodManager.ExistsAsync(
+            authenticationIdentity.Snowflake, command.ClientName, authenticationMethod);
         
         switch (authenticationMethod)
         {

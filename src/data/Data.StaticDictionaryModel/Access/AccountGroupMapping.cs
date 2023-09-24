@@ -8,7 +8,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Access
 public sealed class AccountGroupMapping : IMapping<AccountGroup>
 {
     public static object SetSnowflake(AccountGroup entity, object snowflake)
-        => entity.Snowflake = (long)snowflake;
+        => entity.Snowflake == default ? entity.Snowflake = (long)snowflake : entity.Snowflake;
 
     public static object GetSnowflake(AccountGroup entity)
         => entity.Snowflake;

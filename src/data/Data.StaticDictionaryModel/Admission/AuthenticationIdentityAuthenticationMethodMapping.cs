@@ -8,7 +8,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Admiss
 public sealed class AuthenticationIdentityAuthenticationMethodMapping : IMapping<AuthenticationIdentityAuthenticationMethod>
 {
     public static object SetSnowflake(AuthenticationIdentityAuthenticationMethod entity, object snowflake)
-        => entity.Snowflake = (long)snowflake;
+        => entity.Snowflake == default ? entity.Snowflake = (long)snowflake : entity.Snowflake;
 
     public static object GetSnowflake(AuthenticationIdentityAuthenticationMethod entity)
         => entity.Snowflake;

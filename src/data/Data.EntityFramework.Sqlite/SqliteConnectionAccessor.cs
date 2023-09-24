@@ -5,13 +5,14 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite;
 
 public sealed class SqliteConnectionAccessor : IDisposable
 {
-    private const string InMemeoryConnectionString = "DataSource=multitenancy-monolith;mode=memory;cache=shared";
-
     private readonly SqliteConnection _connection;
 
     public SqliteConnectionAccessor()
     {
-        _connection = new SqliteConnection(InMemeoryConnectionString);
+        var connectionName = $"{Guid.NewGuid}";
+        var connectionString = $"DataSource={connectionName};mode=memory;cache=shared";
+
+        _connection = new SqliteConnection(connectionString);
         _connection.Open();
     }
     public SqliteConnection Connection => _connection;

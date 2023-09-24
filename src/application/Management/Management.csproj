@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Application</RootNamespace>
+		<NoWarn>IDE0290</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

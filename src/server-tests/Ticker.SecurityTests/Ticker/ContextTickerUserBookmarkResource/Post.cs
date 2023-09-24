@@ -48,9 +48,11 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         // Act
         var response = await client.SendAsync(request);
 
+        var content = await response.Content.ReadAsStringAsync();
+
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
+        Assert.NotEqual(0, response.Content.Headers.ContentLength);
     }
 
     [Theory]

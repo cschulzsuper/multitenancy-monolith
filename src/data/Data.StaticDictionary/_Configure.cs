@@ -28,6 +28,7 @@ public static class _Configure
         var authenticationIdentities = authenticationIdentitySeeds
             .Select(seed => new AuthenticationIdentity
             {
+                Snowflake = Array.IndexOf(authenticationIdentitySeeds, seed),
                 UniqueName = seed.UniqueName,
                 MailAddress = seed.MailAddress,
                 Secret = seed.Secret
@@ -43,6 +44,9 @@ public static class _Configure
 
     public static IServiceProvider ConfigureAuthenticationIdentityAuthenticationMethods(this IServiceProvider services)
     {
+        var authenticationIdentitySeeds = services
+            .GetRequiredService<IConfigurationProxyProvider>()
+            .GetSeedData<AuthenticationIdentitySeed>("admission/authentication-identities");
         var authenticationIdentityAuthenticationMethodSeeds = services
             .GetRequiredService<IConfigurationProxyProvider>()
             .GetSeedData<AuthenticationIdentityAuthenticationMethodSeed>("admission/authentication-identity-authentication-methods");
@@ -54,7 +58,9 @@ public static class _Configure
             {
                 AuthenticationMethod = seed.AuthenticationMethod,
                 ClientName = seed.ClientName,
-                AuthenticationIdentity = seed.AuthenticationIdentity
+                AuthenticationIdentity = Array.IndexOf(
+                    authenticationIdentitySeeds,
+                    authenticationIdentitySeeds.Single(x => x.UniqueName == seed.AuthenticationIdentity))
             })
             .ToArray();
 
@@ -168,7 +174,7 @@ public static class _Configure
                 Time = seed.Time,
                 Text = seed.Text,
                 Link = seed.Link,
-                Tags = seed.Tags ?? Array.Empty<string>(),
+                Tags = seed.Tags ?? [],
             })
             .ToArray();
 

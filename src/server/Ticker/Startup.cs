@@ -137,16 +137,9 @@ public sealed class Startup
         app.UseEndpointEvents();
         app.UseEndpoints(endpoints =>
         {
-            if (_environment.IsDevelopment())
-            {
-                endpoints.MapSwagger();
-            }
-            else
-            {
-                endpoints.MapSwagger()
-                    .RequireAuthorization(policy => policy
-                        .RequireClaim("scope", "swagger-json"));
-            }
+            endpoints.MapSwagger()
+                .RequireAuthorization(policy => policy
+                    .RequireClaim("scope", "swagger-json"));
 
             var apiEndpoints = endpoints.MapGroup("api/b1");
 
@@ -180,14 +173,14 @@ public sealed class Startup
             var statusCode = (exception, exceptionErrorCode) switch
             {
                 (NotImplementedException, _) => StatusCodes.Status501NotImplemented,
-
-                (_, "security") => StatusCodes.Status403Forbidden,
-                (_, "object-not-found") => StatusCodes.Status404NotFound,
-                (_, "object-conflict") => StatusCodes.Status409Conflict,
-
                 (BadHttpRequestException, _) => StatusCodes.Status400BadRequest,
+
+                (_, "object-not-found") => StatusCodes.Status404NotFound,
+                (_, "security") => StatusCodes.Status403Forbidden,
+                (_, "object-conflict") => StatusCodes.Status409Conflict,
                 (_, "object-invalid") => StatusCodes.Status400BadRequest,
                 (_, "value-invalid") => StatusCodes.Status400BadRequest,
+                (_, "transaction-failed") => StatusCodes.Status400BadRequest,
 
                 _ => StatusCodes.Status500InternalServerError
             };

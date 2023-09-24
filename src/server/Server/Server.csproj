@@ -32,6 +32,8 @@
 		<ProjectReference Include="..\..\data\Data.StaticDictionary\Data.StaticDictionary.csproj" />
 		<ProjectReference Include="..\..\data\Events.ThreadingChannels\Events.ThreadingChannels.csproj" />
 		<ProjectReference Include="..\..\data\Jobs.SequentialQueue\Jobs.SequentialQueue.csproj" />
+		<ProjectReference Include="..\..\data\Data.EntityFramework.Sqlite\Data.EntityFramework.Sqlite.csproj" />
+		<ProjectReference Include="..\..\data\Data.EntityFramework\Data.EntityFramework.csproj" />
 		<ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
 	</ItemGroup>
 

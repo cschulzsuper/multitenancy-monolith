@@ -118,7 +118,6 @@ internal static class MockWebApplication
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory, ITestOutputHelper? output = null)
         => factory.WithWebHostBuilder(app => app
-            .UseEnvironment("Staging")
             .ConfigureLogging(loggingBuilder =>
             {
                 if (output != null)

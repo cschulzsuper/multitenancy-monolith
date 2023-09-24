@@ -7,7 +7,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Ticker
 public sealed class TickerMessageMapping : IMapping<TickerMessage>
 {
     public static object SetSnowflake(TickerMessage entity, object snowflake)
-        => entity.Snowflake = (long)snowflake;
+        => entity.Snowflake == default ? entity.Snowflake = (long)snowflake : entity.Snowflake;
 
     public static object GetSnowflake(TickerMessage entity)
         => entity.Snowflake;

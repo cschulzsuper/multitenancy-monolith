@@ -8,7 +8,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Extens
 public sealed class DistinctionTypeMapping : IMapping<DistinctionType>
 {
     public static object SetSnowflake(DistinctionType entity, object snowflake)
-        => entity.Snowflake = (long)snowflake;
+        => entity.Snowflake == default ? entity.Snowflake = (long)snowflake : entity.Snowflake;
 
     public static object GetSnowflake(DistinctionType entity)
         => entity.Snowflake;

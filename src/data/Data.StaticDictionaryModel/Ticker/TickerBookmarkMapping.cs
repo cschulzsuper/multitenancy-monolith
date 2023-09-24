@@ -8,7 +8,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Ticker
 public sealed class TickerBookmarkMapping : IMapping<TickerBookmark>
 {
     public static object SetSnowflake(TickerBookmark entity, object snowflake)
-        => entity.Snowflake = (long)snowflake;
+        => entity.Snowflake == default ? entity.Snowflake = (long)snowflake : entity.Snowflake;
 
     public static object GetSnowflake(TickerBookmark entity)
         => entity.Snowflake;

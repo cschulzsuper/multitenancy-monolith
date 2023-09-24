@@ -55,4 +55,13 @@ public sealed class RepositoryException : Exception
 
         throw exception;
     }
+
+    public static void ThrowTransactionFailed()
+    {
+        var exception = new RepositoryException($"Unable to commit transaction.");
+
+        exception.Data["error-code"] = "transaction-failed";
+
+        throw exception;
+    }
 }

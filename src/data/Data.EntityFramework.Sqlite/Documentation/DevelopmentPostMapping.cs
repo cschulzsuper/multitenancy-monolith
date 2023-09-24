@@ -61,8 +61,15 @@ public sealed class DevelopmentPostMapping : IEntityTypeConfiguration<Developmen
             .IsRequired();
 
         builder
-            .Property(entity => entity.Tags);
+            .Property(entity => entity.Tags)
+            .IsRequired();
 
+        builder
+            .HasData(CreateSeed());
+    }
+
+    private DevelopmentPost[] CreateSeed()
+    {
         var developmentPostSeeds = _configurationProxyProvider
             .GetSeedData<DevelopmentPostSeed>("documentation/development-posts");
 
@@ -78,11 +85,10 @@ public sealed class DevelopmentPostMapping : IEntityTypeConfiguration<Developmen
                 Time = seed.Time,
                 Text = seed.Text,
                 Link = seed.Link,
-                Tags = seed.Tags ?? Array.Empty<string>(),
+                Tags = seed.Tags ?? [],
             })
             .ToArray();
 
-        builder
-            .HasData(developmentPosts);
+        return developmentPosts;
     }
 }

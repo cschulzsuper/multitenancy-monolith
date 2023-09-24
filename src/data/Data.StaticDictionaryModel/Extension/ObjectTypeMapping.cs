@@ -8,7 +8,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Extens
 public sealed class ObjectTypeMapping : IMapping<ObjectType>
 {
     public static object SetSnowflake(ObjectType entity, object snowflake)
-        => entity.Snowflake = (long)snowflake;
+        => entity.Snowflake == default ? entity.Snowflake = (long)snowflake : entity.Snowflake;
 
     public static object GetSnowflake(ObjectType entity)
         => entity.Snowflake;

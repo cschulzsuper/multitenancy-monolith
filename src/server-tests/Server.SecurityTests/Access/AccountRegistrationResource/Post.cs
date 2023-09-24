@@ -50,7 +50,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal(0, response.Content.Headers.ContentLength);
+        Assert.NotEqual(0, response.Content.Headers.ContentLength);
     }
 
     [Theory]

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite;
+namespace ChristianSchulz.MultitenancyMonolith.Data.EntityFramework;
 
 public sealed class SnowflakeGenerator : ValueGenerator<long>
 {

@@ -13,7 +13,7 @@ internal sealed class AuthenticationIdentityAuthenticationMethodManager : IAuthe
         _repository = repository;
     }
 
-    public async Task<bool> ExistsAsync(string authenticationIdentity, string clientName, string authenticationMethod)
+    public async Task<bool> ExistsAsync(long authenticationIdentity, string clientName, string authenticationMethod)
     {
         AuthenticationIdentityAuthenticationMethodValidation.EnsureAuthenticationIdentity(authenticationIdentity);
         AuthenticationIdentityAuthenticationMethodValidation.EnsureClientName(clientName);

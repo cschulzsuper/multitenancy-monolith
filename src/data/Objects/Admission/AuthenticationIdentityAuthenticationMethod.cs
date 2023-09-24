@@ -14,7 +14,7 @@ public sealed class AuthenticationIdentityAuthenticationMethod : ICloneable
 
     public long Snowflake { get; set; }
 
-    public required string AuthenticationIdentity { get; set; }
+    public required long AuthenticationIdentity { get; set; }
     public required string ClientName { get; set; }
     public required string AuthenticationMethod { get; set; }
 }

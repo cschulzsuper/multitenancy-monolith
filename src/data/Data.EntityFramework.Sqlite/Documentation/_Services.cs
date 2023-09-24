@@ -19,7 +19,7 @@ public static class _Services
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
-        services.AddScoped<IRepository<DevelopmentPost>>(p => new SqliteRepository<DevelopmentPost>(p.GetRequiredService<_Context>()));
+        services.AddScoped<IRepository<DevelopmentPost>>(p => new Repository<DevelopmentPost>(p.GetRequiredService<_Context>()));
 
         return services;
     }

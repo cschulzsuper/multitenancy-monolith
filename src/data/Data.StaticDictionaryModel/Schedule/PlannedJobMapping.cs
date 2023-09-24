@@ -8,7 +8,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Schedu
 public sealed class PlannedJobMapping : IMapping<PlannedJob>
 {
     public static object SetSnowflake(PlannedJob entity, object snowflake)
-        => entity.Snowflake = (long)snowflake;
+        => entity.Snowflake == default ? entity.Snowflake = (long)snowflake : entity.Snowflake;
 
     public static object GetSnowflake(PlannedJob entity)
         => entity.Snowflake;

@@ -10,7 +10,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Busine
 public sealed class BusinessObjectMapping : IMapping<BusinessObject>
 {
     public static object SetSnowflake(BusinessObject entity, object snowflake)
-        => entity.Snowflake = (long)snowflake;
+        => entity.Snowflake == default ? entity.Snowflake = (long)snowflake : entity.Snowflake;
 
     public static object GetSnowflake(BusinessObject entity)
         => entity.Snowflake;

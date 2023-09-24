@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -242,7 +243,7 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
         if (found)
         {
             _context.Data.AddOrUpdate(snowflake,
-                _ => throw new Exception(),
+                _ => throw new UnreachableException("Update caused insert."),
                 (_, _) =>
                 {
                     var updated = (TEntity)entity!.Clone();

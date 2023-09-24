@@ -17,7 +17,7 @@ internal sealed class RepositoryContext<TEntity>
     public Action<IEnumerable<TEntity>, TEntity> Ensurance { get; set; } = (_, _) => { };
 
 
-    private readonly SemaphoreSlim _lock = new SemaphoreSlim(1);
+    private readonly SemaphoreSlim _lock = new(1);
 
     public IDisposable AcquireLock()
     {

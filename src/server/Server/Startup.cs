@@ -8,6 +8,9 @@ using ChristianSchulz.MultitenancyMonolith.Caching;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
+using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework;
+using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite;
+using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Admission;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Jobs;
 using ChristianSchulz.MultitenancyMonolith.Server.DataProtection;
@@ -100,9 +103,12 @@ public sealed class Startup
         services.AddEvents(options => options.Configure());
         services.AddPlannedJobs(options => options.Configure());
 
+        services.AddDataEntityFramework();
+        services.AddDataEntityFrameworkSqlite();
+        services.AddDataEntityFrameworkSqliteAdmission();
+
         services.AddStaticDictionary();
         services.AddStaticDictionaryAccessData();
-        services.AddStaticDictionaryAdmissionData();
         services.AddStaticDictionaryExtensionData();
         services.AddStaticDictionaryBusinessData();
         services.AddStaticDictionaryScheduleData();
@@ -135,8 +141,6 @@ public sealed class Startup
 
         if (!_environment.IsProduction())
         {
-            app.ApplicationServices.ConfigureAuthenticationIdentities();
-            app.ApplicationServices.ConfigureAuthenticationIdentityAuthenticationMethods();
             app.ApplicationServices.ConfigureAccountGroups();
             app.ApplicationServices.ConfigureAccountMembers();
         }
@@ -153,16 +157,9 @@ public sealed class Startup
         app.UseEndpointEvents();
         app.UseEndpoints(endpoints =>
         {
-            if (_environment.IsDevelopment())
-            {
-                endpoints.MapSwagger();
-            }
-            else
-            {
-                endpoints.MapSwagger()
-                    .RequireAuthorization(policy => policy
-                        .RequireClaim("scope", "swagger-json"));
-            }
+            endpoints.MapSwagger()
+                .RequireAuthorization(policy => policy
+                    .RequireClaim("scope", "swagger-json"));
 
             var apiEndpoints = endpoints.MapGroup("api/a1");
 
@@ -206,6 +203,7 @@ public sealed class Startup
                 (_, "object-conflict") => StatusCodes.Status409Conflict,
                 (_, "object-invalid") => StatusCodes.Status400BadRequest,
                 (_, "value-invalid") => StatusCodes.Status400BadRequest,
+                (_, "transaction-failed") => StatusCodes.Status400BadRequest,
 
                 _ => StatusCodes.Status500InternalServerError
             };

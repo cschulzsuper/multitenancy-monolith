@@ -21,9 +21,10 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.AuthenticationIdentityAdmin, MockWebApplication.AuthenticationIdentityAdminSecret, null)]
+    [InlineData(MockWebApplication.AuthenticationIdentityAdmin, MockWebApplication.MaintenanceSecret, AuthenticationMethods.Maintenance)]
     [InlineData(MockWebApplication.AuthenticationIdentityIdentity, MockWebApplication.AuthenticationIdentityIdentitySecret, AuthenticationMethods.Secret)]
     [InlineData(MockWebApplication.AuthenticationIdentityDemo, null, AuthenticationMethods.Anonymouse)]
-    public async Task Auth_ShouldSucceed_WhenValid(string authenticationIdentity, string secret, string method)
+    public async Task Auth_ShouldSucceed_WhenValid(string authenticationIdentity, string secret, string authenticationMethod)
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/admission/authentication-identities/_/auth");
@@ -33,7 +34,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
             ClientName = MockWebApplication.ClientName,
             AuthenticationIdentity = authenticationIdentity,
             Secret = secret,
-            Method = method
+            AuthenticationMethod = authenticationMethod
         };
 
         request.Content = JsonContent.Create(authRequest);
@@ -61,7 +62,7 @@ public sealed class Auth : IClassFixture<WebApplicationFactory<Program>>
             ClientName = MockWebApplication.ClientName,
             AuthenticationIdentity = authenticationIdentity,
             Secret = secret,
-            Method = method
+            AuthenticationMethod = method
         };
 
         request.Content = JsonContent.Create(authRequest);
