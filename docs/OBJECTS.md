@@ -39,17 +39,3 @@
 * `BusinessObject`
 
   Example business type, that can be extened by custom properties. 
-
-## Ticker
-
-* `TickerUser`
-
-  Example that is located in a separate service. 
-
-* `TickerMessage`
-
-  Example that is located in a separate service. 
-
-* `TickerBookmark`
-
-  Keeps track of ticker messages bookmarked by a ticker user. 

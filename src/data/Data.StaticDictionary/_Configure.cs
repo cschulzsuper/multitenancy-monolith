@@ -2,11 +2,9 @@
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Access;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Admission;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Documentation;
-using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using ChristianSchulz.MultitenancyMonolith.Objects.Documentation;
-using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -122,36 +120,6 @@ public static class _Configure
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountMember>>()
                 .Insert(accountMembers);
-        }
-
-        return services;
-    }
-
-    public static IServiceProvider ConfigureTickerUsers(this IServiceProvider services)
-    {
-        var groupedTickerUserSeeds = services
-            .GetRequiredService<IConfigurationProxyProvider>()
-            .GetSeedData<TickerUserSeed>("ticker/ticker-users")
-            .GroupBy(x => x.AccountGroup);
-
-        foreach (var tickerUserSeedsGroup in groupedTickerUserSeeds)
-        {
-            using var scope = services.CreateMultitenancyScope(tickerUserSeedsGroup.Key);
-
-            var tickerUsers = tickerUserSeedsGroup
-                .Select(seed => new TickerUser
-                {
-                    DisplayName = seed.DisplayName,
-                    MailAddress = seed.MailAddress,
-                    Secret = seed.Secret,
-                    SecretState = seed.SecretState,
-                    SecretToken = seed.SecretToken
-                })
-                .ToArray();
-
-            scope.ServiceProvider
-                .GetRequiredService<IRepository<TickerUser>>()
-                .Insert(tickerUsers);
         }
 
         return services;

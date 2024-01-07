@@ -9,12 +9,10 @@
         "MM_Server_ServiceMappings__0__Url": "http://localhost:5108",
         "MM_Server_ServiceMappings__1__UniqueName": "swagger-ui-host",
         "MM_Server_ServiceMappings__1__Url": "http://localhost:5108",
-        "MM_Server_ServiceMappings__2__UniqueName": "ticker",
-        "MM_Server_ServiceMappings__2__Url": "http://localhost:5051",
-        "MM_Server_ServiceMappings__3__UniqueName": "portal",
-        "MM_Server_ServiceMappings__3__Url": "http://localhost:5015",
-        "MM_Server_ServiceMappings__4__UniqueName": "dev-log",
-        "MM_Server_ServiceMappings__4__Url": "http://localhost:5213"
+        "MM_Server_ServiceMappings__2__UniqueName": "portal",
+        "MM_Server_ServiceMappings__2__Url": "http://localhost:5015",
+        "MM_Server_ServiceMappings__3__UniqueName": "dev-log",
+        "MM_Server_ServiceMappings__3__Url": "http://localhost:5213"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5177"
@@ -28,12 +26,10 @@
         "MM_Server_ServiceMappings__0__Url": "https://localhost:7272",
         "MM_Server_ServiceMappings__1__UniqueName": "swagger-ui-host",
         "MM_Server_ServiceMappings__1__Url": "https://localhost:7272",
-        "MM_Server_ServiceMappings__2__UniqueName": "ticker",
-        "MM_Server_ServiceMappings__2__Url": "https://localhost:7206",
-        "MM_Server_ServiceMappings__3__UniqueName": "portal",
-        "MM_Server_ServiceMappings__3__Url": "https://localhost:7053",
-        "MM_Server_ServiceMappings__4__UniqueName": "dev-log",
-        "MM_Server_ServiceMappings__4__Url": "https://localhost:7190"
+        "MM_Server_ServiceMappings__2__UniqueName": "portal",
+        "MM_Server_ServiceMappings__2__Url": "https://localhost:7053",
+        "MM_Server_ServiceMappings__3__UniqueName": "dev-log",
+        "MM_Server_ServiceMappings__3__Url": "https://localhost:7190"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7207;http://localhost:5177"
@@ -49,12 +45,10 @@
         "MM_Server_ServiceMappings__0__Url": "https://localhost:7272",
         "MM_Server_ServiceMappings__1__UniqueName": "swagger-ui-host",
         "MM_Server_ServiceMappings__1__Url": "https://localhost:7272",
-        "MM_Server_ServiceMappings__2__UniqueName": "ticker",
-        "MM_Server_ServiceMappings__2__Url": "https://localhost:7206",
-        "MM_Server_ServiceMappings__3__UniqueName": "portal",
-        "MM_Server_ServiceMappings__3__Url": "https://localhost:7053",
-        "MM_Server_ServiceMappings__4__UniqueName": "dev-log",
-        "MM_Server_ServiceMappings__4__Url": "https://localhost:7190"
+        "MM_Server_ServiceMappings__2__UniqueName": "portal",
+        "MM_Server_ServiceMappings__2__Url": "https://localhost:7053",
+        "MM_Server_ServiceMappings__3__UniqueName": "dev-log",
+        "MM_Server_ServiceMappings__3__Url": "https://localhost:7190"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7207;http://localhost:5177"
@@ -70,12 +64,10 @@
         "MM_Server_ServiceMappings__0__Url": "https://loclahost:7272",
         "MM_Server_ServiceMappings__1__UniqueName": "swagger-ui-host",
         "MM_Server_ServiceMappings__1__Url": "https://localhost:7272",
-        "MM_Server_ServiceMappings__2__UniqueName": "ticker",
-        "MM_Server_ServiceMappings__2__Url": "https://localhost:7206",
-        "MM_Server_ServiceMappings__3__UniqueName": "portal",
-        "MM_Server_ServiceMappings__3__Url": "https://localhost:7053",
-        "MM_Server_ServiceMappings__4__UniqueName": "dev-log",
-        "MM_Server_ServiceMappings__4__Url": "https://localhost:7190"
+        "MM_Server_ServiceMappings__2__UniqueName": "portal",
+        "MM_Server_ServiceMappings__2__Url": "https://localhost:7053",
+        "MM_Server_ServiceMappings__3__UniqueName": "dev-log",
+        "MM_Server_ServiceMappings__3__Url": "https://localhost:7190"
       },
       "publishAllPorts": true,
       "useSSL": true,

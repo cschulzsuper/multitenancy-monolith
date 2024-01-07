@@ -32,7 +32,6 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - server
-      - ticker
       - portal
       - swagger
       - dev-log
@@ -78,27 +77,6 @@ services:
       ASPNETCORE_HTTPS_PORTS: 
       ASPNETCORE_ENVIRONMENT: ${ENVIRONMENT:-Staging}
 
-  ticker:
-    container_name: ${COMPOSE_PROJECT_NAME}-ticker
-    image: cschulzsuper/mm-ticker:dev
-    build: 
-      context: ../src
-      dockerfile: server/Ticker/Dockerfile
-    networks:
-      - default
-      - redis
-    depends_on:
-      redis:
-        condition: service_healthy
-      server:
-        condition: service_started
-    env_file:
-      - service-mappings.env
-    environment:
-      ASPNETCORE_HTTP_PORTS: 80
-      ASPNETCORE_HTTPS_PORTS: 
-      ASPNETCORE_ENVIRONMENT: ${ENVIRONMENT:-Staging}
-
   portal:
     container_name: ${COMPOSE_PROJECT_NAME}-portal
     image: cschulzsuper/mm-portal:dev
@@ -135,8 +113,6 @@ services:
       portal:
         condition: service_started
       server:
-        condition: service_started
-      ticker:
         condition: service_started
     env_file:
       - service-mappings.env

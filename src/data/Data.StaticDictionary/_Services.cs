@@ -5,14 +5,12 @@ using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Business;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Extension;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Schedule;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionaryModel.Ticker;
 using ChristianSchulz.MultitenancyMonolith.Objects.Access;
 using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using ChristianSchulz.MultitenancyMonolith.Objects.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Objects.Extension;
 using ChristianSchulz.MultitenancyMonolith.Objects.Schedule;
-using ChristianSchulz.MultitenancyMonolith.Objects.Ticker;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -75,15 +73,6 @@ public static class _Services
     public static IServiceCollection AddStaticDictionaryScheduleData(this IServiceCollection services)
     {
         services.AddScoped(CreateRepository<PlannedJobMapping, PlannedJob>);
-
-        return services;
-    }
-
-    public static IServiceCollection AddStaticDictionaryTickerData(this IServiceCollection services)
-    {
-        services.AddScoped(CreateRepository<TickerBookmarkMapping, TickerBookmark>);
-        services.AddScoped(CreateRepository<TickerMessageMapping, TickerMessage>);
-        services.AddScoped(CreateRepository<TickerUserMapping, TickerUser>);
 
         return services;
     }

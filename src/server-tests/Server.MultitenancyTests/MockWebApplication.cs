@@ -17,7 +17,6 @@ using Xunit;
 internal static class MockWebApplication
 {
     public const int MockMember = 1;
-    public const int MockTicker = 2;
 
     public const string Client = "multitenancy-tests";
     public const string Identity = "default";
@@ -73,11 +72,11 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "member"),
-            new Claim("client", Client),
-            new Claim("identity", Identity),
-            new Claim("group", group),
-            new Claim("member", Member)
+            new ("type", "member"),
+            new ("client", Client),
+            new ("identity", Identity),
+            new ("group", group),
+            new ("member", Member)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -89,9 +88,9 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "identity"),
-            new Claim("client", Client),
-            new Claim("identity", Identity)
+            new ("type", "identity"),
+            new ("client", Client),
+            new ("identity", Identity)
         };
 
         var token = factory.ProtectClaims(claims);

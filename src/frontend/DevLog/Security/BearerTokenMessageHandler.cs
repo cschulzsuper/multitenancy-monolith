@@ -9,7 +9,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Security;
 
 public static class BearerTokenMessageHandler
 {
-    private static readonly string[] allowedAuthenticationTypes = { "identity", "member" };
+    private static readonly string[] allowedAuthenticationTypes = ["identity", "member"];
 
     public static Task Handle(MessageReceivedContext context)
     {

@@ -45,11 +45,3 @@
   Member observers can only view data that is accessible to a member. 
 
   Condition:  `Identity == "demo" && !string.IsNullOrEmpty(Member)`
-  
-## Ticker Roles
-
-* `ticker`
-
-  Ticker uses can post ticker messages. 
-
-  Condition: `!string.IsNullOrEmpty(Mail)`

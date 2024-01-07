@@ -10,8 +10,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="IdGen" Version="3.0.3" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0-rc.1.23419.6" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-rc.1.23419.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
