@@ -21,6 +21,9 @@ public sealed class DevelopmentPostMapping : IEntityTypeConfiguration<Developmen
     public void Configure(EntityTypeBuilder<DevelopmentPost> builder)
     {
         builder
+            .ToTable("documentation-development-post");
+
+        builder
             .HasKey(entity => entity.Snowflake);
 
         builder
@@ -64,8 +67,8 @@ public sealed class DevelopmentPostMapping : IEntityTypeConfiguration<Developmen
             .Property(entity => entity.Tags)
             .IsRequired();
 
-        builder
-            .HasData(CreateSeed());
+        // TODO https://github.com/dotnet/efcore/issues/32017
+        // builder.HasData(CreateSeed());
     }
 
     private DevelopmentPost[] CreateSeed()

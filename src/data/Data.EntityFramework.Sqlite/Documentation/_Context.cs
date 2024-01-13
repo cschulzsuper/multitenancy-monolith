@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Documentation;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 public class _Context : DbContext
 {
     private readonly IConfigurationProxyProvider _configurationProxyProvider;

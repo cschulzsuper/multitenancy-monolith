@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Multitenancy;
 
 public static partial class MultitenancyExtensions
 {

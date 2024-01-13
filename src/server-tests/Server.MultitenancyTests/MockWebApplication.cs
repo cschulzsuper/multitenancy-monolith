@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
-using ChristianSchulz.MultitenancyMonolith.Server;
+﻿using ChristianSchulz.MultitenancyMonolith.Server;
+using ChristianSchulz.MultitenancyMonolith.Shared.Multitenancy;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -19,10 +19,10 @@ internal static class MockWebApplication
     public const int MockMember = 1;
 
     public const string Client = "multitenancy-tests";
-    public const string Identity = "default";
+    public const string AuthenticationIdentity = "default";
     public const string Group1 = "group-1";
     public const string Group2 = "group-2";
-    public const string Member = "chief-default";
+    public const string AccountMember = "chief-default";
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
@@ -68,15 +68,15 @@ internal static class MockWebApplication
         return token;
     }
 
-    public static AuthenticationHeaderValue MockValidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory, string group)
+    public static AuthenticationHeaderValue MockValidMemberAuthorizationHeader(this WebApplicationFactory<Program> factory, string accountGroup)
     {
         var claims = new Claim[]
         {
             new ("type", "member"),
-            new ("client", Client),
-            new ("identity", Identity),
-            new ("group", group),
-            new ("member", Member)
+            new ("client-name", Client),
+            new ("authentication-identity", AuthenticationIdentity),
+            new ("account-group", accountGroup),
+            new ("account-member", AccountMember)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -89,8 +89,8 @@ internal static class MockWebApplication
         var claims = new Claim[]
         {
             new ("type", "identity"),
-            new ("client", Client),
-            new ("identity", Identity)
+            new ("client-name", Client),
+            new ("authentication-identity", AuthenticationIdentity)
         };
 
         var token = factory.ProtectClaims(claims);

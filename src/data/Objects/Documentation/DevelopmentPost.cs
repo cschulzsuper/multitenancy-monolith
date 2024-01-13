@@ -1,7 +1,13 @@
-﻿using System;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
+using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Documentation;
 
+[ObjectAnnotation(
+    UniqueName = "development-post",
+    DisplayName = "Development Post",
+    Area = "documentation",
+    Collection = "development-posts")]
 public sealed class DevelopmentPost : ICloneable
 {
     public object Clone()

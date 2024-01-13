@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Security;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 internal static class _Configure
 {
     public static RequestUserOptions Configure(this RequestUserOptions options, ICollection<AllowedClient> allowedClients)

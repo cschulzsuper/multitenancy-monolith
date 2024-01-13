@@ -8,6 +8,8 @@ public sealed class RepositoryException : Exception
 {
     private RepositoryException(string message) : base(message) { }
 
+    private RepositoryException(string message, Exception innerException) : base(message, innerException) { }
+
     [DoesNotReturn]
     public static void ThrowObjectNotFound<TEntity>()
     {
@@ -50,6 +52,16 @@ public sealed class RepositoryException : Exception
         var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
 
         var exception = new RepositoryException($"Object '{objectType}' with snowflake '{snowflake}' already existst.");
+
+        exception.Data["error-code"] = "object-conflict";
+
+        throw exception;
+    }
+
+    [DoesNotReturn]
+    public static void ThrowObjectConflict(Exception innerException)
+    {
+        var exception = new RepositoryException($"Object already existst.", innerException);
 
         exception.Data["error-code"] = "object-conflict";
 

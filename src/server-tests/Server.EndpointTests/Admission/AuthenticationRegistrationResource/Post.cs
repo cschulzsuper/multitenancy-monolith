@@ -57,17 +57,16 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             x => Assert.Equal(("processState", AuthenticationRegistrationProcessStates.New), (x.Key, (string?)x.Value)),
             x => Assert.Equal("snowflake", x.Key));
 
-        using (var scope = _factory.CreateMultitenancyScope())
-        {
-            var createdMember = scope.ServiceProvider
-                .GetRequiredService<IRepository<AuthenticationRegistration>>()
-                .GetQueryable()
-                .SingleOrDefault(x =>
-                    x.AuthenticationIdentity == postAuthenticationRegistration.AuthenticationIdentity &&
-                    x.MailAddress == postAuthenticationRegistration.MailAddress);
+        using var scope = _factory.CreateMultitenancyScope();
 
-            Assert.NotNull(createdMember);
-        }
+        var createdMember = scope.ServiceProvider
+            .GetRequiredService<IRepository<AuthenticationRegistration>>()
+            .GetQueryable()
+            .SingleOrDefault(x =>
+                x.AuthenticationIdentity == postAuthenticationRegistration.AuthenticationIdentity &&
+                x.MailAddress == postAuthenticationRegistration.MailAddress);
+
+        Assert.NotNull(createdMember);
     }
 
     [Fact]

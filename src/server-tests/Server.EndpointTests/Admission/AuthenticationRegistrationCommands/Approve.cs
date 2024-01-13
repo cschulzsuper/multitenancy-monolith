@@ -103,6 +103,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
                 .GetRequiredService<IRepository<AuthenticationRegistration>>()
                 .GetQueryable()
                 .SingleOrDefault(x =>
+                    x.Snowflake == existingAuthenticationRegistration.Snowflake &&
                     x.ProcessState == AuthenticationRegistrationProcessStates.Approved);
 
             Assert.Null(unchangedRegistration);
@@ -147,6 +148,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
                 .GetRequiredService<IRepository<AuthenticationRegistration>>()
                 .GetQueryable()
                 .SingleOrDefault(x =>
+                    x.Snowflake == existingAuthenticationRegistration.Snowflake &&
                     x.ProcessState == AuthenticationRegistrationProcessStates.Approved);
 
             Assert.NotNull(unchangedRegistration);
@@ -191,6 +193,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
                 .GetRequiredService<IRepository<AuthenticationRegistration>>()
                 .GetQueryable()
                 .SingleOrDefault(x =>
+                    x.Snowflake == existingAuthenticationRegistration.Snowflake &&
                     x.ProcessState == AuthenticationRegistrationProcessStates.Approved);
 
             Assert.Null(unchangedRegistration);

@@ -122,7 +122,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Register_ShouldBeUnauthorized_WhenInvalid()
+    public async Task Confirm_ShouldBeUnauthorized_WhenInvalid()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");

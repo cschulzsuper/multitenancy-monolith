@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Access;
 
-[ObjectAnnotation("account-member",
+[ObjectAnnotation(
+    UniqueName = "account-member",
     DisplayName = "Account Member",
     Area = "access",
     Collection = "account-members")]

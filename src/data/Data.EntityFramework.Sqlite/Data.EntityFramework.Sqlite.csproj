@@ -11,12 +11,13 @@
 	<ItemGroup>
 		<PackageReference Include="IdGen" Version="3.0.3" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\configuration\Configuration.Contract\Configuration.Contract.csproj" />
 		<ProjectReference Include="..\..\configuration\SeedProxies\SeedProxies.csproj" />
+		<ProjectReference Include="..\..\shared\Multitenancy\Multitenancy.csproj" />
 		<ProjectReference Include="..\Data.EntityFramework\Data.EntityFramework.csproj" />
 		<ProjectReference Include="..\Objects\Objects.csproj" />
 	</ItemGroup>

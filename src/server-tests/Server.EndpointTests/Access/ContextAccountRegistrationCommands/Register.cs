@@ -149,7 +149,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.AccountGroup == registerAccountRegistration.AccountGroup);
 
         Assert.Null(createdRegistration);
     }
@@ -184,7 +184,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.AccountGroup == registerAccountRegistration.AccountGroup);
 
         Assert.Null(createdRegistration);
     }
@@ -219,7 +219,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.AccountGroup == registerAccountRegistration.AccountGroup);
 
         Assert.Null(createdRegistration);
     }
@@ -254,13 +254,13 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.AccountGroup == registerAccountRegistration.AccountGroup);
 
         Assert.Null(createdRegistration);
     }
 
     [Fact]
-    public async Task Register_ShouldFail_WhenSecretNull()
+    public async Task Register_ShouldFail_WhenAccountMemberNull()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
@@ -289,13 +289,13 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.AccountMember == registerAccountRegistration.AccountMember);
 
         Assert.Null(createdRegistration);
     }
 
     [Fact]
-    public async Task Register_ShouldFail_WhenSecretEmpty()
+    public async Task Register_ShouldFail_WhenAccountMemberEmpty()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
@@ -324,13 +324,13 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.AccountMember == registerAccountRegistration.AccountMember);
 
         Assert.Null(createdRegistration);
     }
 
     [Fact]
-    public async Task Register_ShouldFail_WhenSecretTooLong()
+    public async Task Register_ShouldFail_WhenAccountMemberTooLong()
     {
         // Arrange
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
@@ -359,7 +359,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.AccountMember == registerAccountRegistration.AccountMember);
 
         Assert.Null(createdRegistration);
     }
@@ -394,7 +394,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.MailAddress == registerAccountRegistration.MailAddress);
 
         Assert.Null(createdRegistration);
     }
@@ -464,7 +464,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.MailAddress == registerAccountRegistration.MailAddress);
 
         Assert.Null(createdRegistration);
     }
@@ -499,7 +499,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.MailAddress == registerAccountRegistration.MailAddress);
 
         Assert.Null(createdRegistration);
     }
@@ -534,7 +534,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.MailAddress == registerAccountRegistration.MailAddress);
 
         Assert.Null(createdRegistration);
     }

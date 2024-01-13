@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Services;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 public static class _Services
 {
     public static IRazorComponentsBuilder AddDevLogServices(this IRazorComponentsBuilder builder)

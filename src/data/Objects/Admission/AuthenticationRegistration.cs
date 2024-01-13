@@ -3,7 +3,8 @@ using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 
-[ObjectAnnotation("authentication-registration",
+[ObjectAnnotation(
+    UniqueName = "authentication-registration",
     DisplayName = "Authentication Registration",
     Area = "admission",
     Collection = "Authentication-registrations")]

@@ -34,7 +34,7 @@ internal sealed class ContextAccountMemberCommandHandler : IContextAccountMember
             TransportException.ThrowSecurityViolation($"Client name '{clientName}' is not allowed to sign in.");
         }
 
-        if (command.ClientName != _user.GetClaimOrDefault("client"))
+        if (command.ClientName != _user.GetClaimOrDefault("client-name"))
         {
             TransportException.ThrowSecurityViolation($"Not allowed to switch to client name '{clientName}'.");
         }
@@ -45,7 +45,7 @@ internal sealed class ContextAccountMemberCommandHandler : IContextAccountMember
             TransportException.ThrowSecurityViolation($"Account member '{command.AccountMember}' is not in group '{command.AccountGroup}'.");
         }
 
-        var authenticationIdentity = _user.GetClaim("identity");
+        var authenticationIdentity = _user.GetClaim("authentication-identity");
         var authenticationIdentityPermitted = accountMember.AuthenticationIdentities.Any(x => x.UniqueName == authenticationIdentity);
         if (!authenticationIdentityPermitted)
         {
@@ -54,11 +54,11 @@ internal sealed class ContextAccountMemberCommandHandler : IContextAccountMember
 
         var claims = new Claim[]
         {
-            new Claim("type", "member"),
-            new Claim("client", clientName),
-            new Claim("identity", authenticationIdentity),
-            new Claim("group", command.AccountGroup),
-            new Claim("member", command.AccountMember),
+            new ("type", "member"),
+            new ("client-name", clientName),
+            new ("authentication-identity", authenticationIdentity),
+            new ("account-group", command.AccountGroup),
+            new ("account-member", command.AccountMember),
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);

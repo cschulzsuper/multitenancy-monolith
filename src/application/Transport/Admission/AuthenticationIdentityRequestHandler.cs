@@ -115,9 +115,9 @@ internal sealed class AuthenticationIdentityRequestHandler : IAuthenticationIden
         var mailAddresses = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyMailAddress);
 
         query = query.Where(x => 
-            (!uniqueNames.Any() && !mailAddresses.Any()) ||
-            (uniqueNames.Any() && uniqueNames.Contains(x.UniqueName)) ||
-            (mailAddresses.Any() && mailAddresses.Contains(x.MailAddress)));
+            (uniqueNames.Length == 0 && mailAddresses.Length == 0) ||
+            (uniqueNames.Length != 0 && uniqueNames.Contains(x.UniqueName)) ||
+            (mailAddresses.Length != 0 && mailAddresses.Contains(x.MailAddress)));
 
         return query;
     }

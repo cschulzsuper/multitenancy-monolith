@@ -1,6 +1,34 @@
-# Roles
+# Objects
 
-## Administration
+## Access
+
+* `AccountGroup`
+
+  Multitenancy. 
+
+* `AccountGMember`
+
+  Members of a group. 
+
+## Admission
+
+* `AuthenticationIdentity`
+
+  Username and password. 
+
+## Business
+
+* `BusinessObject`
+
+  Example business type, that can be extened by custom properties. 
+
+## Documentation
+
+* `DevelopmentPost`
+
+  Contains the the entried of the development log. 
+
+## Extension
 
 * `DistinctionType`
 
@@ -18,24 +46,8 @@
 
   Definition of custom properties for types.
 
-## Authentication
+## Schedule
 
-* `Identity`
+* `PlannedJob`
 
-  Username and password. 
-
-## Authorization
-
-* `Group`
-
-  Multitenancy. 
-
-* `Member`
-
-  Members of a group. 
-
-## Business
-
-* `BusinessObject`
-
-  Example business type, that can be extened by custom properties. 
+  Management class to change the schedule of background jobs. 

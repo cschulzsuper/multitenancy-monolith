@@ -16,6 +16,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\configuration\Configuration.Contract\Configuration.Contract.csproj" />
 		<ProjectReference Include="..\..\configuration\SeedProxies\SeedProxies.csproj" />
+		<ProjectReference Include="..\..\shared\Multitenancy\Multitenancy.csproj" />
 		<ProjectReference Include="..\..\shared\Security.Claims\Security.Claims.csproj" />
 		<ProjectReference Include="..\Data.StaticDictionaryModel\Data.StaticDictionaryModel.csproj" />
 		<ProjectReference Include="..\Objects\Objects.csproj" />

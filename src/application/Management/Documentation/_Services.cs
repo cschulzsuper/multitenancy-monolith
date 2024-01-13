@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Documentation;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 public static class _Services
 {
     public static IServiceCollection AddDocumentationManagement(this IServiceCollection services)

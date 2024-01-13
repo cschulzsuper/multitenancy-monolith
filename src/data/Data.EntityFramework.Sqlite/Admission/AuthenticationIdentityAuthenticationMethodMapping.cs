@@ -4,6 +4,7 @@ using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Admission;
@@ -19,6 +20,9 @@ public sealed class AuthenticationIdentityAuthenticationMethodMapping : IEntityT
 
     public void Configure(EntityTypeBuilder<AuthenticationIdentityAuthenticationMethod> builder)
     {
+        builder
+            .ToTable("admission-account-identity-authentication-method");
+
         builder
             .HasKey(entity => entity.Snowflake);
 
@@ -45,10 +49,11 @@ public sealed class AuthenticationIdentityAuthenticationMethodMapping : IEntityT
             .HasMaxLength(140)
             .IsRequired();
 
-        builder
-            .HasData(CreateSeed());
+        // TODO https://github.com/dotnet/efcore/issues/32017
+        // builder.HasData(CreateSeed());
     }
 
+    [SuppressMessage("CodeQuality", "IDE0051:UnusedPrivateMember")]
     private AuthenticationIdentityAuthenticationMethod[] CreateSeed()
     {
         var authenticationIdentitySeeds = _configurationProxyProvider

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Schedule;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 public static class _Subscriptions
 {
     public static IEventSubscriptions MapScheduleSubscriptions(this IEventSubscriptions subscriptions)

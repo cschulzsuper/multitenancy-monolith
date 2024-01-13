@@ -60,6 +60,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
                 .GetRequiredService<IRepository<AccountRegistration>>()
                 .GetQueryable()
                 .SingleOrDefault(x =>
+                    x.Snowflake == existingAccountRegistration.Snowflake &&
                     x.ProcessState == AccountRegistrationProcessStates.Approved);
 
             Assert.NotNull(approvedRegistration);
@@ -105,6 +106,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
                 .GetRequiredService<IRepository<AccountRegistration>>()
                 .GetQueryable()
                 .SingleOrDefault(x =>
+                    x.Snowflake == existingAccountRegistration.Snowflake &&
                     x.ProcessState == AccountRegistrationProcessStates.Approved);
 
             Assert.Null(unchangedRegistration);
@@ -150,6 +152,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
                 .GetRequiredService<IRepository<AccountRegistration>>()
                 .GetQueryable()
                 .SingleOrDefault(x =>
+                    x.Snowflake == existingAccountRegistration.Snowflake &&
                     x.ProcessState == AccountRegistrationProcessStates.Approved);
 
             Assert.NotNull(unchangedRegistration);
@@ -195,6 +198,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
                 .GetRequiredService<IRepository<AccountRegistration>>()
                 .GetQueryable()
                 .SingleOrDefault(x =>
+                    x.Snowflake == existingAccountRegistration.Snowflake &&
                     x.ProcessState == AccountRegistrationProcessStates.Approved);
 
             Assert.Null(unchangedRegistration);

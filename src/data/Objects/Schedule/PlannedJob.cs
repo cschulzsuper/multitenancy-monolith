@@ -3,7 +3,8 @@ using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Schedule;
 
-[ObjectAnnotation("planned-job",
+[ObjectAnnotation(
+    UniqueName = "planned-job",
     DisplayName = "Planned Job",
     Area = "schedule",
     Collection = "planned-jobs")]

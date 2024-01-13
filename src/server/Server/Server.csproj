@@ -14,9 +14,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
-		<PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.1" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 
@@ -34,6 +34,7 @@
 		<ProjectReference Include="..\..\data\Jobs.SequentialQueue\Jobs.SequentialQueue.csproj" />
 		<ProjectReference Include="..\..\data\Data.EntityFramework.Sqlite\Data.EntityFramework.Sqlite.csproj" />
 		<ProjectReference Include="..\..\data\Data.EntityFramework\Data.EntityFramework.csproj" />
+		<ProjectReference Include="..\..\shared\Multitenancy\Multitenancy.csproj" />
 		<ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
 	</ItemGroup>
 

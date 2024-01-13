@@ -9,7 +9,7 @@ using System.Net.Http;
 
 namespace ChristianSchulz.MultitenancyMonolith.Web;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 public static class _Services
 {
     private const int DefaultRequestTimeOut = 6_250;

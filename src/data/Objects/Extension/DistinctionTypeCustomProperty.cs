@@ -3,7 +3,8 @@ using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Extension;
 
-[ObjectAnnotation("distinction-type-custom-property",
+[ObjectAnnotation(
+    UniqueName = "distinction-type-custom-property",
     DisplayName = "Distinction Type Custom Property",
     Area = "extension",
     Collection = "distinction-type-custom-properties")]

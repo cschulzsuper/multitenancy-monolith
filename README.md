@@ -14,7 +14,7 @@ Clone the repository and start the [compose file](./docker/README.md).
 
 ## History
 
-A [dev-log](https://mmdevlogapp.azurewebsites.net/dev-log) is hosted on [Azure](https://azure.microsoft.com/). It runs in `staging` mode, has guest authentication, should be up-to-date, **but is disabled for now**. 
+A _dev-log_ was hosted on [Azure](https://azure.microsoft.com/). It ran in `staging` mode, had guest authentication, **but is not available anymore**. 
 
 # Backlog
 

@@ -32,7 +32,7 @@ internal sealed class ContextAccountRegistrationCommandHandler : IContextAccount
     {
         var updateAction = (AccountRegistration @object) =>
         {
-            var contextAuthenticationIdentity = _user.GetClaim("identity");
+            var contextAuthenticationIdentity = _user.GetClaim("authentication-identity");
 
             if (@object.AuthenticationIdentity != contextAuthenticationIdentity)
             {
@@ -86,7 +86,7 @@ internal sealed class ContextAccountRegistrationCommandHandler : IContextAccount
             AccountGroup = command.AccountGroup,
             AccountMember = command.AccountMember,
             MailAddress = command.MailAddress,
-            AuthenticationIdentity = _user.GetClaim("identity"),
+            AuthenticationIdentity = _user.GetClaim("authentication-identity"),
             ProcessState = AccountRegistrationProcessStates.New,
             ProcessToken = Guid.NewGuid()
         };

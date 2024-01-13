@@ -5,44 +5,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 public sealed class ObjectAnnotationAttribute : Attribute
 {
-    private string? _displayName;
+    public required string UniqueName { get; init; }
 
-    private string? _area;
+    public required string DisplayName { get; init; }
 
-    private string? _collection;
+    public required string Area { get; init; }
 
-    public ObjectAnnotationAttribute(string uniqueName)
-    {
-        UniqueName = uniqueName;
-    }
-
-    public string UniqueName { get; }
-
-    public string DisplayName
-    {
-        get => _displayName ?? throw new MemberAccessException("No value for 'DisplayName' is set.");
-
-        init
-        {
-            _displayName = value;
-        }
-    }
-
-    public string Area
-    {
-        get => _area ?? throw new MemberAccessException("No value for 'Area' is set.");
-        init
-        {
-            _area = value;
-        }
-    }
-
-    public string Collection
-    {
-        get => _collection ?? throw new MemberAccessException("No value for 'Collection' is set.");
-        init
-        {
-            _collection = value;
-        }
-    }
+    public required string Collection { get; init; }
 }

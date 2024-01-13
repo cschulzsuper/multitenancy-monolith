@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Admission;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 public class _Context : DbContext
 {
     private readonly IConfigurationProxyProvider _configurationProxyProvider;
@@ -19,6 +19,6 @@ public class _Context : DbContext
     {
         modelBuilder.ApplyConfiguration(new AuthenticationIdentityAuthenticationMethodMapping(_configurationProxyProvider));
         modelBuilder.ApplyConfiguration(new AuthenticationIdentityMapping(_configurationProxyProvider));
-        modelBuilder.ApplyConfiguration(new AuthenticationRegistrationMapping(_configurationProxyProvider));
+        modelBuilder.ApplyConfiguration(new AuthenticationRegistrationMapping());
     }
 }

@@ -1,7 +1,4 @@
-# TODO https://github.com/Humanizr/Humanizer/issues/1126
-# TODO https://github.com/dotnet/dotnet-docker/discussions/4821
-# FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled AS base
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled-extra AS base
 USER app
 WORKDIR /app
 EXPOSE 5213

@@ -10,6 +10,7 @@ using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite;
+using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Access;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Admission;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Jobs;
@@ -34,6 +35,7 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ChristianSchulz.MultitenancyMonolith.Server.Data;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
@@ -105,10 +107,10 @@ public sealed class Startup
 
         services.AddDataEntityFramework();
         services.AddDataEntityFrameworkSqlite();
+        services.AddDataEntityFrameworkSqliteAccess();
         services.AddDataEntityFrameworkSqliteAdmission();
 
         services.AddStaticDictionary();
-        services.AddStaticDictionaryAccessData();
         services.AddStaticDictionaryExtensionData();
         services.AddStaticDictionaryBusinessData();
         services.AddStaticDictionaryScheduleData();
@@ -143,6 +145,8 @@ public sealed class Startup
         {
             app.ApplicationServices.ConfigureAccountGroups();
             app.ApplicationServices.ConfigureAccountMembers();
+            app.ApplicationServices.ConfigureAuthenticationIdentities();
+            app.ApplicationServices.ConfigureAuthenticationIdentityAuthenticationMethods();
         }
 
         app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));

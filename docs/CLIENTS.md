@@ -31,13 +31,13 @@ Frontend clients are applications or parts of an application that access backend
   * The `portal` client has the `endpoints` `scope` to access all `server` `endpoints`.
     * This is **currently** required for token verification.
 
-### `dev-diary`
+### `dev-log`
 
-  The `dev-diary` client must provide this value during authentication. 
+  The `dev-log` client must provide this value during authentication. 
 
-  * The `dev-diary` client has the `pages` `scope` to access all `dev-diary` `pages`.
-    * This is required for the `dev-diary` pages.
-  * The `dev-diary` client has the `endpoints` `scope` to access all `server` `endpoints`.
+  * The `dev-log` client has the `pages` `scope` to access all `dev-log` `pages`.
+    * This is required for the `dev-log` pages.
+  * The `dev-log` client has the `endpoints` `scope` to access all `server` `endpoints`.
     * This is **currently** required for token verification.
 
 ## Test Clients

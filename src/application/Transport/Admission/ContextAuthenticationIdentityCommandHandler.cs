@@ -82,8 +82,8 @@ internal sealed class ContextAuthenticationIdentityCommandHandler : IContextAuth
         var claims = new Claim[]
         {
             new("type", "identity"),
-            new("client", command.ClientName),
-            new("identity", command.AuthenticationIdentity)
+            new("client-name", command.ClientName),
+            new("authentication-identity", command.AuthenticationIdentity)
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);

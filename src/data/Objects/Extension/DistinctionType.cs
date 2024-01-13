@@ -5,7 +5,8 @@ using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Extension;
 
-[ObjectAnnotation("distinction-type",
+[ObjectAnnotation(
+    UniqueName = "distinction-type",
     DisplayName = "Distinction Type",
     Area = "extension",
     Collection = "distinction-types")]

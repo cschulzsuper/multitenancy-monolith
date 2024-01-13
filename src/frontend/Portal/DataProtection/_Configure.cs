@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.Portal.DataProtection;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 public static class _Configure
 {
     public static IDataProtectionBuilder Configure(this IDataProtectionBuilder builder,

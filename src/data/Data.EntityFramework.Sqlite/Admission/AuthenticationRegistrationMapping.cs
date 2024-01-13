@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
-using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
+﻿using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,15 +6,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Admis
 
 public sealed class AuthenticationRegistrationMapping : IEntityTypeConfiguration<AuthenticationRegistration>
 {
-    private readonly IConfigurationProxyProvider _configurationProxyProvider;
-
-    public AuthenticationRegistrationMapping(IConfigurationProxyProvider configurationProxyProvider)
-    {
-        _configurationProxyProvider = configurationProxyProvider;
-    }
-
     public void Configure(EntityTypeBuilder<AuthenticationRegistration> builder)
     {
+        builder
+            .ToTable("admission-authentication-registration");
+
         builder
             .HasKey(entity => entity.Snowflake);
 
@@ -35,12 +30,14 @@ public sealed class AuthenticationRegistrationMapping : IEntityTypeConfiguration
 
         builder
             .Property(entity => entity.MailAddress)
-            .HasMaxLength(140)
+            .HasMaxLength(254)
             .IsRequired();
 
         builder
             .Property(entity => entity.ProcessToken)
             .IsRequired();
+
+        // TODO Maybe use a check constratint to limit the process state to certain values
 
         builder
             .Property(entity => entity.ProcessState)

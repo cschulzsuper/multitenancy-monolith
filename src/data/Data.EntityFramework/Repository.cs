@@ -157,7 +157,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         => query.Invoke(_context.Set<TEntity>()).AsAsyncEnumerable();
 
     public void Insert(TEntity entity)
-        => Insert(entity);
+        => Insert([entity]);
 
     public void Insert(params TEntity[] entities)
         => Insert(entities as ICollection<TEntity>);
@@ -173,7 +173,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     }
 
     public Task InsertAsync(TEntity entity)
-        => InsertAsync(entity);
+        => InsertAsync([entity]);
 
     public Task InsertAsync(params TEntity[] entities)
         => InsertAsync(entities as ICollection<TEntity>);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 public static class _Subscriptions
 {
     public static IPlannedJobScheduler MapHeartbeat(this IPlannedJobScheduler scheduler)

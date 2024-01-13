@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Data;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.DevLog;
 
@@ -165,6 +166,11 @@ public sealed class Startup
     {
         app.UseForwardedHeaders();
         app.UseRequestLocalization();
+
+        if (!_environment.IsProduction())
+        {
+            app.ApplicationServices.ConfigureDevelopmentPosts();
+        }
 
         app.UseCors();
 

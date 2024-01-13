@@ -36,7 +36,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
     [Theory]
     [InlineData(MockWebApplication.MockChief)]
-    public async Task Post_ShouldFail_WhenAuthorized(int mock)
+    public async Task Delete_ShouldFail_WhenAuthorized(int mock)
     {
         // Arrange
         var validAccountMember = "valid-account-member";
@@ -48,6 +48,8 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
 
         // Act
         var response = await client.SendAsync(request);
+
+        var c = await response.Content.ReadAsStringAsync();
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);

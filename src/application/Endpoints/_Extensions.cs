@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 internal static class _Extensions
 {
     public static TBuilder WithErrorMessage<TBuilder>(this TBuilder builder, string errorMessage)

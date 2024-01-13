@@ -46,18 +46,17 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateScope())
-        {
-            var createdRegistration = scope.ServiceProvider
-                .GetRequiredService<IRepository<AuthenticationRegistration>>()
-                .GetQueryable()
-                .SingleOrDefault(x =>
-                    x.AuthenticationIdentity == registerAuthenticationRegistration.AuthenticationIdentity &&
-                    x.ProcessState == AuthenticationRegistrationProcessStates.New &&
-                    x.MailAddress == registerAuthenticationRegistration.MailAddress);
+        using var scope = _factory.Services.CreateScope();
 
-            Assert.NotNull(createdRegistration);
-        }
+        var createdRegistration = scope.ServiceProvider
+            .GetRequiredService<IRepository<AuthenticationRegistration>>()
+            .GetQueryable()
+            .SingleOrDefault(x =>
+                x.AuthenticationIdentity == registerAuthenticationRegistration.AuthenticationIdentity &&
+                x.ProcessState == AuthenticationRegistrationProcessStates.New &&
+                x.MailAddress == registerAuthenticationRegistration.MailAddress);
+
+        Assert.NotNull(createdRegistration);
     }
 
     [Fact]
@@ -178,7 +177,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AuthenticationRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.AuthenticationIdentity == string.Empty);
 
         Assert.Null(createdRegistration);
     }
@@ -246,7 +245,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AuthenticationRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.AuthenticationIdentity == registerAuthenticationRegistration.AuthenticationIdentity);
 
         Assert.Null(createdRegistration);
     }
@@ -280,7 +279,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AuthenticationRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.MailAddress == registerAuthenticationRegistration.MailAddress);
 
         Assert.Null(createdRegistration);
     }
@@ -314,7 +313,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AuthenticationRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.MailAddress == registerAuthenticationRegistration.MailAddress);
 
         Assert.Null(createdRegistration);
     }
@@ -348,7 +347,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AuthenticationRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.MailAddress == registerAuthenticationRegistration.MailAddress);
 
         Assert.Null(createdRegistration);
     }
@@ -382,7 +381,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AuthenticationRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.MailAddress == registerAuthenticationRegistration.MailAddress);
 
         Assert.Null(createdRegistration);
     }
@@ -416,7 +415,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AuthenticationRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.MailAddress == registerAuthenticationRegistration.MailAddress);
 
         Assert.Null(createdRegistration);
     }
@@ -450,7 +449,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AuthenticationRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.Secret == registerAuthenticationRegistration.Secret);
 
         Assert.Null(createdRegistration);
     }
@@ -484,7 +483,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AuthenticationRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.Secret == registerAuthenticationRegistration.Secret);
 
         Assert.Null(createdRegistration);
     }
@@ -518,7 +517,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AuthenticationRegistration>>()
             .GetQueryable()
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.Secret == registerAuthenticationRegistration.Secret);
 
         Assert.Null(createdRegistration);
     }

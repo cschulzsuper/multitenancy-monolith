@@ -28,7 +28,7 @@ public static class RequestUserConfiguration
 
     private static void TransformAdminRoleClaim(List<Claim> claims)
     {
-        var isAdmin = claims.Any(x => x.Type == "identity" && x.Value == "admin");
+        var isAdmin = claims.Any(x => x.Type == "authentication-identity" && x.Value == "admin");
 
         if (isAdmin)
         {
@@ -41,8 +41,8 @@ public static class RequestUserConfiguration
 
         var isChief =
             claims.Any(x => x.Type == "type" && x.Value == "member") &&
-            claims.Any(x => x.Type == "identity" && x.Value != "demo") &&
-            claims.Any(x => x.Type == "member" && x.Value.StartsWith("chief-"));
+            claims.Any(x => x.Type == "authentication-identity" && x.Value != "demo") &&
+            claims.Any(x => x.Type == "account-member" && x.Value.StartsWith("chief-"));
 
         if (isChief)
         {
@@ -55,8 +55,8 @@ public static class RequestUserConfiguration
 
         var isChiefObserver =
             claims.Any(x => x.Type == "type" && x.Value == "member") &&
-            claims.Any(x => x.Type == "identity" && x.Value == "demo") &&
-            claims.Any(x => x.Type == "member" && x.Value.StartsWith("chief-"));
+            claims.Any(x => x.Type == "authentication-identity" && x.Value == "demo") &&
+            claims.Any(x => x.Type == "account-member" && x.Value.StartsWith("chief-"));
 
         if (isChiefObserver)
         {
@@ -70,8 +70,8 @@ public static class RequestUserConfiguration
 
         var isMember =
             claims.Any(x => x.Type == "type" && x.Value == "member") &&
-            claims.Any(x => x.Type == "identity" && x.Value != "demo") &&
-            claims.Any(x => x.Type == "member" && !string.IsNullOrWhiteSpace(x.Value));
+            claims.Any(x => x.Type == "authentication-identity" && x.Value != "demo") &&
+            claims.Any(x => x.Type == "account-member" && !string.IsNullOrWhiteSpace(x.Value));
 
         if (isMember)
         {
@@ -83,8 +83,8 @@ public static class RequestUserConfiguration
     {
         var isMemberObserver =
             claims.Any(x => x.Type == "type" && x.Value == "member") &&
-            claims.Any(x => x.Type == "identity" && x.Value == "demo") &&
-            claims.Any(x => x.Type == "member" && !string.IsNullOrWhiteSpace(x.Value));
+            claims.Any(x => x.Type == "authentication-identity" && x.Value == "demo") &&
+            claims.Any(x => x.Type == "account-member" && !string.IsNullOrWhiteSpace(x.Value));
 
         if (isMemberObserver)
         {
@@ -99,7 +99,7 @@ public static class RequestUserConfiguration
             foreach (var scope in allowedClient.Scopes)
             {
                 var isScopeFromAllowedClient =
-                    claims.Any(x => x.Type == "client" && x.Value == allowedClient.Service);
+                    claims.Any(x => x.Type == "client-name" && x.Value == allowedClient.Service);
 
                 if (isScopeFromAllowedClient)
                 {

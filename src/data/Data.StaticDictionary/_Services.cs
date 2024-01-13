@@ -11,13 +11,14 @@ using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using ChristianSchulz.MultitenancyMonolith.Objects.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Objects.Extension;
 using ChristianSchulz.MultitenancyMonolith.Objects.Schedule;
+using ChristianSchulz.MultitenancyMonolith.Shared.Multitenancy;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 public static class _Services
 {
     public static IServiceCollection AddStaticDictionary(this IServiceCollection services)

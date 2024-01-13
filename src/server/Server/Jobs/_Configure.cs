@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Jobs;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 internal static class _Configure
 {
     public static IPlannedJobScheduler ConfigureJobScheduler(this IApplicationBuilder app)

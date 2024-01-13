@@ -142,9 +142,9 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "identity"),
-            new Claim("client", client),
-            new Claim("identity", AuthenticationIdentityAdmin)
+            new ("type", "identity"),
+            new ("client-name", client),
+            new ("authentication-identity", AuthenticationIdentityAdmin)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -156,9 +156,9 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "identity"),
-            new Claim("client", client),
-            new Claim("identity", AuthenticationIdentityIdentity)
+            new ("type", "identity"),
+            new ("client-name", client),
+            new ("authentication-identity", AuthenticationIdentityIdentity)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -170,9 +170,9 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "identity"),
-            new Claim("client", client),
-            new Claim("identity", AuthenticationIdentityDemo)
+            new ("type", "identity"),
+            new ("client-name", client),
+            new ("authentication-identity", AuthenticationIdentityDemo)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -184,11 +184,11 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "member"),
-            new Claim("client", client),
-            new Claim("identity", AuthenticationIdentityIdentity),
-            new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupChief)
+            new ("type", "member"),
+            new ("client-name", client),
+            new ("authentication-identity", AuthenticationIdentityIdentity),
+            new ("account-group", AccountGroup),
+            new ("account-member", AccountGroupChief)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -200,11 +200,11 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "member"),
-            new Claim("client", client),
-            new Claim("identity", AuthenticationIdentityDemo),
-            new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupChief)
+            new ("type", "member"),
+            new ("client-name", client),
+            new ("authentication-identity", AuthenticationIdentityDemo),
+            new ("account-group", AccountGroup),
+            new ("account-member", AccountGroupChief)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -216,11 +216,11 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "member"),
-            new Claim("client", client),
-            new Claim("identity", AuthenticationIdentityIdentity),
-            new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupMember)
+            new ("type", "member"),
+            new ("client-name", client),
+            new ("authentication-identity", AuthenticationIdentityIdentity),
+            new ("account-group", AccountGroup),
+            new ("account-member", AccountGroupMember)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -232,11 +232,11 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "member"),
-            new Claim("client", client),
-            new Claim("identity", AuthenticationIdentityDemo),
-            new Claim("group", AccountGroup),
-            new Claim("member", AccountGroupMember)
+            new ("type", "member"),
+            new ("client-name", client),
+            new ("authentication-identity", AuthenticationIdentityDemo),
+            new ("account-group", AccountGroup),
+            new ("account-member", AccountGroupMember)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -248,7 +248,7 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "invalid")
+            new ("type", "invalid")
         };
 
         var token = factory.ProtectClaims(claims);

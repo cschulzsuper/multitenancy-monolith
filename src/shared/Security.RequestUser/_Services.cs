@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 public static class _Services
 {
     public static IServiceCollection AddRequestUser(this IServiceCollection services, Action<RequestUserOptions> setup)

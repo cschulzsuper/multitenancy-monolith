@@ -1,7 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
-using ChristianSchulz.MultitenancyMonolith.Events;
+﻿using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Server;
 using ChristianSchulz.MultitenancyMonolith.Shared.Logging;
+using ChristianSchulz.MultitenancyMonolith.Shared.Multitenancy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;

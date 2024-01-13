@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server.Events;
 
-[SuppressMessage("Style", "IDE1006:Naming Styles")]
+[SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 internal static class _Configure
 {
     public static EventsOptions Configure(this EventsOptions options)
     {
         options.ChannelNameResolver = provider => provider
             .GetRequiredService<ClaimsPrincipal>()
-            .GetClaimOrDefault("group") ?? string.Empty;
+            .GetClaimOrDefault("account-group") ?? string.Empty;
 
         options.BeforeSubscriptionInvocation = BeforeSubscriptionInvocation;
         options.AfterSubscriptionInvocation = AfterSubscriptionInvocation;
@@ -27,7 +27,7 @@ internal static class _Configure
     {
         services
             .GetRequiredService<ClaimsPrincipal>()
-            .AddIdentity(new ClaimsIdentity(new[] { new Claim("group", channelName) }));
+            .AddIdentity(new ClaimsIdentity(new[] { new Claim("account-group", channelName) }));
 
         return Task.CompletedTask;
     }

@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
-using ChristianSchulz.MultitenancyMonolith.Server;
+﻿using ChristianSchulz.MultitenancyMonolith.Server;
+using ChristianSchulz.MultitenancyMonolith.Shared.Multitenancy;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -17,19 +17,16 @@ using Xunit;
 
 internal static class MockWebApplication
 {
-    public const string Client = "endpoint-tests";
-
+    public const string ClientName = "endpoint-tests";
     public const string AuthenticationIdentity = "admin";
-    public const string MailAddress = "default@localhost";
-    public const string Secret = "default";
-
-    public const string Group = "group";
-    public const string Member = "chief-member";
+    public const string AccountGroup = "group";
+    public const string AccountMember = "chief-member";
 
     private static readonly IDictionary<string, string> _configuration = new Dictionary<string, string>()
     {
         {"AllowedClients:0:Service", "endpoint-tests"},
-        {"AllowedClients:0:Scopes:1", "endpoints"}
+        {"AllowedClients:0:Scopes:1", "endpoints"},
+        {"AllowedClients:0:Scopes:2", "swagger-json"},
     };
 
     public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory)
@@ -48,7 +45,7 @@ internal static class MockWebApplication
         }));
 
     public static IServiceScope CreateMultitenancyScope(this WebApplicationFactory<Program> factory)
-        => factory.Services.CreateMultitenancyScope(Group);
+        => factory.Services.CreateMultitenancyScope(AccountGroup);
 
     private static string ProtectClaims(this WebApplicationFactory<Program> factory, Claim[] claims)
     {
@@ -73,9 +70,9 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "identity"),
-            new Claim("client", Client),
-            new Claim("identity", AuthenticationIdentity)
+            new ("type", "identity"),
+            new ("client-name", ClientName),
+            new ("authentication-identity", AuthenticationIdentity)
         };
 
         var token = factory.ProtectClaims(claims);
@@ -88,11 +85,11 @@ internal static class MockWebApplication
     {
         var claims = new Claim[]
         {
-            new Claim("type", "member"),
-            new Claim("client", Client),
-            new Claim("identity", AuthenticationIdentity),
-            new Claim("group", Group),
-            new Claim("member", Member)
+            new ("type", "member"),
+            new ("client-name", ClientName),
+            new ("authentication-identity", AuthenticationIdentity),
+            new ("account-group", AccountGroup),
+            new ("account-member", AccountMember)
         };
 
         var token = factory.ProtectClaims(claims);
