@@ -1,6 +1,7 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 
@@ -10,6 +11,7 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
     private const string AdmissionPortal = nameof(AdmissionPortal);
     private const string AdmissionServer = nameof(AdmissionServer);
     private const string AllowedClients = nameof(AllowedClients);
+    private const string BuildInfo = nameof(BuildInfo);
     private const string DistributedCache = nameof(DistributedCache);
     private const string MaintenanceSecret = nameof(MaintenanceSecret);
     private const string ServiceMappings = nameof(ServiceMappings);
@@ -68,6 +70,29 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
         return admissionServer;
     }
 
+    public AllowedClient[] GetAllowedClients()
+    {
+        var allowedClients = _configuration
+            .GetSection(AllowedClients)
+            .Get<AllowedClient[]>();
+
+        return allowedClients ?? [];
+    }
+
+    public BuildInfo GetBuildInfo()
+    {
+        var buildInfo = _configuration
+            .GetSection(BuildInfo)
+            .Get<BuildInfo>();
+
+        if (buildInfo == null)
+        {
+            ConfigurationException.ThrowNotConfigured(BuildInfo);
+        }
+
+        return buildInfo;
+    }
+
     public DistributedCache GetDistributedCache()
     {
         var distributedCache = _configuration
@@ -80,15 +105,6 @@ public sealed class ConfigurationProxyProvider : IConfigurationProxyProvider
         }
 
         return distributedCache;
-    }
-
-    public AllowedClient[] GetAllowedClients()
-    {
-        var allowedClients = _configuration
-            .GetSection(AllowedClients)
-            .Get<AllowedClient[]>();
-
-        return allowedClients ?? [];
     }
 
     public string GetMaintenanceSecret()
