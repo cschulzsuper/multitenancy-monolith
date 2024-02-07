@@ -1,4 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Services.Documentation;
+﻿using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Services.Diagnostic;
+using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Services.Documentation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
@@ -10,6 +11,7 @@ public static class _Services
     public static IRazorComponentsBuilder AddDevLogServices(this IRazorComponentsBuilder builder)
     {
 
+        builder.Services.AddScoped<BuildInfoService>();
         builder.Services.AddScoped<DevelopmentPostService>();
 
         return builder;

@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services.Admission;
+using ChristianSchulz.MultitenancyMonolith.Frontend.Portal.Services.Diagnostic;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
@@ -12,6 +13,7 @@ public static class _Services
         builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddScoped<AuthService>();
+        builder.Services.AddScoped<BuildInfoService>();
 
         return builder;
     }

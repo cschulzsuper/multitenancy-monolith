@@ -1,5 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Tools.PreBuild.Contract;
-using Microsoft.Extensions.Options;
 using System.Text;
 using System.Threading.Tasks;
 

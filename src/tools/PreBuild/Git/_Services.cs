@@ -1,6 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Tools.PreBuild.Contract;
-using ChristianSchulz.MultitenancyMonolith.Tools.PreBuild.Outputs;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 

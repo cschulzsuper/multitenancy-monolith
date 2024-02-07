@@ -1,6 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Tools.PreBuild.Contract;
 using ChristianSchulz.MultitenancyMonolith.Tools.PreBuild.Git;
-using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Tools.PreBuild;

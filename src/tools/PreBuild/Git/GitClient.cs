@@ -1,5 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Tools.PreBuild.Outputs;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;

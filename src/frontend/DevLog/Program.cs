@@ -6,10 +6,11 @@ namespace ChristianSchulz.MultitenancyMonolith.Frontend.DevLog;
 
 public sealed class Program
 {
+
 #if DEBUG
-    private const bool _buildInfoOptions = true;
+    private const bool _buildInfoOptional = true;
 #else
-    private const bool _buildInfoOptions = false;
+    private const bool _buildInfoOptional = false;
 #endif
 
     public static void Main(string[] args)
@@ -23,7 +24,7 @@ public sealed class Program
             {
                 webBuilder.UseStartup<Startup>();
                 webBuilder.ConfigureAppConfiguration(c => c
-                    .AddJsonFile("appsettings.BuildInfo.json", _buildInfoOptions)
+                    .AddJsonFile("appsettings.BuildInfo.json", _buildInfoOptional)
                     .AddJsonFile("appsettings.SeedData.json", true)
                     .AddEnvironmentVariables("MM_DevLog_"));
             });

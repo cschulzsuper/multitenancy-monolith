@@ -178,9 +178,7 @@ public sealed class Startup
         {
             builder.UseStaticFiles();
             builder.UseRouting();
-            builder.Use(async (context, next) => await next());
             builder.UseAntiforgery();
-            builder.Use(async (context, next) => await next());
 
             builder.UseAuthentication();
             builder.UseAuthorization();

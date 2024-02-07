@@ -36,6 +36,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ChristianSchulz.MultitenancyMonolith.Server.Data;
+using ChristianSchulz.MultitenancyMonolith.Application.Diagnostic;
 
 namespace ChristianSchulz.MultitenancyMonolith.Server;
 
@@ -121,11 +122,13 @@ public sealed class Startup
         services.AddAdmissionManagement();
         services.AddAdmissionTransport();
 
-        services.AddExtensionManagement();
-        services.AddExtensionTransport();
-
         services.AddBusinessManagement();
         services.AddBusinessTransport();
+
+        services.AddDiagnosticTransport();
+
+        services.AddExtensionManagement();
+        services.AddExtensionTransport();
 
         services.AddScheduleManagement();
         services.AddScheduleTransport();
@@ -161,15 +164,24 @@ public sealed class Startup
         app.UseEndpointEvents();
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapSwagger()
-                .RequireAuthorization(policy => policy
-                    .RequireClaim("scope", "swagger-json"));
+            //if (!_environment.IsDevelopment())
+            //{
+                endpoints.MapSwagger()
+                    .RequireAuthorization(policy => policy
+                        .RequireClaim("scope", "swagger-json"));
+            //}
+            //else
+            //{
+            //    endpoints.MapSwagger()
+            //        .AllowAnonymous();
+            //}
 
             var apiEndpoints = endpoints.MapGroup("api/a1");
 
             apiEndpoints.MapAdmissionEndpoints();
             apiEndpoints.MapAccessEndpoints();
             apiEndpoints.MapBusinessEndpoints();
+            apiEndpoints.MapDiagnosticEndpoints();
             apiEndpoints.MapExtensionEndpoints();
             apiEndpoints.MapScheduleEndpoints();
         });

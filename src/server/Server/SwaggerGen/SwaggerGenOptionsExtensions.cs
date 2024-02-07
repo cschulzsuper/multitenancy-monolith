@@ -59,6 +59,12 @@ internal static class SwaggerGenOptionsExtensions
             Version = "a1-extension"
         });
 
+        options.SwaggerDoc("a1-diagnostic", new()
+        {
+            Title = "Server A1 (diagnostic)",
+            Version = "a1-diagnostic"
+        });
+
         options.SwaggerDoc("a1-schedule", new()
         {
             Title = "Server A1 (schedule)",

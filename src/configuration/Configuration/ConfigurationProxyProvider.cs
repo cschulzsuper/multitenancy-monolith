@@ -1,7 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace ChristianSchulz.MultitenancyMonolith.Configuration;
 

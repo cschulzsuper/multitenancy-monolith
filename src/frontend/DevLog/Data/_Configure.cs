@@ -1,7 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Data;
-using ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 using ChristianSchulz.MultitenancyMonolith.Objects.Documentation;
 using Microsoft.Extensions.DependencyInjection;
 using System;

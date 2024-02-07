@@ -17,7 +17,13 @@ openssl pkcs12 -in ./multitenancy-monolith.pfx -nocerts -nodes -out multitenancy
 ### Execute docker compose
 
 ``` bash
-docker compose -p multitenancy-monolith up
+dotnet run --project ../src/tools/PreBuild -c Release -- --source-directory="../src/frontend/DevLog" --output-directory="../src/frontend/DevLog" --output-filename="appsettings.{0}.json"
+dotnet run --project ../src/tools/PreBuild -c Release -- --source-directory="../src/frontend/Portal" --output-directory="../src/frontend/Portal" --output-filename="appsettings.{0}.json"
+dotnet run --project ../src/tools/PreBuild -c Release -- --source-directory="../src/frontend/Swagger" --output-directory="../src/frontend/Swagger" --output-filename="appsettings.{0}.json"
+dotnet run --project ../src/tools/PreBuild -c Release -- --source-directory="../src/server/Server" --output-directory="../src/server/Server" --output-filename="appsettings.{0}.json"
+
+docker compose -p multitenancy-monolith build
+docker compose -p multitenancy-monolith up -d
 ```
 
 # Access

@@ -137,9 +137,7 @@ public sealed class Startup
 
         services.AddAuthorization(options =>
         {
-            options.FallbackPolicy = _environment.IsDevelopment()
-                ? options.FallbackPolicy
-                : options.DefaultPolicy;
+            options.FallbackPolicy = options.DefaultPolicy;
         });
 
         services.AddCors(setup => setup

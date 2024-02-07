@@ -1,0 +1,64 @@
+﻿@inject BuildInfoService BuildInfoService
+
+<footer class="footer fixed-bottom">
+    <div class="copyright">
+        &copy; Copyright @DateTime.Now.Year
+        <a href="https://github.com/cschulzsuper">Christian Schulz</a>.
+        @if (_buildString != null)
+        {
+            <span class="d-none d-md-inline-block">@_buildString</span>
+        }
+    </div>
+</footer>
+
+@code {
+
+    private string? _buildString = null;
+
+    protected override void OnInitialized()
+    {
+        GenerateBuildString();
+    }
+
+    private void GenerateBuildString()
+    {
+        if (_buildString != null)
+        {
+            return;
+        }
+
+        var buildInfo = BuildInfoService.Get();
+
+        var runtime = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+
+        var makeRuntimeString =
+            !string.IsNullOrWhiteSpace(runtime);
+
+        var makeCommitString =
+            makeRuntimeString &&
+            !string.IsNullOrWhiteSpace(buildInfo.BranchName) &&
+            !string.IsNullOrWhiteSpace(buildInfo.ShortCommitHash);
+
+        var makeBuildString =
+            makeCommitString &&
+            !string.IsNullOrWhiteSpace(buildInfo.BuildNumber);
+
+        if (makeBuildString)
+        {
+            _buildString = $@"Powered by {runtime}, deployed from {buildInfo.BranchName} commit {buildInfo.ShortCommitHash} via build {buildInfo.BuildNumber}.";
+            return;
+        }
+
+        if (makeCommitString)
+        {
+            _buildString = $@"Powered by {runtime}, deployed from {buildInfo.BranchName} commit {buildInfo.ShortCommitHash}.";
+            return;
+        }
+
+        if (makeRuntimeString)
+        {
+            _buildString = $"Powered by {runtime}.";
+            return;
+        }
+    }
+}

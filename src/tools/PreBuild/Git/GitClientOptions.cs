@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ChristianSchulz.MultitenancyMonolith.Tools.PreBuild.Outputs;
+namespace ChristianSchulz.MultitenancyMonolith.Tools.PreBuild.Git;
 
 public sealed class GitClientOptions
 {
