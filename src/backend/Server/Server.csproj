@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>ChristianSchulz.MultitenancyMonolith.Backend.Server</RootNamespace>
+		<UserSecretsId>5fc3e16b-6664-4557-9c4f-e7ff7d7a178e</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+		<DockerfileTag>multitenancy-monolith-server</DockerfileTag>
+		<DockerfileRunArguments>--name multitenancy-monolith-server</DockerfileRunArguments>
+		<NoWarn>IDE0290</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\processing\application\Endpoints\Endpoints.csproj" />
+		<ProjectReference Include="..\..\processing\application\Management\Management.csproj" />
+		<ProjectReference Include="..\..\processing\application\Orchestration\Orchestration.csproj" />
+		<ProjectReference Include="..\..\processing\application\Schedule\Schedule.csproj" />
+		<ProjectReference Include="..\..\processing\application\Subscriptions\Subscriptions.csproj" />
+		<ProjectReference Include="..\..\processing\application\Transport\Transport.csproj" />
+		<ProjectReference Include="..\..\processing\configuration\Configuration\Configuration.csproj" />
+		<ProjectReference Include="..\..\processing\data\Caching\Caching.csproj" />
+		<ProjectReference Include="..\..\processing\data\Data.StaticDictionary\Data.StaticDictionary.csproj" />
+		<ProjectReference Include="..\..\processing\data\Events.ThreadingChannels\Events.ThreadingChannels.csproj" />
+		<ProjectReference Include="..\..\processing\data\Jobs.SequentialQueue\Jobs.SequentialQueue.csproj" />
+		<ProjectReference Include="..\..\processing\data\Data.EntityFramework.Sqlite\Data.EntityFramework.Sqlite.csproj" />
+		<ProjectReference Include="..\..\processing\data\Data.EntityFramework\Data.EntityFramework.csproj" />
+		<ProjectReference Include="..\..\processing\shared\Multitenancy\Multitenancy.csproj" />
+		<ProjectReference Include="..\..\processing\shared\Security.RequestUser\Security.RequestUser.csproj" />
+	</ItemGroup>
+
+</Project>

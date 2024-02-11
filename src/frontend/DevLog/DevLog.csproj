@@ -21,11 +21,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\application\Management\Management.csproj" />
-		<ProjectReference Include="..\..\configuration\Configuration\Configuration.csproj" />
-		<ProjectReference Include="..\..\data\Data.EntityFramework.Sqlite\Data.EntityFramework.Sqlite.csproj" />
-		<ProjectReference Include="..\..\data\Data.EntityFramework\Data.EntityFramework.csproj" />
-		<ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
+		<ProjectReference Include="..\..\processing\application\Management\Management.csproj" />
+		<ProjectReference Include="..\..\processing\configuration\Configuration\Configuration.csproj" />
+		<ProjectReference Include="..\..\processing\data\Data.EntityFramework.Sqlite\Data.EntityFramework.Sqlite.csproj" />
+		<ProjectReference Include="..\..\processing\data\Data.EntityFramework\Data.EntityFramework.csproj" />
+		<ProjectReference Include="..\..\processing\shared\Security.RequestUser\Security.RequestUser.csproj" />
 	</ItemGroup>
 
 </Project>

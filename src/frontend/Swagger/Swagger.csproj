@@ -22,11 +22,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\application\Transport.Web\Transport.Web.csproj" />
-		<ProjectReference Include="..\..\configuration\Configuration\Configuration.csproj" />
-		<ProjectReference Include="..\..\data\Web\Web.csproj" />
-		<ProjectReference Include="..\..\shared\Security.Claims\Security.Claims.csproj" />
-		<ProjectReference Include="..\..\shared\Security.RequestUser\Security.RequestUser.csproj" />
+		<ProjectReference Include="..\..\processing\application\Transport.Web\Transport.Web.csproj" />
+		<ProjectReference Include="..\..\processing\configuration\Configuration\Configuration.csproj" />
+		<ProjectReference Include="..\..\processing\data\Web\Web.csproj" />
+		<ProjectReference Include="..\..\processing\shared\Security.Claims\Security.Claims.csproj" />
+		<ProjectReference Include="..\..\processing\shared\Security.RequestUser\Security.RequestUser.csproj" />
 	</ItemGroup>
 
 </Project>
