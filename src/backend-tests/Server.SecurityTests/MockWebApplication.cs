@@ -51,6 +51,11 @@ internal static class MockWebApplication
     {
         {"MaintenanceSecret", MaintenanceSecret},
 
+        {"BuildInfo:BuildNumber", "build-number"},
+        {"BuildInfo:BranchName", "branch-name"},
+        {"BuildInfo:CommitHash", "commit-hash"},
+        {"BuildInfo:ShortCommitHash", "short-commit-hash"},
+
         {"AllowedClients:0:Service", "security-tests"},
         {"AllowedClients:0:Scopes:1", "endpoints"},
         {"AllowedClients:1:Service", "swagger"},

@@ -12,6 +12,7 @@ using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Access;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Admission;
+using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Extension;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Schedule;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Jobs;
@@ -111,11 +112,15 @@ public sealed class Startup
         services.AddDataEntityFrameworkSqlite();
         services.AddDataEntityFrameworkSqliteAccess();
         services.AddDataEntityFrameworkSqliteAdmission();
+
+        // TODO For now this does not work! (https://github.com/dotnet/efcore/issues/29380, https://github.com/dotnet/efcore/issues/28594)
+        // services.AddDataEntityFrameworkSqliteExtension();
+        
         services.AddDataEntityFrameworkSqliteSchedule();
 
-        services.AddStaticDictionary();
-        services.AddStaticDictionaryExtensionData();
-        services.AddStaticDictionaryBusinessData();
+        services.AddDataStaticDictionary();
+        services.AddDataStaticDictionaryExtension();
+        services.AddDataStaticDictionaryBusiness();
 
         services.AddAccessManagement();
         services.AddAccessTransport();

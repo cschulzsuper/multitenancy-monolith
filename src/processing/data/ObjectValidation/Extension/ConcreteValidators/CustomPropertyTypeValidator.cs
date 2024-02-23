@@ -17,9 +17,9 @@ public sealed class CustomPropertyTypeValidator
     {
         var rules = new IValidationRule<string>[]
         {
-        ValidationRules.NotNull(field),
-        ValidationRules.NotEmpty(field),
-        ValidationRules.AllowedValues(field, "string"),
+            ValidationRules.NotNull(field),
+            ValidationRules.NotEmpty(field),
+            ValidationRules.AllowedValues(field, "string"),
         };
 
         return rules;

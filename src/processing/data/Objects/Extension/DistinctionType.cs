@@ -36,6 +36,5 @@ public sealed class DistinctionType : ICloneable
 
     public required string ObjectType { get; set; }
 
-    public ICollection<DistinctionTypeCustomProperty> CustomProperties { get; init; }
-        = new List<DistinctionTypeCustomProperty>();
+    public ICollection<DistinctionTypeCustomProperty> CustomProperties { get; init; } = [];
 }

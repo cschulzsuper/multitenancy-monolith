@@ -30,6 +30,5 @@ public sealed class ObjectType : ICloneable
 
     public required string UniqueName { get; init; }
 
-    public ICollection<ObjectTypeCustomProperty> CustomProperties { get; init; }
-        = new List<ObjectTypeCustomProperty>();
+    public ICollection<ObjectTypeCustomProperty> CustomProperties { get; init; } = [];
 }

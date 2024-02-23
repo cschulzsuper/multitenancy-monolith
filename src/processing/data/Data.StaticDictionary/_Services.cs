@@ -21,7 +21,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 [SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
 public static class _Services
 {
-    public static IServiceCollection AddStaticDictionary(this IServiceCollection services)
+    public static IServiceCollection AddDataStaticDictionary(this IServiceCollection services)
     {
         services.AddSingleton<SnowflakeGenerator>();
 
@@ -31,7 +31,7 @@ public static class _Services
         return services;
     }
 
-    public static IServiceCollection AddStaticDictionaryExtensionData(this IServiceCollection services)
+    public static IServiceCollection AddDataStaticDictionaryExtension(this IServiceCollection services)
     {
         services.AddScoped(CreateRepository<ObjectTypeMapping, ObjectType>);
         services.AddScoped(CreateRepository<DistinctionTypeMapping, DistinctionType>);
@@ -39,7 +39,7 @@ public static class _Services
         return services;
     }
 
-    public static IServiceCollection AddStaticDictionaryAdmissionData(this IServiceCollection services)
+    public static IServiceCollection AddDataStaticDictionaryAdmission(this IServiceCollection services)
     {
         services.AddScoped(CreateRepository<AuthenticationIdentityMapping, AuthenticationIdentity>);
         services.AddScoped(CreateRepository<AuthenticationIdentityAuthenticationMethodMapping, AuthenticationIdentityAuthenticationMethod>);
@@ -48,7 +48,7 @@ public static class _Services
         return services;
     }
 
-    public static IServiceCollection AddStaticDictionaryAccessData(this IServiceCollection services)
+    public static IServiceCollection AddDataStaticDictionaryAccess(this IServiceCollection services)
     {
         services.AddScoped(CreateRepository<AccountGroupMapping, AccountGroup>);
         services.AddScoped(CreateRepository<AccountMemberMapping, AccountMember>);
@@ -57,21 +57,21 @@ public static class _Services
         return services;
     }
 
-    public static IServiceCollection AddStaticDictionaryBusinessData(this IServiceCollection services)
+    public static IServiceCollection AddDataStaticDictionaryBusiness(this IServiceCollection services)
     {
         services.AddScoped(CreateRepository<BusinessObjectMapping, BusinessObject>);
 
         return services;
     }
 
-    public static IServiceCollection AddStaticDictionaryDocumentationData(this IServiceCollection services)
+    public static IServiceCollection AddDataStaticDictionaryDocumentation(this IServiceCollection services)
     {
         services.AddScoped(CreateRepository<DevelopmentPostMapping, DevelopmentPost>);
 
         return services;
     }
 
-    public static IServiceCollection AddStaticDictionaryScheduleData(this IServiceCollection services)
+    public static IServiceCollection AddDataStaticDictionarySchedule(this IServiceCollection services)
     {
         services.AddScoped(CreateRepository<PlannedJobMapping, PlannedJob>);
 
