@@ -12,25 +12,20 @@ using Xunit;
 
 namespace Business.BusinessObjectResource;
 
-public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Delete 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Delete(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Delete_ShouldSucceed_WhenExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingBusinessObject = new BusinessObject
         {
             UniqueName = $"existing-business-object-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<BusinessObject>>()
@@ -38,9 +33,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/business/business-objects/{existingBusinessObject.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -48,7 +43,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var deletedBusinessObject = scope.ServiceProvider
                 .GetRequiredService<IRepository<BusinessObject>>()
@@ -63,12 +58,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentBusinessObject = "absent-business-object";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/business/business-objects/{absentBusinessObject}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -82,12 +79,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidBusinessObject = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/business/business-objects/{invalidBusinessObject}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

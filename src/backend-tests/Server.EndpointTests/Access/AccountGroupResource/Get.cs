@@ -14,25 +14,20 @@ using Xunit;
 
 namespace Access.AccountGroupResource;
 
-public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Get
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Get(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Get_ShouldSucceed_WhenExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountGroup = new AccountGroup
         {
             UniqueName = $"existing-account-group-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -40,9 +35,9 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -60,12 +55,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentAccountGroup = "absent-account-group";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-groups/{absentAccountGroup}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -79,12 +76,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidAccountGroup = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-groups/{invalidAccountGroup}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

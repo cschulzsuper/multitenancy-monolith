@@ -10,25 +10,20 @@ using Xunit;
 
 namespace Extension.ObjectTypeResource;
 
-public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Get 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Get(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Get_ShouldSucceed_WhenBusinessObject()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var objectTypeBusinessObject = "business-object";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{objectTypeBusinessObject}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -49,12 +44,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentObjectType = "absent-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{absentObjectType}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -68,12 +65,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidObjectType = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{invalidObjectType}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

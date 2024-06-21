@@ -15,21 +15,16 @@ using Xunit;
 
 namespace Access.AccountRegistrationResource;
 
-public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Post 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Post(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Post_ShouldSucceed_WhenValid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -41,7 +36,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -59,7 +54,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             x => Assert.Equal(("processState", AccountRegistrationProcessStates.New), (x.Key, (string?)x.Value)),
             x => Assert.Equal("snowflake", x.Key));
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var createdMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -78,6 +73,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAccountGroupExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -88,7 +85,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -96,7 +93,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -108,7 +105,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -117,7 +114,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var unchangedMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -134,8 +131,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAccountGroupIsNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -147,7 +146,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -156,7 +155,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -170,8 +169,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAccountGroupIsEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -183,7 +184,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -192,7 +193,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -206,8 +207,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAccountGroupTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -219,7 +222,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -228,7 +231,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -242,8 +245,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAccountGroupInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -255,7 +260,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -264,7 +269,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -278,8 +283,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAccountMemberIsNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -291,7 +298,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -300,7 +307,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -314,8 +321,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAccountMemberIsEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -327,7 +336,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -336,7 +345,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -350,8 +359,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAccountMemberTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -363,7 +374,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -372,7 +383,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -386,8 +397,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAccountMemberInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -399,7 +412,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -408,7 +421,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -418,15 +431,14 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdMember);
     }
 
-
-
-
     [Fact]
     public async Task Post_ShouldFail_WhenAuthenticationIdentityIsNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -438,7 +450,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -447,7 +459,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -461,8 +473,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAuthenticationIdentityIsEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -474,7 +488,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -483,7 +497,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -497,8 +511,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAuthenticationIdentityTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -510,7 +526,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -519,7 +535,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -533,8 +549,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenAuthenticationIdentityInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -546,7 +564,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -555,7 +573,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -565,15 +583,14 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Null(createdMember);
     }
 
-
-
-
     [Fact]
     public async Task Post_ShouldFail_WhenMailAddressNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -585,7 +602,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -594,7 +611,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -608,8 +625,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -621,7 +640,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -630,7 +649,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -644,8 +663,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -657,7 +678,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -666,7 +687,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -680,8 +701,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -693,7 +716,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -702,7 +725,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -716,8 +739,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountRegistration = new
         {
@@ -729,7 +754,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -738,7 +763,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()

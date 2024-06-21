@@ -24,7 +24,7 @@ public sealed class ObjectTypeMapping : IMapping<ObjectType>
 
         if (customPropertyUniqueNameConflict != null)
         {
-            ModelException.ThrowUniqueNameConflict<ObjectTypeCustomProperty>(customPropertyUniqueNameConflict.Key);
+            DataException.ThrowUniqueNameConflict<ObjectTypeCustomProperty>(customPropertyUniqueNameConflict.Key);
         }
 
         var customPropertyNameConflict = entity.CustomProperties
@@ -34,13 +34,13 @@ public sealed class ObjectTypeMapping : IMapping<ObjectType>
 
         if (customPropertyNameConflict != null)
         {
-            ModelException.ThrowPropertyNameConflict<ObjectTypeCustomProperty>(customPropertyNameConflict.Key);
+            DataException.ThrowPropertyNameConflict<ObjectTypeCustomProperty>(customPropertyNameConflict.Key);
         }
 
         var uniqueNameConflict = data.Any(x => x.UniqueName == entity.UniqueName);
         if (uniqueNameConflict)
         {
-            ModelException.ThrowUniqueNameConflict<ObjectTypeCustomProperty>(entity.UniqueName);
+            DataException.ThrowUniqueNameConflict<ObjectTypeCustomProperty>(entity.UniqueName);
         }
     }
 }

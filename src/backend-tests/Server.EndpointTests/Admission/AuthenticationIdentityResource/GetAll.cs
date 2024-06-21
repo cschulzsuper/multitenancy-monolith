@@ -15,19 +15,14 @@ using Xunit;
 
 namespace Admission.AuthenticationIdentityResource;
 
-public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
+public sealed class GetAll 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public GetAll(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task GetAll_ShouldSucceed()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity1 = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-1-{Guid.NewGuid()}",
@@ -42,7 +37,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             Secret = "foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -50,9 +45,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/admission/authentication-identities");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -83,6 +78,8 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldRespectQueryMailAddress()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity1 = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-3-{Guid.NewGuid()}",
@@ -97,7 +94,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             Secret = "foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -105,9 +102,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/admission/authentication-identities?q=mail-address:info3@localhost");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -126,6 +123,8 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldRespectQueryUniqueName()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity1 = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-5-{Guid.NewGuid()}",
@@ -140,7 +139,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             Secret = "foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -148,9 +147,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/admission/authentication-identities?q=unique-name:{existingAuthenticationIdentity1.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -169,6 +168,8 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldRespectTake()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity1 = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-7-{Guid.NewGuid()}",
@@ -183,7 +184,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             Secret = "foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -191,9 +192,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/admission/authentication-identities?t=1&q=mail-address:info7@localhost");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -212,6 +213,8 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldRespectSkip()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity1 = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-10-{Guid.NewGuid()}",
@@ -226,7 +229,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             Secret = "foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -234,9 +237,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/admission/authentication-identities?s=1&q=mail-address:info9@localhost");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

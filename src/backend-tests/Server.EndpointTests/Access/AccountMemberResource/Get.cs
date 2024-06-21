@@ -14,26 +14,21 @@ using Xunit;
 
 namespace Access.AccountMemberResource;
 
-public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Get 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Get(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Get_ShouldSucceed_WhenExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountMember = new AccountMember
         {
             UniqueName = $"existing-account-member-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountMember>>()
@@ -41,9 +36,9 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -62,12 +57,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentAccountMember = "absent-account-member";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-members/{absentAccountMember}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -81,12 +78,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidAccountMember = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/access/account-members/{invalidAccountMember}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

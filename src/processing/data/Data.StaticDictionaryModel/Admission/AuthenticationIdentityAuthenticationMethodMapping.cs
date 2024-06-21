@@ -24,7 +24,7 @@ public sealed class AuthenticationIdentityAuthenticationMethodMapping : IMapping
 
         if (entityConflict)
         {
-            ModelException.ThrowObjectConflict<AuthenticationIdentity>($"{entity.AuthenticationIdentity}/{entity.ClientName}/{entity.AuthenticationMethod}");
+            DataException.ThrowObjectConflict<AuthenticationIdentity>($"{entity.AuthenticationIdentity}/{entity.ClientName}/{entity.AuthenticationMethod}");
         }
     }
 }

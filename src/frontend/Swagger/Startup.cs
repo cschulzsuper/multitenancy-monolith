@@ -38,7 +38,7 @@ public sealed class Startup
 
         if (!environment.IsDevelopment())
         {
-            // TODO https://github.com/dotnet/aspnetcore/issues/49577
+            // TODO https://github.com/dotnet/aspnetcore/issues/49577 https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/static-files?view=aspnetcore-8.0#static-files-in-non-development-environments
             StaticWebAssetsLoader.UseStaticWebAssets(environment, configuration);
         }
     }

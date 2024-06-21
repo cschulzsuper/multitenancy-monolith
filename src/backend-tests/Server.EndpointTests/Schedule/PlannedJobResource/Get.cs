@@ -14,19 +14,14 @@ using Xunit;
 
 namespace Schedule.PlannedJobResource;
 
-public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Get 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Get(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Get_ShouldSucceed_WhenExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingPlannedJob = new PlannedJob
         {
             UniqueName = "mock-job-1",
@@ -34,7 +29,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
             ExpressionType = ScheduleExpressionTypes.CronExpression
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<PlannedJob>>()
@@ -42,9 +37,9 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -63,12 +58,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentPlannedJob = "absent-planned-job";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/schedule/planned-jobs/{absentPlannedJob}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -82,12 +79,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidPlannedJob = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/schedule/planned-jobs/{invalidPlannedJob}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

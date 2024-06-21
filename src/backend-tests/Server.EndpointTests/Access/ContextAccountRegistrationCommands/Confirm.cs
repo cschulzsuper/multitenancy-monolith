@@ -13,20 +13,14 @@ using Xunit;
 
 namespace Access.ContextAccountRegistrationCommands;
 
-public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Confirm 
 {
-
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Confirm(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Confirm_ShouldSucceed_WhenProcessStateNew()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AuthenticationIdentity = MockWebApplication.AuthenticationIdentity,
@@ -37,7 +31,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
             ProcessToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -45,7 +39,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var confirmRequest = new
         {
@@ -55,7 +49,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(confirmRequest);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -68,6 +62,8 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldFail_WhenProcessStateConfirmed()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AuthenticationIdentity = MockWebApplication.AuthenticationIdentity,
@@ -78,7 +74,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
             ProcessToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -86,7 +82,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var confirmRequest = new
         {
@@ -96,7 +92,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(confirmRequest);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -110,6 +106,8 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldFail_WhenProcessStateApproved()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AuthenticationIdentity = MockWebApplication.AuthenticationIdentity,
@@ -120,7 +118,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
             ProcessToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -128,7 +126,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var confirmRequest = new
         {
@@ -138,7 +136,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(confirmRequest);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -152,6 +150,8 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
     public async Task Confirm_ShouldFail_WhenProcessStateCompleted()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AuthenticationIdentity = MockWebApplication.AuthenticationIdentity,
@@ -162,7 +162,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
             ProcessToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -170,7 +170,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/_/confirm");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var confirmRequest = new
         {
@@ -180,7 +180,7 @@ public sealed class Confirm : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(confirmRequest);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

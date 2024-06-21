@@ -29,14 +29,10 @@ public sealed class PlannedJobMapping : IEntityTypeConfiguration<PlannedJob>
             .HasMaxLength(140)
             .IsRequired();
 
-        // TODO Maybe use a check constratint to limit the expression type to certain values
-
         builder
             .Property(entity => entity.ExpressionType)
             .HasMaxLength(140)
             .IsRequired();
-
-        // TODO Maybe use a check constratint to force expressions to have a value
 
         builder
             .Property(entity => entity.Expression)

@@ -20,7 +20,7 @@ public sealed class PlannedJobMapping : IMapping<PlannedJob>
         var uniqueNameConflict = data.Any(x => x.UniqueName == entity.UniqueName);
         if (uniqueNameConflict)
         {
-            ModelException.ThrowUniqueNameConflict<PlannedJob>(entity.UniqueName);
+            DataException.ThrowUniqueNameConflict<PlannedJob>(entity.UniqueName);
         }
     }
 }

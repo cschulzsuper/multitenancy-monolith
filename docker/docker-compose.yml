@@ -63,7 +63,7 @@ services:
     image: cschulzsuper/mm-server:dev
     build: 
       context: ../src
-      dockerfile: server/Server/Dockerfile
+      dockerfile: backend/Server/Dockerfile
     networks:
       - default
       - redis

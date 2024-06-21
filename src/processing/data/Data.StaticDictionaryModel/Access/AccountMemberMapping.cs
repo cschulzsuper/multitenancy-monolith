@@ -24,13 +24,13 @@ public sealed class AccountMemberMapping : IMapping<AccountMember>
 
         if (identityUniqueNameConflict != null)
         {
-            ModelException.ThrowUniqueNameConflict<AccountMemberAuthenticationIdentity>(identityUniqueNameConflict.Key);
+            DataException.ThrowUniqueNameConflict<AccountMemberAuthenticationIdentity>(identityUniqueNameConflict.Key);
         }
 
         var uniqueNameConflict = data.Any(x => x.UniqueName == entity.UniqueName);
         if (uniqueNameConflict)
         {
-            ModelException.ThrowUniqueNameConflict<AccountMember>(entity.UniqueName);
+            DataException.ThrowUniqueNameConflict<AccountMember>(entity.UniqueName);
         }
     }
 }

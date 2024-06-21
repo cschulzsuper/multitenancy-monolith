@@ -12,19 +12,15 @@ using Xunit;
 
 namespace Extension.ObjectTypeCustomPropertyResource;
 
-public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Delete 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Delete(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
 
     [Fact]
     public async Task Delete_ShouldSucceed_WhenExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
         {
             UniqueName = "business-object",
@@ -42,7 +38,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         }
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -50,9 +46,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{existingObjectTypeCustomProperty.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -60,7 +56,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var deletedObjectType = scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -77,13 +73,15 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldFail_WhenInvalidObjectType()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidObjectType = "Invalid";
         var validObjectTypeCustomProperty = "valid-object-type-custom-property";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/extension/object-types/{invalidObjectType}/custom-properties/{validObjectTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -97,12 +95,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldFail_WhenInvalidCustomProperty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = new ObjectType
         {
             UniqueName = "business-object"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -112,9 +112,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         var invalidObjectTypeCustomProperty = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{invalidObjectTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -128,12 +128,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = new ObjectType
         {
             UniqueName = "business-object"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -143,9 +145,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         var absentObjectTypeCustomProperty = "absent-object-type-custom-property";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties/{absentObjectTypeCustomProperty}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

@@ -20,7 +20,7 @@ public sealed class AccountRegistrationMapping : IMapping<AccountRegistration>
         var accountGroupConflict = data.Any(x => x.AccountGroup == @object.AccountGroup);
         if (accountGroupConflict)
         {
-            ModelException.ThrowPropertyValueConflict<AccountGroup>(nameof(@object.AccountGroup), @object.AccountGroup);
+            DataException.ThrowPropertyValueConflict<AccountGroup>(nameof(@object.AccountGroup), @object.AccountGroup);
         }
     }
 }

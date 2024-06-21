@@ -15,19 +15,14 @@ using Xunit;
 
 namespace Admission.AuthenticationRegistrationResource;
 
-public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Get 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Get(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Get_ShouldSucceed_WhenExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationRegistration = new AuthenticationRegistration
         {
             AuthenticationIdentity = $"existing-authentication-registration-authentication-identity-{Guid.NewGuid()}",
@@ -37,7 +32,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationRegistration>>()
@@ -45,9 +40,9 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/admission/authentication-registrations/{existingAuthenticationRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -68,12 +63,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentAuthenticationRegistration = 1;
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/admission/authentication-registrations/{absentAuthenticationRegistration}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -87,12 +84,14 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidAuthenticationRegistration = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/admission/authentication-registrations/{invalidAuthenticationRegistration}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

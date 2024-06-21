@@ -40,7 +40,7 @@ public sealed class BusinessObjectMapping : IMapping<BusinessObject>
 
                 if (objectTypeCustomProperty.PropertyType != entityCustomPropertyType)
                 {
-                    ModelException.ThrowPropertyTypeMismatch<BusinessObject>(entityCustomPropertyKey);
+                    DataException.ThrowPropertyTypeMismatch<BusinessObject>(entityCustomPropertyKey);
                 }
             }
         }
@@ -52,7 +52,7 @@ public sealed class BusinessObjectMapping : IMapping<BusinessObject>
         var uniqueNameConflict = data.Any(x => x.UniqueName == entity.UniqueName);
         if (uniqueNameConflict)
         {
-            ModelException.ThrowUniqueNameConflict<BusinessObject>(entity.UniqueName);
+            DataException.ThrowUniqueNameConflict<BusinessObject>(entity.UniqueName);
         }
     }
 }

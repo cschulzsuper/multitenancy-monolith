@@ -1,4 +1,6 @@
-﻿namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation;
+﻿using System;
+
+namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation;
 
 public static class ValidationErrors
 {
@@ -27,4 +29,6 @@ public static class ValidationErrors
     public const string ValueTooLong = "Value '{0}' must not exceed {1} characters.";
 
     public const string ValueNotZero = "Value '{0}' must be zero.";
+
+    public const string ValueNotUnique = "Value '{0}' must be unique.";
 }

@@ -16,7 +16,7 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            RepositoryException.ThrowObjectNotFound<TEntity>(snowflake);
+            DataException.ThrowObjectNotFound<TEntity>(snowflake);
         }
 
         return entity;
@@ -28,7 +28,7 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            RepositoryException.ThrowObjectNotFound<TEntity>();
+            DataException.ThrowObjectNotFound<TEntity>();
         }
 
         return entity;
@@ -40,7 +40,7 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            RepositoryException.ThrowObjectNotFound<TEntity>(snowflake);
+            DataException.ThrowObjectNotFound<TEntity>(snowflake);
         }
 
         return entity;
@@ -52,7 +52,7 @@ public static class RepositoryExtensions
 
         if (entity == null)
         {
-            RepositoryException.ThrowObjectNotFound<TEntity>();
+            DataException.ThrowObjectNotFound<TEntity>();
         }
 
         return entity;
@@ -237,7 +237,7 @@ public static class RepositoryExtensions
     {
         if (affectedRows == 0)
         {
-            RepositoryException.ThrowObjectNotFound<TEntity>();
+            DataException.ThrowObjectNotFound<TEntity>();
         }
 
         if (affectedRows != 1)
@@ -251,12 +251,12 @@ public static class RepositoryExtensions
     {
         if (affectedRows == 0 && expectedRows == 1)
         {
-            RepositoryException.ThrowObjectNotFound<TEntity>();
+            DataException.ThrowObjectNotFound<TEntity>();
         }
 
         if (affectedRows < expectedRows)
         {
-            RepositoryException.ThrowObjectsNotFound<TEntity>(expectedRows, affectedRows);
+            DataException.ThrowObjectsNotFound<TEntity>(expectedRows, affectedRows);
         }
 
         if (affectedRows > expectedRows)

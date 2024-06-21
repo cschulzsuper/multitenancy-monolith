@@ -13,25 +13,20 @@ using Xunit;
 
 namespace Access.AccountGroupResource;
 
-public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Put 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Put(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Put_ShouldSucceed_WhenValid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountGroup = new AccountGroup
         {
             UniqueName = $"existing-account-group-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -39,7 +34,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
         {
@@ -48,7 +43,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -56,7 +51,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             var changedIdentity = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -73,10 +68,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidAccountGroup = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{invalidAccountGroup}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
         {
@@ -85,7 +82,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -99,10 +96,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentAccountGroup = "absent-account-group";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{absentAccountGroup}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
         {
@@ -111,7 +110,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -125,6 +124,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountGroup = new AccountGroup
         {
             UniqueName = $"existing-account-group-{Guid.NewGuid()}"
@@ -135,7 +136,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             UniqueName = $"additional-account-group-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -143,7 +144,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
         {
@@ -153,7 +154,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -161,7 +162,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             var unchangedIdentity = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -178,12 +179,14 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountGroup = new AccountGroup
         {
             UniqueName = $"existing-account-group-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -191,7 +194,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
         {
@@ -200,7 +203,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -214,12 +217,14 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountGroup = new AccountGroup
         {
             UniqueName = $"existing-account-group-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -227,7 +232,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
         {
@@ -236,7 +241,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -250,12 +255,14 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountGroup = new AccountGroup
         {
             UniqueName = $"existing-account-group-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -263,7 +270,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
         {
@@ -272,7 +279,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -286,12 +293,14 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountGroup = new AccountGroup
         {
             UniqueName = $"existing-account-group-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -299,7 +308,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-groups/{existingAccountGroup.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountGroup = new
         {
@@ -308,7 +317,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

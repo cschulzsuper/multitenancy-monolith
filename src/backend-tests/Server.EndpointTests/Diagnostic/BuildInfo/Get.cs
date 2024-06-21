@@ -12,10 +12,8 @@ using Xunit;
 
 namespace Diagnostic.BuildInfo;
 
-public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Get 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
     private static readonly IDictionary<string, string> _buildInfoConfiguration = new Dictionary<string, string>()
     {
         {"BuildInfo:BuildNumber", "build-number"},
@@ -24,16 +22,12 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
         {"BuildInfo:ShortCommitHash", "short-commit-hash"},    
     };
 
-    public Get(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Get_ShouldSucceed_WhenExists()
     {
         // Arrange
-        using var factory = _factory.WithWebHostBuilder(app => app
+        using var application = MockWebApplication.Create()
+            .WithWebHostBuilder(app => app
             .ConfigureAppConfiguration((_, config) =>
             {
                 config.AddInMemoryCollection(_buildInfoConfiguration!);
@@ -41,7 +35,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/diagnostic/build-info");
 
-        var client = factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

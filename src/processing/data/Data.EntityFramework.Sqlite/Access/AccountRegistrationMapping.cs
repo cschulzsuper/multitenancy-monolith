@@ -47,8 +47,6 @@ public sealed class AccountRegistrationMapping : IEntityTypeConfiguration<Accoun
              .Property(entity => entity.ProcessToken)
              .IsRequired();
 
-        // TODO Maybe use a check constratint to limit the process state to certain values
-
         builder
             .Property(entity => entity.ProcessState)
             .HasMaxLength(140)

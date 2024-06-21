@@ -44,13 +44,13 @@ public sealed class Validator<T>
                 var validationResult = validator.Validate(value);
 
                 if (validationResult != null &&
-                    validationResult != ValidationResult.Success)
+                    validationResult != ValidationRuleResult.Success)
                 {
                     return validationResult;
                 }
             }
 
-            return ValidationResult.Success;
+            return ValidationRuleResult.Success;
         };
 
     public Func<T, ValidationResult?> CreateValidation<TProperty>(Func<T, TProperty> property, IValidationRule<TProperty> rule)
@@ -59,8 +59,8 @@ public sealed class Validator<T>
             var valid = rule.Check(property.Invoke(value));
 
             return valid
-                ? ValidationResult.Success
-                : new ValidationResult(rule.ValidationMessage);
+                ? ValidationRuleResult.Success
+                : new ValidationRuleResult(rule, rule.ValidationMessage);
         };
 
     public void Ensure(T value)
@@ -68,7 +68,7 @@ public sealed class Validator<T>
         var validationResult = Validate(value);
 
         if (validationResult != null &&
-            validationResult != ValidationResult.Success)
+            validationResult != ValidationRuleResult.Success)
         {
             ValidationException.Throw(validationResult, value);
         }
@@ -81,12 +81,12 @@ public sealed class Validator<T>
             var validationResult = validation.Invoke(value);
 
             if (validationResult != null &&
-                validationResult != ValidationResult.Success)
+                validationResult != ValidationRuleResult.Success)
             {
                 return validationResult;
             }
         }
 
-        return ValidationResult.Success;
+        return ValidationRuleResult.Success;
     }
 }

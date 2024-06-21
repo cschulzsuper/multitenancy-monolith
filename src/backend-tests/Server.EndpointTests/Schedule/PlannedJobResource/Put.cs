@@ -13,19 +13,14 @@ using Xunit;
 
 namespace Schedule.PlannedJobResource;
 
-public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Put 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Put(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Put_ShouldSucceed_WhenValid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingPlannedJob = new PlannedJob
         {
             UniqueName = "mock-job-1",
@@ -33,7 +28,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             ExpressionType = ScheduleExpressionTypes.CronExpression
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<PlannedJob>>()
@@ -41,7 +36,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
         {
@@ -50,7 +45,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putPlannedJob);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -58,7 +53,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             var changedJob = scope.ServiceProvider
                 .GetRequiredService<IRepository<PlannedJob>>()
@@ -75,10 +70,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidPlannedJob = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{invalidPlannedJob}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
         {
@@ -87,7 +84,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putPlannedJob);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -101,10 +98,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentPlannedJob = "absent-job";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{absentPlannedJob}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
         {
@@ -113,7 +112,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putPlannedJob);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -127,6 +126,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenExpressionNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingPlannedJob = new PlannedJob
         {
             UniqueName = "mock-job-2",
@@ -134,7 +135,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             ExpressionType = ScheduleExpressionTypes.CronExpression
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<PlannedJob>>()
@@ -142,7 +143,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
         {
@@ -151,7 +152,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putPlannedJob);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -165,6 +166,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenExpressionInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingPlannedJob = new PlannedJob
         {
             UniqueName = "mock-job-3",
@@ -172,7 +175,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             ExpressionType = ScheduleExpressionTypes.CronExpression
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<PlannedJob>>()
@@ -180,7 +183,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
         {
@@ -189,7 +192,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putPlannedJob);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -203,6 +206,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenExpressionEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingPlannedJob = new PlannedJob
         {
             UniqueName = "mock-job-4",
@@ -210,7 +215,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             ExpressionType = ScheduleExpressionTypes.CronExpression
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<PlannedJob>>()
@@ -218,7 +223,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
         {
@@ -227,7 +232,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putPlannedJob);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -241,6 +246,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenExpressionTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingPlannedJob = new PlannedJob
         {
             UniqueName = "mock-job-5",
@@ -248,7 +255,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             ExpressionType = ScheduleExpressionTypes.CronExpression
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<PlannedJob>>()
@@ -256,7 +263,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/schedule/planned-jobs/{existingPlannedJob.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putPlannedJob = new
         {
@@ -265,7 +272,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putPlannedJob);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

@@ -13,19 +13,14 @@ using Xunit;
 
 namespace Access.AccountRegistrationResource;
 
-public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Delete 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Delete(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Delete_ShouldSucceed_WhenExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -36,7 +31,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -44,9 +39,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -54,7 +49,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var deletedMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -69,12 +64,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentAccountRegistration = 1;
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-registrations/{absentAccountRegistration}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -88,12 +85,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidAccountRegistration = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-registrations/{invalidAccountRegistration}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

@@ -14,21 +14,16 @@ using Xunit;
 
 namespace Extension.DistinctionTypeResource;
 
-public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Post 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Post(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Post_ShouldSucceed_WhenObjectTypeBusinessObject()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -39,7 +34,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -54,7 +49,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             x => Assert.Equal(("objectType", postDistinctionType.ObjectType), (x.Key, (string?)x.Value)),
             x => Assert.Equal(("uniqueName", postDistinctionType.UniqueName), (x.Key, (string?)x.Value)));
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var createdDistinctionType = scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -72,6 +67,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingDistinctionType = new DistinctionType
         {
             UniqueName = $"existing-distinction-type-{Guid.NewGuid()}",
@@ -79,7 +76,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             DisplayName = "Existing Distinction Type"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -87,7 +84,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -98,7 +95,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -107,7 +104,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var unchangedDistinctionType = scope.ServiceProvider
                 .GetRequiredService<IRepository<DistinctionType>>()
@@ -126,8 +123,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -138,7 +137,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -147,7 +146,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdDistinctionType = scope.ServiceProvider
             .GetRequiredService<IRepository<DistinctionType>>()
@@ -161,8 +160,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -173,7 +174,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -182,7 +183,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdDistinctionType = scope.ServiceProvider
             .GetRequiredService<IRepository<DistinctionType>>()
@@ -196,8 +197,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -208,7 +211,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -217,7 +220,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdDistinctionType = scope.ServiceProvider
             .GetRequiredService<IRepository<DistinctionType>>()
@@ -231,8 +234,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -243,7 +248,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -252,7 +257,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdDistinctionType = scope.ServiceProvider
             .GetRequiredService<IRepository<DistinctionType>>()
@@ -266,8 +271,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenDisplayNameNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -278,7 +285,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -287,7 +294,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdDistinctionType = scope.ServiceProvider
             .GetRequiredService<IRepository<DistinctionType>>()
@@ -301,8 +308,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenDisplayNameEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -313,7 +322,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -322,7 +331,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdDistinctionType = scope.ServiceProvider
             .GetRequiredService<IRepository<DistinctionType>>()
@@ -336,8 +345,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenDisplayNameTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -348,7 +359,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -357,7 +368,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdDistinctionType = scope.ServiceProvider
             .GetRequiredService<IRepository<DistinctionType>>()
@@ -371,8 +382,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenObjectTypeNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -383,7 +396,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -392,7 +405,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdDistinctionType = scope.ServiceProvider
             .GetRequiredService<IRepository<DistinctionType>>()
@@ -406,8 +419,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailObjectTypeEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -418,7 +433,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -427,7 +442,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdDistinctionType = scope.ServiceProvider
             .GetRequiredService<IRepository<DistinctionType>>()
@@ -441,8 +456,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenObjectTypeInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/extension/distinction-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postDistinctionType = new
         {
@@ -453,7 +470,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postDistinctionType);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -462,7 +479,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdDistinctionType = scope.ServiceProvider
             .GetRequiredService<IRepository<DistinctionType>>()

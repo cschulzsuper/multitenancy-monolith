@@ -14,21 +14,16 @@ using Xunit;
 
 namespace Access.AccountGroupResource;
 
-public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Post 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Post(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Post_ShouldSucceed_WhenValid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new
         {
@@ -37,7 +32,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -50,7 +45,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Collection(content.OrderBy(x => x.Key),
             x => Assert.Equal(("uniqueName", postAccountGroup.UniqueName), (x.Key, (string?)x.Value)));
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdIdentity = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountGroup>>()
@@ -65,12 +60,14 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountGroup = new AccountGroup
         {
             UniqueName = $"existing-account-group-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -78,7 +75,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new
         {
@@ -87,7 +84,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -96,7 +93,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             var unchangedIdentity = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -113,8 +110,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new
         {
@@ -123,7 +122,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -132,7 +131,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdIdentity = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountGroup>>()
@@ -146,8 +145,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new
         {
@@ -156,7 +157,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -165,7 +166,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdIdentity = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountGroup>>()
@@ -179,8 +180,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new
         {
@@ -189,7 +192,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -198,7 +201,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdIdentity = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountGroup>>()
@@ -212,8 +215,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-groups");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var postAccountGroup = new
         {
@@ -222,7 +227,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountGroup);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -231,7 +236,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdIdentity = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountGroup>>()

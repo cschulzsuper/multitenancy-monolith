@@ -14,21 +14,16 @@ using Xunit;
 
 namespace Access.ContextAccountRegistrationCommands;
 
-public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Register 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Register(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Register_ShouldSucceed_WhenValid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -39,7 +34,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -47,7 +42,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
             .GetQueryable()
@@ -65,6 +60,8 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountGroupExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AuthenticationIdentity = $"existing-account-registration-{Guid.NewGuid()}",
@@ -75,7 +72,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
             ProcessToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -83,7 +80,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -94,7 +91,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -103,7 +100,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             var unchangedRegistration = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -123,8 +120,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountGroupNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -135,7 +134,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -144,7 +143,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -158,8 +157,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountGroupEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -170,7 +171,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -179,7 +180,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -193,8 +194,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountGroupTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -205,7 +208,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -214,7 +217,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -228,8 +231,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountGroupInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -240,7 +245,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -249,7 +254,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -263,8 +268,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountMemberNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -275,7 +282,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -284,7 +291,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -298,8 +305,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountMemberEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -310,7 +319,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -319,7 +328,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -333,8 +342,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenAccountMemberTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -345,7 +356,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -354,7 +365,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -368,8 +379,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -380,7 +393,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -389,7 +402,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -403,8 +416,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -415,7 +430,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -424,7 +439,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -438,8 +453,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -450,7 +467,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -459,7 +476,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -473,8 +490,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -485,7 +504,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -494,7 +513,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()
@@ -508,8 +527,10 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_ShouldFail_WhenMailAddressInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-registrations/_/register");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var registerAccountRegistration = new
         {
@@ -520,7 +541,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(registerAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -529,7 +550,7 @@ public sealed class Register : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.Services.CreateScope();
+        using var scope = application.Services.CreateScope();
 
         var createdRegistration = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountRegistration>>()

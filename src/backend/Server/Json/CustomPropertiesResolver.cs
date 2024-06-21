@@ -23,7 +23,9 @@ public sealed class CustomPropertiesResolver : DefaultJsonTypeInfoResolver
     {
         var dictionaries = @object.GetType()
             .GetProperties()
-            .Where(property => property.PropertyType == typeof(IDictionary<string, object>))
+            .Where(property => 
+                property.PropertyType == typeof(IDictionary<string, object>) || 
+                property.PropertyType == typeof(Dictionary<string, object>))
             .Select(property => (IDictionary<string, object>)property.GetValue(@object)!)
             .ToArray();
 

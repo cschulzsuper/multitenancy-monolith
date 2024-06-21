@@ -145,27 +145,7 @@
     private void RedirectSuccess()
     {
         var target =  $"/redirect?return={Return}";
-        var targetUri = new Uri(target, UriKind.RelativeOrAbsolute);
-
-        if (!targetUri.IsAbsoluteUri)
-        {
-            // TODO https://github.com/dotnet/aspnetcore/issues/49670
-            var relative = NavigationManager.ToBaseRelativePath(NavigationManager.ToAbsoluteUri(target).AbsoluteUri);
-            var absolute = NavigationManager.ToAbsoluteUri(relative).AbsoluteUri;
-
-            // TODO https://github.com/dotnet/aspnetcore/issues/50384
-            HttpContextAccessor.HttpContext!.Response.Headers.Add("blazor-enhanced-nav-redirect-location", absolute);
-            HttpContextAccessor.HttpContext!.Response.StatusCode = 200;
-
-            NavigationManager.NavigateTo(absolute, true);
-        }
-        else
-        {
-            // TODO https://github.com/dotnet/aspnetcore/issues/50384
-            HttpContextAccessor.HttpContext!.Response.Headers.Add("blazor-enhanced-nav-redirect-location", targetUri.AbsoluteUri);
-            HttpContextAccessor.HttpContext!.Response.StatusCode = 200;
-
-            NavigationManager.NavigateTo(targetUri.AbsoluteUri, true);
-        }
+        
+        NavigationManager.NavigateTo(target, true);
     }
 }

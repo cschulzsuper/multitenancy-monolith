@@ -21,7 +21,7 @@ public sealed class AuthenticationRegistrationMapping : IMapping<AuthenticationR
         var authenticationIdentityConflict = data.Any(x => x.AuthenticationIdentity == @object.AuthenticationIdentity);
         if (authenticationIdentityConflict)
         {
-            ModelException.ThrowPropertyValueConflict<AccountGroup>(nameof(@object.AuthenticationIdentity), @object.AuthenticationIdentity);
+            DataException.ThrowPropertyValueConflict<AccountGroup>(nameof(@object.AuthenticationIdentity), @object.AuthenticationIdentity);
         }
     }
 }

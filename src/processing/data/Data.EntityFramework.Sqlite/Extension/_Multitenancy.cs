@@ -1,12 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ChristianSchulz.MultitenancyMonolith.Configuration;
+using ChristianSchulz.MultitenancyMonolith.Shared.Multitenancy;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Extension;
 
 [SuppressMessage("Style", "IDE1006:NamingRuleViolation")]
-public class _Context : DbContext
+public class _Multitenancy : DbContext
 {
-    public _Context(DbContextOptions<_Context> options)
+    public _Multitenancy(DbContextOptions<_Multitenancy> options)
         : base(options)
     {
 

@@ -24,13 +24,13 @@ public sealed class DistinctionTypeMapping : IMapping<DistinctionType>
 
         if (customPropertyUniqueNameConflict != null)
         {
-            ModelException.ThrowUniqueNameConflict<ObjectTypeCustomProperty>(customPropertyUniqueNameConflict.Key);
+            DataException.ThrowUniqueNameConflict<ObjectTypeCustomProperty>(customPropertyUniqueNameConflict.Key);
         }
 
         var uniqueNameConflict = data.Any(x => x.UniqueName == entity.UniqueName);
         if (uniqueNameConflict)
         {
-            ModelException.ThrowUniqueNameConflict<DistinctionType>(entity.UniqueName);
+            DataException.ThrowUniqueNameConflict<DistinctionType>(entity.UniqueName);
         }
     }
 }

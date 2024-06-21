@@ -3,6 +3,7 @@ using ChristianSchulz.MultitenancyMonolith.Shared.Multitenancy;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -26,23 +27,30 @@ internal static class MockWebApplication
     {
         {"AllowedClients:0:Service", "endpoint-tests"},
         {"AllowedClients:0:Scopes:1", "endpoints"},
-        {"AllowedClients:0:Scopes:2", "swagger-json"},
+        {"AllowedClients:0:Scopes:2", "openapi-json"},
     };
 
-    public static WebApplicationFactory<Program> Mock(this WebApplicationFactory<Program> factory)
-    => factory.WithWebHostBuilder(app => app
-        .ConfigureServices(services =>
-        {
-            services.Configure<BearerTokenOptions>(BearerTokenDefaults.AuthenticationScheme, options =>
+    public static WebApplicationFactory<Program> Create()
+    {
+        var application = new WebApplicationFactory<Program>();
+
+        application = application
+            .WithWebHostBuilder(app => app
+            .ConfigureServices(services =>
             {
-                options.Events.OnMessageReceived = context => Task.CompletedTask;
-            });
-        })
-        .ConfigureAppConfiguration((_, config) =>
-        {
-            config.Sources.Clear();
-            config.AddInMemoryCollection(_configuration!);
-        }));
+                services.Configure<BearerTokenOptions>(BearerTokenDefaults.AuthenticationScheme, options =>
+                {
+                    options.Events.OnMessageReceived = context => Task.CompletedTask;
+                });
+            })
+            .ConfigureAppConfiguration((_, config) =>
+            {
+                config.Sources.Clear();
+                config.AddInMemoryCollection(_configuration!);
+            }));
+
+        return application;
+    }
 
     public static IServiceScope CreateMultitenancyScope(this WebApplicationFactory<Program> factory)
         => factory.Services.CreateMultitenancyScope(AccountGroup);

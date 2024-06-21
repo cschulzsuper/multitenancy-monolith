@@ -20,7 +20,7 @@ public sealed class DevelopmentPostMapping : IMapping<DevelopmentPost>
         var indexConflict = data.Any(x => x.Index == entity.Index);
         if (indexConflict)
         {
-            ModelException.ThrowObjectConflict<DevelopmentPost>($"{entity.Index}");
+            DataException.ThrowObjectConflict<DevelopmentPost>($"{entity.Index}");
         }
     }
 }

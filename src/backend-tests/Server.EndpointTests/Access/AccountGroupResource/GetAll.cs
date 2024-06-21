@@ -15,19 +15,14 @@ using Xunit;
 
 namespace Access.AccountGroupResource;
 
-public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
+public sealed class GetAll 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public GetAll(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task GetAll_ShouldSucceed()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountGroup1 = new AccountGroup
         {
             UniqueName = $"existing-account-group-1-{Guid.NewGuid()}"
@@ -38,7 +33,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             UniqueName = $"existing-account-group-2-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountGroup>>()
@@ -46,9 +41,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/access/account-groups");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

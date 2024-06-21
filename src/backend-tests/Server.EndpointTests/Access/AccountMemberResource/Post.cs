@@ -14,21 +14,16 @@ using Xunit;
 
 namespace Access.AccountMemberResource;
 
-public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Post 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Post(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Post_ShouldSucceed_WhenValid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
         {
@@ -38,7 +33,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountMember);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -52,7 +47,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             x => Assert.Equal(("mailAddress", postAccountMember.MailAddress), (x.Key, (string?)x.Value)),
             x => Assert.Equal(("uniqueName", postAccountMember.UniqueName), (x.Key, (string?)x.Value)));
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var createdMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountMember>>()
@@ -67,13 +62,15 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountMember = new AccountMember
         {
             UniqueName = $"existing-account-member-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountMember>>()
@@ -81,7 +78,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
         {
@@ -91,7 +88,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountMember);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -100,7 +97,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var unchangedMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountMember>>()
@@ -117,8 +114,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameIsNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
         {
@@ -128,7 +127,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountMember);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -137,7 +136,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountMember>>()
@@ -151,8 +150,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameIsEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
         {
@@ -162,7 +163,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountMember);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -171,7 +172,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountMember>>()
@@ -185,8 +186,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
         {
@@ -196,7 +199,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountMember);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -205,7 +208,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountMember>>()
@@ -219,8 +222,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
         {
@@ -230,7 +235,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountMember);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -239,7 +244,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountMember>>()
@@ -253,8 +258,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
         {
@@ -264,7 +271,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountMember);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -273,7 +280,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountMember>>()
@@ -287,8 +294,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
         {
@@ -298,7 +307,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountMember);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -307,7 +316,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountMember>>()
@@ -321,8 +330,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
         {
@@ -332,7 +343,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountMember);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -341,7 +352,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountMember>>()
@@ -355,8 +366,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
         {
@@ -366,7 +379,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountMember);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -375,7 +388,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountMember>>()
@@ -389,8 +402,10 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenMailAddressInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/a1/access/account-members");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postAccountMember = new
         {
@@ -400,7 +415,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postAccountMember);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -409,7 +424,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdMember = scope.ServiceProvider
             .GetRequiredService<IRepository<AccountMember>>()

@@ -16,19 +16,14 @@ using Xunit;
 
 namespace Extension.ObjectTypeCustomPropertyResource;
 
-public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
+public sealed class GetAll 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public GetAll(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task GetAll_ShouldSucceed()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectTypeCustomProperty1 = new ObjectTypeCustomProperty
         {
             UniqueName = $"existing-object-type-custom-property-1-{Guid.NewGuid()}",
@@ -54,7 +49,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -62,9 +57,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -97,12 +92,14 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldFail_WhenInvalidObjectType()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidObjectType = "Invalid-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/api/a1/extension/object-types/{invalidObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

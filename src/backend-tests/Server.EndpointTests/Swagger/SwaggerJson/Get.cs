@@ -1,6 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Backend.Server;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.OpenApi.Readers;
+﻿using Microsoft.OpenApi.Readers;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,15 +6,8 @@ using Xunit;
 
 namespace Swagger.SwaggerJson;
 
-public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Get 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Get(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Theory]
     [InlineData("a1")]
     [InlineData("a1-extension")]
@@ -27,10 +18,12 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldSucceed_WhenValid(string doc)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/swagger/{doc}/swagger.json");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        using var application = MockWebApplication.Create();
 
-        var client = _factory.CreateClient();
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/openapi/{doc}.json");
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
+
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

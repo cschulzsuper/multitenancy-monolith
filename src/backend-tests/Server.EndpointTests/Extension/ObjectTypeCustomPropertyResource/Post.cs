@@ -15,23 +15,18 @@ using Xunit;
 
 namespace Extension.ObjectTypeCustomPropertyResource;
 
-public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Post 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Post(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Post_ShouldSucceed_WhenObjectTypeNew()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "business-object";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -43,7 +38,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -60,7 +55,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             x => Assert.Equal(("propertyType", postObjectTypeCustomProperty.PropertyType), (x.Key, (string?)x.Value)),
             x => Assert.Equal(("uniqueName", postObjectTypeCustomProperty.UniqueName), (x.Key, (string?)x.Value)));
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var createdObjectTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -81,12 +76,14 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldSucceed_WhenPropertyTypeString()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = new ObjectType
         {
             UniqueName = "business-object"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -94,7 +91,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -106,7 +103,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -123,7 +120,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
             x => Assert.Equal(("propertyType", postObjectTypeCustomProperty.PropertyType), (x.Key, (string?)x.Value)),
             x => Assert.Equal(("uniqueName", postObjectTypeCustomProperty.UniqueName), (x.Key, (string?)x.Value)));
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var createdObjectTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -144,10 +141,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenInvalidObjectType()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidObjectType = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{invalidObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -159,7 +158,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -173,6 +172,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
         {
             UniqueName = $"existing-object-type-custom-property--{Guid.NewGuid()}",
@@ -190,7 +191,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -198,7 +199,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -210,7 +211,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -219,7 +220,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var unchangedObjectTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -240,10 +241,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "business-object";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -255,7 +258,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -264,7 +267,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -278,10 +281,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -293,7 +298,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -302,7 +307,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -316,10 +321,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -331,7 +338,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -340,7 +347,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -354,10 +361,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -369,7 +378,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -378,7 +387,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -392,10 +401,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenDisplayNameNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -407,7 +418,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -416,7 +427,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -430,10 +441,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenDisplayNameEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -445,7 +458,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -454,7 +467,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -468,10 +481,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenDisplayNameTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -483,7 +498,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -492,7 +507,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -506,6 +521,8 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenPropertyNameExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectTypeCustomProperty = new ObjectTypeCustomProperty
         {
             UniqueName = $"existing-object-type-custom-property-{Guid.NewGuid()}",
@@ -523,7 +540,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -531,7 +548,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType.UniqueName}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -543,7 +560,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -552,7 +569,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var unchangedObjectTypeCustomProperty = scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -573,10 +590,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenPropertyNameNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -588,7 +607,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -597,7 +616,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -611,10 +630,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenPropertyNameEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -626,7 +647,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -635,7 +656,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -649,10 +670,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenPropertyNameTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -664,7 +687,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -673,7 +696,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -687,10 +710,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenPropertyNameInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -702,7 +727,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -711,7 +736,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -725,10 +750,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenPropertyTypeNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -740,7 +767,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -749,7 +776,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -763,10 +790,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenPropertyTypeEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -778,7 +807,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -787,7 +816,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()
@@ -801,10 +830,12 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
     public async Task Post_ShouldFail_WhenPropertyTypeInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectType = "existing-object-type";
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/extension/object-types/{existingObjectType}/custom-properties");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
         var postObjectTypeCustomProperty = new
         {
@@ -816,7 +847,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(postObjectTypeCustomProperty);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -825,7 +856,7 @@ public sealed class Post : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using var scope = _factory.CreateMultitenancyScope();
+        using var scope = application.CreateMultitenancyScope();
 
         var createdObjectTypeCustomProperty = scope.ServiceProvider
             .GetRequiredService<IRepository<ObjectType>>()

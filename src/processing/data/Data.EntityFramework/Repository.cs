@@ -76,7 +76,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         }
         catch
         {
-            RepositoryException.ThrowTransactionFailed();
+            DataException.ThrowTransactionFailed();
         }
     }
 
@@ -92,7 +92,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         }
         catch (OperationCanceledException)
         {
-            RepositoryException.ThrowTransactionFailed();
+            DataException.ThrowTransactionFailed();
         }
     }
 

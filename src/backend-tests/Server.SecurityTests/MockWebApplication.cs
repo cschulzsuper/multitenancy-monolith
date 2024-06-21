@@ -58,8 +58,8 @@ internal static class MockWebApplication
 
         {"AllowedClients:0:Service", "security-tests"},
         {"AllowedClients:0:Scopes:1", "endpoints"},
-        {"AllowedClients:1:Service", "swagger"},
-        {"AllowedClients:1:Scopes:0", "swagger-json"},
+        {"AllowedClients:1:Service", "openapi"},
+        {"AllowedClients:1:Scopes:0", "openapi-json"},
         {"AllowedClients:1:Scopes:1", "endpoints"},
 
         {"SeedData:0:Scheme", "admission/authentication-identities"},

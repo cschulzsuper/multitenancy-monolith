@@ -38,10 +38,8 @@ public sealed class ObjectTypeMapping : IEntityTypeConfiguration<ObjectType>
             .OwnsMany(entity => entity.CustomProperties,
                 customPropertiesBuilder =>
                 {
-                    // TODO For now this does not work! (https://github.com/dotnet/efcore/issues/29380, https://github.com/dotnet/efcore/issues/28594)
-
                     customPropertiesBuilder.ToJson();
-
+  
                     customPropertiesBuilder
                         .HasIndex(entity => entity.UniqueName)
                         .IsUnique();
@@ -64,8 +62,6 @@ public sealed class ObjectTypeMapping : IEntityTypeConfiguration<ObjectType>
                         .Property(entity => entity.PropertyName)
                         .HasMaxLength(140)
                         .IsRequired();
-
-                    // TODO Maybe use a check constratint to limit the expression type to certain values
 
                     customPropertiesBuilder
                         .Property(entity => entity.PropertyType)

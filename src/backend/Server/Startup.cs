@@ -80,8 +80,6 @@ public sealed class Startup
             out var allowedClients,
             out var allowedClientHosts);
 
-        services.ConfigureJsonOptions();
-
         services.AddDataProtection().Configure(_environment, _configuration);
 
         services.AddAuthentication().AddBearerToken(options => options.Configure());
@@ -95,12 +93,15 @@ public sealed class Startup
 
         services.AddEndpointsApiExplorer();
 
-        services.AddSwaggerGen(options =>
+        /*services.AddSwaggerGen(options =>
         {
             options.ConfigureSwaggerDocs();
             options.ConfigureAuthentication();
             options.ConfigureAuthorization();
-        });
+        });*/
+
+        services.AddOpenApiDocs();
+        services.ConfigureJsonOptions();
 
         services.AddRequestUser(options => options.Configure(allowedClients));
         services.AddCaching();
@@ -111,15 +112,12 @@ public sealed class Startup
         services.AddDataEntityFramework();
         services.AddDataEntityFrameworkSqlite();
         services.AddDataEntityFrameworkSqliteAccess();
-        services.AddDataEntityFrameworkSqliteAdmission();
-
-        // TODO For now this does not work! (https://github.com/dotnet/efcore/issues/29380, https://github.com/dotnet/efcore/issues/28594)
-        // services.AddDataEntityFrameworkSqliteExtension();
-        
+        services.AddDataEntityFrameworkSqliteAdmission();      
+        services.AddDataEntityFrameworkSqliteExtension();
         services.AddDataEntityFrameworkSqliteSchedule();
 
         services.AddDataStaticDictionary();
-        services.AddDataStaticDictionaryExtension();
+        // services.AddDataStaticDictionaryExtension();
         services.AddDataStaticDictionaryBusiness();
 
         services.AddAccessManagement();
@@ -170,17 +168,9 @@ public sealed class Startup
         app.UseEndpointEvents();
         app.UseEndpoints(endpoints =>
         {
-            //if (!_environment.IsDevelopment())
-            //{
-            endpoints.MapSwagger()
+            endpoints.MapOpenApi()
                 .RequireAuthorization(policy => policy
-                    .RequireClaim("scope", "swagger-json"));
-            //}
-            //else
-            //{
-            //    endpoints.MapSwagger()
-            //        .AllowAnonymous();
-            //}
+                    .RequireClaim("scope", "openapi-json"));
 
             var apiEndpoints = endpoints.MapGroup("api/a1");
 

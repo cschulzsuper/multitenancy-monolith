@@ -17,7 +17,7 @@ internal sealed class SwaggerUIOptionsConfiguration
     $$"""
             function n(req)
             {
-                let swaggerJsonRequest = req.url.endsWith('swagger.json');
+                let swaggerJsonRequest = req.url.endsWith('.json');
                 if (!swaggerJsonRequest)
                 {
                     return req;

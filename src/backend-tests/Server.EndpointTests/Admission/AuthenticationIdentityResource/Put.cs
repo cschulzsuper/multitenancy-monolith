@@ -13,19 +13,14 @@ using Xunit;
 
 namespace Admission.AuthenticationIdentityResource;
 
-public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Put 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Put(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Put_ShouldSucceed_WhenValid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -33,7 +28,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Secret = "existing-foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -41,7 +36,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -51,7 +46,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -59,7 +54,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             var changedIdentity = scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -78,10 +73,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidAuthenticationIdentity = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{invalidAuthenticationIdentity}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -91,7 +88,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -105,10 +102,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentAuthenticationIdentity = "absent-authentication-identity";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{absentAuthenticationIdentity}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -118,7 +117,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -132,6 +131,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -146,7 +147,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Secret = "additional-foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -154,7 +155,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -164,7 +165,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -172,7 +173,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             var unchangedIdentity = scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -191,6 +192,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -198,7 +201,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Secret = "existing-foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -206,7 +209,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -216,7 +219,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -230,6 +233,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -237,7 +242,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Secret = "existing-foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -245,7 +250,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -255,7 +260,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -269,6 +274,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -276,7 +283,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Secret = "existing-foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -284,7 +291,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -294,7 +301,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -308,6 +315,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenUniqueNameInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -315,7 +324,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Secret = "existing-foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -323,7 +332,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -333,7 +342,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -347,6 +356,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -354,7 +365,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Secret = "existing-foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -362,7 +373,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -372,7 +383,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -386,6 +397,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -393,7 +406,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Secret = "existing-foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -401,7 +414,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -411,7 +424,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -425,6 +438,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -432,7 +447,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Secret = "existing-foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -440,7 +455,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -450,7 +465,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -464,6 +479,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -471,7 +488,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Secret = "existing-foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -479,7 +496,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -489,7 +506,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -503,6 +520,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -510,7 +529,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             Secret = "existing-foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -518,7 +537,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAuthenticationIdentity = new
         {
@@ -528,7 +547,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAuthenticationIdentity);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

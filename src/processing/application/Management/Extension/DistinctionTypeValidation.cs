@@ -17,6 +17,7 @@ internal static class DistinctionTypeValidation
         _insertValidator.AddRules(x => x.UniqueName, UniqueNameValidator.CreateRules());
         _insertValidator.AddRules(x => x.DisplayName, DisplayNameValidator.CreateRules());
         _insertValidator.AddRules(x => x.ObjectType, ObjectTypeValidator.CreateRules());
+        _insertValidator.AddRules(x => x.CustomProperties, UniqueConstrainValidator<DistinctionTypeCustomProperty>.CreateRules(x => x.UniqueName, "unique name"));
         _insertValidator.AddRules(x => x.CustomProperties, validator =>
             validator.AddRules(x => x.UniqueName, UniqueNameValidator.CreateRules("custom property unique name")));
 
@@ -26,6 +27,7 @@ internal static class DistinctionTypeValidation
         _updateValidator.AddRules(x => x.UniqueName, UniqueNameValidator.CreateRules());
         _updateValidator.AddRules(x => x.DisplayName, DisplayNameValidator.CreateRules());
         _updateValidator.AddRules(x => x.ObjectType, ObjectTypeValidator.CreateRules());
+        _updateValidator.AddRules(x => x.CustomProperties, UniqueConstrainValidator<DistinctionTypeCustomProperty>.CreateRules(x => x.UniqueName, "unique name"));
         _updateValidator.AddRules(x => x.CustomProperties, validator =>
             validator.AddRules(x => x.UniqueName, UniqueNameValidator.CreateRules("custom property unique name")));
     }

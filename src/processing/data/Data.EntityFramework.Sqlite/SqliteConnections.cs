@@ -13,7 +13,7 @@ public sealed class SqliteConnections : IDisposable
     public SqliteConnections()
     {
         _connections = new ConcurrentDictionary<string,SqliteConnection>();
-        _connectionDiscriminator = $"{Guid.NewGuid}";
+        _connectionDiscriminator = $"{Guid.NewGuid()}";
     }
 
     public SqliteConnection Get(string name)

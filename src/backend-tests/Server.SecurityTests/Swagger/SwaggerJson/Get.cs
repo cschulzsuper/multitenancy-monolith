@@ -27,7 +27,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldBeUnauthorized_WhenNotAuthenticated(string doc)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/swagger/{doc}/swagger.json");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/openapi/{doc}.json");
 
         var client = _factory.CreateClient();
 
@@ -85,7 +85,7 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldBeForbidden_WhenInvalidClient(string doc, int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/swagger/{doc}/swagger.json");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/openapi/{doc}.json");
         request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock);
 
         var client = _factory.CreateClient();
@@ -144,8 +144,8 @@ public sealed class Get : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldSucceed_WhenValidClient(string doc, int mock)
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/swagger/{doc}/swagger.json");
-        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock, "swagger");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/openapi/{doc}.json");
+        request.Headers.Authorization = _factory.MockValidAuthorizationHeader(mock, "openapi");
 
         var client = _factory.CreateClient();
 

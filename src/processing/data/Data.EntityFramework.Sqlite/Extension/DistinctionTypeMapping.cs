@@ -34,8 +34,6 @@ public sealed class DistinctionTypeMapping : IEntityTypeConfiguration<Distinctio
             .HasMaxLength(140)
             .IsRequired();
 
-        // TODO Maybe use a check constratint to limit the expression type to certain values
-
         builder
             .Property(entity => entity.ObjectType)
             .HasMaxLength(140)
@@ -45,8 +43,6 @@ public sealed class DistinctionTypeMapping : IEntityTypeConfiguration<Distinctio
             .OwnsMany(entity => entity.CustomProperties,
                 customPropertiesBuilder =>
                 {
-                    // TODO For now this does not work! (https://github.com/dotnet/efcore/issues/29380, https://github.com/dotnet/efcore/issues/28594)
-
                     customPropertiesBuilder.ToJson();
 
                     customPropertiesBuilder

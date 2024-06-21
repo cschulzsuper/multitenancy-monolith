@@ -17,19 +17,14 @@ using Xunit;
 
 namespace Business.BusinessObjectResource;
 
-public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
+public sealed class GetAll 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public GetAll(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task GetAll_ShouldSucceed_WithoutCustomProperties()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingBusinessObject1 = new BusinessObject
         {
             UniqueName = $"existing-business-object-1-{Guid.NewGuid()}"
@@ -40,7 +35,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             UniqueName = $"existing-business-object-2-{Guid.NewGuid()}"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<BusinessObject>>()
@@ -48,9 +43,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/business/business-objects");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -69,6 +64,8 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetAll_ShouldSucceed_WithCustomProperties()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingObjectTypeCustomProperty1 = new ObjectTypeCustomProperty
         {
             UniqueName = $"custom-property-1-{Guid.NewGuid()}",
@@ -112,7 +109,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             }
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<ObjectType>>()
@@ -124,9 +121,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/business/business-objects");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

@@ -20,7 +20,7 @@ public sealed class AuthenticationIdentityMapping : IMapping<AuthenticationIdent
         var uniqueNameConflict = data.Any(x => x.UniqueName == entity.UniqueName);
         if (uniqueNameConflict)
         {
-            ModelException.ThrowUniqueNameConflict<AuthenticationIdentity>(entity.UniqueName);
+            DataException.ThrowUniqueNameConflict<AuthenticationIdentity>(entity.UniqueName);
         }
     }
 }

@@ -20,7 +20,7 @@ public sealed class AccountGroupMapping : IMapping<AccountGroup>
         var uniqueNameConflict = data.Any(x => x.UniqueName == entity.UniqueName);
         if (uniqueNameConflict)
         {
-            ModelException.ThrowUniqueNameConflict<AccountGroup>(entity.UniqueName);
+            DataException.ThrowUniqueNameConflict<AccountGroup>(entity.UniqueName);
         }
     }
 }

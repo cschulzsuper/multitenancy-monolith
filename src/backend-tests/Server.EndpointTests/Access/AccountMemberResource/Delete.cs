@@ -12,26 +12,21 @@ using Xunit;
 
 namespace Access.AccountMemberResource;
 
-public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Delete 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Delete(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Delete_ShouldSucceed_WhenExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountMember = new AccountMember
         {
             UniqueName = $"existing-account-member-{Guid.NewGuid()}",
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountMember>>()
@@ -39,9 +34,9 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-members/{existingAccountMember.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -49,7 +44,7 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var deletedMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountMember>>()
@@ -64,12 +59,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentAccountMember = "absent-account-member";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-members/{absentAccountMember}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -83,12 +80,14 @@ public sealed class Delete : IClassFixture<WebApplicationFactory<Program>>
     public async Task Delete_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidAccountMember = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/a1/access/account-members/{invalidAccountMember}");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

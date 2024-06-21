@@ -13,19 +13,14 @@ using Xunit;
 
 namespace Access.AccountRegistrationCommands;
 
-public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Approve 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Approve(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Approve_ShouldSucceed_WhenProcessStateConfirmed()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AuthenticationIdentity = $"existing-account-registration-{Guid.NewGuid()}",
@@ -36,7 +31,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
             ProcessToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -44,9 +39,9 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}/approve");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -54,7 +49,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             var approvedRegistration = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -71,6 +66,8 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
     public async Task Approve_ShouldFail_WhenProcessStateNew()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AuthenticationIdentity = $"existing-account-registration-{Guid.NewGuid()}",
@@ -81,7 +78,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
             ProcessToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -89,9 +86,9 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}/approve");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -100,7 +97,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             var unchangedRegistration = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -117,6 +114,8 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
     public async Task Approve_ShouldFail_WhenProcessStateApproved()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AuthenticationIdentity = $"existing-account-registration-{Guid.NewGuid()}",
@@ -127,7 +126,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
             ProcessToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -135,9 +134,9 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}/approve");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -146,7 +145,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             var unchangedRegistration = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -163,6 +162,8 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
     public async Task Approve_ShouldFail_WhenProcessStateCompleted()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AuthenticationIdentity = $"existing-account-registration-{Guid.NewGuid()}",
@@ -173,7 +174,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
             ProcessToken = Guid.NewGuid()
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -181,9 +182,9 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}/approve");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -192,7 +193,7 @@ public sealed class Approve : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             var unchangedRegistration = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()

@@ -14,19 +14,14 @@ using Xunit;
 
 namespace Access.AccountRegistrationResource;
 
-public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Put 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Put(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Put_ShouldSucceed_WhenValid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -37,7 +32,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -45,7 +40,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -57,7 +52,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -65,7 +60,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var changedMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -85,10 +80,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidAccountRegistration = "invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{invalidAccountRegistration}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -100,7 +97,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -114,10 +111,12 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentAccountRegistration = 1;
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{absentAccountRegistration}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -129,7 +128,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -143,6 +142,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAccountGroupExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -163,7 +164,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "additional@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -171,7 +172,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -183,7 +184,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -191,7 +192,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             var unchangedMember = scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -208,6 +209,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAccountGroupNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -218,7 +221,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -226,7 +229,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -238,7 +241,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -252,6 +255,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAccountGroupEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -262,7 +267,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -270,7 +275,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -282,7 +287,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -296,6 +301,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAccountGroupTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -306,7 +313,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -314,7 +321,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -326,7 +333,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -340,6 +347,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAccountGroupInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -350,7 +359,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -358,7 +367,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -370,7 +379,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -384,6 +393,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAccountMemberNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -394,7 +405,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -402,7 +413,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -414,7 +425,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -428,6 +439,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAccountMemberEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -438,7 +451,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -446,7 +459,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -458,7 +471,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -472,6 +485,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAccountMemberTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -482,7 +497,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -490,7 +505,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -502,7 +517,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -516,6 +531,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAccountMemberInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -526,7 +543,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -534,7 +551,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -546,7 +563,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -560,6 +577,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAuthenticationIdentityNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -570,7 +589,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -578,7 +597,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -590,7 +609,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -604,6 +623,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAuthenticationIdentityEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -614,7 +635,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -622,7 +643,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -634,7 +655,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -648,6 +669,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAuthenticationIdentityTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -658,7 +681,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -666,7 +689,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -678,7 +701,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -692,6 +715,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenAuthenticationIdentityInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -702,7 +727,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -710,7 +735,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -722,7 +747,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -736,6 +761,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressNull()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -746,7 +773,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -754,7 +781,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -766,7 +793,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -780,6 +807,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressEmpty()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -790,7 +819,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -798,7 +827,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -810,7 +839,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -824,6 +853,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -834,7 +865,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -842,7 +873,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -854,7 +885,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -868,6 +899,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressLocalPartTooLong()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -878,7 +911,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -886,7 +919,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -898,7 +931,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -912,6 +945,8 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
     public async Task Put_ShouldFail_WhenMailAddressInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAccountRegistration = new AccountRegistration
         {
             AccountGroup = $"existing-account-registration-account-group-{Guid.NewGuid()}",
@@ -922,7 +957,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
             MailAddress = "default@localhost"
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AccountRegistration>>()
@@ -930,7 +965,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/a1/access/account-registrations/{existingAccountRegistration.Snowflake}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
         var putAccountRegistration = new
         {
@@ -942,7 +977,7 @@ public sealed class Put : IClassFixture<WebApplicationFactory<Program>>
 
         request.Content = JsonContent.Create(putAccountRegistration);
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

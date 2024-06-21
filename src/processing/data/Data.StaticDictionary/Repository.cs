@@ -202,7 +202,7 @@ internal sealed class Repository<TEntity> : IRepository<TEntity>
             },
             (snowflake, entity) =>
             {
-                RepositoryException.ThrowObjectConflict<TEntity>(snowflake);
+                DataException.ThrowObjectConflict<TEntity>(snowflake);
                 return entity;
             });
     }

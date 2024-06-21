@@ -11,19 +11,14 @@ using Xunit;
 
 namespace Admission.AuthenticationIdentityResource;
 
-public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
+public sealed class Head 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public Head(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task Get_ShouldSucceed_WhenExists()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingAuthenticationIdentity = new AuthenticationIdentity
         {
             UniqueName = $"existing-authentication-identity-{Guid.NewGuid()}",
@@ -31,7 +26,7 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
             Secret = "foo-bar"
         };
 
-        using (var scope = _factory.Services.CreateScope())
+        using (var scope = application.Services.CreateScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<AuthenticationIdentity>>()
@@ -39,9 +34,9 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Head, $"/api/a1/admission/authentication-identities/{existingAuthenticationIdentity.UniqueName}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -55,12 +50,14 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenAbsent()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var absentAuthenticationIdentity = "absent-authentication-identity";
 
         var request = new HttpRequestMessage(HttpMethod.Head, $"/api/a1/admission/authentication-identities/{absentAuthenticationIdentity}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);
@@ -74,12 +71,14 @@ public sealed class Head : IClassFixture<WebApplicationFactory<Program>>
     public async Task Get_ShouldFail_WhenInvalid()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var invalidAuthenticationIdentity = "Invalid";
 
         var request = new HttpRequestMessage(HttpMethod.Head, $"/api/a1/admission/authentication-identities/{invalidAuthenticationIdentity}");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

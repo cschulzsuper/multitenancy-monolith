@@ -11,23 +11,18 @@ using Xunit;
 
 namespace Extension.ObjectTypeResource;
 
-public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
+public sealed class GetAll 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public GetAll(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task GetAll_ShouldSucceed()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/extension/object-types");
-        request.Headers.Authorization = _factory.MockValidMemberAuthorizationHeader();
+        using var application = MockWebApplication.Create();
 
-        var client = _factory.CreateClient();
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/extension/object-types");
+        request.Headers.Authorization = application.MockValidMemberAuthorizationHeader();
+
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

@@ -1,4 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
+using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 using System;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
@@ -59,7 +60,13 @@ public sealed class ValidationException : Exception
             exception = new ValidationException($"Object '{objectType}' is not valid.");
         }
 
-        exception.Data["error-code"] = "object-invalid";
+        exception.Data["error-code"] = 
+            validationResult is ValidationRuleResult validationRuleResult &&
+            validationRuleResult.Rule.GetType().IsGenericType &&
+            validationRuleResult.Rule.GetType().GetGenericTypeDefinition() == typeof(UniqueValidationRule<>)
+            ? "object-conflict"
+            : "object-invalid";
+
         exception.Data["object-type"] = objectType;
 
         throw exception;

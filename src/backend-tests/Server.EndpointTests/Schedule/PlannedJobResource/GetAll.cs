@@ -16,19 +16,14 @@ using Xunit;
 
 namespace Schedule.PlannedJobResource;
 
-public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
+public sealed class GetAll 
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public GetAll(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.Mock();
-    }
-
     [Fact]
     public async Task GetAll_ShouldSucceed()
     {
         // Arrange
+        using var application = MockWebApplication.Create();
+
         var existingPlannedJob1 = new PlannedJob
         {
             UniqueName = "mock-job-1",
@@ -43,7 +38,7 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
             ExpressionType = ScheduleExpressionTypes.CronExpression
         };
 
-        using (var scope = _factory.CreateMultitenancyScope())
+        using (var scope = application.CreateMultitenancyScope())
         {
             scope.ServiceProvider
                 .GetRequiredService<IRepository<PlannedJob>>()
@@ -55,9 +50,9 @@ public sealed class GetAll : IClassFixture<WebApplicationFactory<Program>>
         }
 
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/a1/schedule/planned-jobs");
-        request.Headers.Authorization = _factory.MockValidIdentityAuthorizationHeader();
+        request.Headers.Authorization = application.MockValidIdentityAuthorizationHeader();
 
-        var client = _factory.CreateClient();
+        var client = application.CreateClient();
 
         // Act
         var response = await client.SendAsync(request);

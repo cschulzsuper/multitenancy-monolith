@@ -25,7 +25,6 @@ public static class _Services
             var configurationWebService = webServiceResolver.Invoke(configuration);
             var clientFactory = provider.GetRequiredService<TransportWebServiceClientFactory>();
 
-            // TODO Add default token provider
             var client = clientFactory.Create<TService>(configurationWebService);
 
             return client;

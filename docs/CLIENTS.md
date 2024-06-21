@@ -8,8 +8,8 @@ Frontend clients are applications or parts of an application that access backend
 
   The `swagger-ui` client must provide this value during authentication. 
 
-  * The `swagger-ui` client has the `swagger-json` `scope` to read the `swagger.json`.
-    * The `swagger-ui` loads the `swagger.json` files.
+  * The `swagger-ui` client has the `openapi-json` `scope` to read the `*.json` files.
+    * The `swagger-ui` loads the `*.json` files.
   * The `swagger-ui` client has the `endpoints` `scope` to access all `endpoints`.
     * This is required to access the REST API.
 
@@ -17,8 +17,8 @@ Frontend clients are applications or parts of an application that access backend
 
   The `swagger-ui-host` client must provide this value during authentication. 
 
-  * The `swagger-ui-host` client has the `swagger-json` `scope` to read the `swagger.json`.
-    * The `swagger-ui-host` tests the availability of `swagger.json` files.
+  * The `swagger-ui-host` client has the `openapi-json` `scope` to read the `*.json` files.
+    * The `swagger-ui-host` tests the availability of `*.json` files.
   * The `swagger-ui-host` client has the `endpoints` `scope` to access all `endpoints`.
     * This is **currently** required for token verification.
 
