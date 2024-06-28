@@ -1,5 +1,5 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
-using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
+﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
+using Humanizer;
 using System;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
@@ -47,7 +47,7 @@ public sealed class ValidationException : Exception
     [DoesNotReturn]
     public static void ThrowObjectInvalid<TEntity>(ValidationResult validationResult)
     {
-        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+        var objectType = typeof(TEntity).Name.Humanize();
 
         ValidationException exception;
 
@@ -63,7 +63,7 @@ public sealed class ValidationException : Exception
         exception.Data["error-code"] = 
             validationResult is ValidationRuleResult validationRuleResult &&
             validationRuleResult.Rule.GetType().IsGenericType &&
-            validationRuleResult.Rule.GetType().GetGenericTypeDefinition() == typeof(UniqueValidationRule<>)
+            validationRuleResult.Rule.GetType().GetGenericTypeDefinition() == typeof(UniquePropertyValueValidationRule<>)
             ? "object-conflict"
             : "object-invalid";
 
@@ -98,7 +98,7 @@ public sealed class ValidationException : Exception
 
     private static string FormatValueString(string value)
     {
-        var begin = value.Substring(0, 10).TrimEnd('.');
+        var begin = value[..10].TrimEnd('.');
         var end = value.Substring(value.Length - 11, 10).TrimEnd('.');
 
         return $"{begin}...{end}";

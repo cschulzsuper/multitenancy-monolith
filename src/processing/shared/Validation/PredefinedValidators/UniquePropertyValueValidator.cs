@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidators;
 
-public sealed class UniqueConstrainValidator<T>
+public sealed class UniquePropertyValueValidator<T>
     where T : class
 {
     private static readonly Validator<IEnumerable<T>> _validator;
 
-    static UniqueConstrainValidator()
+    static UniquePropertyValueValidator()
     {
         _validator = new Validator<IEnumerable<T>>();
         _validator.AddRules(x => x, CreateRules(x => x.GetHashCode()));
@@ -20,7 +19,7 @@ public sealed class UniqueConstrainValidator<T>
     {
         var rules = new IValidationRule<IEnumerable<T>>[]
         {
-            ValidationRules.Unique(field, select)
+            ValidationRules.UniquePropertyValue(field, select)
         };
 
         return rules;

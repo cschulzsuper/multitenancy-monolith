@@ -1,5 +1,4 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Extension;
-using ChristianSchulz.MultitenancyMonolith.Objects.Schedule;
 using ChristianSchulz.MultitenancyMonolith.Shared.Multitenancy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,13 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
-using System;
+﻿using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Extension;
 
-[ObjectAnnotation(
-    UniqueName = "object-type-custom-property",
-    DisplayName = "Object Type Custom Property",
-    Area = "extension",
-    Collection = "object-type-custom-properties")]
 public sealed class ObjectTypeCustomProperty : ICloneable
 {
     public object Clone()

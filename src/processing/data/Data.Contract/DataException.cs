@@ -13,7 +13,7 @@ public sealed class DataException : Exception
     [DoesNotReturn]
     public static void ThrowObjectConflict<TEntity>(object snowflake)
     {
-        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+        var objectType = ObjectAnnotations.DisplayNameLowerCase<TEntity>();
 
         var exception = new DataException($"Object '{objectType}' with snowflake '{snowflake}' already exists.");
 
@@ -25,7 +25,7 @@ public sealed class DataException : Exception
     [DoesNotReturn]
     public static void ThrowObjectConflict<TEntity>(string messageParameter)
     {
-        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+        var objectType = ObjectAnnotations.DisplayNameLowerCase<TEntity>();
 
         var exception = new DataException($"Object '{objectType}' causes conflict '{messageParameter}'.");
 
@@ -47,7 +47,7 @@ public sealed class DataException : Exception
     [DoesNotReturn]
     public static void ThrowObjectNotFound<TEntity>()
     {
-        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+        var objectType = ObjectAnnotations.DisplayNameLowerCase<TEntity>();
 
         var exception = new DataException($"Object '{objectType}' not found.");
 
@@ -59,7 +59,7 @@ public sealed class DataException : Exception
     [DoesNotReturn]
     public static void ThrowObjectNotFound<TEntity>(object snowflake)
     {
-        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+        var objectType = ObjectAnnotations.DisplayNameLowerCase<TEntity>();
 
         var exception = new DataException($"Object '{objectType}' with snowflake '{snowflake}' not found.");
 
@@ -71,7 +71,7 @@ public sealed class DataException : Exception
     [DoesNotReturn]
     public static void ThrowObjectsNotFound<TEntity>(int expected, int actual)
     {
-        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+        var objectType = ObjectAnnotations.DisplayNameLowerCase<TEntity>();
 
         var exception = new DataException($"Objects '{objectType}' not found. Expect '{expected}' but found '{actual}'.");
 
@@ -101,7 +101,7 @@ public sealed class DataException : Exception
     [DoesNotReturn]
     public static void ThrowUniqueNameConflict(Type entityType, string uniqueName)
     {
-        var objectType = ObjectAnnotations.ExtractObjectType(entityType);
+        var objectType = ObjectAnnotations.DisplayNameLowerCase(entityType);
 
         var exception = new DataException($"Unique name '{uniqueName}' of object '{objectType}' causes conflict.");
 
@@ -113,7 +113,7 @@ public sealed class DataException : Exception
     [DoesNotReturn]
     public static void ThrowPropertyValueConflict<TEntity>(string propertyName, object propertyValue)
     {
-        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+        var objectType = ObjectAnnotations.DisplayNameLowerCase<TEntity>();
 
         var exception = new DataException($"Property '{propertyName}' value '{propertyValue}' of object '{objectType}' causes conflict.");
 
@@ -125,7 +125,7 @@ public sealed class DataException : Exception
     [DoesNotReturn]
     public static void ThrowPropertyNameConflict<TEntity>(string propertyName)
     {
-        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+        var objectType = ObjectAnnotations.DisplayNameLowerCase<TEntity>();
 
         var exception = new DataException($"Property name '{propertyName}' of object '{objectType}' causes conflict.");
 
@@ -137,7 +137,7 @@ public sealed class DataException : Exception
     [DoesNotReturn]
     public static void ThrowPropertyTypeMismatch<TEntity>(string propertyName)
     {
-        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+        var objectType = ObjectAnnotations.DisplayNameLowerCase<TEntity>();
 
         var exception = new DataException($"Object '{objectType}' property '{propertyName}' has incorrect type.");
 

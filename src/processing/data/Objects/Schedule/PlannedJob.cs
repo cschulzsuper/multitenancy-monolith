@@ -1,13 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
-using System;
+﻿using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Schedule;
 
-[ObjectAnnotation(
-    UniqueName = "planned-job",
-    DisplayName = "Planned Job",
-    Area = "schedule",
-    Collection = "planned-jobs")]
 public sealed class PlannedJob : ICloneable
 {
     public object Clone()

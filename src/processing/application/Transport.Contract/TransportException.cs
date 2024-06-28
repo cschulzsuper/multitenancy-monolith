@@ -11,7 +11,7 @@ public sealed class TransportException : Exception
     [DoesNotReturn]
     public static void ThrowNotFound<TEntity>(string uniqueName)
     {
-        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+        var objectType = ObjectAnnotations.DisplayNameLowerCase<TEntity>();
 
         var exception = new TransportException($"Object '{objectType}' with unique name '{uniqueName}' not found.");
 
@@ -23,7 +23,7 @@ public sealed class TransportException : Exception
     [DoesNotReturn]
     public static void ThrowConflict<TEntity>(string uniqueName)
     {
-        var objectType = ObjectAnnotations.ExtractObjectType<TEntity>();
+        var objectType = ObjectAnnotations.DisplayNameLowerCase<TEntity>();
 
         var exception = new TransportException($"Object '{objectType}' with unique name '{uniqueName}'' already exists.");
 

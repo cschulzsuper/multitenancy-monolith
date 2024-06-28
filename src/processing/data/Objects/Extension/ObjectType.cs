@@ -1,15 +1,9 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Extension;
 
-[ObjectAnnotation(
-    UniqueName = "object-type",
-    DisplayName = "Object Type",
-    Area = "extension",
-    Collection = "object-types")]
 public sealed class ObjectType : ICloneable
 {
     public object Clone()

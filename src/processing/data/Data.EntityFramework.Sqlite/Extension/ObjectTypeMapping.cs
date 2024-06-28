@@ -1,11 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework;
-using ChristianSchulz.MultitenancyMonolith.Objects.Extension;
-using ChristianSchulz.MultitenancyMonolith.Objects.Schedule;
+﻿using ChristianSchulz.MultitenancyMonolith.Objects.Extension;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Extension;
 

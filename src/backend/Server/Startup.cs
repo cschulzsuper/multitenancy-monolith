@@ -2,18 +2,27 @@ using ChristianSchulz.MultitenancyMonolith.Application;
 using ChristianSchulz.MultitenancyMonolith.Application.Access;
 using ChristianSchulz.MultitenancyMonolith.Application.Admission;
 using ChristianSchulz.MultitenancyMonolith.Application.Business;
+using ChristianSchulz.MultitenancyMonolith.Application.Diagnostic;
 using ChristianSchulz.MultitenancyMonolith.Application.Extension;
 using ChristianSchulz.MultitenancyMonolith.Application.Schedule;
+using ChristianSchulz.MultitenancyMonolith.Backend.Server.Data;
+using ChristianSchulz.MultitenancyMonolith.Backend.Server.DataProtection;
+using ChristianSchulz.MultitenancyMonolith.Backend.Server.Events;
+using ChristianSchulz.MultitenancyMonolith.Backend.Server.Jobs;
+using ChristianSchulz.MultitenancyMonolith.Backend.Server.Json;
+using ChristianSchulz.MultitenancyMonolith.Backend.Server.Middleware;
+using ChristianSchulz.MultitenancyMonolith.Backend.Server.Security;
+using ChristianSchulz.MultitenancyMonolith.Backend.Server.SwaggerGen;
 using ChristianSchulz.MultitenancyMonolith.Caching;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
-using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Access;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Admission;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Extension;
 using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Schedule;
+using ChristianSchulz.MultitenancyMonolith.Data.StaticDictionary;
 using ChristianSchulz.MultitenancyMonolith.Events;
 using ChristianSchulz.MultitenancyMonolith.Jobs;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
@@ -30,15 +39,6 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Application.Diagnostic;
-using ChristianSchulz.MultitenancyMonolith.Backend.Server.DataProtection;
-using ChristianSchulz.MultitenancyMonolith.Backend.Server.Events;
-using ChristianSchulz.MultitenancyMonolith.Backend.Server.Security;
-using ChristianSchulz.MultitenancyMonolith.Backend.Server.Jobs;
-using ChristianSchulz.MultitenancyMonolith.Backend.Server.Middleware;
-using ChristianSchulz.MultitenancyMonolith.Backend.Server.SwaggerGen;
-using ChristianSchulz.MultitenancyMonolith.Backend.Server.Data;
-using ChristianSchulz.MultitenancyMonolith.Backend.Server.Json;
 
 namespace ChristianSchulz.MultitenancyMonolith.Backend.Server;
 
@@ -91,16 +91,7 @@ public sealed class Startup
                 .WithHeaders(HeaderNames.Accept, HeaderNames.ContentType, HeaderNames.Authorization)
                 .WithMethods(HttpMethods.Get, HttpMethods.Head, HttpMethods.Post, HttpMethods.Put, HttpMethods.Delete)));
 
-        services.AddEndpointsApiExplorer();
-
-        /*services.AddSwaggerGen(options =>
-        {
-            options.ConfigureSwaggerDocs();
-            options.ConfigureAuthentication();
-            options.ConfigureAuthorization();
-        });*/
-
-        services.AddOpenApiDocs();
+        services.AddOpenApiSupport();
         services.ConfigureJsonOptions();
 
         services.AddRequestUser(options => options.Configure(allowedClients));
@@ -117,7 +108,6 @@ public sealed class Startup
         services.AddDataEntityFrameworkSqliteSchedule();
 
         services.AddDataStaticDictionary();
-        // services.AddDataStaticDictionaryExtension();
         services.AddDataStaticDictionaryBusiness();
 
         services.AddAccessManagement();

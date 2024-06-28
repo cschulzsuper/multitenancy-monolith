@@ -1,13 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
-using System;
+﻿using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Access;
 
-[ObjectAnnotation(
-    UniqueName = "account-group",
-    DisplayName = "Account Group",
-    Area = "access",
-    Collection = "account-groups")]
 public sealed class AccountGroup : ICloneable
 {
     public object Clone()

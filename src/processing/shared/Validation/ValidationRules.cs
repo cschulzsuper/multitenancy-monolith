@@ -46,8 +46,8 @@ public static class ValidationRules
     public static IValidationRule<string> StringLength(string field, int length)
         => new StringLengthValidationRule(field, length);
 
-    public static IValidationRule<IEnumerable<T>> Unique<T>(string field, Func<T, IComparable> select)
-        => new UniqueValidationRule<T>(field, select);
+    public static IValidationRule<IEnumerable<T>> UniquePropertyValue<T>(string field, Func<T, IComparable> select)
+        => new UniquePropertyValueValidationRule<T>(field, select);
 
     public static IValidationRule<T> Zero<T>(string field) 
         where T : INumber<T>

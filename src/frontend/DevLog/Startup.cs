@@ -1,14 +1,15 @@
 using ChristianSchulz.MultitenancyMonolith.Application.Documentation;
 using ChristianSchulz.MultitenancyMonolith.Configuration;
 using ChristianSchulz.MultitenancyMonolith.Configuration.Proxies;
+using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework;
+using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite;
+using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Documentation;
+using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Data;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.DataProtection;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Endpoints;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Security;
 using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Services;
 using ChristianSchulz.MultitenancyMonolith.Shared.Security.RequestUser;
-using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework;
-using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite;
-using ChristianSchulz.MultitenancyMonolith.Data.EntityFramework.Sqlite.Documentation;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -25,7 +26,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using ChristianSchulz.MultitenancyMonolith.Frontend.DevLog.Data;
 
 namespace ChristianSchulz.MultitenancyMonolith.Frontend.DevLog;
 

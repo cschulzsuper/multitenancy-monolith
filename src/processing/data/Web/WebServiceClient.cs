@@ -104,7 +104,8 @@ internal sealed class WebServiceClient : IWebServiceClient
         {
             SetAuthorizationHeader(request);
 
-            using var response = _client.Send(request, HttpCompletionOption.ResponseHeadersRead);
+            // TODO Service Discovery does not work with sync request. Need to fallback to SendAsync and Result
+            using var response = _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).Result;
 
             if (!response.IsSuccessStatusCode)
             {

@@ -1,8 +1,6 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Objects.Business;
 using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Extension;
 
@@ -12,17 +10,17 @@ internal sealed class ObjectTypeDefinitionProvider : IObjectTypeDefinitionProvid
 
     static ObjectTypeDefinitionProvider()
     {
-        var businessObjectAnnotation = typeof(BusinessObject).GetCustomAttribute<ObjectAnnotationAttribute>()
-            ?? throw new UnreachableException("The object 'BusinessObject' is not annotated with an 'ObjectAnnotationAttribute'.");
+        var businessObjectType = typeof(BusinessObject);
+        var businessObjectUniqueName = ObjectAnnotations.UniqueName(businessObjectType);
 
         _objectTypes = new Dictionary<string, ObjectTypeDefinition>
         {
-            [businessObjectAnnotation.UniqueName] = new()
+            [businessObjectUniqueName] = new()
             {
-                UniqueName = businessObjectAnnotation.UniqueName,
-                DisplayName = businessObjectAnnotation.DisplayName,
-                Area = businessObjectAnnotation.Area,
-                Collection = businessObjectAnnotation.Collection
+                UniqueName = businessObjectUniqueName,
+                DisplayName = ObjectAnnotations.DisplayName(businessObjectType),
+                Area = ObjectAnnotations.Area(businessObjectType),
+                Collection = ObjectAnnotations.Collection(businessObjectType)
             }
         };
     }

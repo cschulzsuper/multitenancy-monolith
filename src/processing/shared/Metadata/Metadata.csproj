@@ -8,4 +8,8 @@
 		<NoWarn>IDE0290</NoWarn>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Humanizer" Version="2.14.1" />
+	</ItemGroup>
+
 </Project>

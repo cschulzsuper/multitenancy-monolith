@@ -1,6 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Backend.Server;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Microsoft.AspNetCore.Authentication;
 using System.Linq;
 using System.Net;
 using System.Net.Http;

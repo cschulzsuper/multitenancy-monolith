@@ -12,7 +12,7 @@ public sealed class Program
 #else
     private const bool _buildInfoOptional = false;
 #endif
-
+    
     public static void Main(string[] args)
     {
         CreateHostBuilder(args).Build().Run();

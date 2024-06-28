@@ -1,6 +1,4 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Backend.Server;
-using Microsoft.AspNetCore.Mvc.Testing;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;

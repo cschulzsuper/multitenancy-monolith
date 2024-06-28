@@ -1,9 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Backend.Server;
-using ChristianSchulz.MultitenancyMonolith.Data;
+﻿using ChristianSchulz.MultitenancyMonolith.Data;
 using ChristianSchulz.MultitenancyMonolith.Objects.Schedule;
 using ChristianSchulz.MultitenancyMonolith.ObjectValidation.Schedule.ConcreteValidators;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Net;

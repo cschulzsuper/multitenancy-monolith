@@ -1,13 +1,7 @@
-﻿using ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
-using System;
+﻿using System;
 
 namespace ChristianSchulz.MultitenancyMonolith.Objects.Admission;
 
-[ObjectAnnotation(
-    UniqueName = "authentication-identity",
-    DisplayName = "Authentication Identity",
-    Area = "admission",
-    Collection = "authentication-identities")]
 public sealed class AuthenticationIdentity : ICloneable
 {
     public object Clone()

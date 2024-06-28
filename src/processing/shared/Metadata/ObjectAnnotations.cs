@@ -1,5 +1,7 @@
-﻿using System;
-using System.Reflection;
+﻿using Humanizer;
+using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
@@ -7,27 +9,51 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Metadata;
 public static class ObjectAnnotations
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string ExtractObjectType<TEntity>()
+    public static string UniqueName(Type objectType)
     {
-        var entityType = typeof(TEntity);
+        var uniqueName = objectType.Name.Kebaberize();
 
-        return ExtractObjectType(entityType);
+        return uniqueName;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string ExtractObjectType(Type entityType)
+    public static string DisplayName(Type objectType)
     {
-        var objectTypeDefinition = entityType.GetCustomAttribute<ObjectAnnotationAttribute>();
+        var displayName = objectType.Name.Humanize(LetterCasing.Title);
 
-        if (objectTypeDefinition != null)
-        {
-            return objectTypeDefinition.UniqueName
-                .Replace('-', ' ');
-        }
-        else
-        {
-            return entityType.Name
-                .ToLower();
-        }
+        return displayName;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string DisplayNameLowerCase<T>()
+    {
+        var objectType = typeof(T);
+
+        return DisplayNameLowerCase(objectType);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string DisplayNameLowerCase(Type objectType)
+    {
+        var displayName = objectType.Name.Humanize(LetterCasing.LowerCase);
+
+        return displayName;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string Area(Type objectType)
+    {
+        var area = objectType.Namespace?.Split('.').Last().Kebaberize()
+            ?? throw new UnreachableException($"The entity type '{objectType.Name}' does not have a namespace.");
+
+        return area;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string Collection(Type objectType)
+    {
+        var collection = objectType.Name.Kebaberize().Pluralize();
+
+        return collection;
     }
 }

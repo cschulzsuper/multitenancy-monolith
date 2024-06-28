@@ -9,12 +9,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Cronos" Version="0.8.4" />
+		<PackageReference Include="Cronos" Version="0.8.4" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Metadata\Metadata.csproj" />
+		<ProjectReference Include="..\Metadata\Metadata.csproj" />
 	</ItemGroup>
-
 
 </Project>

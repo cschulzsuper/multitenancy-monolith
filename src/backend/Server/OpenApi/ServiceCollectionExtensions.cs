@@ -1,16 +1,11 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Backend.Server.OpenApi;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ChristianSchulz.MultitenancyMonolith.Backend.Server.SwaggerGen;
 
 internal static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddOpenApiDocs(this IServiceCollection services)
+    public static IServiceCollection AddOpenApiSupport(this IServiceCollection services)
     {
         services.AddKeyedSingleton<OpenApiSchemaProvider>("a1");
         services.AddOpenApi("a1", options =>

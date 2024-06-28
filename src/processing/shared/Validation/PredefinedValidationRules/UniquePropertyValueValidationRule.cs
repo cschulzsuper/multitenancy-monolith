@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedValidationRules;
 
-public sealed class UniqueValidationRule<T> : IValidationRule<IEnumerable<T>>
+public sealed class UniquePropertyValueValidationRule<T> : IValidationRule<IEnumerable<T>>
 {
     private readonly string _validationMessage;
     private readonly Func<T, IComparable> _select;
 
-    internal UniqueValidationRule(string field, Func<T, IComparable> select)
+    internal UniquePropertyValueValidationRule(string field, Func<T, IComparable> select)
     {
         _validationMessage = string.Format(ValidationErrors.ValueNotUnique, field);
         _select = select;

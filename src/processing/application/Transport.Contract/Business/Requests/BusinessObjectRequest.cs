@@ -1,6 +1,5 @@
 ﻿using ChristianSchulz.MultitenancyMonolith.Shared.Validation.PredefinedAnnotations;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace ChristianSchulz.MultitenancyMonolith.Application.Business.Requests;
 

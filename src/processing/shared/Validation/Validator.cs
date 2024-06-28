@@ -6,7 +6,7 @@ namespace ChristianSchulz.MultitenancyMonolith.Shared.Validation;
 
 public sealed class Validator<T>
 {
-    public readonly IList<Func<T, ValidationResult?>> _validations = new List<Func<T, ValidationResult?>>();
+    public readonly IList<Func<T, ValidationResult?>> _validations = [];
 
     public void AddRule<TProperty>(Func<T, TProperty> property, IValidationRule<TProperty> rule)
     {
